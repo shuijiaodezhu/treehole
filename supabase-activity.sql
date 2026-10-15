@@ -50,6 +50,10 @@ alter table public.profiles
 
 create index if not exists profiles_last_seen_idx on public.profiles (last_seen_at desc);
 
+-- 强制 PostgREST 刷新 schema 缓存（新表常常需要这一下，否则前端仍报
+-- Could not find the table 'public.user_activity' in the schema cache）
+notify pgrst, 'reload schema';
+
 -- ============================================================
 -- 三、确认结果
 -- ============================================================

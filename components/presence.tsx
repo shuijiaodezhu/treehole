@@ -2,24 +2,95 @@
 
 import { useEffect, useRef, useState } from 'react'
 import { createClient } from '../app/lib/supabase'
+import type { RealtimeChannel } from '@supabase/supabase-js'
 
 /**
  * 在线状态与活跃上报
  *
- *  - <OnlinePresence />     挂在根 layout，登录用户进站时上报当日活跃并加入在线频道
- *  - useOnlineCount()       给后台用：订阅同一个频道，实时数出在线人数
+ *  - <OnlinePresence />   挂在根 layout：登录用户进站上报当日活跃，并加入在线频道
+ *  - useOnlineCount()     给后台用：读同一个频道的在线人数
  *
- * 在线用 Supabase Realtime 的 Presence（内存态，不需要建表、不需要发布）；
+ * 关键点：supabase-js 里同名 channel 会复用同一个实例，而「已 subscribe 的频道
+ * 不能再 on('presence')」会直接抛错。所以这里用模块级单例频道 + 引用计数，
+ * 两个组件共享一个频道，计数通过订阅回调广播出去。
+ *
+ * 在线用 Realtime Presence（内存态，不需要建表也不需要加入发布）；
  * 日活用 user_activity 表（见 supabase-activity.sql）。
  */
 
 const supabase = createClient()
 
-/** 在线频道名：所有页面与后台都用它 */
 const CHANNEL = 'online-users'
-
-/** last_seen_at 的写入节流：两次写之间至少间隔这么久 */
 const SEEN_THROTTLE_MS = 60 * 1000
+
+type OnlineSnapshot = { count: number; ready: boolean }
+
+let sharedChannel: RealtimeChannel | null = null
+let refCount = 0
+let removeTimer: number | null = null
+let snapshot: OnlineSnapshot = { count: 0, ready: false }
+const listeners = new Set<(s: OnlineSnapshot) => void>()
+
+function emit() {
+  for (const fn of listeners) fn(snapshot)
+}
+
+/** 取得共享频道（不存在就建；已存在就只是加引用） */
+function acquireChannel(key: string) {
+  if (removeTimer !== null) {
+    window.clearTimeout(removeTimer)
+    removeTimer = null
+  }
+
+  if (sharedChannel) {
+    refCount += 1
+    return
+  }
+
+  const channel = supabase.channel(CHANNEL, { config: { presence: { key } } })
+
+  // 必须在 subscribe 之前注册 presence 回调
+  channel.on('presence', { event: 'sync' }, () => {
+    snapshot = { ...snapshot, count: Object.keys(channel.presenceState()).length }
+    emit()
+  })
+
+  channel.subscribe((status) => {
+    snapshot = { ...snapshot, ready: status === 'SUBSCRIBED' }
+    emit()
+    if (status === 'SUBSCRIBED') {
+      void channel.track({ at: new Date().toISOString() })
+    }
+  })
+
+  sharedChannel = channel
+  refCount = 1
+}
+
+/** 释放引用；最后一个使用者离开后延时拆除（躲开 StrictMode 的挂载-卸载-再挂载） */
+function releaseChannel() {
+  refCount = Math.max(0, refCount - 1)
+  if (refCount > 0) return
+
+  removeTimer = window.setTimeout(() => {
+    removeTimer = null
+    if (refCount > 0 || !sharedChannel) return
+    const channel = sharedChannel
+    sharedChannel = null
+    snapshot = { count: 0, ready: false }
+    emit()
+    void supabase.removeChannel(channel)
+  }, 1500)
+}
+
+/** 订阅在线人数变化（会立刻回调一次当前值） */
+export function subscribeOnlineCount(fn: (s: OnlineSnapshot) => void): () => void {
+  listeners.add(fn)
+  fn(snapshot)
+  return () => {
+    listeners.delete(fn)
+  }
+}
 
 function todayUTC(): string {
   return new Date().toISOString().slice(0, 10)
@@ -38,7 +109,7 @@ export function OnlinePresence() {
         const { data } = await supabase.auth.getUser()
         if (!cancelled) setUserId(data.user?.id ?? null)
       } catch {
-        /* 未登录/网络异常都忽略，不影响页面 */
+        /* 未登录或网络异常都忽略，不影响页面 */
       }
     })()
     return () => {
@@ -49,10 +120,9 @@ export function OnlinePresence() {
   useEffect(() => {
     if (!userId) return
 
-    let channel: ReturnType<typeof supabase.channel> | null = null
     let disposed = false
 
-    /** 上报当日活跃（一天一行，重复插入忽略）+ 刷新 last_seen_at（节流） */
+    /** 上报当日活跃（一天一行，重复忽略）+ 刷新 last_seen_at（节流） */
     const reportActivity = async (force = false) => {
       if (disposed) return
       const now = Date.now()
@@ -78,16 +148,8 @@ export function OnlinePresence() {
     }
 
     void reportActivity(true)
+    acquireChannel(userId)
 
-    // 加入在线频道（presence 的 key 用 user id，多标签页算一个人）
-    channel = supabase.channel(CHANNEL, { config: { presence: { key: userId } } })
-    channel.subscribe((status) => {
-      if (status === 'SUBSCRIBED') {
-        void channel?.track({ user_id: userId, at: new Date().toISOString() })
-      }
-    })
-
-    // 定时刷新：只在标签页可见时写，避免后台标签页一直刷
     const timer = window.setInterval(() => {
       if (document.visibilityState === 'visible') void reportActivity()
     }, SEEN_THROTTLE_MS)
@@ -101,7 +163,7 @@ export function OnlinePresence() {
       disposed = true
       window.clearInterval(timer)
       document.removeEventListener('visibilitychange', onVisible)
-      if (channel) void supabase.removeChannel(channel)
+      releaseChannel()
     }
   }, [userId])
 
@@ -110,40 +172,37 @@ export function OnlinePresence() {
 
 /* ==================== 后台：实时在线人数 ==================== */
 
-export type OnlineState = {
-  /** 当前在线人数（不同用户数，多标签页只算一个） */
-  count: number
-  /** 订阅是否正常 */
-  ready: boolean
-}
+export type OnlineState = OnlineSnapshot
 
 export function useOnlineCount(): OnlineState {
-  const [count, setCount] = useState(0)
-  const [ready, setReady] = useState(false)
+  const [state, setState] = useState<OnlineSnapshot>({ count: 0, ready: false })
 
   useEffect(() => {
-    let channel: ReturnType<typeof supabase.channel> | null = null
+    let cancelled = false
+    let acquired = false
+    let key = `anon-${Math.random().toString(36).slice(2, 8)}`
 
     void (async () => {
-      const { data } = await supabase.auth.getUser()
-      const key = data.user?.id ?? `anon-${Math.random().toString(36).slice(2, 8)}`
-
-      channel = supabase.channel(CHANNEL, { config: { presence: { key } } })
-
-      channel.on('presence', { event: 'sync' }, () => {
-        const state = channel?.presenceState() ?? {}
-        setCount(Object.keys(state).length)
-      })
-
-      channel.subscribe((status) => {
-        setReady(status === 'SUBSCRIBED')
-      })
+      try {
+        const { data } = await supabase.auth.getUser()
+        if (data.user?.id) key = data.user.id
+      } catch {
+        /* 用匿名 key 也能数在线人数 */
+      }
+      if (cancelled) return
+      acquireChannel(key)
+      acquired = true
     })()
 
+    const unsubscribe = subscribeOnlineCount(setState)
+
     return () => {
-      if (channel) void supabase.removeChannel(channel)
+      cancelled = true
+      unsubscribe()
+      // 只有真的 acquire 过才 release，避免引用计数错位
+      if (acquired) releaseChannel()
     }
   }, [])
 
-  return { count, ready }
+  return state
 }
