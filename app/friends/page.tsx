@@ -25,6 +25,7 @@ import {
   type Visibility,
 } from '../../components/visibility'
 import { VaultView } from '../../components/vault-view'
+import { PlansView } from '../../components/plans-view'
 
 type Friend = {
   friendship_id: string
@@ -128,7 +129,7 @@ function formatTime(dateStr: string) {
 }
 
 export default function FriendsPage() {
-  const [mode, setMode] = useState<'friends' | 'moments' | 'vault'>('friends')
+  const [mode, setMode] = useState<'friends' | 'moments' | 'vault' | 'plans'>('friends')
 
   const [friends, setFriends] = useState<Friend[]>([])
   const [requests, setRequests] = useState<Request[]>([])
@@ -782,6 +783,16 @@ export default function FriendsPage() {
               }`}
             >
               储物箱
+            </button>
+            <button
+              onClick={() => setMode('plans')}
+              className={`pb-2.5 text-sm transition flex items-center gap-1.5 ${
+                mode === 'plans'
+                  ? 'border-b-2 border-[#d97757] text-[#d97757] font-medium'
+                  : 'text-[#8a827a] hover:text-[#2b2620]'
+              }`}
+            >
+              计划书
             </button>
           </div>
         </header>
@@ -1457,9 +1468,12 @@ export default function FriendsPage() {
               )}
             </div>
           </div>
-        ) : (
+        ) : mode === 'vault' ? (
           /* 储物箱：号主私有文件（≤10MB，按类别归档） */
           <VaultView userId={meId} />
+        ) : (
+          /* 计划书：计划 / 目标 / 待办任务 */
+          <PlansView userId={meId} />
         )}
       </div>
     </div>
