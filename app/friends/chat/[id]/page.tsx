@@ -223,7 +223,7 @@ function ChatInner() {
             className="flex-1 px-4 py-2.5 rounded-full border border-[var(--accent-line)] bg-[var(--accent-soft)] text-sm text-[#2b2620] focus:outline-none focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent)]/10 transition placeholder:text-[var(--accent-muted)]"
             maxLength={500}
           />
-          <EmojiPicker onPick={insertEmoji} align="right" />
+          <EmojiPicker onPick={insertEmoji} align="right" size="md" />
           <button
             type="submit"
             disabled={sending || !content.trim()}

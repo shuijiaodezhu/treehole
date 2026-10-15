@@ -32,20 +32,53 @@ const GROUPS: { name: string; emojis: string[] }[] = [
   },
 ]
 
+/** 自绘的可爱笑脸（用 currentColor，跟着页面主色走，不依赖系统 emoji 字体） */
+function CuteFace({ className = '' }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      {/* 脸 */}
+      <circle cx="12" cy="12" r="9.2" stroke="currentColor" strokeWidth="1.4" />
+      {/* 笑眼：细月牙（实心），比描边弧在小尺寸下更清楚 */}
+      <path d="M8.4 10.5A1.2 1.05 0 0 1 10.8 10.5A1.2 0.35 0 0 0 8.4 10.5Z" fill="currentColor" />
+      <path d="M13.2 10.5A1.2 1.05 0 0 1 15.6 10.5A1.2 0.35 0 0 0 13.2 10.5Z" fill="currentColor" />
+      {/* 嘴 */}
+      <path
+        d="M9 14.2A3 1.35 0 0 0 15 14.2"
+        stroke="currentColor"
+        strokeWidth="1.15"
+        strokeLinecap="round"
+      />
+      {/* 腮红 */}
+      <circle cx="6.9" cy="13" r="0.85" fill="currentColor" opacity="0.32" />
+      <circle cx="17.1" cy="13" r="0.85" fill="currentColor" opacity="0.32" />
+    </svg>
+  )
+}
+
+/** 触发按钮尺寸：sm 用于表单行，md 用于和圆形发送键并排 */
+const TRIGGER = {
+  sm: { box: 'h-8 w-8', icon: 'h-[18px] w-[18px]' },
+  md: { box: 'h-11 w-11', icon: 'h-6 w-6' },
+} as const
+
 export function EmojiPicker({
   onPick,
   className = '',
   align = 'left',
+  size = 'sm',
 }: {
   /** 选中一个表情时回调（调用方负责插进输入框） */
   onPick: (emoji: string) => void
   className?: string
   /** 面板对齐方向：输入框在屏幕右侧时用 right，避免溢出 */
   align?: 'left' | 'right'
+  /** sm = 表单行里的紧凑尺寸；md = 与 44px 圆形发送键并排 */
+  size?: keyof typeof TRIGGER
 }) {
   const [open, setOpen] = useState(false)
   const [group, setGroup] = useState(0)
   const boxRef = useRef<HTMLDivElement>(null)
+  const t = TRIGGER[size]
 
   // 点外面 / 按 Esc 关闭
   useEffect(() => {
@@ -66,33 +99,48 @@ export function EmojiPicker({
 
   return (
     <div ref={boxRef} className={`relative flex-shrink-0 ${className}`}>
+      {/*
+        触发按钮：软圆底 + 淡描边，和输入框/发送键同一套语言
+        展开时底色变实、图标轻轻放大一点，算个小小的「回应」
+      */}
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
         aria-label="插入表情"
         title="插入表情"
         aria-expanded={open}
-        className={`flex h-8 w-8 items-center justify-center rounded-full transition ${
-          open ? 'bg-[var(--accent-soft)] text-[var(--accent-deep)]' : 'text-[var(--accent-muted)] hover:bg-[var(--accent-soft)] hover:text-[var(--accent-deep)]'
+        className={`flex ${t.box} items-center justify-center rounded-full border transition-all duration-200 ${
+          open
+            ? 'border-[var(--accent)] bg-[var(--accent)] text-white shadow-[0_4px_12px_rgba(0,0,0,0.08)]'
+            : 'border-[var(--accent-line)] bg-[var(--accent-soft)] text-[var(--accent-deep)] hover:-translate-y-0.5 hover:border-[var(--accent-light)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.06)]'
         }`}
       >
-        <span className="text-base leading-none">😊</span>
+        <CuteFace className={`${t.icon} transition-transform duration-200 ${open ? 'scale-110' : ''}`} />
       </button>
 
       {open && (
         <div
-          className={`absolute bottom-full z-40 mb-2 w-64 overflow-hidden rounded-2xl border border-[var(--accent-line)] bg-white shadow-xl ${
+          className={`absolute bottom-full z-40 mb-3 w-72 overflow-hidden rounded-3xl border border-[var(--accent-line)] bg-white shadow-[0_12px_36px_rgba(0,0,0,0.12)] ${
             align === 'right' ? 'right-0' : 'left-0'
           }`}
         >
-          <div className="flex gap-1 border-b border-[#f7f0e8] px-2 py-1.5">
+          {/* 小尖角，视觉上连回按钮 */}
+          <span
+            className={`absolute -bottom-1.5 h-3 w-3 rotate-45 border-b border-r border-[var(--accent-line)] bg-white ${
+              align === 'right' ? 'right-3' : 'left-3'
+            }`}
+          />
+
+          <div className="flex gap-1 border-b border-[var(--accent-line)] bg-[var(--accent-soft)] px-2.5 py-2">
             {GROUPS.map((g, i) => (
               <button
                 key={g.name}
                 type="button"
                 onClick={() => setGroup(i)}
-                className={`rounded-lg px-2 py-1 text-[10px] transition ${
-                  i === group ? 'bg-[var(--accent-soft)] text-[var(--accent-deep)] font-medium' : 'text-[var(--accent-muted)] hover:bg-[var(--accent-soft)]'
+                className={`rounded-full px-2.5 py-1 text-[10px] transition ${
+                  i === group
+                    ? 'bg-white font-medium text-[var(--accent-deep)] shadow-sm'
+                    : 'text-[var(--accent-muted)] hover:bg-white/70'
                 }`}
               >
                 {g.name}
@@ -100,21 +148,21 @@ export function EmojiPicker({
             ))}
           </div>
 
-          <div className="grid max-h-44 grid-cols-8 gap-0.5 overflow-y-auto p-2">
+          <div className="grid max-h-48 grid-cols-8 gap-1 overflow-y-auto p-2.5">
             {GROUPS[group].emojis.map((emoji) => (
               <button
                 key={emoji}
                 type="button"
                 onClick={() => onPick(emoji)}
-                className="flex h-7 w-7 items-center justify-center rounded-lg text-base transition hover:bg-[var(--accent-soft)]"
+                className="flex h-7 w-7 items-center justify-center rounded-full text-lg leading-none transition duration-150 hover:scale-125 hover:bg-[var(--accent-soft)]"
               >
                 {emoji}
               </button>
             ))}
           </div>
 
-          <p className="border-t border-[#f7f0e8] px-3 py-1.5 text-[9px] text-[#c0b0a0]">
-            点一下就插到输入框末尾
+          <p className="border-t border-[var(--accent-line)] px-3.5 py-2 text-[9px] text-[var(--accent-muted)]">
+            点一下就插到光标处
           </p>
         </div>
       )}

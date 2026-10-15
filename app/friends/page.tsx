@@ -1048,7 +1048,7 @@ export default function FriendsPage() {
                       className="flex-1 px-4 py-2.5 rounded-full border border-[var(--accent-line)] bg-[var(--accent-soft)] text-sm focus:outline-none focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent)]/10 transition"
                       maxLength={500}
                     />
-                    <EmojiPicker onPick={(emoji) => setContent((cur) => cur + emoji)} align="right" />
+                    <EmojiPicker onPick={(emoji) => setContent((cur) => cur + emoji)} align="right" size="md" />
                     <button
                       type="submit"
                       disabled={sending || !content.trim()}
