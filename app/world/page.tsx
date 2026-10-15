@@ -13,6 +13,7 @@ import { useFavorites } from '../../components/favorites'
 import { useDeleteContent } from '../../components/delete-content'
 import { useBlocks } from '../../components/blocks'
 import { useEditContent } from '../../components/edit-content'
+import { HashtagList } from '../../components/hashtags'
 
 // 客户端提到模块级，保证引用稳定
 const supabase = createClient()
@@ -757,6 +758,9 @@ export default function WorldPage() {
                       </p>
                     )}
 
+                    {/* 正文里的话题标签 */}
+                    <HashtagList content={post.content} className="mt-2 pl-1" />
+
                     <div className="flex items-center gap-4 pl-1 pt-3 mt-3 border-t border-[#e0eed0]">
                       <button
                         onClick={() => handleLike(post.id, post.liked_by_me)}
@@ -1115,7 +1119,7 @@ export default function WorldPage() {
               </select>
               <p className="text-[10px] text-[#9aa88a] mt-1.5">这条会发到「<span className="text-[#5a8a4a]">{selectedCategoryName}</span>」</p>
             </div>
-            <textarea value={postContent} onChange={(e) => setPostContent(e.target.value)} placeholder="写点什么..." rows={5} maxLength={500} autoFocus className="w-full px-4 py-3 rounded-xl border border-[#d8e8c8] bg-[#f8fcf4] text-sm resize-none focus:outline-none focus:border-[#7ea86a] focus:ring-2 focus:ring-[#7ea86a]/10 transition mb-4" />
+            <textarea value={postContent} onChange={(e) => setPostContent(e.target.value)} placeholder="写点什么… 用 #话题# 加标签" rows={5} maxLength={500} autoFocus className="w-full px-4 py-3 rounded-xl border border-[#d8e8c8] bg-[#f8fcf4] text-sm resize-none focus:outline-none focus:border-[#7ea86a] focus:ring-2 focus:ring-[#7ea86a]/10 transition mb-4" />
             <div className="flex items-center justify-between mb-5">
               <label className="flex items-center gap-2 text-sm text-[#3a4a2a] cursor-pointer">
                 <input type="checkbox" checked={isAnonymous} onChange={(e) => setIsAnonymous(e.target.checked)} className="accent-[#7ea86a]" />

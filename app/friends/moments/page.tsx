@@ -9,6 +9,7 @@ import { useFavorites } from '../../../components/favorites'
 import { useDeleteContent } from '../../../components/delete-content'
 import { useBlocks } from '../../../components/blocks'
 import { useEditContent } from '../../../components/edit-content'
+import { HashtagList } from '../../../components/hashtags'
 import { Icon } from '../../../components/icons'
 import {
   VISIBILITY_HINT,
@@ -267,7 +268,7 @@ export default function MomentsPage() {
               <textarea
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
-                placeholder="说点什么，只有好友看得到..."
+                placeholder="说点什么… 用 #话题# 加标签"
                 rows={3}
                 className="w-full px-4 py-3 rounded-xl border border-[#ece6dd] bg-[#fefcf9] text-sm text-[#2b2620] resize-none focus:outline-none focus:border-[#d97757] focus:ring-2 focus:ring-[#d97757]/10 transition placeholder:text-[#c0b8ae]"
                 maxLength={500}
@@ -463,6 +464,12 @@ export default function MomentsPage() {
                       )}
                     </p>
                   )}
+
+                  <HashtagList
+                    content={post.content}
+                    className="mt-2 pl-1"
+                    chipClassName="rounded-full bg-[#fbeee4] px-2 py-0.5 text-[11px] text-[#c96447] hover:bg-[#f7e2d3] transition"
+                  />
 
                   {/* 收藏 / 删除自己发的 */}
                   <div className="mt-3 pt-3 border-t border-[#f2ece4] flex items-center justify-end gap-4">

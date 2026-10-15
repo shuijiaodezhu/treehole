@@ -7,6 +7,7 @@ import { createClient } from '../lib/supabase'
 import { Icon } from '../../components/icons'
 import { avatarFallback } from '../../components/utils'
 import { useBlocks } from '../../components/blocks'
+import { useFocusQuery } from '../../components/use-focus-query'
 
 /** 客户端单例 */
 const supabase = createClient()
@@ -88,6 +89,15 @@ export default function SearchPage() {
 
   // 拉黑：搜索结果里排除被拉黑（含拉黑我的）的人及其内容
   const blocks = useBlocks(meId)
+
+  // 从话题标签点进来：/search?q=%23音乐%23 直接带出关键词
+  const queryFromUrl = useFocusQuery('q')
+  useEffect(() => {
+    if (!queryFromUrl) return
+    // rAF 推迟，避开「effect 内同步 setState」
+    const frame = window.requestAnimationFrame(() => setKeyword(queryFromUrl))
+    return () => window.cancelAnimationFrame(frame)
+  }, [queryFromUrl])
 
   /* ---------- 登录校验 ---------- */
   useEffect(() => {
