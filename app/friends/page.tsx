@@ -10,8 +10,9 @@ import { markModuleSeen } from '../../components/module-badges'
 import { ChatMessages } from '../../components/chat-bubbles'
 import { useChatRealtime } from '../../components/chat-realtime'
 import { useTypingIndicator } from '../../components/chat-typing'
-import { AffinityScore, readAffinityHidden, useAffinity } from '../../components/affinity'
-import { StatusLabel, useStatusText } from '../../components/status'
+import { AffinityScore, readAffinityHidden, useAffinity, useAffinityMap } from '../../components/affinity'
+import { StatusLabel, useStatusMap, useStatusText } from '../../components/status'
+import { Icon } from '../../components/icons'
 import { checkRate, filterHint, filterText, noteSent } from '../../components/content-guard'
 import { useBlocks } from '../../components/blocks'
 import { ImagePicker } from '../../components/media'
@@ -263,6 +264,10 @@ export default function FriendsPage() {
     [sortedFriends, hidden],
   )
 
+  // 列表里要显示「状态 + 好感度」：一次批量取回，不给每个好友各发一个请求
+  const friendStatusMap = useStatusMap(shownFriends.map((f) => f.friend_id))
+  const { scores: affinityScores, refresh: refreshAffinity } = useAffinityMap(meId)
+
   useEffect(() => {
     // loadAll 是函数声明（提升），此处引用安全；规则无法识别
     // eslint-disable-next-line react-hooks/immutability
@@ -496,6 +501,7 @@ export default function FriendsPage() {
     } else {
       noteSent('message')
       stopTyping()
+      refreshAffinity()
       if (filtered.hits.length > 0) alert(filterHint(filtered.hits))
       await loadMessages(conversationId)
     }
@@ -1041,9 +1047,25 @@ export default function FriendsPage() {
                               )}
                             </div>
                             <div className="flex-1 min-w-0">
-                              <p className="text-sm font-medium text-[#2b2620] truncate">
-                                {f.nickname || f.username}
-                              </p>
+                              {/* 昵称 + 状态 + 好感度：都在同一行，小字，不抢注意力 */}
+                              <div className="flex min-w-0 items-center gap-1.5">
+                                {/* min-w-0 不能省：flex 子项默认不会压到内容宽度以下，
+                                    少了它长昵称不会出省略号，而是把状态和数字挤出可视区 */}
+                                <p className="min-w-0 text-sm font-medium text-[#2b2620] truncate">
+                                  {f.nickname || f.username}
+                                </p>
+                                {friendStatusMap[f.friend_id] && (
+                                  <span className="flex-shrink-0 font-serif-cn text-[10px] leading-none text-[var(--accent)]">
+                                    {friendStatusMap[f.friend_id]}
+                                  </span>
+                                )}
+                                {!affinityHidden && (affinityScores[f.friend_id] ?? 0) > 0 && (
+                                  <span className="flex flex-shrink-0 items-center gap-0.5 font-serif-cn text-[10px] leading-none text-[var(--accent-light)]">
+                                    <Icon name="heart" className="h-2.5 w-2.5" />
+                                    {affinityScores[f.friend_id]}
+                                  </span>
+                                )}
+                              </div>
                               {f.signature && (
                                 <p className="text-[10px] text-[var(--accent-muted)] truncate">{f.signature}</p>
                               )}

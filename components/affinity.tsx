@@ -100,6 +100,51 @@ export function useAffinity(meId: string | null, friendId: string | null): Affin
   }
 }
 
+/**
+ * 一次取回「我对所有好友」的好感度（好友列表要用）
+ *
+ * 只查 from_id = 我 这一侧：列表里显示的是"我对他的好感"，
+ * 别人的那一侧受隐私限制（他没公开就读不到），列表里也不该显示。
+ * 表还没建时不报错，返回空表即可。
+ */
+export function useAffinityMap(meId: string | null): {
+  scores: Record<string, number>
+  refresh: () => void
+} {
+  const [scores, setScores] = useState<Record<string, number>>({})
+  const [reloadKey, setReloadKey] = useState(0)
+
+  useEffect(() => {
+    if (!meId) return
+    let cancelled = false
+    void (async () => {
+      const { data, error } = await supabase
+        .from('affinity')
+        .select('to_id, score')
+        .eq('from_id', meId)
+
+      if (cancelled) return
+      if (error) {
+        if (!/does not exist|PGRST205|schema cache|404/i.test(error.message)) {
+          console.error('批量读好感度失败:', error)
+        }
+        return
+      }
+
+      const next: Record<string, number> = {}
+      for (const row of (data ?? []) as { to_id: string; score: number }[]) {
+        next[row.to_id] = row.score
+      }
+      setScores(next)
+    })()
+    return () => {
+      cancelled = true
+    }
+  }, [meId, reloadKey])
+
+  return { scores, refresh: useCallback(() => setReloadKey((k) => k + 1), []) }
+}
+
 /** 本地偏好：关掉之后聊天抬头就不显示好感度（默认开） */
 const HIDE_KEY = (uid: string) => `treehole:affinity:hidden:${uid}`
 

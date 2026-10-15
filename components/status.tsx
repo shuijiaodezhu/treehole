@@ -136,6 +136,43 @@ export function useStatusEditor(userId: string | null) {
   return { text, setText, loading, saving, hint, missing, save }
 }
 
+/**
+ * 一次取回一批人的状态（好友列表要用）
+ *
+ * 为什么要批量：列表里可能有几十个好友，一人一次请求就太浪费了。
+ * 用 join 出来的 id 串当依赖，避免数组每次渲染都是新对象导致重复请求。
+ */
+export function useStatusMap(userIds: string[]): Record<string, string> {
+  const [map, setMap] = useState<Record<string, string>>({})
+  const key = userIds.filter(Boolean).join(',')
+
+  useEffect(() => {
+    if (!key) return
+    let cancelled = false
+    void (async () => {
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('id, status_text')
+        .in('id', key.split(','))
+      if (cancelled) return
+      if (error) {
+        if (!/status_text|column/i.test(error.message)) console.error('批量读状态失败:', error)
+        return
+      }
+      const next: Record<string, string> = {}
+      for (const row of (data ?? []) as { id: string; status_text: string | null }[]) {
+        if (row.status_text) next[row.id] = cleanStatus(row.status_text)
+      }
+      setMap(next)
+    })()
+    return () => {
+      cancelled = true
+    }
+  }, [key])
+
+  return map
+}
+
 /** 聊天抬头里那一小截：只有字，没有底、没有框 */
 export function StatusLabel({ text }: { text: string | null }) {
   if (!text) return null
