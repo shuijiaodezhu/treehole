@@ -1,0 +1,345 @@
+'use client'
+
+import { useCallback, useEffect, useState } from 'react'
+import { createClient } from '../app/lib/supabase'
+import { Icon } from './icons'
+
+/**
+ * 好感度（互动值）
+ *
+ * 机制（与 supabase-affinity.sql 一致）：
+ *   · **有向**：从「我」到「你」。我跟你聊得越多，我对你的好感越高
+ *   · **只增不减**：不做抖音火花那种「断了就消失」，不构成负担
+ *   · 增长来源：私信 +1/条（每天最多 +20）、给 TA 朋友圈点赞 +2（每天最多 +10）
+ *   · **默认只有自己看得到**；想让对方看到，去设置里开（profiles.affinity_public）
+ *
+ * 段位用的是"熟人感"的说法，不用"等级 Lv.5"那种游戏腔——
+ * 这个站整体是安静的语气，数字只是留个痕迹，不该变成竞技场。
+ */
+
+const supabase = createClient()
+
+export type AffinityTier = { at: number; name: string }
+
+/** 阈值从低到高；数字只是分界，名字才是给人看的 */
+export const AFFINITY_TIERS: AffinityTier[] = [
+  { at: 0, name: '陌生' },
+  { at: 10, name: '眼熟' },
+  { at: 30, name: '聊得来' },
+  { at: 80, name: '熟络' },
+  { at: 200, name: '老朋友' },
+  { at: 500, name: '知己' },
+  { at: 1000, name: '生死之交' },
+]
+
+export function tierOf(score: number): AffinityTier {
+  let current = AFFINITY_TIERS[0]
+  for (const t of AFFINITY_TIERS) {
+    if (score >= t.at) current = t
+    else break
+  }
+  return current
+}
+
+/** 距下一段还差多少；已经满级返回 null */
+export function nextTier(score: number): { name: string; need: number } | null {
+  for (const t of AFFINITY_TIERS) {
+    if (score < t.at) return { name: t.name, need: t.at - score }
+  }
+  return null
+}
+
+export type AffinityState = {
+  /** 我对 TA 的好感度 */
+  mine: number | null
+  /** TA 对我的（他没公开的话是 null） */
+  theirs: number | null
+  loading: boolean
+  /** 表还没建时不报错，只是不显示 */
+  missing: boolean
+  refresh: () => void
+}
+
+export function useAffinity(meId: string | null, friendId: string | null): AffinityState {
+  /*
+   * 取回来的数带着「这是哪一对」的标记（pairKey）。
+   * 这样两件事都不用额外处理：
+   *   · 换好友时，旧分数因为 key 对不上直接不显示（不会闪一下别人的数）
+   *   · effect 里不需要同步 setState 去清空（那条会触发 react-hooks/set-state-in-effect）
+   */
+  const [fetched, setFetched] = useState<{
+    pairKey: string
+    mine: number
+    theirs: number | null
+  } | null>(null)
+  const [loading, setLoading] = useState(false)
+  const [missing, setMissing] = useState(false)
+  const [reloadKey, setReloadKey] = useState(0)
+
+  const pairKey = meId && friendId ? `${meId}:${friendId}` : null
+
+  useEffect(() => {
+    if (!meId || !friendId || !pairKey) return
+
+    let cancelled = false
+    void (async () => {
+      setLoading(true)
+      // 一次查两个方向：我→TA 永远读得到；TA→我 读不到就是没公开（RLS 会过滤掉）
+      const { data, error } = await supabase
+        .from('affinity')
+        .select('from_id, to_id, score')
+        .or(
+          `and(from_id.eq.${meId},to_id.eq.${friendId}),and(from_id.eq.${friendId},to_id.eq.${meId})`,
+        )
+
+      if (cancelled) return
+
+      if (error) {
+        // 表还没建：不吵，安静地不显示
+        if (/does not exist|PGRST205|schema cache|404/i.test(error.message)) setMissing(true)
+        else console.error('读好感度失败:', error)
+        setLoading(false)
+        return
+      }
+
+      setMissing(false)
+      const rows = (data ?? []) as { from_id: string; to_id: string; score: number }[]
+      setFetched({
+        pairKey,
+        mine: rows.find((r) => r.from_id === meId)?.score ?? 0,
+        theirs: rows.find((r) => r.from_id === friendId)?.score ?? null,
+      })
+      setLoading(false)
+    })()
+
+    return () => {
+      cancelled = true
+    }
+  }, [meId, friendId, pairKey, reloadKey])
+
+  // key 对不上就当没有（换人了 / 还没回来）
+  const fresh = fetched && fetched.pairKey === pairKey ? fetched : null
+
+  return {
+    mine: pairKey ? (fresh?.mine ?? null) : null,
+    theirs: pairKey ? (fresh?.theirs ?? null) : null,
+    loading,
+    missing,
+    refresh: useCallback(() => setReloadKey((k) => k + 1), []),
+  }
+}
+
+/** 本地偏好：关掉之后聊天抬头就不显示好感度（默认开） */
+const HIDE_KEY = (uid: string) => `treehole:affinity:hidden:${uid}`
+
+export function readAffinityHidden(uid: string): boolean {
+  try {
+    return window.localStorage.getItem(HIDE_KEY(uid)) === '1'
+  } catch {
+    return false
+  }
+}
+
+export function writeAffinityHidden(uid: string, hidden: boolean): void {
+  try {
+    window.localStorage.setItem(HIDE_KEY(uid), hidden ? '1' : '0')
+  } catch {
+    /* 隐私模式忽略 */
+  }
+}
+
+/**
+ * 设置页里的一节：两个开关
+ *
+ *   · 显示好感度（**只是本机偏好**，放 localStorage）—— 关掉后聊天抬头不再显示
+ *   · 让 TA 看到我对 TA 的好感度（**写进 profiles.affinity_public**，默认关）
+ *
+ * 分开两个开关是有意的：「我不想看」和「我不想被看」是两件事。
+ */
+export function AffinitySettingsSection({ userId }: { userId: string | null }) {
+  const [hidden, setHidden] = useState(false)
+  const [isPublic, setIsPublic] = useState(false)
+  const [loading, setLoading] = useState(true)
+  const [saving, setSaving] = useState(false)
+  const [hint, setHint] = useState('')
+  const [missing, setMissing] = useState(false)
+
+  useEffect(() => {
+    if (!userId) return
+    let cancelled = false
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setHidden(readAffinityHidden(userId))
+    void (async () => {
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('affinity_public')
+        .eq('id', userId)
+        .maybeSingle()
+      if (cancelled) return
+      if (error) {
+        if (/affinity_public|column/i.test(error.message)) setMissing(true)
+        else console.error('读好感度开关失败:', error)
+      } else {
+        setIsPublic(Boolean((data as { affinity_public?: boolean } | null)?.affinity_public))
+      }
+      setLoading(false)
+    })()
+    return () => {
+      cancelled = true
+    }
+  }, [userId])
+
+  async function togglePublic(next: boolean) {
+    if (!userId) return
+    setSaving(true)
+    setHint('')
+    setIsPublic(next)
+    const { data, error } = await supabase
+      .from('profiles')
+      .update({ affinity_public: next })
+      .eq('id', userId)
+      .select('id')
+    setSaving(false)
+
+    if (error || !data || data.length === 0) {
+      setIsPublic(!next)
+      setHint(
+        /affinity_public|column/i.test(error?.message ?? '')
+          ? '这个开关还没开通：先在 Supabase 里执行 supabase-affinity.sql'
+          : '没能保存：' + (error?.message ?? '没有权限'),
+      )
+      return
+    }
+    setHint(next ? '已开启：对方能看到你对他的好感度' : '已关闭：只有你自己看得到')
+  }
+
+  return (
+    <section className="rounded-3xl border border-[var(--accent-line)] bg-white/80 backdrop-blur p-6 shadow-[0_2px_12px_rgba(217,119,87,0.04)]">
+      <div className="flex items-center gap-3">
+        <div className="flex h-9 w-9 items-center justify-center rounded-full bg-[var(--accent-soft)]">
+          <Icon name="heart" className="h-4 w-4 text-[var(--accent-deep)]" />
+        </div>
+        <div className="min-w-0 flex-1">
+          <h2 className="text-sm font-semibold text-[#2b2430]">好感度</h2>
+          <p className="mt-0.5 text-[11px] leading-relaxed text-[var(--accent-muted)]">
+            你和每个朋友来往留下的痕迹：聊天、点赞都会加一点，**只增不减**，
+            不催你天天说话。
+          </p>
+        </div>
+      </div>
+
+      <div className="mt-5 space-y-4">
+        {/* 本机偏好 */}
+        <label className="flex items-start gap-3 cursor-pointer">
+          <input
+            type="checkbox"
+            checked={!hidden}
+            onChange={(e) => {
+              if (!userId) return
+              const nextHidden = !e.target.checked
+              setHidden(nextHidden)
+              writeAffinityHidden(userId, nextHidden)
+            }}
+            className="mt-0.5 h-4 w-4 accent-[var(--accent)]"
+          />
+          <span className="min-w-0">
+            <span className="block text-xs font-medium text-[#2b2430]">在聊天里显示好感度</span>
+            <span className="mt-0.5 block text-[10.5px] leading-relaxed text-[var(--accent-muted)]">
+              只是你自己这台设备上的显示偏好。关掉之后，聊天抬头不再出现那个段位。
+            </span>
+          </span>
+        </label>
+
+        {/* 是否让对方看到 */}
+        <label className="flex items-start gap-3 cursor-pointer">
+          <input
+            type="checkbox"
+            checked={isPublic}
+            disabled={loading || saving || missing}
+            onChange={(e) => void togglePublic(e.target.checked)}
+            className="mt-0.5 h-4 w-4 accent-[var(--accent)] disabled:opacity-50"
+          />
+          <span className="min-w-0">
+            <span className="block text-xs font-medium text-[#2b2430]">
+              让朋友看到我对他的好感度
+            </span>
+            <span className="mt-0.5 block text-[10.5px] leading-relaxed text-[var(--accent-muted)]">
+              默认关闭：**只有你自己看得到**。开启后，对方在聊天抬头能看到你那一侧的分数；
+              其他人任何时候都看不到。
+            </span>
+          </span>
+        </label>
+
+        {missing && (
+          <p className="rounded-xl border border-[var(--accent-line)] bg-[var(--accent-soft)] px-3 py-2 text-[10.5px] leading-relaxed text-[var(--accent-muted)]">
+            好感度还没开通：先在 Supabase 里执行 <code>supabase-affinity.sql</code>。
+            （没跑也不影响别的功能，只是不显示这个数）
+          </p>
+        )}
+        {hint && <p className="text-[10.5px] text-[var(--accent-muted)]">{hint}</p>}
+      </div>
+    </section>
+  )
+}
+/**
+ * 聊天抬头那一小行：段位 + 分数
+ *
+ * 刻意做得不显眼：小字、低对比，不抢聊天的注意力。
+ * 鼠标停上去才展开一句解释（增长方式与每日上限）。
+ */
+export function AffinityChip({
+  affinity,
+  friendName,
+}: {
+  affinity: AffinityState
+  friendName: string
+}) {
+  const [tip, setTip] = useState(false)
+
+  if (affinity.missing || affinity.mine === null) return null
+
+  const tier = tierOf(affinity.mine)
+  const next = nextTier(affinity.mine)
+
+  return (
+    <span className="relative inline-flex items-center">
+      <button
+        type="button"
+        onMouseEnter={() => setTip(true)}
+        onMouseLeave={() => setTip(false)}
+        onFocus={() => setTip(true)}
+        onBlur={() => setTip(false)}
+        className="rounded-full bg-[var(--accent-soft)] px-2 py-0.5 font-serif-cn text-[10px] text-[var(--accent-deep)] transition hover:bg-[var(--accent-line)]"
+      >
+        {tier.name}
+        <span className="ml-1 text-[var(--accent-light)]">{affinity.mine}</span>
+      </button>
+
+      {tip && (
+        <span className="absolute left-0 top-full z-30 mt-1.5 w-56 rounded-xl border border-[var(--accent-line)] bg-white/95 px-3 py-2.5 text-left font-serif-cn text-[10.5px] leading-relaxed text-[var(--accent-muted)] shadow-[0_12px_32px_rgba(217,119,87,0.16)] backdrop-blur">
+          你和 {friendName} 的来往留下的痕迹。
+          <br />
+          聊一句 +1（每天最多 20），给他的朋友圈点个赞 +2（每天最多 10）。
+          <br />
+          <span className="text-[var(--accent-deep)]">不会减少，也不催你天天说话。</span>
+          {affinity.theirs !== null && (
+            <>
+              <br />
+              <span className="text-[var(--accent-light)]">
+                （他对你：{tierOf(affinity.theirs).name} {affinity.theirs}）
+              </span>
+            </>
+          )}
+          {next && (
+            <>
+              <br />
+              <span className="text-[var(--accent-light)]">
+                再 +{next.need} 到「{next.name}」
+              </span>
+            </>
+          )}
+        </span>
+      )}
+    </span>
+  )
+}

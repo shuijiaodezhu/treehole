@@ -10,6 +10,7 @@ import { markModuleSeen } from '../../components/module-badges'
 import { ChatMessages } from '../../components/chat-bubbles'
 import { useChatRealtime } from '../../components/chat-realtime'
 import { useTypingIndicator } from '../../components/chat-typing'
+import { AffinityChip, readAffinityHidden, useAffinity } from '../../components/affinity'
 import { checkRate, filterHint, filterText, noteSent } from '../../components/content-guard'
 import { useBlocks } from '../../components/blocks'
 import { ImagePicker } from '../../components/media'
@@ -298,6 +299,15 @@ export default function FriendsPage() {
     meId,
     currentFriend?.friend_id ?? null,
   )
+
+  // 好感度（互动值）：默认只有自己看得到
+  const affinity = useAffinity(meId, currentFriend?.friend_id ?? null)
+  const [affinityHidden, setAffinityHidden] = useState(false)
+  useEffect(() => {
+    if (!meId) return
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setAffinityHidden(readAffinityHidden(meId))
+  }, [meId])
 
   useChatRealtime(conversationId, handleIncoming, () => {
     // loadMessages 是函数声明（提升），此处引用安全；规则无法识别
@@ -1077,6 +1087,9 @@ export default function FriendsPage() {
                       <h2 className="text-sm font-semibold text-[#2b2620] truncate">
                         {friendName}
                       </h2>
+                      {!affinityHidden && (
+                        <AffinityChip affinity={affinity} friendName={friendName} />
+                      )}
                       {friendTyping && (
                         <span className="font-serif-cn text-[10.5px] text-[var(--accent-light)]">
                           正在输入…

@@ -8,6 +8,7 @@ import { EmojiPicker, useEmojiInsert } from '../../../../components/emoji-picker
 import { ChatMessages } from '../../../../components/chat-bubbles'
 import { useChatRealtime } from '../../../../components/chat-realtime'
 import { useTypingIndicator } from '../../../../components/chat-typing'
+import { AffinityChip, readAffinityHidden, useAffinity } from '../../../../components/affinity'
 import { pageAccentVars } from '../../../../components/theme'
 
 type Message = {
@@ -65,6 +66,15 @@ function ChatInner() {
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [messages])
+
+  // 好感度（互动值）
+  const affinity = useAffinity(meId, friendId)
+  const [affinityHidden, setAffinityHidden] = useState(false)
+  useEffect(() => {
+    if (!meId) return
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setAffinityHidden(readAffinityHidden(meId))
+  }, [meId])
 
   // 「对方正在输入…」（Presence，不需要 SQL）
   const { friendTyping, reportTyping, stopTyping } = useTypingIndicator(conversationId, meId, friendId)
@@ -186,6 +196,7 @@ function ChatInner() {
             <span className="text-sm text-[var(--accent-deep)] font-semibold">{friendName[0]}</span>
           </div>
           <h1 className="text-sm font-semibold text-[#2b2620]">{friendName}</h1>
+          {!affinityHidden && <AffinityChip affinity={affinity} friendName={friendName} />}
           {friendTyping && (
             <span className="font-serif-cn text-[10.5px] text-[var(--accent-light)]">正在输入…</span>
           )}
