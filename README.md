@@ -8,9 +8,11 @@
 ## 本地跑起来
 
 ```bash
-pnpm install
-pnpm dev          # http://localhost:3000
+npm install
+npm run dev      # http://localhost:3000
 ```
+
+（项目用的是 **npm**，锁文件是 `package-lock.json`。）
 
 Supabase 的地址与 publishable key 有**两份来源**：优先读环境变量，
 读不到就用 `app/lib/supabase.ts` 里写好的默认值。
@@ -74,14 +76,25 @@ select tablename, rowsecurity from pg_tables where schemaname = 'public' order b
 
 ## 部署
 
-Vercel 直接连这个仓库即可。环境变量：
+**看 [`docs/部署步骤.md`](docs/部署步骤.md)。** 简要版：
+
+从这台机器测出来 **github.com 不通（连接被重置）**，所以「推 GitHub → Vercel 自动拉取」
+那条路走不通。改用 Vercel 官方 CLI，**把本地文件直接传上去，不需要 GitHub**：
+
+```bash
+npx vercel login          # 选「Continue with Email」，不要选 GitHub（那个要连 github.com）
+npx vercel                # 第一次：一路回车
+npx vercel --prod         # 发布到正式环境，拿到域名
+```
+
+环境变量（在 Vercel 网页里设，或用 `npx vercel env add`）：
 
 ```
 NEXT_PUBLIC_SITE_URL=https://你的域名
 ```
 
-部署后记得回 Supabase 的 **Redirect URLs** 把正式域名加进去，
-否则找回密码的链接会跳到 localhost。
+> ⚠️ 因为推不上 GitHub，**代码目前只在本机**。等网络能连上时记得 `git push` 一次，
+> 否则硬盘坏了就没了。
 
 ---
 
