@@ -311,146 +311,139 @@ export default function HomePage() {
         </div>
       )}
 
-      {/* ── 桌面 ── */}
-      <main className="mx-auto w-full max-w-6xl px-5 py-10 sm:px-8 lg:py-14">
-        <div className="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1.35fr)_minmax(0,1fr)] lg:gap-10">
-          {/* ══ 左栏 ══ */}
-          <div className="flex flex-col gap-6 lg:gap-8">
-            {/* 信纸：标题＝信头 */}
-            <section className="rounded-2xl border border-[#ece0cd] bg-[#fdf9f2] lg:-rotate-1 px-7 py-9 shadow-[0_28px_60px_-40px_rgba(90,64,52,0.5)] sm:px-10 sm:py-11">
-              <h1 className="dsh-hero-title font-brush text-[38px] leading-[1.05] tracking-[0.03em] sm:text-[44px]">
-                你的来信
-              </h1>
-              <p className="mt-2 text-[11.5px] tracking-[0.18em] text-[#a2937f]">
-                DEAR YOU · {dateText}
+      {/* ── 桌面：一摞东西（lg 以上互相压着，手机上干净竖列）── */}
+      <main className="mx-auto w-full max-w-3xl px-5 py-10 sm:px-8 lg:py-16">
+        <div className="flex flex-col gap-6 lg:gap-0">
+
+          {/* 信纸：标题＝信头 */}
+          <section className="rounded-2xl border border-[#ece0cd] bg-[#fdf9f2] px-7 py-9 shadow-[0_28px_60px_-40px_rgba(90,64,52,0.5)] sm:px-10 sm:py-11 lg:-rotate-1">
+            <h1 className="dsh-hero-title font-brush text-[38px] leading-[1.05] tracking-[0.03em] sm:text-[46px]">
+              你的来信
+            </h1>
+            <p className="mt-2 text-[11.5px] tracking-[0.18em] text-[#a2937f]">
+              DEAR YOU · {dateText}
+            </p>
+
+            <div className="mt-6 h-px bg-[#ece0cd]" />
+
+            {quote && (
+              <p className="mt-7 font-serif-cn text-[21px] leading-[1.95] text-[#3a2f26] sm:text-[24px]">
+                「{quote}」
               </p>
+            )}
 
-              <div className="mt-6 h-px bg-[#ece0cd]" />
+            <p className="mt-7 text-[13px] text-[#6f5d4c]">
+              {weather.city} · {weather.condition}{' '}
+              <span className="text-[#3a2f26]">{weather.temp}°</span>
+              <span className="text-[#a2937f]"> / {weather.tempMin}°</span>
+            </p>
+            <p className="mt-1.5 text-[12.5px] text-[#8a6a4a]">{weatherAdvice(weather)}</p>
 
-              {quote && (
-                <p className="mt-7 font-serif-cn text-[21px] leading-[1.95] text-[#3a2f26] sm:text-[24px]">
-                  「{quote}」
-                </p>
-              )}
+            <p className="mt-2.5 text-[12px] tracking-[0.1em] text-[#a2937f]">
+              陪你走过 {streak.days} 天
+              {streak.sinceLast <= 1 ? ' · 今天是重逢的第一天' : ` · 距上次见面 ${streak.sinceLast} 天`}
+            </p>
 
-              {/* 天气 + 短建议（拆两行，换行才不难看）*/}
-              <p className="mt-7 text-[13px] text-[#6f5d4c]">
-                {weather.city} · {weather.condition}{' '}
-                <span className="text-[#3a2f26]">{weather.temp}°</span>
-                <span className="text-[#a2937f]"> / {weather.tempMin}°</span>
-              </p>
-              <p className="mt-1.5 text-[12.5px] text-[#8a6a4a]">{weatherAdvice(weather)}</p>
+            <div className="mt-8 flex justify-end">
+              <span className="flex h-12 w-12 items-center justify-center rounded-full bg-[radial-gradient(circle_at_34%_30%,#c2674a,#a8563a)] shadow-[0_10px_20px_-10px_rgba(120,50,30,0.55)]">
+                <span className="font-brush text-[19px] leading-none text-[#fdf8f0]">来</span>
+              </span>
+            </div>
+          </section>
 
-              {/* 连续陪伴 */}
-              <p className="mt-2.5 text-[12px] tracking-[0.1em] text-[#a2937f]">
-                陪你走过 {streak.days} 天
-                {streak.sinceLast <= 1 ? ' · 今天是重逢的第一天' : ` · 距上次见面 ${streak.sinceLast} 天`}
-              </p>
+          {/* 冬日信箱：小照片，靠右，压住信纸右下角 */}
+          <section className="rounded-2xl border border-[#ece0cd] bg-white p-3 pb-3 shadow-[0_26px_58px_-40px_rgba(90,64,52,0.5)] lg:-mt-12 lg:ml-auto lg:mr-3 lg:w-[240px] lg:rotate-1">
+            <div className="rounded-lg bg-[#f8f0e4] px-2 pt-1">
+              <MailboxArt onOpen={() => setMailboxOpen(true)} />
+            </div>
+            <div className="mt-1 flex items-baseline justify-between px-1">
+              <span className="font-brush text-[17px] leading-none">冬日信箱</span>
+              <span className="text-[11px] text-[#a2937f]">点它写信</span>
+            </div>
+          </section>
 
-              {/* 蜡封 */}
-              <div className="mt-8 flex justify-end">
-                <span className="flex h-12 w-12 items-center justify-center rounded-full bg-[radial-gradient(circle_at_34%_30%,#c2674a,#a8563a)] shadow-[0_10px_20px_-10px_rgba(120,50,30,0.55)]">
-                  <span className="font-brush text-[19px] leading-none text-[#fdf8f0]">来</span>
-                </span>
-              </div>
-            </section>
-
-            {/* 好友申请（有才显示）*/}
+          {/* 好友申请 */}
+          <div className="lg:mt-8">
             <FriendRequestBanner requests={requests} />
-
-            {/* 信封：小屋 */}
-            <Link
-              href="/friends"
-              onClick={() => markModuleSeen('friends')}
-              className="group relative rounded-2xl border border-[#e3d4bd] lg:rotate-1 bg-[#f8eee2] px-7 pb-6 pt-9 shadow-[0_24px_54px_-38px_rgba(90,64,52,0.55)] transition hover:-translate-y-0.5 sm:px-9"
-            >
-              {/* V 形封盖 */}
-              <svg viewBox="0 0 100 30" preserveAspectRatio="none" aria-hidden="true"
-                   className="absolute inset-x-0 top-0 h-7 w-full">
-                <path d="M0 0 L50 26 L100 0 Z" fill="rgba(226,211,189,0.5)" />
-                <path d="M0 0 L50 26 L100 0" fill="none" stroke="#dcc9ae" strokeWidth="1.2" />
-              </svg>
-
-              <span className="flex items-baseline gap-3">
-                <span className="font-brush text-[23px] leading-none">小屋</span>
-                {badges?.friends?.count ? (
-                  <span className="whitespace-nowrap text-[12px] tabular-nums text-[#a8563a]">
-                    未读 {badges.friends.count} 封
-                  </span>
-                ) : badges?.friends?.dot ? (
-                  <span className="h-1.5 w-1.5 rounded-full bg-[#a8563a]" />
-                ) : null}
-              </span>
-              <p className="mt-2 text-[13px] text-[#8a7a68]">那几个人还在等你回话</p>
-            </Link>
-
-            {/* 便签：院子 */}
-            <Link
-              href="/world"
-              onClick={() => markModuleSeen('world')}
-              className="relative w-full rounded-lg border border-[#e4d6b8] lg:w-[220px] lg:-rotate-2 bg-[#f7efdc] px-5 py-4 shadow-[0_16px_36px_-26px_rgba(90,64,52,0.5)] transition hover:-translate-y-0.5"
-            >
-              <span className="flex items-baseline gap-2.5">
-                <span className="font-brush text-[19px] leading-none">院子</span>
-                {badges?.world?.count ? (
-                  <span className="text-[11px] tabular-nums text-[#a8563a]">{badges.world.count}</span>
-                ) : badges?.world?.dot ? (
-                  <span className="h-1.5 w-1.5 rounded-full bg-[#a8563a]" />
-                ) : null}
-              </span>
-              <p className="mt-1.5 text-[12px] text-[#8a7a68]">今晚有人在这里说了梦</p>
-            </Link>
           </div>
 
-          {/* ══ 右栏 ══ */}
-          <div className="flex flex-col gap-6 lg:gap-8">
-            {/* 照片：冬日信箱（本身就是入口）*/}
-            <section className="rounded-2xl border border-[#ece0cd] bg-white p-3 pb-9 lg:rotate-1 shadow-[0_26px_58px_-40px_rgba(90,64,52,0.5)]">
-              <div className="rounded-lg bg-[#f8f0e4] px-2 pt-1">
-                <MailboxArt onOpen={() => setMailboxOpen(true)} />
-              </div>
-              <div className="mt-1 flex items-baseline justify-between px-1">
-                <span className="font-brush text-[18px] leading-none">冬日信箱</span>
-                <span className="text-[11.5px] text-[#a2937f]">点它写信</span>
-              </div>
-            </section>
+          {/* 信封：小屋（放大、加高）*/}
+          <Link
+            href="/friends"
+            onClick={() => markModuleSeen('friends')}
+            className="group relative rounded-2xl border border-[#e3d4bd] bg-[#f8eee2] px-7 pb-8 pt-11 shadow-[0_24px_54px_-38px_rgba(90,64,52,0.55)] transition hover:-translate-y-0.5 sm:px-9 lg:-mt-8 lg:w-[86%] lg:rotate-1"
+          >
+            <svg viewBox="0 0 100 30" preserveAspectRatio="none" aria-hidden="true"
+                 className="absolute inset-x-0 top-0 h-8 w-full">
+              <path d="M0 0 L50 26 L100 0 Z" fill="rgba(226,211,189,0.5)" />
+              <path d="M0 0 L50 26 L100 0" fill="none" stroke="#dcc9ae" strokeWidth="1.2" />
+            </svg>
 
-            {/* 票根：聚会 */}
-            <Link
-              href="/play"
-              onClick={() => markModuleSeen('play')}
-              className="relative rounded-xl border border-[#e6c3ae] lg:-rotate-2 lg:self-start bg-[#fbeae3] px-6 py-5 shadow-[0_20px_44px_-30px_rgba(168,86,58,0.5)] transition hover:-translate-y-0.5"
-            >
-              <span className="text-[9px] tracking-[0.2em] text-[#a98a78]">NO. 0031 · ADMIT ONE</span>
-              <span className="mt-1.5 flex items-baseline gap-2.5">
-                <span className="font-brush text-[20px] leading-none">聚会</span>
-                {badges?.play?.count ? (
-                  <span className="text-[11px] tabular-nums text-[#a8563a]">{badges.play.count}</span>
-                ) : badges?.play?.dot ? (
-                  <span className="h-1.5 w-1.5 rounded-full bg-[#a8563a]" />
-                ) : null}
-              </span>
-              <p className="mt-1.5 text-[12px] text-[#9c7566]">有人在放一首很旧的歌</p>
-            </Link>
+            <span className="flex items-baseline gap-3">
+              <span className="font-brush text-[27px] leading-none">小屋</span>
+              {badges?.friends?.count ? (
+                <span className="whitespace-nowrap text-[12px] tabular-nums text-[#a8563a]">
+                  未读 {badges.friends.count} 封
+                </span>
+              ) : badges?.friends?.dot ? (
+                <span className="h-1.5 w-1.5 rounded-full bg-[#a8563a]" />
+              ) : null}
+            </span>
+            <p className="mt-2.5 text-[13px] text-[#8a7a68]">那几个人还在等你回话</p>
+          </Link>
 
-            {/* 本子：我的 */}
-            <Link
-              href="/me"
-              className="relative rounded-xl border border-[#d3bfa0] lg:self-start bg-[linear-gradient(155deg,#e7d8c0,#d8c6a8)] px-7 py-6 pl-9 shadow-[0_24px_52px_-34px_rgba(90,64,52,0.55)] transition hover:-translate-y-0.5"
-            >
-              <span className="absolute left-3.5 top-2 bottom-2 w-[2px] rounded bg-[#c3ab86]" />
-              <span className="absolute right-4 top-0 bottom-0 w-[2px] rounded bg-[#a87f56]/40" />
-              <span className="flex items-baseline gap-2.5">
-                <span className="font-brush text-[20px] leading-none text-[#4b3826]">我的</span>
-                {badges?.me?.count ? (
-                  <span className="text-[11px] tabular-nums text-[#a8563a]">{badges.me.count}</span>
-                ) : badges?.me?.dot ? (
-                  <span className="h-1.5 w-1.5 rounded-full bg-[#a8563a]" />
-                ) : null}
-              </span>
-              <p className="mt-1.5 text-[12px] text-[#6d5942]">资料、收藏、设置</p>
-            </Link>
-          </div>
+          {/* 票根：聚会 */}
+          <Link
+            href="/play"
+            onClick={() => markModuleSeen('play')}
+            className="relative rounded-xl border border-[#e6c3ae] bg-[#fbeae3] px-6 py-5 shadow-[0_20px_44px_-30px_rgba(168,86,58,0.5)] transition hover:-translate-y-0.5 lg:-mt-6 lg:ml-auto lg:mr-6 lg:w-[62%] lg:-rotate-2"
+          >
+            <span className="text-[9px] tracking-[0.2em] text-[#a98a78]">NO. 0031 · ADMIT ONE</span>
+            <span className="mt-1.5 flex items-baseline gap-2.5">
+              <span className="font-brush text-[21px] leading-none">聚会</span>
+              {badges?.play?.count ? (
+                <span className="text-[11px] tabular-nums text-[#a8563a]">{badges.play.count}</span>
+              ) : badges?.play?.dot ? (
+                <span className="h-1.5 w-1.5 rounded-full bg-[#a8563a]" />
+              ) : null}
+            </span>
+            <p className="mt-1.5 text-[12px] text-[#9c7566]">有人在放一首很旧的歌</p>
+          </Link>
+
+          {/* 便签：院子 */}
+          <Link
+            href="/world"
+            onClick={() => markModuleSeen('world')}
+            className="relative rounded-lg border border-[#e4d6b8] bg-[#f7efdc] px-5 py-4 shadow-[0_16px_36px_-26px_rgba(90,64,52,0.5)] transition hover:-translate-y-0.5 lg:-mt-10 lg:ml-4 lg:w-[46%] lg:-rotate-1"
+          >
+            <span className="flex items-baseline gap-2.5">
+              <span className="font-brush text-[20px] leading-none">院子</span>
+              {badges?.world?.count ? (
+                <span className="text-[11px] tabular-nums text-[#a8563a]">{badges.world.count}</span>
+              ) : badges?.world?.dot ? (
+                <span className="h-1.5 w-1.5 rounded-full bg-[#a8563a]" />
+              ) : null}
+            </span>
+            <p className="mt-1.5 text-[12px] text-[#8a7a68]">今晚有人在这里说了梦</p>
+          </Link>
+
+          {/* 本子：我的 */}
+          <Link
+            href="/me"
+            className="relative rounded-xl border border-[#d3bfa0] bg-[linear-gradient(155deg,#e7d8c0,#d8c6a8)] px-7 py-6 pl-9 shadow-[0_24px_52px_-34px_rgba(90,64,52,0.55)] transition hover:-translate-y-0.5 lg:-mt-8 lg:ml-auto lg:mr-14 lg:w-[40%] lg:rotate-2"
+          >
+            <span className="absolute left-3.5 top-2 bottom-2 w-[2px] rounded bg-[#c3ab86]" />
+            <span className="absolute right-4 top-0 bottom-0 w-[2px] rounded bg-[#a87f56]/40" />
+            <span className="flex items-baseline gap-2.5">
+              <span className="font-brush text-[21px] leading-none text-[#4b3826]">我的</span>
+              {badges?.me?.count ? (
+                <span className="text-[11px] tabular-nums text-[#a8563a]">{badges.me.count}</span>
+              ) : badges?.me?.dot ? (
+                <span className="h-1.5 w-1.5 rounded-full bg-[#a8563a]" />
+              ) : null}
+            </span>
+            <p className="mt-1.5 text-[12px] text-[#6d5942]">资料、收藏、设置</p>
+          </Link>
         </div>
       </main>
 
