@@ -6,6 +6,7 @@ import { createClient } from '../lib/supabase'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { markMomentsSeen, useMomentsBadge, useUnreadMessages } from '../../components/unread'
+import { markModuleSeen } from '../../components/module-badges'
 import { useBlocks } from '../../components/blocks'
 import { ImagePicker } from '../../components/media'
 import { HashtagList } from '../../components/hashtags'
@@ -252,6 +253,14 @@ export default function FriendsPage() {
     const frame = window.requestAnimationFrame(() => markMomentsSeen(meId))
     return () => window.cancelAnimationFrame(frame)
   }, [mode, meId])
+
+  // 进了小屋就算看过：主页「小屋」卡片上的数字角标随之消失。
+  // （原来这个时间戳只被读取、从来没被写入过，所以角标只会涨不会消。）
+  useEffect(() => {
+    if (!meId) return
+    const frame = window.requestAnimationFrame(() => markModuleSeen('friends'))
+    return () => window.cancelAnimationFrame(frame)
+  }, [meId])
 
   async function loadAll() {
     const { data: userData } = await supabase.auth.getUser()

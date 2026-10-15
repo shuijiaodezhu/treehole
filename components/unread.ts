@@ -68,17 +68,35 @@ export function useUnreadMessages(userId: string | null): UnreadMessages {
 
     const run = async () => {
       try {
-        const { data: convs, error } = await supabase
-          .from('conversations')
-          .select('id, user1_id, user2_id')
-          .or(`user1_id.eq.${userId},user2_id.eq.${userId}`)
+        const [convRes, friendRes] = await Promise.all([
+          supabase
+            .from('conversations')
+            .select('id, user1_id, user2_id')
+            .or(`user1_id.eq.${userId},user2_id.eq.${userId}`),
+          supabase
+            .from('friendships')
+            .select('requester_id, addressee_id')
+            .or(`requester_id.eq.${userId},addressee_id.eq.${userId}`)
+            .eq('status', 'accepted'),
+        ])
 
-        if (error) throw error
+        if (convRes.error) throw convRes.error
         if (cancelled) return
 
-        const convIds = (convs ?? []).map((c) => c.id)
+        // 只保留「对方是我好友」的会话：
+        // 不是好友的会话在小屋里打不开，计进去就变成永远清不掉的红点
+        const friendIds = new Set(
+          (friendRes.data ?? []).map((f) =>
+            f.requester_id === userId ? f.addressee_id : f.requester_id,
+          ),
+        )
+        const convs = ((convRes.data ?? []) as { id: string; user1_id: string; user2_id: string }[]).filter(
+          (c) => friendIds.has(c.user1_id === userId ? c.user2_id : c.user1_id),
+        )
+
+        const convIds = convs.map((c) => c.id)
         const friendMap: Record<string, string> = {}
-        for (const conv of convs ?? []) {
+        for (const conv of convs) {
           friendMap[conv.id] = conv.user1_id === userId ? conv.user2_id : conv.user1_id
         }
         setFriendIdByConversation(friendMap)
@@ -98,7 +116,7 @@ export function useUnreadMessages(userId: string | null): UnreadMessages {
         if (cancelled) return
 
         const counts: Record<string, number> = {}
-        for (const msg of msgs ?? []) {
+        for (const msg of (msgs ?? []) as { conversation_id: string; created_at: string }[]) {
           const seenAt = readKey(`${CONV_SEEN_PREFIX}${userId}:${msg.conversation_id}`)
           if (!isNewer(msg.created_at, seenAt)) continue
           counts[msg.conversation_id] = (counts[msg.conversation_id] ?? 0) + 1

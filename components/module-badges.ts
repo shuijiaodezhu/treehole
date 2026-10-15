@@ -12,7 +12,7 @@ import { createClient } from '../app/lib/supabase'
  *   我的(me)      → 不提示
  *
  * 未读一律用「上次离开时的时间戳」比较，存在 localStorage，不改数据库结构。
- * 院子/派对在离开时由各自页面记录时间戳（见 notes 里的 markModuleSeen）。
+ * 页面进入时调用 markModuleSeen(key) 记时间戳，并广播事件让主页角标立刻消失。
  */
 
 const supabase = createClient()
@@ -35,6 +35,22 @@ export type ModuleBadge = {
 export type ModuleBadges = Record<ModuleKey, ModuleBadge>
 
 /* ==================== 本地时间戳读写（页面与主页共用） ==================== */
+
+/** 页面标记已看时广播，主页角标立刻跟着更新（不用整页刷新） */
+const MODULE_SEEN_EVENT = 'treehole:module-seen'
+
+/**
+ * 页面进入时调用：把这个模块标记为已看。
+ * 通知主页那边的角标立即刷新——否则要等整页重载才会消失。
+ */
+export function markModuleSeen(key: keyof typeof SEEN_KEY): void {
+  writeSeenAt(key, new Date().toISOString())
+  try {
+    window.dispatchEvent(new CustomEvent<string>(MODULE_SEEN_EVENT, { detail: key }))
+  } catch {
+    /* 忽略 */
+  }
+}
 
 export function readSeenAt(key: keyof typeof SEEN_KEY): string | null {
   try {
@@ -185,19 +201,33 @@ export function useModuleBadges(userId: string | null): ModuleBadges {
     try {
       const friendSeen = readSeenAt('friends')
 
-      const [pendingRes, convRes] = await Promise.all([
+      const [pendingRes, friendRes, convRes] = await Promise.all([
         supabase
           .from('friendships')
           .select('id')
           .eq('addressee_id', uid)
           .eq('status', 'pending'),
-        supabase.from('conversations').select('id').or(`user1_id.eq.${uid},user2_id.eq.${uid}`),
+        supabase
+          .from('friendships')
+          .select('requester_id, addressee_id, status')
+          .or(`requester_id.eq.${uid},addressee_id.eq.${uid}`)
+          .eq('status', 'accepted'),
+        supabase
+          .from('conversations')
+          .select('id, user1_id, user2_id')
+          .or(`user1_id.eq.${uid},user2_id.eq.${uid}`),
       ])
 
       if (pendingRes.error) throw pendingRes.error
       setPendingFriends(pendingRes.data?.length ?? 0)
 
-      const convIds = (convRes.data ?? []).map((c) => c.id)
+      // 只算「对方是我好友」的会话
+      const friendIds = new Set(
+        (friendRes.data ?? []).map((f) => (f.requester_id === uid ? f.addressee_id : f.requester_id)),
+      )
+      const convIds = ((convRes.data ?? []) as { id: string; user1_id: string; user2_id: string }[])
+        .filter((c) => friendIds.has(c.user1_id === uid ? c.user2_id : c.user1_id))
+        .map((c) => c.id)
       if (convIds.length === 0) {
         setUnreadMessages(0)
         return
@@ -256,7 +286,18 @@ export function useModuleBadges(userId: string | null): ModuleBadges {
       })
       .subscribe()
 
+    // 页面里标记「已看」时立刻重算角标：
+    // 否则从小屋返回主页，角标要等整页重载才消失（用户会以为清不掉）
+    const onModuleSeen = (event: Event) => {
+      const key = (event as CustomEvent<string>).detail
+      refreshSeenBadges()
+      if (key === 'friends') void loadFriendsBadge(userId)
+      void refreshWorldReplies()
+    }
+    window.addEventListener(MODULE_SEEN_EVENT, onModuleSeen)
+
     return () => {
+      window.removeEventListener(MODULE_SEEN_EVENT, onModuleSeen)
       void supabase.removeChannel(channel)
     }
   }, [userId, loadFriendsBadge, refreshSeenBadges, refreshWorldReplies])
