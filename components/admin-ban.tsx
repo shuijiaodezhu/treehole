@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { createClient } from '../app/lib/supabase'
 import { Icon } from './icons'
 import { ADMIN_UUID } from './utils'
@@ -33,17 +33,49 @@ export function UserBanSection({ adminId }: { adminId: string }) {
   const [busy, setBusy] = useState<string | null>(null)
   const [hint, setHint] = useState('')
 
-  async function search() {
-    const word = keyword.trim()
-    if (!word) return
-    setSearched(true)
-    setHint('')
-
+  /*
+   * 最近注册的 20 人：搜索框空着时先列出来。
+   * 站主要封的人常常就在最近注册的里面，让他不用先猜昵称。
+   */
+  async function loadRecent() {
     const { data, error } = await supabase
       .from('profiles')
       .select('id, nickname, username')
-      .or(`nickname.ilike.%${word}%,username.ilike.%${word}%`)
-      .limit(10)
+      .order('created_at', { ascending: false })
+      .limit(20)
+    if (error) {
+      console.error('读最近用户失败:', error)
+      return
+    }
+    setFound((data ?? []) as Found[])
+  }
+
+  useEffect(() => {
+    if (adminId !== ADMIN_UUID) return
+    void (async () => {
+      await loadRecent()
+    })()
+  }, [adminId])
+
+  /** 看起来像 uuid 就按 id 精确查（后台的注销申请、举报记录里都能看到 id） */
+  const looksLikeId = (w: string) =>
+    /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(w)
+
+  async function search() {
+    const word = keyword.trim()
+    setSearched(Boolean(word))
+    setHint('')
+    if (!word) {
+      await loadRecent()
+      return
+    }
+
+    const query = supabase.from('profiles').select('id, nickname, username')
+    const { data, error } = looksLikeId(word)
+      ? await query.eq('id', word).limit(5)
+      : await query
+          .or(`nickname.ilike.%${word}%,username.ilike.%${word}%`)
+          .limit(10)
 
     if (error) {
       setHint('搜索失败：' + error.message)
@@ -102,7 +134,10 @@ export function UserBanSection({ adminId }: { adminId: string }) {
         <input
           type="text"
           value={keyword}
-          onChange={(e) => setKeyword(e.target.value)}
+          onChange={(e) => {
+            setKeyword(e.target.value)
+            if (!e.target.value.trim()) setSearched(false)
+          }}
           onKeyDown={(e) => {
             if (e.key === 'Enter') void search()
           }}
@@ -118,8 +153,22 @@ export function UserBanSection({ adminId }: { adminId: string }) {
         </button>
       </div>
 
-      {searched && found.length === 0 && (
-        <p className="mt-3 text-xs text-[#8a7a9a]">没找到这个人</p>
+      {found.length === 0 && (
+        <p className="mt-3 text-[10px] leading-relaxed text-[#8a7a9a]">
+          没找到这个人。昵称要写得完整一些；也可以直接粘贴他的**用户 id**
+          （后台的「注销申请」「举报」里都能看到 id）。
+          {' '}
+          <span className="text-[#b0a89e]">
+            邮箱搜不了 —— 邮箱在 auth 里，前端读不到，要按邮箱找请去 Supabase →
+            Authentication → Users。
+          </span>
+        </p>
+      )}
+
+      {found.length > 0 && (
+        <p className="mt-3 text-[10px] text-[#b0a89e]">
+          {searched ? `搜索结果 ${found.length} 人` : '最近注册的 20 人（在下面直接点）'}
+        </p>
       )}
 
       {found.length > 0 && (
