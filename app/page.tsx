@@ -241,10 +241,11 @@ export default function HomePage() {
       {/*
         左侧留白里的冬日信箱。
         用绝对定位挂在页面左侧，**不参与 flex 布局**，所以中间的内容一点都不会偏移；
-        位置压在内容中段（top-330），不贴页头，看着像挂在留白里的一幅画；
+        位置压在内容中段偏下（left-48 / top-470），上不贴页头、下不碰页脚，
+        像挂在留白里的一幅画；
         只有够宽（2xl = 1536px 以上）留白放得下时才出现。
       */}
-      <div className="absolute left-10 top-[330px] hidden w-[168px] 2xl:block">
+      <div className="absolute left-12 top-[470px] hidden w-[168px] 2xl:block">
         <MailboxArt onOpen={() => setMailboxOpen(true)} />
       </div>
 
