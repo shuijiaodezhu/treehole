@@ -53,6 +53,11 @@ export function loginNavigateDelay(): number {
   return window.matchMedia('(prefers-reduced-motion: reduce)').matches ? REDUCED_MS : NAVIGATE_MS
 }
 
+/** 现在是否正在播过场（首次登录那封信要等它结束再出现） */
+export function isLoginTransitioning(): boolean {
+  return transitioning
+}
+
 /**
  * 订阅过场状态（true = 正在播）。
  * 给「等动画放完再出现」的东西用，比如首次登录后那封信。

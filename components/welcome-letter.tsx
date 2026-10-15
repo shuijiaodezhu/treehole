@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { createClient } from '../app/lib/supabase'
 import { findDefaultPage } from './site-page-defaults'
 import { Icon } from './icons'
-import { subscribeLoginTransition } from './login-transition'
+import { isLoginTransitioning, subscribeLoginTransition } from './login-transition'
 
 /**
  * 致每一位来到这里的人（登录后浮出的一封信）
@@ -31,7 +31,6 @@ import { subscribeLoginTransition } from './login-transition'
  */
 
 const SEEN_KEY = (uid: string) => `treehole:letter:seen:${uid}`
-const FADE_MS = 400
 
 const supabase = createClient()
 
@@ -104,22 +103,45 @@ export function WelcomeLetter({ userId }: { userId: string | null }) {
     }
     if (read === letter.sig) return
 
+    /*
+     * 它现在是一道**门**，所以不留 400ms 的余地：
+     *   · 过场还在播 → 等它结束，结束就立刻出现（过场本来就把屏幕盖住了，不会露馅）
+     *   · 没有过场（刷新、或本来就在站里）→ 立刻出现
+     * 早先那版是"浮层"，等 400ms 淡入更好看；现在铺满整屏，
+     * 那 400ms 反而会先闪一下主页，所以去掉。
+     */
     let timer: number | null = null
-    const schedule = (delay: number) => {
-      timer = window.setTimeout(() => setOpen(true), delay)
+    const show = () => setOpen(true)
+
+    if (isLoginTransitioning()) {
+      const unsubscribe = subscribeLoginTransition((active) => {
+        if (!active) show()
+      })
+      scheduleFallback()
+      return () => {
+        unsubscribe()
+        if (timer) window.clearTimeout(timer)
+      }
     }
 
-    // 过场还在播 → 等它结束；否则直接排一个短延时
-    const unsubscribe = subscribeLoginTransition((active) => {
-      if (!active && timer === null) schedule(FADE_MS)
-    })
-    schedule(2600) // 兜底
+    show()
+    return undefined
 
-    return () => {
-      unsubscribe()
-      if (timer) window.clearTimeout(timer)
+    /** 万一没收到过场结束的通知，也别一直不出现 */
+    function scheduleFallback() {
+      timer = window.setTimeout(show, 2600)
     }
   }, [userId, letter])
+
+  /* ---------- 开门期间锁住背景滚动 ---------- */
+  useEffect(() => {
+    if (!open) return
+    const previous = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+    return () => {
+      document.body.style.overflow = previous
+    }
+  }, [open])
 
   const close = useCallback(() => {
     setOpen(false)
@@ -134,36 +156,43 @@ export function WelcomeLetter({ userId }: { userId: string | null }) {
 
   if (!open || !letter) return null
 
+  /*
+   * 铺满整屏、不透明：这是一道门，不是浮层。
+   * 主页在它后面（数据已经加载好了），但看不到也点不到；
+   * 点「我记住了」才把它撤掉 —— 所以"确认过才进主页"。
+   */
   return (
     <div
-      className="animate-fade-in fixed inset-0 z-[60] flex items-center justify-center bg-black/35 px-4 py-8 backdrop-blur-sm"
+      className="animate-fade-in fixed inset-0 z-[60] flex flex-col bg-[var(--paper)]"
       role="dialog"
       aria-modal="true"
       aria-label={letter.title}
     >
-      <div className="flex max-h-full w-full max-w-lg flex-col overflow-hidden rounded-3xl border border-[var(--accent-line)] bg-[var(--paper)] shadow-[0_24px_60px_rgba(120,80,60,0.22)]">
-        {/* 信头 */}
-        <div className="flex items-start gap-3 border-b border-[var(--accent-line)] bg-gradient-to-br from-[var(--accent-soft)] to-[var(--accent-line)] px-6 py-4">
-          <span className="mt-0.5 flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full bg-white/80">
-            <Icon name="mail" className="h-4 w-4 text-[var(--accent-deep)]" />
-          </span>
-          <div className="min-w-0">
-            <h2 className="font-serif-cn text-sm font-semibold text-[#2b2430]">{letter.title}</h2>
-            <p className="mt-0.5 text-[10.5px] text-[var(--accent-muted)]">
-              这封信不常出现，只在内容更新后露一次面。
-            </p>
-          </div>
-        </div>
-
-        {/* 正文 */}
-        <div className="min-h-0 flex-1 overflow-y-auto px-6 py-5">
-          <p className="whitespace-pre-line font-serif-cn text-[12.5px] leading-[1.95] text-[#3a3229]">
-            {letter.body}
+      {/* 信头 */}
+      <div className="flex flex-shrink-0 items-start gap-3 border-b border-[var(--accent-line)] bg-gradient-to-br from-[var(--accent-soft)] to-[var(--accent-line)] px-6 py-5">
+        <span className="mt-0.5 flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full bg-white/80">
+          <Icon name="mail" className="h-4 w-4 text-[var(--accent-deep)]" />
+        </span>
+        <div className="mx-auto min-w-0 max-w-xl flex-1">
+          <h2 className="font-serif-cn text-sm font-semibold text-[#2b2430]">{letter.title}</h2>
+          <p className="mt-0.5 text-[10.5px] text-[var(--accent-muted)]">
+            读完点下面的按钮就好 —— 它不常出现，只在内容更新后露一次面。
           </p>
         </div>
+        {/* 和信头左边图标占位对称，让标题居中那一列对齐 */}
+        <span className="hidden h-9 w-9 flex-shrink-0 sm:block" aria-hidden="true" />
+      </div>
 
-        {/* 底部 */}
-        <div className="flex flex-wrap items-center justify-between gap-3 border-t border-[var(--accent-line)] px-6 py-4">
+      {/* 正文：可滚动，居中一列 */}
+      <div className="min-h-0 flex-1 overflow-y-auto px-6 py-8">
+        <p className="mx-auto max-w-xl whitespace-pre-line font-serif-cn text-[12.5px] leading-[1.95] text-[#3a3229]">
+          {letter.body}
+        </p>
+      </div>
+
+      {/* 底部：确认 */}
+      <div className="flex-shrink-0 border-t border-[var(--accent-line)] bg-white/70 px-6 py-4">
+        <div className="mx-auto flex max-w-xl flex-wrap items-center justify-between gap-3">
           <Link
             href="/p/community"
             onClick={close}
@@ -174,9 +203,9 @@ export function WelcomeLetter({ userId }: { userId: string | null }) {
           <button
             type="button"
             onClick={close}
-            className="rounded-xl bg-gradient-to-r from-[var(--accent-light)] to-[var(--accent)] px-5 py-2 text-xs font-medium text-white transition hover:shadow-[0_6px_20px_rgba(217,119,87,0.3)]"
+            className="rounded-xl bg-gradient-to-r from-[var(--accent-light)] to-[var(--accent)] px-6 py-2.5 text-xs font-medium text-white transition hover:shadow-[0_6px_20px_rgba(217,119,87,0.3)]"
           >
-            我记住了
+            我记住了，进去吧
           </button>
         </div>
       </div>
