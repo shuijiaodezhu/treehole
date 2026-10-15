@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { markMomentsSeen, useMomentsBadge, useUnreadMessages } from '../../components/unread'
 import { markModuleSeen } from '../../components/module-badges'
+import { ChatMessages } from '../../components/chat-bubbles'
 import { useBlocks } from '../../components/blocks'
 import { ImagePicker } from '../../components/media'
 import { HashtagList } from '../../components/hashtags'
@@ -993,7 +994,7 @@ export default function FriendsPage() {
                   )}
                 </div>
 
-                <div className="flex-1 overflow-y-auto px-5 py-4">
+                <div className="th-scroll flex-1 overflow-y-auto px-5 py-4">
                   {!currentFriend ? (
                     <div className="h-full flex flex-col items-center justify-center text-center">
                       <div className="w-14 h-14 rounded-full bg-[var(--accent-soft)] flex items-center justify-center mb-3">
@@ -1008,40 +1009,12 @@ export default function FriendsPage() {
                       <EmptyState art="mail" title="还没有消息" hint="说点什么吧" />
                     </div>
                   ) : (
-                    <div className="space-y-2.5">
-                      {shownMessages.map((m) => {
-                        const isMine = m.sender_id === meId
-                        return (
-                          <div
-                            key={m.id}
-                            className={`flex ${isMine ? 'justify-end' : 'justify-start'}`}
-                          >
-                            <div
-                              className={`max-w-[70%] px-4 py-2.5 shadow-[0_4px_16px_rgba(217,119,87,0.08)] ${
-                                isMine
-                                  ? 'bg-gradient-to-br from-[var(--accent-light)] to-[var(--accent)] text-white rounded-[18px] rounded-tr-[4px]'
-                                  : 'bg-white text-[#2b2620] rounded-[18px] rounded-tl-[4px] border border-[var(--accent-line)]'
-                              }`}
-                            >
-                              <p className="text-sm whitespace-pre-wrap break-words leading-relaxed">
-                                {m.content}
-                              </p>
-                              <p
-                                className={`text-[10px] mt-1 ${
-                                  isMine ? 'text-white/60' : 'text-[var(--accent-muted)]'
-                                }`}
-                              >
-                                {new Date(m.created_at).toLocaleTimeString('zh-CN', {
-                                  hour: '2-digit',
-                                  minute: '2-digit',
-                                })}
-                              </p>
-                            </div>
-                          </div>
-                        )
-                      })}
-                      <div ref={bottomRef} />
-                    </div>
+                    <ChatMessages
+                      messages={shownMessages}
+                      meId={meId}
+                      friendName={friendName}
+                      bottomRef={bottomRef}
+                    />
                   )}
                 </div>
 

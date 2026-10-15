@@ -219,6 +219,29 @@ body {
   }
 }
 
+/* 细滚动条：聊天区的系统灰条太扎眼，换成暖色细条 */
+.th-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: var(--accent-line) transparent;
+}
+.th-scroll::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+.th-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+.th-scroll::-webkit-scrollbar-thumb {
+  background: var(--accent-line);
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+.th-scroll::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-light);
+  background-clip: content-box;
+}
+
 /* ============================================================
    登录成功后的过场：两边淡出 → 信封飞来 → 开盖 → 进主页
    用在 components/login-transition.tsx

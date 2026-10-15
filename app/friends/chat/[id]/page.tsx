@@ -5,6 +5,7 @@ import { createClient } from '../../../lib/supabase'
 import { useRouter, useParams } from 'next/navigation'
 import Link from 'next/link'
 import { EmojiPicker, useEmojiInsert } from '../../../../components/emoji-picker'
+import { ChatMessages } from '../../../../components/chat-bubbles'
 import { pageAccentVars } from '../../../../components/theme'
 
 type Message = {
@@ -184,30 +185,8 @@ function ChatInner() {
               <p className="text-xs text-[var(--accent-muted)] mt-1.5">说点什么吧</p>
             </div>
           ) : (
-            messages.map((m) => {
-              const isMine = m.sender_id === meId
-              return (
-                <div key={m.id} className={`flex ${isMine ? 'justify-end' : 'justify-start'}`}>
-                  <div
-                    className={`max-w-[70%] px-4 py-2.5 rounded-2xl shadow-[0_2px_12px_rgba(217,119,87,0.06)] ${
-                      isMine
-                        ? 'bg-gradient-to-br from-[var(--accent-light)] to-[var(--accent)] text-white rounded-tr-md'
-                        : 'bg-white/95 backdrop-blur text-[#2b2620] rounded-tl-md'
-                    }`}
-                  >
-                    <p className="text-sm whitespace-pre-wrap break-words leading-relaxed">{m.content}</p>
-                    <p className={`text-[10px] mt-1 ${isMine ? 'text-white/70' : 'text-[var(--accent-muted)]'}`}>
-                      {new Date(m.created_at).toLocaleTimeString('zh-CN', {
-                        hour: '2-digit',
-                        minute: '2-digit',
-                      })}
-                    </p>
-                  </div>
-                </div>
-              )
-            })
+            <ChatMessages messages={messages} meId={meId} friendName={friendName} bottomRef={bottomRef} />
           )}
-          <div ref={bottomRef} />
         </div>
       </main>
 
