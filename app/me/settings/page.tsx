@@ -615,6 +615,42 @@ export default function SettingsPage() {
             )}
           </section>
 
+          {/* 关于与条款 */}
+          <section className="rounded-3xl border border-[var(--accent-line)] bg-white/80 backdrop-blur-lg p-6 shadow-[0_8px_40px_rgba(168,138,184,0.06)]">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-9 h-9 rounded-full bg-[var(--accent-soft)] flex items-center justify-center">
+                <Icon name="file" className="w-4 h-4 text-[var(--accent-deep)]" />
+              </div>
+              <div>
+                <h2 className="text-sm font-semibold text-[#2b2430]">关于与条款</h2>
+                <p className="text-[10px] text-[var(--accent-light)] mt-0.5">
+                  这个站怎么运转、你的东西怎么被对待
+                </p>
+              </div>
+            </div>
+
+            <div className="grid gap-1.5 sm:grid-cols-2">
+              {[
+                { slug: 'community', label: '社区公约' },
+                { slug: 'privacy', label: '隐私政策' },
+                { slug: 'terms', label: '用户协议' },
+                { slug: 'moderation', label: '内容审核指引' },
+                { slug: 'reporting', label: '举报处理流程' },
+                { slug: 'appeal', label: '申诉机制' },
+                { slug: 'about', label: '关于本站' },
+              ].map((item) => (
+                <Link
+                  key={item.slug}
+                  href={`/p/${item.slug}`}
+                  className="flex items-center justify-between rounded-xl border border-[var(--accent-line)] px-3.5 py-2.5 text-xs text-[#5a4a6a] transition hover:bg-[var(--accent-soft)]"
+                >
+                  {item.label}
+                  <Icon name="arrow" className="w-3.5 h-3.5 text-[var(--accent-light)]" />
+                </Link>
+              ))}
+            </div>
+          </section>
+
         </main>
       </div>
     </div>

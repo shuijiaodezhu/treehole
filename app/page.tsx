@@ -261,6 +261,33 @@ export default function HomePage() {
         </main>
       </div>
 
+      {/* 页脚：条款与说明入口 */}
+      <footer className="mx-auto max-w-5xl px-8 pb-10">
+        <div className="flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-[var(--accent-line)] pt-5">
+          {[
+            { slug: 'community', label: '社区公约' },
+            { slug: 'reporting', label: '举报与申诉' },
+            { slug: 'privacy', label: '隐私政策' },
+            { slug: 'terms', label: '用户协议' },
+            { slug: 'about', label: '关于' },
+          ].map((item) => (
+            <Link
+              key={item.slug}
+              href={`/p/${item.slug}`}
+              className="text-[11px] text-[var(--accent-muted)] transition hover:text-[var(--accent-deep)]"
+            >
+              {item.label}
+            </Link>
+          ))}
+          <Link
+            href="/p"
+            className="ml-auto text-[11px] text-[var(--accent-muted)] transition hover:text-[var(--accent-deep)]"
+          >
+            全部条款 →
+          </Link>
+        </div>
+      </footer>
+
       {/* 退出登录二次确认 */}
       {confirmLogout && (
         <div

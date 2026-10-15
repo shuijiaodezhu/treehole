@@ -6,6 +6,7 @@ import { createClient } from '../lib/supabase'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { AdminStats } from '../../components/admin-stats'
+import { AdminSitePages } from '../../components/admin-site-pages'
 
 // 客户端提到模块级，保证引用稳定
 const supabase = createClient()
@@ -61,7 +62,7 @@ function formatTime(dateStr: string) {
 }
 
 export default function AdminPage() {
-  const [tab, setTab] = useState<'categories' | 'reports'>('categories')
+  const [tab, setTab] = useState<'categories' | 'reports' | 'pages'>('categories')
   const [categories, setCategories] = useState<Category[]>([])
   const [reports, setReports] = useState<Report[]>([])
   const [activityReports, setActivityReports] = useState<ActivityReport[]>([])
@@ -385,6 +386,12 @@ export default function AdminPage() {
           >
             举报处理 {totalReports > 0 && `(${totalReports})`}
           </button>
+          <button
+            onClick={() => setTab('pages')}
+            className={`pb-2.5 text-sm transition ${tab === 'pages' ? 'border-b-2 border-[#a88ab8] text-[#8a7aaa] font-medium' : 'text-[#8a7a9a] hover:text-[#2b2430]'}`}
+          >
+            站点页面
+          </button>
         </div>
 
         {tab === 'categories' && (
@@ -538,6 +545,8 @@ export default function AdminPage() {
             </div>
           </div>
         )}
+
+        {tab === 'pages' && <AdminSitePages />}
       </div>
     </div>
   )

@@ -10,6 +10,8 @@ export default function RegisterPage() {
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
   const [message, setMessage] = useState('')
+  // 必须勾选条款才能注册
+  const [agreed, setAgreed] = useState(false)
   const router = useRouter()
   const supabase = createClient()
 
@@ -119,9 +121,35 @@ export default function RegisterPage() {
               </div>
             </div>
 
+            {/* 条款勾选：不勾不能注册 */}
+            <label className="flex cursor-pointer items-start gap-2 text-[11px] leading-relaxed text-[#8a827a]">
+              <input
+                type="checkbox"
+                checked={agreed}
+                onChange={(e) => setAgreed(e.target.checked)}
+                required
+                className="mt-0.5 h-3.5 w-3.5 flex-shrink-0 accent-[#d97757]"
+              />
+              <span>
+                我已阅读并同意
+                <Link href="/p/terms" target="_blank" className="text-[#c96447] underline">
+                  《用户协议》
+                </Link>
+                和
+                <Link href="/p/privacy" target="_blank" className="text-[#c96447] underline">
+                  《隐私政策》
+                </Link>
+                ，并会遵守
+                <Link href="/p/community" target="_blank" className="text-[#c96447] underline">
+                  《社区公约》
+                </Link>
+                。
+              </span>
+            </label>
+
             <button
               type="submit"
-              disabled={loading}
+              disabled={loading || !agreed}
               className="w-full py-2.5 rounded-xl bg-gradient-to-r from-[#e8a87c] to-[#d97757] text-white text-sm font-medium hover:shadow-[0_6px_20px_rgba(217,119,87,0.3)] transition-all disabled:opacity-60 disabled:cursor-not-allowed"
             >
               {loading ? '注册中...' : '注 册'}
