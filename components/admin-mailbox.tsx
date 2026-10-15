@@ -4,21 +4,27 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { createClient } from '../app/lib/supabase'
 import { Icon } from './icons'
 import { EmojiPicker } from './emoji-picker'
+import { describeMailboxError } from './mailbox'
 
 /**
  * 站主后台：冬日信箱收件箱
  *
- * 为什么必须单独做：小屋的会话列表只列**好友**，
- * 不是好友的人写来的悄悄话在那里看不到。这里直接按「我是参与人」
- * 把所有会话列出来，所以谁写的都能收到并回信。
+ * 读的是**信箱自己的表** winter_letters，不碰好友私聊（conversations / messages），
+ * 所以这里列出来的干干净净全是来信，不会和好友聊天混在一起。
  *
- * 不需要任何新表：用户端写在 conversations + messages，
- * 这里读同一批数据、以站主身份回信。
+ * 为什么必须单独做：小屋的会话列表只列好友，不是好友的人写来的悄悄话
+ * 在那里看不到——信箱必须有自己的收件箱。
+ *
+ * 谁能看到：由 winter_letters 的 RLS 决定（只有写信人本人和站主）。
+ * 已读状态放在本地（localStorage 里一个 threadId → 时间 的表），
+ * 不给表加 update 策略，信寄出去就改不了。
  */
 
 const supabase = createClient()
 
-type Message = {
+const SEEN_KEY = (uid: string) => `treehole:seen:wintermail:${uid}`
+
+type Letter = {
   id: string
   sender_id: string
   content: string
@@ -26,12 +32,29 @@ type Message = {
 }
 
 type Row = {
-  conversationId: string
-  otherId: string
-  otherName: string
+  threadUserId: string
+  name: string
   lastAt: string
   lastText: string
   fromMe: boolean
+  unread: boolean
+}
+
+function readSeenMap(uid: string): Record<string, string> {
+  try {
+    const raw = window.localStorage.getItem(SEEN_KEY(uid))
+    return raw ? (JSON.parse(raw) as Record<string, string>) : {}
+  } catch {
+    return {}
+  }
+}
+
+function writeSeenMap(uid: string, map: Record<string, string>) {
+  try {
+    window.localStorage.setItem(SEEN_KEY(uid), JSON.stringify(map))
+  } catch {
+    /* 隐私模式忽略 */
+  }
 }
 
 function stamp(iso: string): string {
@@ -50,7 +73,7 @@ function stamp(iso: string): string {
 export function AdminMailbox({ adminId }: { adminId: string }) {
   const [rows, setRows] = useState<Row[]>([])
   const [active, setActive] = useState<Row | null>(null)
-  const [messages, setMessages] = useState<Message[]>([])
+  const [letters, setLetters] = useState<Letter[]>([])
   const [draft, setDraft] = useState('')
   const [loading, setLoading] = useState(true)
   const [threadLoading, setThreadLoading] = useState(false)
@@ -62,63 +85,55 @@ export function AdminMailbox({ adminId }: { adminId: string }) {
   const load = useCallback(async () => {
     setLoading(true)
     try {
-      const { data: convs, error: convError } = await supabase
-        .from('conversations')
-        .select('id, user1_id, user2_id')
-        .or(`user1_id.eq.${adminId},user2_id.eq.${adminId}`)
+      const { data, error: loadError } = await supabase
+        .from('winter_letters')
+        .select('id, thread_user_id, sender_id, content, created_at')
+        .order('created_at', { ascending: false })
+        .limit(500)
 
-      if (convError) throw convError
-      const list = (convs ?? []) as { id: string; user1_id: string; user2_id: string }[]
-      if (list.length === 0) {
+      if (loadError) throw loadError
+
+      const all = (data ?? []) as (Letter & { thread_user_id: string })[]
+      if (all.length === 0) {
         setRows([])
         setError('')
         return
       }
 
-      const convIds = list.map((c) => c.id)
-      const otherIds = [...new Set(list.map((c) => (c.user1_id === adminId ? c.user2_id : c.user1_id)))]
+      // 每个信箱取最新一封
+      const latest = new Map<string, Letter & { thread_user_id: string }>()
+      for (const letter of all) {
+        if (!latest.has(letter.thread_user_id)) latest.set(letter.thread_user_id, letter)
+      }
 
-      const [{ data: profiles }, { data: msgs }] = await Promise.all([
-        supabase.from('profiles').select('id, nickname, username').in('id', otherIds),
-        supabase
-          .from('messages')
-          .select('conversation_id, sender_id, content, created_at')
-          .in('conversation_id', convIds)
-          .order('created_at', { ascending: false })
-          .limit(500),
-      ])
-
+      const ids = [...latest.keys()]
+      const { data: profiles } = await supabase.from('profiles').select('id, nickname, username').in('id', ids)
       const nameOf = (id: string) => {
         const p = (profiles ?? []).find((x) => x.id === id)
         return p?.nickname || p?.username || '某人'
       }
 
-      // 每个会话取最新一条
-      const lastByConv = new Map<string, Message & { conversation_id: string }>()
-      for (const m of (msgs ?? []) as (Message & { conversation_id: string })[]) {
-        if (!lastByConv.has(m.conversation_id)) lastByConv.set(m.conversation_id, m)
-      }
-
-      const built: Row[] = list
-        .map((c) => {
-          const otherId = c.user1_id === adminId ? c.user2_id : c.user1_id
-          const last = lastByConv.get(c.id)
+      const seenNow = readSeenMap(adminId)
+      const built: Row[] = ids
+        .map((threadUserId) => {
+          const last = latest.get(threadUserId)!
           return {
-            conversationId: c.id,
-            otherId,
-            otherName: nameOf(otherId),
-            lastAt: last?.created_at ?? '',
-            lastText: last?.content ?? '（还没有消息）',
-            fromMe: last?.sender_id === adminId,
+            threadUserId,
+            name: nameOf(threadUserId),
+            lastAt: last.created_at,
+            lastText: last.content,
+            fromMe: last.sender_id === adminId,
+            // 最新一封是对方写的、而且比上次看过的新 → 未读
+            unread: last.sender_id !== adminId && last.created_at > (seenNow[threadUserId] ?? ''),
           }
         })
-        .sort((a, b) => (b.lastAt || '').localeCompare(a.lastAt || ''))
+        .sort((a, b) => b.lastAt.localeCompare(a.lastAt))
 
       setRows(built)
       setError('')
     } catch (err) {
-      console.error('加载信箱失败:', err)
-      setError('加载失败（conversations / messages 的读取策略可能没生效）')
+      console.error('加载冬日信箱失败:', err)
+      setError(describeMailboxError(err))
     } finally {
       setLoading(false)
     }
@@ -129,52 +144,59 @@ export function AdminMailbox({ adminId }: { adminId: string }) {
     void load()
   }, [load])
 
-  const openThread = useCallback(async (row: Row) => {
-    setActive(row)
-    setMessages([])
-    setThreadLoading(true)
-    setMessage('')
-    try {
-      const { data, error: msgError } = await supabase
-        .from('messages')
-        .select('id, sender_id, content, created_at')
-        .eq('conversation_id', row.conversationId)
-        .order('created_at', { ascending: true })
-        .limit(300)
-      if (msgError) throw msgError
-      setMessages((data ?? []) as Message[])
-    } catch (err) {
-      console.error('读取短信失败:', err)
-      setMessage('这封信打不开')
-    } finally {
-      setThreadLoading(false)
-      window.requestAnimationFrame(() => {
-        const el = listRef.current
-        if (el) el.scrollTop = el.scrollHeight
-      })
-    }
-  }, [])
+  const openThread = useCallback(
+    async (row: Row) => {
+      setActive(row)
+      setLetters([])
+      setThreadLoading(true)
+      setMessage('')
+      try {
+        const { data, error: loadError } = await supabase
+          .from('winter_letters')
+          .select('id, sender_id, content, created_at')
+          .eq('thread_user_id', row.threadUserId)
+          .order('created_at', { ascending: true })
+          .limit(300)
+        if (loadError) throw loadError
+        setLetters((data ?? []) as Letter[])
+
+        // 标记这个信箱已看过
+        writeSeenMap(adminId, { ...readSeenMap(adminId), [row.threadUserId]: row.lastAt })
+        setRows((prev) => prev.map((r) => (r.threadUserId === row.threadUserId ? { ...r, unread: false } : r)))
+      } catch (err) {
+        console.error('读取来信失败:', err)
+        setMessage(describeMailboxError(err))
+      } finally {
+        setThreadLoading(false)
+        window.requestAnimationFrame(() => {
+          const el = listRef.current
+          if (el) el.scrollTop = el.scrollHeight
+        })
+      }
+    },
+    [adminId],
+  )
 
   async function handleReply() {
-    const body = draft.trim()
-    if (!body || !active) return
+    const content = draft.trim()
+    if (!content || !active) return
     setSending(true)
     setMessage('')
     try {
       const { data, error: sendError } = await supabase
-        .from('messages')
-        .insert({ conversation_id: active.conversationId, sender_id: adminId, content: body })
+        .from('winter_letters')
+        .insert({ thread_user_id: active.threadUserId, sender_id: adminId, content })
         .select('id, sender_id, content, created_at')
         .single()
       if (sendError) throw sendError
 
-      setMessages((prev) => [...prev, data as Message])
+      const letter = data as Letter
+      setLetters((prev) => [...prev, letter])
       setDraft('')
-      // 顺手更新列表里的最新一条
       setRows((prev) =>
         prev.map((r) =>
-          r.conversationId === active.conversationId
-            ? { ...r, lastAt: (data as Message).created_at, lastText: body, fromMe: true }
+          r.threadUserId === active.threadUserId
+            ? { ...r, lastAt: letter.created_at, lastText: content, fromMe: true, unread: false }
             : r,
         ),
       )
@@ -183,31 +205,36 @@ export function AdminMailbox({ adminId }: { adminId: string }) {
         if (el) el.scrollTop = el.scrollHeight
       })
     } catch (err) {
-      const msg =
-        err && typeof err === 'object' && 'message' in err
-          ? String((err as { message: unknown }).message)
-          : String(err)
-      setMessage('回信失败：' + msg)
+      console.error('回信失败:', err)
+      setMessage(describeMailboxError(err))
     } finally {
       setSending(false)
     }
   }
 
   const total = useMemo(() => rows.length, [rows])
+  const unreadTotal = useMemo(() => rows.filter((r) => r.unread).length, [rows])
 
   return (
     <section className="rounded-3xl border border-[#e0d4e8] bg-white/80 p-6 backdrop-blur shadow-[0_2px_12px_rgba(168,138,184,0.06)]">
-      <div className="mb-5 flex items-center gap-3">
-        <div className="flex h-9 w-9 items-center justify-center rounded-full bg-[#f0e6f8]">
+      <div className="mb-5 flex items-start gap-3">
+        <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full bg-[#f0e6f8]">
           <Icon name="mail" className="h-4 w-4 text-[#8a7aaa]" />
         </div>
-        <div className="flex-1">
-          <h2 className="text-sm font-semibold text-[#2b2430]">冬日信箱</h2>
+        <div className="min-w-0 flex-1">
+          <h2 className="flex items-baseline gap-2 text-sm font-semibold text-[#2b2430]">
+            冬日信箱
+            {unreadTotal > 0 && (
+              <span className="rounded-full bg-[#a88ab8] px-2 py-0.5 text-[10px] font-normal text-white">
+                {unreadTotal} 封新的
+              </span>
+            )}
+          </h2>
           <p className="mt-1 text-[11px] leading-relaxed text-[#8a7a9a]">
-            大家把不好说的烦心事写在这里，等你认真回一封
+            这里收到的，都是他们不好意思跟别人说的话
           </p>
           <p className="mt-0.5 text-[10px] text-[#b8a8c8]">
-            共 {total} 个来信人 · 回信只有对方看得到
+            共 {total} 位来信人 · 回信只有对方看得到
           </p>
         </div>
         <button
@@ -232,21 +259,20 @@ export function AdminMailbox({ adminId }: { adminId: string }) {
         </p>
       ) : (
         <div className="grid gap-4 md:grid-cols-[260px_1fr]">
-          {/* 来信人列表 */}
+          {/* 来信人 */}
           <nav className="max-h-[420px] space-y-1.5 overflow-y-auto pr-1">
             {rows.map((r) => (
               <button
-                key={r.conversationId}
+                key={r.threadUserId}
                 type="button"
                 onClick={() => void openThread(r)}
                 className={`w-full rounded-xl px-3 py-2.5 text-left transition ${
-                  active?.conversationId === r.conversationId
-                    ? 'bg-[#f0e6f8]'
-                    : 'hover:bg-[#faf5ff]'
+                  active?.threadUserId === r.threadUserId ? 'bg-[#f0e6f8]' : 'hover:bg-[#faf5ff]'
                 }`}
               >
                 <span className="flex items-center gap-2">
-                  <span className="truncate text-xs font-medium text-[#2b2430]">{r.otherName}</span>
+                  <span className="truncate text-xs font-medium text-[#2b2430]">{r.name}</span>
+                  {r.unread && <span className="h-1.5 w-1.5 flex-shrink-0 rounded-full bg-[#a88ab8]" />}
                   <span className="ml-auto flex-shrink-0 text-[9px] text-[#b8a8c8]">{stamp(r.lastAt)}</span>
                 </span>
                 <span className="mt-0.5 block truncate text-[10px] text-[#8a7a9a]">
@@ -260,24 +286,23 @@ export function AdminMailbox({ adminId }: { adminId: string }) {
           {/* 读信 / 回信 */}
           <div className="flex min-h-[320px] min-w-0 flex-col rounded-2xl border border-[#e0d4e8] bg-[#fcf8ff]">
             {!active ? (
-              <p className="m-auto py-10 text-center text-xs text-[#b8a8c8]">
-                左边选一个人，看看他写了什么
-              </p>
-            ) : (              <>
-                <div className="flex items-center gap-2 border-b border-[#ece4f4] px-4 py-3">
-                  <span className="text-xs font-medium text-[#2b2430]">{active.otherName}</span>
+              <p className="m-auto py-10 text-center text-xs text-[#b8a8c8]">左边选一个人，看看他写了什么</p>
+            ) : (
+              <>
+                <div className="flex flex-wrap items-center gap-x-2 gap-y-1 border-b border-[#ece4f4] px-4 py-3">
+                  <span className="text-xs font-medium text-[#2b2430]">{active.name}</span>
                   <span className="text-[10px] text-[#b8a8c8]">写来的</span>
                   <span className="ml-auto text-[10px] text-[#c8b8d8]">只有你和对方看得到</span>
-                  {message && <span className="text-[10px] text-[#8a7aaa]">{message}</span>}
+                  {message && <span className="w-full text-[10px] text-[#8a7aaa]">{message}</span>}
                 </div>
 
                 <div ref={listRef} className="max-h-[300px] flex-1 space-y-3 overflow-y-auto px-4 py-4">
                   {threadLoading ? (
                     <p className="py-8 text-center text-xs text-[#b8a8c8]">开信箱中…</p>
-                  ) : messages.length === 0 ? (
-                    <p className="py-8 text-center text-xs text-[#b8a8c8]">这个会话还没有消息</p>
+                  ) : letters.length === 0 ? (
+                    <p className="py-8 text-center text-xs text-[#b8a8c8]">这个信箱还没有信</p>
                   ) : (
-                    messages.map((m) => {
+                    letters.map((m) => {
                       const mine = m.sender_id === adminId
                       return (
                         <div key={m.id} className={`flex ${mine ? 'justify-end' : 'justify-start'}`}>
@@ -312,7 +337,7 @@ export function AdminMailbox({ adminId }: { adminId: string }) {
                       }}
                       rows={2}
                       maxLength={500}
-                      placeholder={`回 ${active.otherName} 一封…`}
+                      placeholder={`回 ${active.name} 一封…`}
                       className="min-w-0 flex-1 resize-none rounded-2xl border border-[#e0d4e8] bg-white px-3.5 py-2.5 font-serif-cn text-[12.5px] text-[#2b2430] focus:border-[#a88ab8] focus:outline-none"
                     />
                     <EmojiPicker onPick={(emoji) => setDraft((cur) => cur + emoji)} align="right" />

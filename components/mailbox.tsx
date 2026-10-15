@@ -1,6 +1,7 @@
 'use client'
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import Link from 'next/link'
 import { createClient } from '../app/lib/supabase'
 import { Icon } from './icons'
 import { EmojiPicker, useEmojiInsert } from './emoji-picker'
@@ -11,11 +12,12 @@ import { ADMIN_UUID } from './utils'
  *
  * 写烦心事、悄悄话给站主，点对点，只有站主看得到。
  *
- * 数据上直接复用现有的私信表：conversations（按排序后的两个 uid 建会话）
- * + messages。所以**不需要任何新的 SQL**，站主也能在原来的好友聊天里回信。
+ * 数据上用**自己的一张表** winter_letters，和好友私聊（conversations / messages）
+ * 完全分开——共用一个频道会让用户的好友列表里凭空多出一个和站主的会话，
+ * 站主后台也会把好友私聊一并列出来，两边都乱。
+ * 隐私由这张表的 RLS 保证：只有写信人本人和站主能读。
  *
- * 未读数自己记：把「上次读到的时间」放在 localStorage，
- * 不跟好友私信的已读标记混在一起。
+ * 未读数自己记：把「上次读到的时间」放在 localStorage。
  */
 
 const supabase = createClient()
@@ -31,7 +33,6 @@ export type MailboxMessage = {
 
 export type Mailbox = {
   meId: string | null
-  conversationId: string | null
   messages: MailboxMessage[]
   unread: number
   loading: boolean
@@ -40,6 +41,21 @@ export type Mailbox = {
   send: (text: string) => Promise<{ ok: boolean; message?: string }>
   markRead: () => void
   refresh: () => void
+}
+
+/** 把底层报错翻译成能照着做的话（后台也用） */
+export function describeMailboxError(err: unknown): string {
+  const text =
+    err && typeof err === 'object' && 'message' in err
+      ? String((err as { message: unknown }).message)
+      : String(err)
+  if (/does not exist|PGRST205|schema cache|404/i.test(text)) {
+    return '信箱还没开通：先在 Supabase 里执行 supabase-winter-mailbox.sql'
+  }
+  if (/row-level security|permission denied|42501/i.test(text)) {
+    return '没有权限：检查 winter_letters 的 RLS 策略是否已建好'
+  }
+  return '信箱暂时打不开，稍后再试'
 }
 
 function readSeenAt(uid: string): string {
@@ -59,7 +75,6 @@ function writeSeenAt(uid: string, iso: string) {
 }
 
 export function useMailbox(meId: string | null): Mailbox {
-  const [conversationId, setConversationId] = useState<string | null>(null)
   const [messages, setMessages] = useState<MailboxMessage[]>([])
   const [seenAt, setSeenAt] = useState('')
   const [loading, setLoading] = useState(false)
@@ -75,11 +90,9 @@ export function useMailbox(meId: string | null): Mailbox {
   }, [meId])
 
   useEffect(() => {
+    // 站主不用这个入口，来信都在后台的「冬日信箱」里
     if (!meId || meId === ADMIN_UUID) {
-      const frame = window.requestAnimationFrame(() => {
-        setConversationId(null)
-        setMessages([])
-      })
+      const frame = window.requestAnimationFrame(() => setMessages([]))
       return () => window.cancelAnimationFrame(frame)
     }
 
@@ -87,45 +100,22 @@ export function useMailbox(meId: string | null): Mailbox {
     void (async () => {
       setLoading(true)
       try {
-        // 会话按「排序后的两个 uid」唯一，和好友私信同一套规则
-        const [u1, u2] = [meId, ADMIN_UUID].sort()
-
-        let { data: conv } = await supabase
-          .from('conversations')
-          .select('id')
-          .eq('user1_id', u1)
-          .eq('user2_id', u2)
-          .maybeSingle()
-
-        if (!conv) {
-          const { data: created, error: createError } = await supabase
-            .from('conversations')
-            .insert({ user1_id: u1, user2_id: u2 })
-            .select('id')
-            .single()
-          if (createError) throw createError
-          conv = created
-        }
-
-        if (!conv) throw new Error('没能建立信箱')
-        if (cancelled) return
-        setConversationId(conv.id)
-
-        const { data, error: msgError } = await supabase
-          .from('messages')
+        // 独立的表：一行一封信，thread_user_id = 自己的信箱
+        const { data, error: loadError } = await supabase
+          .from('winter_letters')
           .select('id, sender_id, content, created_at')
-          .eq('conversation_id', conv.id)
+          .eq('thread_user_id', meId)
           .order('created_at', { ascending: true })
           .limit(200)
 
-        if (msgError) throw msgError
+        if (loadError) throw loadError
         if (!cancelled) {
           setMessages((data ?? []) as MailboxMessage[])
           setError('')
         }
       } catch (err) {
         console.error('打开冬日信箱失败:', err)
-        if (!cancelled) setError('信箱暂时打不开，稍后再试')
+        if (!cancelled) setError(describeMailboxError(err))
       } finally {
         if (!cancelled) setLoading(false)
       }
@@ -138,16 +128,15 @@ export function useMailbox(meId: string | null): Mailbox {
 
   const send = useCallback(
     async (text: string) => {
-      const body = text.trim()
+      const content = text.trim()
       if (!meId) return { ok: false, message: '请先登录' }
-      if (!conversationId) return { ok: false, message: '信箱还没准备好' }
-      if (!body) return { ok: false, message: '写点什么呢' }
+      if (!content) return { ok: false, message: '写点什么呢' }
 
       setSending(true)
       try {
         const { data, error: sendError } = await supabase
-          .from('messages')
-          .insert({ conversation_id: conversationId, sender_id: meId, content: body })
+          .from('winter_letters')
+          .insert({ thread_user_id: meId, sender_id: meId, content })
           .select('id, sender_id, content, created_at')
           .single()
 
@@ -155,17 +144,13 @@ export function useMailbox(meId: string | null): Mailbox {
         setMessages((prev) => [...prev, data as MailboxMessage])
         return { ok: true }
       } catch (err) {
-        const msg =
-          err && typeof err === 'object' && 'message' in err
-            ? String((err as { message: unknown }).message)
-            : String(err)
         console.error('寄信失败:', err)
-        return { ok: false, message: msg }
+        return { ok: false, message: describeMailboxError(err) }
       } finally {
         setSending(false)
       }
     },
-    [meId, conversationId],
+    [meId],
   )
 
   const markRead = useCallback(() => {
@@ -183,7 +168,6 @@ export function useMailbox(meId: string | null): Mailbox {
 
   return {
     meId,
-    conversationId,
     messages,
     unread,
     loading,
@@ -324,7 +308,7 @@ export function MailboxDialog({
           <div className="min-w-0 flex-1">
             <h2 className="font-serif-cn text-sm font-semibold text-[#2b2620]">冬日信箱</h2>
             <p className="mt-0.5 font-serif-cn text-[10px] text-[var(--accent-muted)]">
-              {isOwner ? '大家把不好说的烦心事写在这里，等你回一封' : '只写给站主一个人 · 他会认真读，也会认真回'}
+              {isOwner ? '你是站主 · 大家写来的烦心事都在后台' : '写给站主一个人 · 不公开，别人看不到'}
             </p>
           </div>
           <button
@@ -344,16 +328,36 @@ export function MailboxDialog({
           ) : mailbox.error ? (
             <p className="py-10 text-center text-xs text-red-500">{mailbox.error}</p>
           ) : mailbox.messages.length === 0 ? (
-            /* 第一次打开：把「怎么用」讲清楚，措辞先安慰人 */
-            <div className="px-1 py-4">
-              <p className="text-center font-serif-cn text-[13px] leading-relaxed text-[#3a3229]">
-                有什么不好开口的，
-                <br />
-                写在这里就好。
-              </p>
-              <p className="mt-2 text-center font-serif-cn text-[11px] leading-relaxed text-[var(--accent-muted)]">
-                不用组织语言，也不必写得体面。
-              </p>
+            isOwner ? (
+              /* 站主自己在前台点开：指个路，别让他以为要在前台写信 */
+              <div className="px-1 py-8 text-center">
+                <p className="font-serif-cn text-[13px] leading-relaxed text-[#3a3229]">
+                  你是站主
+                </p>
+                <p className="mt-2 font-serif-cn text-[11px] leading-relaxed text-[var(--accent-muted)]">
+                  大家写来的烦心事都在后台的「冬日信箱」里，
+                  <br />
+                  在那边一封一封回。
+                </p>
+                <Link
+                  href="/admin"
+                  className="mt-5 inline-flex items-center gap-1.5 rounded-full border border-[var(--accent-line)] bg-[var(--accent-soft)] px-4 py-2 font-serif-cn text-[11.5px] text-[var(--accent-deep)] transition hover:bg-[var(--accent-line)]"
+                >
+                  去后台看信
+                  <Icon name="arrow" className="h-3 w-3" />
+                </Link>
+              </div>
+            ) : (
+              /* 第一次打开：把「怎么用」讲清楚，措辞先安慰人 */
+              <div className="px-1 py-4">
+                <p className="text-center font-serif-cn text-[13px] leading-relaxed text-[#3a3229]">
+                  有什么不好开口的，
+                  <br />
+                  写在这里就好。
+                </p>
+                <p className="mt-2 text-center font-serif-cn text-[11px] leading-relaxed text-[var(--accent-muted)]">
+                  不用组织语言，也不必写得体面。
+                </p>
 
               <ol className="mt-6 space-y-3">
                 {[
@@ -375,10 +379,11 @@ export function MailboxDialog({
                 ))}
               </ol>
 
-              <p className="mt-5 text-center font-serif-cn text-[10.5px] text-[var(--accent-light)]">
-                说完就轻松一点了。
-              </p>
-            </div>
+                <p className="mt-5 text-center font-serif-cn text-[10.5px] text-[var(--accent-light)]">
+                  说完就轻松一点了。
+                </p>
+              </div>
+            )
           ) : (
             mailbox.messages.map((m) => {
               const mine = m.sender_id === mailbox.meId
@@ -402,40 +407,42 @@ export function MailboxDialog({
           )}
         </div>
 
-        {/* 写信 */}
-        <div className="border-t border-[var(--accent-line)] px-4 py-3">
-          {hint && <p className="mb-2 text-[10px] text-red-500">{hint}</p>}
-          <div className="flex items-end gap-2">
-            <textarea
-              ref={inputRef}
-              value={draft}
-              onChange={(e) => setDraft(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) {
-                  e.preventDefault()
-                  void handleSend()
-                }
-              }}
-              rows={2}
-              maxLength={500}
-              placeholder={isOwner ? '回一封…' : '写点想说的…'}
-              className="min-w-0 flex-1 resize-none rounded-2xl border border-[var(--accent-line)] bg-[var(--accent-soft)] px-3.5 py-2.5 font-serif-cn text-[12.5px] text-[#2b2620] placeholder:text-[var(--accent-muted)] focus:border-[var(--accent)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/10"
-            />
+        {/* 写信：站主不在前台写，他回信在后台 */}
+        {!isOwner && (
+          <div className="border-t border-[var(--accent-line)] px-4 py-3">
+            {hint && <p className="mb-2 text-[10px] text-red-500">{hint}</p>}
+            <div className="flex items-end gap-2">
+              <textarea
+                ref={inputRef}
+                value={draft}
+                onChange={(e) => setDraft(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) {
+                    e.preventDefault()
+                    void handleSend()
+                  }
+                }}
+                rows={2}
+                maxLength={500}
+                placeholder="写点想说的…"
+                className="min-w-0 flex-1 resize-none rounded-2xl border border-[var(--accent-line)] bg-[var(--accent-soft)] px-3.5 py-2.5 font-serif-cn text-[12.5px] text-[#2b2620] placeholder:text-[var(--accent-muted)] focus:border-[var(--accent)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/10"
+              />
             <EmojiPicker onPick={insertEmoji} align="right" />
-            <button
-              type="button"
-              disabled={mailbox.sending || !draft.trim()}
-              onClick={() => void handleSend()}
-              className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-r from-[var(--accent-light)] to-[var(--accent)] text-white transition hover:shadow-[0_6px_20px_rgba(217,119,87,0.3)] disabled:opacity-50"
-              aria-label="寄出"
-            >
-              <Icon name="send" className="h-4 w-4" />
-            </button>
+              <button
+                type="button"
+                disabled={mailbox.sending || !draft.trim()}
+                onClick={() => void handleSend()}
+                className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-r from-[var(--accent-light)] to-[var(--accent)] text-white transition hover:shadow-[0_6px_20px_rgba(217,119,87,0.3)] disabled:opacity-50"
+                aria-label="寄出"
+              >
+                <Icon name="send" className="h-4 w-4" />
+              </button>
+            </div>
+            <p className="mt-1.5 text-[9px] text-[var(--accent-muted)]">
+              {draft.length}/500 · Ctrl+Enter 寄出
+            </p>
           </div>
-          <p className="mt-1.5 text-[9px] text-[var(--accent-muted)]">
-            {draft.length}/500 · Ctrl+Enter 寄出
-          </p>
-        </div>
+        )}
       </div>
     </div>
   )

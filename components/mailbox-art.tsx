@@ -34,20 +34,26 @@ export function MailboxArt({ onOpen }: { onOpen: () => void }) {
           <circle cx="54" cy="150" r="1.8" />
         </g>
 
-        {/* ---------- 雪地 + 立柱投影 ---------- */}
-        <ellipse cx="106" cy="232" rx="106" ry="16" fill="var(--accent-soft)" />
-        <ellipse cx="108" cy="239" rx="88" ry="15" fill="var(--accent-soft)" opacity="0.85" />
-        <ellipse cx="90" cy="224" rx="26" ry="8" fill="var(--accent-line)" opacity="0.8" />
-
-        {/* ---------- 立柱 ---------- */}
+        {/* ---------- 雪地（后面一层）：顶边压一条淡线，地面才立得住 ---------- */}
+        <path d="M0 226 C 34 218, 68 222, 100 225 C 134 228, 170 220, 215 224 L215 255 L0 255 Z" fill="var(--accent-soft)" />
         <path
-          d="M78 168 H96 L94 224 H80 Z"
+          d="M0 226 C 34 218, 68 222, 100 225 C 134 228, 170 220, 215 224"
+          fill="none"
+          stroke="var(--accent-line)"
+          strokeWidth="1.6"
+        />
+
+        {/* ---------- 立柱（下端插进雪里，被前面那层雪地盖住） ---------- */}
+        <path
+          d="M78 168 H96 L93 236 H81 Z"
           fill="var(--accent-soft)"
           stroke="var(--accent-line)"
           strokeWidth="2.2"
           strokeLinejoin="round"
         />
-        <path d="M88 168 H96 L94 224 H88 Z" fill="var(--accent-line)" />
+        <path d="M88 168 H96 L93 236 H88 Z" fill="var(--accent-line)" />
+        {/* 立在雪上的影子 */}
+        <ellipse cx="89" cy="227" rx="25" ry="7" fill="var(--accent-line)" opacity="0.75" />
 
         {/* ---------- 顶面（两个拱之间那条弯带 = 纵深） ---------- */}
         <path d="M40 120 A45 45 0 0 1 130 120 L156 107 A45 45 0 0 0 66 107 Z" fill="var(--accent-light)" />
@@ -126,12 +132,24 @@ export function MailboxArt({ onOpen }: { onOpen: () => void }) {
           fillOpacity="0.75"
         />
 
+        {/* ---------- 前面一层雪地：盖住立柱下端，做出前后景 ---------- */}
+        <path d="M0 240 C 40 233, 82 238, 122 241 C 160 244, 188 237, 215 240 L215 255 L0 255 Z" fill="var(--accent-soft)" />
+        <path
+          d="M0 240 C 40 233, 82 238, 122 241 C 160 244, 188 237, 215 240"
+          fill="none"
+          stroke="var(--accent-line)"
+          strokeWidth="1.6"
+        />
+        {/* 雪地上两个小包，像一幅画 */}
+        <path d="M150 240 C 156 232, 172 232, 180 240" fill="none" stroke="var(--accent-line)" strokeWidth="1.4" />
+        <path d="M24 243 C 30 236, 44 236, 52 243" fill="none" stroke="var(--accent-line)" strokeWidth="1.4" />
+
         {/* ---------- 近景雪（大而实） ---------- */}
         <g fill="var(--accent-light)" opacity="0.75">
           <circle cx="20" cy="58" r="6.8" />
           <circle cx="188" cy="150" r="5.6" />
-          <circle cx="26" cy="186" r="5.2" />
-          <circle cx="174" cy="206" r="5.6" />
+          <circle cx="26" cy="196" r="5.2" />
+          <circle cx="174" cy="208" r="5.6" />
         </g>
       </svg>
 
