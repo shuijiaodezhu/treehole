@@ -64,6 +64,72 @@ export default function MomentsPage() {
   const blocks = useBlocks(userId)
   const [confirmDelete, setConfirmDelete] = useState<string | null>(null)
 
+  /* ---------- 举报朋友圈：可举报、可撤回 ---------- */
+  const [reportedMoments, setReportedMoments] = useState<Set<string>>(new Set())
+
+  useEffect(() => {
+    if (!userId) return
+    let cancelled = false
+    void (async () => {
+      const { data, error } = await supabase
+        .from('reports')
+        .select('target_id')
+        .eq('reporter_id', userId)
+        .eq('target_type', 'friend_post')
+        .eq('status', 'pending')
+      if (cancelled) return
+      if (error) {
+        console.error('查询我的朋友圈举报失败:', error)
+        return
+      }
+      setReportedMoments(new Set((data ?? []).map((r) => r.target_id)))
+    })()
+    return () => {
+      cancelled = true
+    }
+    // supabase 是模块级单例，不必进依赖
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userId])
+
+  async function handleReportMoment(momentId: string) {
+    if (!userId) return
+    const reason = window.prompt('举报这条动态的原因？（会发给站主看）')
+    if (reason === null) return
+    const text = reason.trim() || '未填写原因'
+    const { error } = await supabase.from('reports').insert({
+      reporter_id: userId,
+      target_type: 'friend_post',
+      target_id: momentId,
+      reason: text,
+      status: 'pending',
+    })
+    if (error) {
+      alert('举报失败：' + error.message)
+      return
+    }
+    setReportedMoments((prev) => new Set(prev).add(momentId))
+    alert('已收到，谢谢你的反馈。误报可以在同一条动态上点「撤回举报」。')
+  }
+
+  async function handleWithdrawMomentReport(momentId: string) {
+    if (!userId) return
+    const { error } = await supabase
+      .from('reports')
+      .delete()
+      .eq('reporter_id', userId)
+      .eq('target_type', 'friend_post')
+      .eq('target_id', momentId)
+    if (error) {
+      alert('撤回失败：' + error.message)
+      return
+    }
+    setReportedMoments((prev) => {
+      const next = new Set(prev)
+      next.delete(momentId)
+      return next
+    })
+  }
+
   /* ---------- 可见范围 ---------- */
   const [visibility, setVisibility] = useState<Visibility>('public')
   const [selectedFriends, setSelectedFriends] = useState<string[]>([])
@@ -542,6 +608,21 @@ export default function MomentsPage() {
                           删除
                         </button>
                       )
+                    )}
+                    {post.author_id !== userId && (
+                      <button
+                        type="button"
+                        onClick={() =>
+                          reportedMoments.has(post.id)
+                            ? void handleWithdrawMomentReport(post.id)
+                            : void handleReportMoment(post.id)
+                        }
+                        className="flex items-center gap-1.5 text-xs text-[#b0a89e] transition hover:text-[#c96447]"
+                        title={reportedMoments.has(post.id) ? '撤回举报' : '举报'}
+                      >
+                        <Icon name="shield" className="w-3.5 h-3.5" />
+                        {reportedMoments.has(post.id) ? '已举报' : '举报'}
+                      </button>
                     )}
                     <button
                       type="button"

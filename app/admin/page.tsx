@@ -9,6 +9,7 @@ import { AdminStats } from '../../components/admin-stats'
 import { AdminSitePages } from '../../components/admin-site-pages'
 import { AdminMailbox } from '../../components/admin-mailbox'
 import { DeletionRequestsSection } from '../../components/account-tools'
+import { MomentReportsSection } from '../../components/admin-moment-reports'
 
 // 客户端提到模块级，保证引用稳定
 const supabase = createClient()
@@ -377,6 +378,10 @@ export default function AdminPage() {
 
         {/* 注销申请：放在页签之前，确保一定看得见（这种申请不该被漏掉） */}
         <DeletionRequestsSection adminId={ADMIN_UUID} />
+
+        {/* 朋友圈举报：入口（朋友圈页）+ 权限（supabase-admin-moments.sql）+ 这一块，
+            三样齐了，《举报处理流程》里那句承诺才算数 */}
+        <MomentReportsSection adminId={ADMIN_UUID} />
 
         <div className="flex gap-6 mb-6 border-b border-[#e0d4e8]">
           <button
