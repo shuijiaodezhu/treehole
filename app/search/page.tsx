@@ -10,6 +10,7 @@ import { useBlocks } from '../../components/blocks'
 import { useFocusQuery } from '../../components/use-focus-query'
 import { SkeletonList } from '../../components/skeleton'
 import { EmptyState } from '../../components/empty-state'
+import { pageAccentVars } from '../../components/theme'
 
 /** 客户端单例 */
 const supabase = createClient()
@@ -258,22 +259,22 @@ export default function SearchPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#fdf7f0]">
+    <div className="min-h-screen bg-[#fdf7f0]" style={pageAccentVars('home')}>
       <div className="relative max-w-3xl mx-auto px-6 pt-10 pb-16">
         <Link
           href="/"
-          className="inline-flex items-center gap-1.5 text-sm text-[#8a827a] hover:text-[#c96447] transition"
+          className="inline-flex items-center gap-1.5 text-sm text-[var(--accent-muted)] hover:text-[var(--accent-deep)] transition"
         >
           <Icon name="back" className="w-4 h-4" />
           返回
         </Link>
 
         <h1 className="text-3xl font-bold text-[#2b2620] mt-4">搜索</h1>
-        <p className="text-sm text-[#8a827a] mt-1">站内搜帖子、活动、朋友圈、用户</p>
+        <p className="text-sm text-[var(--accent-muted)] mt-1">站内搜帖子、活动、朋友圈、用户</p>
 
         {/* 搜索框 */}
         <div className="mt-6 relative">
-          <span className="absolute left-4 top-1/2 -translate-y-1/2 text-[#c3b3a5]">
+          <span className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--accent-muted)]">
             <Icon name="search" className="w-4 h-4" />
           </span>
           <input
@@ -283,13 +284,13 @@ export default function SearchPage() {
             placeholder="输入关键词，比如：奶龙 / user_ / 今天"
             autoFocus
             maxLength={50}
-            className="w-full pl-11 pr-10 py-3 rounded-2xl border border-[#ece6dd] bg-white text-sm text-[#2b2620] placeholder:text-[#c3b3a5] focus:outline-none focus:border-[#e0a184] focus:ring-2 focus:ring-[#d97757]/10 transition"
+            className="w-full pl-11 pr-10 py-3 rounded-2xl border border-[var(--accent-line)] bg-white text-sm text-[#2b2620] placeholder:text-[var(--accent-muted)] focus:outline-none focus:border-[var(--accent-light)] focus:ring-2 focus:ring-[var(--accent)]/10 transition"
           />
           {keyword && (
             <button
               type="button"
               onClick={() => setKeyword('')}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-[#c3b3a5] hover:text-[#c96447] transition"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--accent-muted)] hover:text-[var(--accent-deep)] transition"
               aria-label="清空"
             >
               <Icon name="x" className="w-4 h-4" />
@@ -298,14 +299,14 @@ export default function SearchPage() {
         </div>
 
         {/* 页签 */}
-        <div className="mt-5 flex flex-wrap gap-x-6 gap-y-2 border-b border-[#ece6dd]">
+        <div className="mt-5 flex flex-wrap gap-x-6 gap-y-2 border-b border-[var(--accent-line)]">
           <button
             type="button"
             onClick={() => setTab('posts')}
             className={`pb-2.5 text-sm transition flex items-center gap-1.5 ${
               tab === 'posts'
-                ? 'border-b-2 border-[#d97757] text-[#d97757] font-medium'
-                : 'text-[#8a827a] hover:text-[#2b2620]'
+                ? 'border-b-2 border-[var(--accent)] text-[var(--accent)] font-medium'
+                : 'text-[var(--accent-muted)] hover:text-[#2b2620]'
             }`}
           >
             帖子
@@ -316,8 +317,8 @@ export default function SearchPage() {
             onClick={() => setTab('activities')}
             className={`pb-2.5 text-sm transition flex items-center gap-1.5 ${
               tab === 'activities'
-                ? 'border-b-2 border-[#d97757] text-[#d97757] font-medium'
-                : 'text-[#8a827a] hover:text-[#2b2620]'
+                ? 'border-b-2 border-[var(--accent)] text-[var(--accent)] font-medium'
+                : 'text-[var(--accent-muted)] hover:text-[#2b2620]'
             }`}
           >
             活动
@@ -328,8 +329,8 @@ export default function SearchPage() {
             onClick={() => setTab('moments')}
             className={`pb-2.5 text-sm transition flex items-center gap-1.5 ${
               tab === 'moments'
-                ? 'border-b-2 border-[#d97757] text-[#d97757] font-medium'
-                : 'text-[#8a827a] hover:text-[#2b2620]'
+                ? 'border-b-2 border-[var(--accent)] text-[var(--accent)] font-medium'
+                : 'text-[var(--accent-muted)] hover:text-[#2b2620]'
             }`}
           >
             朋友圈
@@ -340,8 +341,8 @@ export default function SearchPage() {
             onClick={() => setTab('users')}
             className={`pb-2.5 text-sm transition flex items-center gap-1.5 ${
               tab === 'users'
-                ? 'border-b-2 border-[#d97757] text-[#d97757] font-medium'
-                : 'text-[#8a827a] hover:text-[#2b2620]'
+                ? 'border-b-2 border-[var(--accent)] text-[var(--accent)] font-medium'
+                : 'text-[var(--accent-muted)] hover:text-[#2b2620]'
             }`}
           >
             用户
@@ -376,10 +377,10 @@ export default function SearchPage() {
                 <Link
                   key={p.id}
                   href={`/world?post=${p.id}`}
-                  className="block rounded-2xl border border-[#ece6dd] bg-white/80 backdrop-blur p-4 hover:shadow-[0_4px_16px_rgba(217,119,87,0.08)] hover:-translate-y-0.5 transition"
+                  className="block rounded-2xl border border-[var(--accent-line)] bg-white/80 backdrop-blur p-4 hover:shadow-[0_4px_16px_rgba(217,119,87,0.08)] hover:-translate-y-0.5 transition"
                 >
                   <div className="flex items-center gap-2.5 mb-2">
-                    <span className="w-7 h-7 rounded-full bg-[#f3e2d3] flex items-center justify-center overflow-hidden flex-shrink-0 text-[11px] text-[#c96447]">
+                    <span className="w-7 h-7 rounded-full bg-[#f3e2d3] flex items-center justify-center overflow-hidden flex-shrink-0 text-[11px] text-[var(--accent-deep)]">
                       {p.authorAvatar ? (
                         // eslint-disable-next-line @next/next/no-img-element
                         <img src={p.authorAvatar} alt="" className="w-full h-full object-cover" />
@@ -443,7 +444,7 @@ export default function SearchPage() {
                 <Link
                   key={m.id}
                   href={`/friends/moments?post=${m.id}`}
-                  className="block rounded-2xl border border-[#ece6dd] bg-white/80 backdrop-blur p-4 hover:shadow-[0_4px_16px_rgba(217,119,87,0.08)] hover:-translate-y-0.5 transition"
+                  className="block rounded-2xl border border-[var(--accent-line)] bg-white/80 backdrop-blur p-4 hover:shadow-[0_4px_16px_rgba(217,119,87,0.08)] hover:-translate-y-0.5 transition"
                 >
                   <div className="flex items-center gap-2 mb-2">
                     <span className="text-[10px] text-[#b0a89e]">朋友圈</span>
@@ -468,9 +469,9 @@ export default function SearchPage() {
                 return (
                   <div
                     key={u.id}
-                    className="flex items-center gap-3 rounded-2xl border border-[#ece6dd] bg-white/80 backdrop-blur p-4"
+                    className="flex items-center gap-3 rounded-2xl border border-[var(--accent-line)] bg-white/80 backdrop-blur p-4"
                   >
-                    <span className="w-10 h-10 rounded-full bg-gradient-to-br from-[#fae0cc] to-[#f9d5ba] flex items-center justify-center overflow-hidden flex-shrink-0 text-sm text-[#c96447] font-semibold">
+                    <span className="w-10 h-10 rounded-full bg-gradient-to-br from-[#fae0cc] to-[#f9d5ba] flex items-center justify-center overflow-hidden flex-shrink-0 text-sm text-[var(--accent-deep)] font-semibold">
                       {u.avatar_url ? (
                         // eslint-disable-next-line @next/next/no-img-element
                         <img src={u.avatar_url} alt="" className="w-full h-full object-cover" />
@@ -482,7 +483,7 @@ export default function SearchPage() {
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-medium text-[#2b2620] truncate">
                         {name}
-                        {isMe && <span className="ml-1.5 text-[10px] text-[#c96447]">（我）</span>}
+                        {isMe && <span className="ml-1.5 text-[10px] text-[var(--accent-deep)]">（我）</span>}
                       </p>
                       {u.username && (
                         <p className="text-[10px] text-[#b0a89e] truncate">@{u.username}</p>
@@ -495,7 +496,7 @@ export default function SearchPage() {
                     {!isMe && (
                       <Link
                         href="/friends"
-                        className="flex-shrink-0 rounded-full bg-[#d97757] px-3 py-1 text-[11px] text-white hover:bg-[#c96447] transition"
+                        className="flex-shrink-0 rounded-full bg-[var(--accent)] px-3 py-1 text-[11px] text-white hover:bg-[var(--accent-deep)] transition"
                       >
                         去小屋加好友
                       </Link>
