@@ -12,6 +12,7 @@ import { useFocusQuery } from '../../components/use-focus-query'
 import { useFavorites } from '../../components/favorites'
 import { useDeleteContent } from '../../components/delete-content'
 import { useBlocks } from '../../components/blocks'
+import { useEditContent } from '../../components/edit-content'
 
 // 客户端提到模块级，保证引用稳定
 const supabase = createClient()
@@ -265,6 +266,34 @@ export default function WorldPage() {
 
   // 拉黑：被拉黑（含拉黑我的）的内容一律不显示
   const blocks = useBlocks(meId)
+
+  /* ---------- 编辑自己发的帖子 / 评论 ---------- */
+  const editor = useEditContent(meId)
+
+  async function handleSavePost(postId: string) {
+    const text = editor.draft.trim()
+    const result = await editor.save('world_post', postId, text)
+    if (!result.ok) {
+      alert('保存失败：' + (result.message ?? '未知错误'))
+      return
+    }
+    setPosts((prev) => prev.map((p) => (p.id === postId ? { ...p, content: text } : p)))
+  }
+
+  async function handleSaveComment(commentId: string) {
+    const text = editor.draft.trim()
+    const result = await editor.save('world_comment', commentId, text)
+    if (!result.ok) {
+      alert('保存失败：' + (result.message ?? '未知错误'))
+      return
+    }
+    setPosts((prev) =>
+      prev.map((p) => ({
+        ...p,
+        comments: p.comments.map((c) => (c.id === commentId ? { ...c, content: text } : c)),
+      })),
+    )
+  }
 
   /* ---------- 举报帖子：可举报、可撤回 ---------- */
   const [reportedPosts, setReportedPosts] = useState<Set<string>>(new Set())
@@ -688,7 +717,45 @@ export default function WorldPage() {
                         <p className="text-[10px] text-[#9aa88a] mt-0.5">{formatTime(post.created_at)}</p>
                       </div>
                     </div>
-                    <p className="text-sm text-[#3a4a2a] whitespace-pre-wrap break-words leading-relaxed pl-1">{post.content}</p>
+                    {editor.isEditing('world_post', post.id) ? (
+                      <div className="pl-1">
+                        <textarea
+                          value={editor.draft}
+                          onChange={(e) => editor.setDraft(e.target.value)}
+                          rows={4}
+                          maxLength={editor.maxLength.world_post}
+                          autoFocus
+                          className="w-full px-3 py-2 rounded-xl border border-[#cfe0bd] bg-[#f8fcf4] text-sm text-[#3a4a2a] resize-none focus:outline-none focus:border-[#7ea86a] focus:ring-2 focus:ring-[#7ea86a]/10 transition"
+                        />
+                        <div className="flex items-center gap-3 mt-2">
+                          <button
+                            type="button"
+                            disabled={editor.isBusy('world_post', post.id)}
+                            onClick={() => void handleSavePost(post.id)}
+                            className="rounded-lg bg-[#7ea86a] px-3 py-1 text-xs text-white hover:bg-[#6d9759] transition disabled:opacity-50"
+                          >
+                            {editor.isBusy('world_post', post.id) ? '保存中…' : '保存'}
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => editor.cancel()}
+                            className="rounded-lg border border-[#d8e8c8] px-3 py-1 text-xs text-[#8a9a7a] hover:bg-[#f0f7e8] transition"
+                          >
+                            取消
+                          </button>
+                          <span className="ml-auto text-[10px] text-[#9aa88a]">
+                            {editor.draft.length}/{editor.maxLength.world_post}
+                          </span>
+                        </div>
+                      </div>
+                    ) : (
+                      <p className="text-sm text-[#3a4a2a] whitespace-pre-wrap break-words leading-relaxed pl-1">
+                        {post.content}
+                        {editor.wasSaved('world_post', post.id) && (
+                          <span className="ml-2 text-[10px] text-[#7ea86a]">已保存</span>
+                        )}
+                      </p>
+                    )}
 
                     <div className="flex items-center gap-4 pl-1 pt-3 mt-3 border-t border-[#e0eed0]">
                       <button
@@ -729,7 +796,17 @@ export default function WorldPage() {
                         />
                         {favorites.isFavorited('world_post', post.id) ? '已收藏' : '收藏'}
                       </button>
-                      {/* 自己发的帖子可以删（两步确认，防误触） */}
+                      {/* 自己发的帖子：编辑 / 删除 */}
+                      {editor.canEdit(post.author_id) && !editor.isEditing('world_post', post.id) && (
+                        <button
+                          type="button"
+                          onClick={() => editor.start('world_post', post.id, post.content)}
+                          className="flex items-center gap-1 text-xs text-[#8a9a7a] hover:text-[#5a8a4a] transition"
+                        >
+                          <Icon name="pen" className="w-3.5 h-3.5" />
+                          编辑
+                        </button>
+                      )}
                       {deleter.canDelete(post.author_id) && (
                         confirmDeletePost === post.id ? (
                           <button
@@ -806,10 +883,53 @@ export default function WorldPage() {
                                     )}
                                     <div className="flex-1 min-w-0 bg-[#f0f7e8] rounded-xl px-3 py-2">
                                       <p className="text-[11px] font-medium text-[#5a8a4a]">{parent.author_name}</p>
-                                      <p className="text-xs text-[#3a4a2a] mt-0.5 whitespace-pre-wrap break-words">{parent.content}</p>
+                                      {editor.isEditing('world_comment', parent.id) ? (
+                                        <div className="mt-1">
+                                          <textarea
+                                            value={editor.draft}
+                                            onChange={(e) => editor.setDraft(e.target.value)}
+                                            rows={2}
+                                            maxLength={editor.maxLength.world_comment}
+                                            autoFocus
+                                            className="w-full px-2 py-1.5 rounded-lg border border-[#cfe0bd] bg-white text-xs text-[#3a4a2a] resize-none focus:outline-none focus:border-[#7ea86a] transition"
+                                          />
+                                          <div className="flex items-center gap-2 mt-1">
+                                            <button
+                                              type="button"
+                                              disabled={editor.isBusy('world_comment', parent.id)}
+                                              onClick={() => void handleSaveComment(parent.id)}
+                                              className="rounded-md bg-[#7ea86a] px-2 py-0.5 text-[10px] text-white hover:bg-[#6d9759] transition disabled:opacity-50"
+                                            >
+                                              {editor.isBusy('world_comment', parent.id) ? '保存中…' : '保存'}
+                                            </button>
+                                            <button
+                                              type="button"
+                                              onClick={() => editor.cancel()}
+                                              className="rounded-md border border-[#d8e8c8] px-2 py-0.5 text-[10px] text-[#8a9a7a] transition"
+                                            >
+                                              取消
+                                            </button>
+                                          </div>
+                                        </div>
+                                      ) : (
+                                        <p className="text-xs text-[#3a4a2a] mt-0.5 whitespace-pre-wrap break-words">
+                                          {parent.content}
+                                          {editor.wasSaved('world_comment', parent.id) && (
+                                            <span className="ml-1.5 text-[10px] text-[#7ea86a]">已保存</span>
+                                          )}
+                                        </p>
+                                      )}
                                       <div className="flex items-center justify-between mt-1 gap-2">
                                         <div className="flex items-center gap-2">
                                           <button onClick={() => setReplyingTo(parent)} className="text-[10px] text-[#8a9a7a] hover:text-[#7ea86a]">回复</button>
+                                          {editor.canEdit(parent.author_id) && !editor.isEditing('world_comment', parent.id) && (
+                                            <button
+                                              onClick={() => editor.start('world_comment', parent.id, parent.content)}
+                                              className="text-[10px] text-[#8a9a7a] hover:text-[#5a8a4a] transition"
+                                            >
+                                              编辑
+                                            </button>
+                                          )}
                                           {deleter.canDelete(parent.author_id) && (
                                             confirmDeleteComment === parent.id ? (
                                               <button
@@ -857,11 +977,47 @@ export default function WorldPage() {
                                               <span className="font-medium text-[#5a8a4a]">{c.author_name}</span>
                                               {c.parent_name && (<><span className="text-[#8a9a7a]"> 回复 </span><span className="font-medium text-[#5a8a4a]">{c.parent_name}</span></>)}
                                               <span className="text-[#8a9a7a]">：</span>
-                                              <span className="ml-1">{c.content}</span>
+                                              {editor.isEditing('world_comment', c.id) ? null : (
+                                                <span className="ml-1">{c.content}</span>
+                                              )}
                                             </p>
+                                            {editor.isEditing('world_comment', c.id) && (
+                                              <div className="mt-1 flex items-center gap-2">
+                                                <input
+                                                  value={editor.draft}
+                                                  onChange={(e) => editor.setDraft(e.target.value)}
+                                                  maxLength={editor.maxLength.world_comment}
+                                                  autoFocus
+                                                  className="flex-1 rounded-lg border border-[#cfe0bd] bg-white px-2 py-1 text-[11px] text-[#3a4a2a] focus:outline-none focus:border-[#7ea86a] transition"
+                                                />
+                                                <button
+                                                  type="button"
+                                                  disabled={editor.isBusy('world_comment', c.id)}
+                                                  onClick={() => void handleSaveComment(c.id)}
+                                                  className="rounded-md bg-[#7ea86a] px-2 py-0.5 text-[10px] text-white hover:bg-[#6d9759] transition disabled:opacity-50"
+                                                >
+                                                  {editor.isBusy('world_comment', c.id) ? '…' : '保存'}
+                                                </button>
+                                                <button
+                                                  type="button"
+                                                  onClick={() => editor.cancel()}
+                                                  className="rounded-md border border-[#d8e8c8] px-2 py-0.5 text-[10px] text-[#8a9a7a] transition"
+                                                >
+                                                  取消
+                                                </button>
+                                              </div>
+                                            )}
                                             <div className="flex items-center justify-between mt-1 gap-2">
                                               <div className="flex items-center gap-2">
                                                 <button onClick={() => setReplyingTo(c)} className="text-[10px] text-[#8a9a7a] hover:text-[#7ea86a]">回复</button>
+                                                {editor.canEdit(c.author_id) && !editor.isEditing('world_comment', c.id) && (
+                                                  <button
+                                                    onClick={() => editor.start('world_comment', c.id, c.content)}
+                                                    className="text-[10px] text-[#8a9a7a] hover:text-[#5a8a4a] transition"
+                                                  >
+                                                    编辑
+                                                  </button>
+                                                )}
                                                 {deleter.canDelete(c.author_id) && (
                                                   confirmDeleteComment === c.id ? (
                                                     <button

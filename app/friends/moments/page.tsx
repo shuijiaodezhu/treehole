@@ -8,6 +8,7 @@ import { useFocusQuery } from '../../../components/use-focus-query'
 import { useFavorites } from '../../../components/favorites'
 import { useDeleteContent } from '../../../components/delete-content'
 import { useBlocks } from '../../../components/blocks'
+import { useEditContent } from '../../../components/edit-content'
 import { Icon } from '../../../components/icons'
 import {
   VISIBILITY_HINT,
@@ -63,6 +64,19 @@ export default function MomentsPage() {
 
   const { friends } = useFriendList(userId)
   const { groups } = useFriendGroups(userId)
+
+  /* ---------- 编辑已发的动态 ---------- */
+  const editor = useEditContent(userId)
+
+  async function handleSaveMoment(postId: string) {
+    const text = editor.draft.trim()
+    const result = await editor.save('moment', postId, text)
+    if (!result.ok) {
+      alert('保存失败：' + (result.message ?? '未知错误'))
+      return
+    }
+    setPosts((prev) => prev.map((p) => (p.id === postId ? { ...p, content: text } : p)))
+  }
 
   async function handleDeleteMoment(momentId: string, authorId: string) {
     const result = await deleter.deleteMoment(momentId, authorId)
@@ -410,12 +424,58 @@ export default function MomentsPage() {
                     </div>
                   </div>
 
-                  <p className="text-sm text-[#4a423c] whitespace-pre-wrap break-words leading-relaxed pl-1">
-                    {post.content}
-                  </p>
+                  {editor.isEditing('moment', post.id) ? (
+                    <div className="pl-1">
+                      <textarea
+                        value={editor.draft}
+                        onChange={(e) => editor.setDraft(e.target.value)}
+                        rows={3}
+                        maxLength={editor.maxLength.moment}
+                        autoFocus
+                        className="w-full rounded-xl border border-[#e8d0be] bg-[#fefcf9] px-3 py-2 text-sm text-[#4a423c] resize-none focus:outline-none focus:border-[#d97757] focus:ring-2 focus:ring-[#d97757]/10 transition"
+                      />
+                      <div className="mt-2 flex items-center gap-3">
+                        <button
+                          type="button"
+                          disabled={editor.isBusy('moment', post.id)}
+                          onClick={() => void handleSaveMoment(post.id)}
+                          className="rounded-lg bg-[#d97757] px-3 py-1 text-xs text-white hover:bg-[#c96447] transition disabled:opacity-50"
+                        >
+                          {editor.isBusy('moment', post.id) ? '保存中…' : '保存'}
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => editor.cancel()}
+                          className="rounded-lg border border-[#ece6dd] px-3 py-1 text-xs text-[#8a827a] transition"
+                        >
+                          取消
+                        </button>
+                        <span className="ml-auto text-[10px] text-[#b0a89e]">
+                          {editor.draft.length}/{editor.maxLength.moment}
+                        </span>
+                      </div>
+                    </div>
+                  ) : (
+                    <p className="text-sm text-[#4a423c] whitespace-pre-wrap break-words leading-relaxed pl-1">
+                      {post.content}
+                      {editor.wasSaved('moment', post.id) && (
+                        <span className="ml-2 text-[10px] text-[#7ea86a]">已保存</span>
+                      )}
+                    </p>
+                  )}
 
                   {/* 收藏 / 删除自己发的 */}
                   <div className="mt-3 pt-3 border-t border-[#f2ece4] flex items-center justify-end gap-4">
+                    {editor.canEdit(post.author_id) && !editor.isEditing('moment', post.id) && (
+                      <button
+                        type="button"
+                        onClick={() => editor.start('moment', post.id, post.content)}
+                        className="flex items-center gap-1.5 text-xs text-[#b0a89e] hover:text-[#c96447] transition"
+                      >
+                        <Icon name="pen" className="w-3.5 h-3.5" />
+                        编辑
+                      </button>
+                    )}
                     {deleter.canDelete(post.author_id) && (
                       confirmDelete === post.id ? (
                         <button
