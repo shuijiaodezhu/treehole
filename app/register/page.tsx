@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { createClient } from '../lib/supabase'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import { AuthLayout, AuthSwitch } from '../../components/auth-layout'
 
 export default function RegisterPage() {
   const [email, setEmail] = useState('')
@@ -48,39 +49,7 @@ export default function RegisterPage() {
   }
 
   return (
-    <div className="min-h-screen relative overflow-hidden flex items-center justify-center px-4">
-      {/* 背景装饰光晕 */}
-      <div className="absolute -top-20 -left-20 w-96 h-96 bg-[#f0b078] opacity-20 rounded-full blur-3xl pointer-events-none"></div>
-      <div className="absolute -bottom-20 -right-20 w-96 h-96 bg-[#d97757] opacity-10 rounded-full blur-3xl pointer-events-none"></div>
-
-      {/* 左侧装饰文字（大屏可见） */}
-      <div className="hidden lg:block absolute left-20 top-1/2 -translate-y-1/2 max-w-sm">
-        <h1 className="text-5xl font-bold text-[#2b2620] leading-tight">你的来信</h1>
-        <p className="mt-4 text-[#8a6a4a] flex items-baseline gap-2">
-          <span className="font-art text-3xl text-[#c96447]">Dear You</span>
-        </p>
-        <p className="mt-6 text-[#8a827a] text-sm leading-relaxed">
-          这里有一封，你的来信。
-          <br />
-          陌生人、朋友，和自己。
-        </p>
-      </div>
-
-      {/* 注册卡片 */}
-      <div className="relative w-full max-w-sm ml-auto mr-auto lg:mr-32">
-        <div className="rounded-3xl border border-[#f0e4d4] bg-white/80 backdrop-blur-lg p-8 shadow-[0_8px_40px_rgba(217,119,87,0.08)]">
-          <div className="lg:hidden text-center mb-6">
-            <h1 className="text-2xl font-bold text-[#2b2620]">你的来信</h1>
-            <p className="mt-1 font-art italic text-[#c96447]">Dear You</p>
-          </div>
-
-          <h2 className="hidden lg:block text-lg font-semibold text-[#2b2620] mb-1">
-            注册新账号
-          </h2>
-          <p className="hidden lg:block text-xs text-[#8a827a] mb-6">
-            从写下第一句开始
-          </p>
-
+    <AuthLayout heading="注册新账号" subheading="从写下第一句开始">
           <form onSubmit={handleRegister} className="space-y-4">
             <div>
               <label className="block text-xs text-[#8a6a4a] mb-1.5 tracking-wide">邮箱</label>
@@ -162,20 +131,7 @@ export default function RegisterPage() {
             )}
           </form>
 
-          <div className="mt-6 text-center">
-            <p className="text-xs text-[#8a827a]">
-              已经有账号？
-              <Link href="/login" className="text-[#c96447] ml-1 hover:underline font-medium">
-                去登录
-              </Link>
-            </p>
-          </div>
-        </div>
-
-        <p className="text-center text-[10px] text-[#b0a89e] mt-4 tracking-wider">
-          © 你的来信 · Dear You
-        </p>
-      </div>
-    </div>
+          <AuthSwitch text="已经有账号？" href="/login" label="去登录" />
+        </AuthLayout>
   )
 }
