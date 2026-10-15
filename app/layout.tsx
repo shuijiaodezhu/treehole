@@ -4,7 +4,6 @@ import { Cormorant_Garamond, Ma_Shan_Zheng, Noto_Serif_SC } from "next/font/goog
 import "./globals.css";
 import { OnlinePresence } from "../components/presence";
 import { ThemeProvider } from "../components/theme";
-import { PageDecor } from "../components/page-decor"
 import { SmoothScroll } from "../components/smooth-scroll"
 import { Splash } from "../components/splash"
 import { PageTransition } from "../components/page-transition"
@@ -102,7 +101,6 @@ export default function RootLayout({
           <OnlinePresence />
           {/* 整站边缘的极淡装饰（颜色与图案跟着当前页面走） */}
           <Suspense fallback={null}>
-            <PageDecor />
             {/* 登录过场：挂在 layout 上，所以换页时动画不会中断 */}
             <LoginTransitionOverlay />
           </Suspense>
