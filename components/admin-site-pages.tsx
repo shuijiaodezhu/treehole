@@ -1,8 +1,9 @@
 'use client'
 
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { createClient } from '../app/lib/supabase'
 import { Icon } from './icons'
+import { DEFAULT_PAGES } from './site-page-defaults'
 import { formatUpdated } from './site-pages'
 
 /**
@@ -11,7 +12,10 @@ import { formatUpdated } from './site-pages'
  * 公约 / 审核指引 / 举报流程 / 申诉 / 隐私 / 协议 / 关于，正文存在
  * public.site_pages。改完点保存即生效，不用重新部署。
  *
- * 依赖 supabase-site-pages.sql（建表 + 7 份初稿 + 只有站主能改的策略）
+ * 数据库里还没有的那几条，用内置初稿（components/site-page-defaults.ts）垫着，
+ * 所以这里永远能看到全部 7 页；编辑后保存会自动插入。
+ *
+ * 依赖 supabase-site-pages.sql（建表 + 只有站主能写的策略）
  */
 
 const supabase = createClient()
@@ -27,10 +31,11 @@ type Row = {
 
 export function AdminSitePages() {
   const [rows, setRows] = useState<Row[]>([])
-  const [activeSlug, setActiveSlug] = useState<string | null>(null)
+  const [activeSlug, setActiveSlug] = useState<string>(DEFAULT_PAGES[0].slug)
   const [draft, setDraft] = useState('')
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
+  const [seeding, setSeeding] = useState(false)
   const [message, setMessage] = useState('')
   const [error, setError] = useState('')
 
@@ -43,13 +48,12 @@ export function AdminSitePages() {
         .order('sort_order', { ascending: true })
 
       if (queryError) throw queryError
-      const list = (data ?? []) as unknown as Row[]
-      setRows(list)
-      setActiveSlug((cur) => cur ?? list[0]?.slug ?? null)
+      setRows((data ?? []) as unknown as Row[])
       setError('')
     } catch (err) {
       console.error('加载站点页面失败:', err)
-      setError('加载失败（可能还没跑 supabase-site-pages.sql）')
+      setError('读取数据库失败，下面显示的是内置初稿（可能还没跑 supabase-site-pages.sql）')
+      setRows([])
     } finally {
       setLoading(false)
     }
@@ -61,15 +65,47 @@ export function AdminSitePages() {
     void load()
   }, [load])
 
-  const active = rows.find((r) => r.slug === activeSlug) ?? null
+  /** 目录：数据库优先，缺的用内置初稿补位 */
+  const catalog = useMemo(() => {
+    const byslug = new Map(rows.map((r) => [r.slug, r]))
+    const list = DEFAULT_PAGES.map((d) => {
+      const row = byslug.get(d.slug)
+      return {
+        slug: d.slug,
+        title: row?.title ?? d.title,
+        summary: row?.summary ?? d.summary,
+        body: row?.body ?? d.body,
+        updated_at: row?.updated_at ?? '',
+        inDb: Boolean(row),
+      }
+    })
+    // 数据库里可能有自定义的额外条目，也列出来
+    for (const r of rows) {
+      if (!DEFAULT_PAGES.some((d) => d.slug === r.slug)) {
+        list.push({
+          slug: r.slug,
+          title: r.title,
+          summary: r.summary ?? '',
+          body: r.body,
+          updated_at: r.updated_at,
+          inDb: true,
+        })
+      }
+    }
+    return list
+  }, [rows])
 
-  // 切换页面时把草稿同步成那一页的正文
+  const active = catalog.find((c) => c.slug === activeSlug) ?? catalog[0] ?? null
+  const originalBody = active?.body ?? ''
+
+  // 切换页面时同步草稿（原正文变了也要跟上，例如刚保存或刚写入）
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
-    setDraft(active?.body ?? '')
-  }, [active?.slug, active?.body])
+    setDraft(originalBody)
+  }, [activeSlug, originalBody])
 
-  const dirty = active ? draft !== active.body : false
+  const dirty = draft !== originalBody
+  const missingCount = catalog.filter((c) => !c.inDb).length
 
   async function handleSave() {
     if (!active) return
@@ -77,26 +113,35 @@ export function AdminSitePages() {
     setMessage('')
     try {
       const { data: userData } = await supabase.auth.getUser()
-      const { data, error: updateError } = await supabase
+      const payload = {
+        slug: active.slug,
+        title: active.title,
+        summary: active.summary || null,
+        body: draft,
+        sort_order: DEFAULT_PAGES.findIndex((d) => d.slug === active.slug) + 1 || 99,
+        updated_at: new Date().toISOString(),
+        updated_by: userData.user?.id ?? null,
+      }
+
+      // upsert：数据库里没有这条就插入，有就更新
+      const { data, error: writeError } = await supabase
         .from('site_pages')
-        .update({
-          body: draft,
-          updated_at: new Date().toISOString(),
-          updated_by: userData.user?.id ?? null,
-        })
-        .eq('slug', active.slug)
+        .upsert(payload, { onConflict: 'slug' })
         .select('slug, title, summary, body, sort_order, updated_at')
 
-      if (updateError) throw updateError
+      if (writeError) throw writeError
       if (!data || data.length === 0) {
-        setMessage('没能保存：数据库没有更新任何一行（可能是权限策略没生效）。')
+        setMessage('没能保存：数据库没有写入任何一行（可能是权限策略没生效）。')
         await load()
         return
       }
 
       const updated = data[0] as unknown as Row
-      setRows((prev) => prev.map((r) => (r.slug === updated.slug ? updated : r)))
-      setMessage('已保存')
+      setRows((prev) => {
+        const others = prev.filter((r) => r.slug !== updated.slug)
+        return [...others, updated]
+      })
+      setMessage('已保存，前台已生效')
       window.setTimeout(() => setMessage(''), 2500)
     } catch (err) {
       const msg =
@@ -106,6 +151,49 @@ export function AdminSitePages() {
       setMessage('保存失败：' + msg)
     } finally {
       setSaving(false)
+    }
+  }
+
+  /** 把数据库里还没有的那几页一次性写入（不动已有的） */
+  async function handleSeed() {
+    setSeeding(true)
+    setMessage('')
+    try {
+      const missing = catalog.filter((c) => !c.inDb)
+      if (missing.length === 0) {
+        setMessage('数据库里已经有了，不需要写入')
+        return
+      }
+      const { data: userData } = await supabase.auth.getUser()
+      const payload = missing.map((c) => ({
+        slug: c.slug,
+        title: c.title,
+        summary: c.summary || null,
+        body: c.body,
+        sort_order: DEFAULT_PAGES.findIndex((d) => d.slug === c.slug) + 1 || 99,
+        updated_by: userData.user?.id ?? null,
+      }))
+
+      const { data, error: insertError } = await supabase
+        .from('site_pages')
+        .insert(payload)
+        .select('slug, title, summary, body, sort_order, updated_at')
+
+      if (insertError) throw insertError
+      if (!data || data.length === 0) {
+        setMessage('没能写入：数据库没有插入任何一行（检查一下权限策略）。')
+        return
+      }
+      setMessage(`已写入 ${data.length} 页`)
+      await load()
+    } catch (err) {
+      const msg =
+        err && typeof err === 'object' && 'message' in err
+          ? String((err as { message: unknown }).message)
+          : String(err)
+      setMessage('写入失败：' + msg)
+    } finally {
+      setSeeding(false)
     }
   }
 
@@ -125,20 +213,35 @@ export function AdminSitePages() {
       </div>
 
       {error && (
-        <p className="mb-4 rounded-xl border border-red-100 bg-red-50 px-4 py-3 text-xs text-red-600">{error}</p>
+        <p className="mb-4 rounded-xl border border-amber-100 bg-amber-50 px-4 py-3 text-xs text-amber-700">
+          {error}
+        </p>
       )}
 
-      {loading && rows.length === 0 ? (
+      {missingCount > 0 && !error && (
+        <div className="mb-4 flex flex-wrap items-center gap-3 rounded-xl border border-[#e0d4e8] bg-[#faf5ff] px-4 py-3">
+          <p className="flex-1 text-[11px] text-[#7a5a9a]">
+            有 {missingCount} 页还没存进数据库，前台现在显示的是内置初稿。
+            写入之后就能在这里随意改。
+          </p>
+          <button
+            type="button"
+            disabled={seeding}
+            onClick={() => void handleSeed()}
+            className="rounded-xl bg-gradient-to-r from-[#b89ac8] to-[#a88ab8] px-4 py-1.5 text-xs text-white transition hover:shadow-[0_4px_16px_rgba(168,138,184,0.3)] disabled:opacity-50"
+          >
+            {seeding ? '写入中…' : '写入初稿'}
+          </button>
+        </div>
+      )}
+
+      {loading && rows.length === 0 && catalog.length === 0 ? (
         <p className="py-10 text-center text-xs text-[#b8a8c8]">加载中…</p>
-      ) : rows.length === 0 ? (
-        <p className="py-10 text-center text-xs text-[#b8a8c8]">
-          还没有内容，先跑一次 supabase-site-pages.sql
-        </p>
       ) : (
         <div className="grid gap-4 md:grid-cols-[200px_1fr]">
           {/* 左侧目录 */}
           <nav className="flex flex-wrap gap-1.5 md:flex-col md:flex-nowrap">
-            {rows.map((r) => (
+            {catalog.map((r) => (
               <button
                 key={r.slug}
                 type="button"
@@ -146,13 +249,14 @@ export function AdminSitePages() {
                   if (dirty && !window.confirm('这一页还没保存，切走会丢掉改动。继续？')) return
                   setActiveSlug(r.slug)
                 }}
-                className={`rounded-xl px-3 py-2 text-left text-xs transition ${
-                  r.slug === activeSlug
+                className={`flex items-center gap-1.5 rounded-xl px-3 py-2 text-left text-xs transition ${
+                  r.slug === active?.slug
                     ? 'bg-[#f0e6f8] font-medium text-[#7a5a9a]'
                     : 'text-[#8a7a9a] hover:bg-[#faf5ff]'
                 }`}
               >
-                {r.title}
+                <span className="min-w-0 flex-1 truncate">{r.title}</span>
+                {!r.inDb && <span className="h-1.5 w-1.5 flex-shrink-0 rounded-full bg-amber-400" title="还没存进数据库" />}
               </button>
             ))}
           </nav>
@@ -170,7 +274,7 @@ export function AdminSitePages() {
                 >
                   看前台效果 ↗
                 </a>
-                <span className="ml-auto text-[10px] text-[#b8a8c8]">
+                <span className="text-[10px] text-[#b8a8c8]">
                   更新于 {formatUpdated(active.updated_at)} · {draft.length} 字
                 </span>
               </div>
@@ -195,7 +299,7 @@ export function AdminSitePages() {
                 <button
                   type="button"
                   disabled={!dirty}
-                  onClick={() => setDraft(active.body)}
+                  onClick={() => setDraft(originalBody)}
                   className="rounded-xl border border-[#e0d4e8] px-4 py-2 text-xs text-[#8a7a9a] transition hover:bg-[#faf5ff] disabled:opacity-40"
                 >
                   放弃改动
