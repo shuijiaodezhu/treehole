@@ -13,7 +13,7 @@ import {
   QUOTE_SLOT_MS,
   calcLoginStreak,
   formatDateText,
-  getQuoteByTime,
+  getDailyPoem,
   msUntilNextQuoteSlot,
   pickProfile,
   resolveDisplayName,
@@ -57,7 +57,7 @@ export default function HomePage() {
   const [reloadKey, setReloadKey] = useState(0)
 
   // 时间相关内容全部放到 hydration 之后再取：Next 16 不允许在预渲染阶段读 Date.now()
-  const [quote, setQuote] = useState('')
+  const [poem, setPoem] = useState<string[]>([])
   const [dateText, setDateText] = useState('')
 
   /*
@@ -207,20 +207,20 @@ export default function HomePage() {
 
     // 用 rAF 推迟到首帧之后：既避开预渲染限制，也不在 effect 里同步 setState
     const firstFrame = window.requestAnimationFrame(() => {
-      setQuote(getQuoteByTime())
+      setPoem(getDailyPoem(3))
       setDateText(formatDateText(new Date()))
     })
 
     const timeoutId = window.setTimeout(() => {
-      setQuote(getQuoteByTime())
+      setPoem(getDailyPoem(3))
       intervalId = window.setInterval(() => {
         if (!mountedRef.current) return
-        setQuote(getQuoteByTime())
+        setPoem(getDailyPoem(3))
       }, QUOTE_SLOT_MS)
     }, msUntilNextQuoteSlot())
 
     const handleVisible = () => {
-      if (document.visibilityState === 'visible') setQuote(getQuoteByTime())
+      if (document.visibilityState === 'visible') setPoem(getDailyPoem(3))
     }
     document.addEventListener('visibilitychange', handleVisible)
 
@@ -326,10 +326,12 @@ export default function HomePage() {
 
             <div className="mt-6 h-px bg-[#ece0cd]" />
 
-            {quote && (
-              <p className="mt-7 font-serif-cn text-[21px] leading-[1.95] text-[#3a2f26] sm:text-[24px]">
-                「{quote}」
-              </p>
+{poem.length > 0 && (
+              <div className="mt-7 space-y-2 font-serif-cn text-[21px] leading-[1.85] text-[#3a2f26] sm:text-[23px]">
+                {poem.map((line) => (
+                  <p key={line}>{line}</p>
+                ))}
+              </div>
             )}
 
             <p className="mt-7 text-[13px] text-[#6f5d4c]">

@@ -44,6 +44,22 @@ export function getQuoteByTime(now: number = Date.now()): string {
 }
 
 /** 距离下一个时间片还有多少毫秒（至少 1 秒，防止 0 延迟定时器） */
+/**
+ * 一天一首小诗：按日期取 count 句，同一天内稳定不变。
+ * 信里写的不该只有一句话 —— 三四句连起来才像一个人在那儿慢慢说。
+ * 步长取 7，避免取到相邻两句（那两句常常太像）。
+ */
+export function getDailyPoem(count = 3, now: number = Date.now()): string[] {
+  const n = DAILY_QUOTES.length
+  const day = Math.floor(now / (1000 * 60 * 60 * 24))
+  const start = day % n
+  const out: string[] = []
+  for (let i = 0; i < count && i < n; i++) {
+    out.push(DAILY_QUOTES[(start + i * 7) % n])
+  }
+  return out
+}
+
 export function msUntilNextQuoteSlot(now: number = Date.now()): number {
   return Math.max(Math.ceil(now / QUOTE_SLOT_MS) * QUOTE_SLOT_MS - now, 1000)
 }
