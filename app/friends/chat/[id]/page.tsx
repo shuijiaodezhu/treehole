@@ -6,6 +6,7 @@ import { useRouter, useParams } from 'next/navigation'
 import Link from 'next/link'
 import { EmojiPicker, useEmojiInsert } from '../../../../components/emoji-picker'
 import { ChatMessages } from '../../../../components/chat-bubbles'
+import { useChatRealtime } from '../../../../components/chat-realtime'
 import { pageAccentVars } from '../../../../components/theme'
 
 type Message = {
@@ -63,6 +64,13 @@ function ChatInner() {
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [messages])
+
+  // 实时收消息（实现见 components/chat-realtime.ts）
+  useChatRealtime(conversationId, (incoming) => {
+    setMessages((prev) => (prev.some((m) => m.id === incoming.id) ? prev : [...prev, incoming]))
+  }, () => {
+    if (conversationId) void loadMessages(conversationId)
+  })
 
   async function init() {
     const { data: userData } = await supabase.auth.getUser()

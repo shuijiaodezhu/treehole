@@ -1,13 +1,14 @@
 'use client'
 /* eslint-disable @next/next/no-img-element -- 头像用原生 img 即可，尺寸固定 */
 
-import { useEffect, useMemo, useState, useRef } from 'react'
+import { useCallback, useEffect, useMemo, useState, useRef } from 'react'
 import { createClient } from '../lib/supabase'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { markMomentsSeen, useMomentsBadge, useUnreadMessages } from '../../components/unread'
 import { markModuleSeen } from '../../components/module-badges'
 import { ChatMessages } from '../../components/chat-bubbles'
+import { useChatRealtime } from '../../components/chat-realtime'
 import { checkRate, filterHint, filterText, noteSent } from '../../components/content-guard'
 import { useBlocks } from '../../components/blocks'
 import { ImagePicker } from '../../components/media'
@@ -239,6 +240,28 @@ export default function FriendsPage() {
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [messages])
+
+  /*
+   * 实时收消息：对方发的当场出现，不用刷新（实现见 components/chat-realtime.ts）
+   */
+  const handleIncoming = useCallback(
+    (incoming: Message) => {
+      setMessages((prev) => (prev.some((m) => m.id === incoming.id) ? prev : [...prev, incoming]))
+      // 正看着这个会话 → 顺手记为已读，别让角标又冒出来
+      if (conversationId && incoming.sender_id !== meId && currentFriend) {
+        unread.markConversationRead(conversationId, currentFriend.friend_id)
+      }
+    },
+    // unread 每次渲染都是新对象，写进依赖会让上面的回调不断重建
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [conversationId, meId, currentFriend?.friend_id],
+  )
+
+  useChatRealtime(conversationId, handleIncoming, () => {
+    // loadMessages 是函数声明（提升），此处引用安全；规则无法识别
+    // eslint-disable-next-line react-hooks/immutability
+    if (conversationId) void loadMessages(conversationId)
+  })
 
   useEffect(() => {
     if (mode === 'moments' && meId) {
