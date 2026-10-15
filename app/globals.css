@@ -426,8 +426,8 @@ html[data-first-load="1"] .dsh-splash-inner {
 }
 /* 主页标题：等 splash 开始收的时候升起来，接住那四个字 */
 @keyframes dsh-hero-title-in {
-  from { opacity: 0; transform: translate3d(0, 10px, 0); }
-  to   { opacity: 1; transform: translate3d(0, 0, 0); }
+  from { opacity: 0; }
+  to   { opacity: 1; }
 }
 html[data-first-load="1"] .dsh-hero-title {
   animation: dsh-hero-title-in 620ms cubic-bezier(0.22, 1, 0.36, 1) 900ms both;
@@ -516,8 +516,8 @@ select:-webkit-autofill {
 
 
 /* ============================================================
-   进主页的出场：**一开始就是模糊的** → 四个字慢慢弹一下 → 再清晰
-   （上一版反了：先清晰，等动画开始才糊一下再跳，看着很丑）
+   进主页的出场：**一开始就是模糊的** → 慢慢化开变清晰
+   （就是最初要的那句「像信被打开」，不再有跳的动作）
    ============================================================ */
 
 /* 等待阶段：静态模糊。它从**首帧**就在，所以不会出现"先清晰再糊" */
@@ -532,20 +532,10 @@ select:-webkit-autofill {
 }
 
 /* 弹跳放慢、幅度收小：上一版 620ms + 12px/1.05 太快太夸张 */
-@keyframes dsh-bounce {
-  0%   { transform: translate3d(0, 0, 0) scale(1); }
-  40%  { transform: translate3d(0, -10px, 0) scale(1.04); }
-  100% { transform: translate3d(0, 0, 0) scale(1); }
-}
-
 /*
  * 播放阶段（.dsh-open）：
- *   标题与整页都从 0ms 开始、同样 620ms：**模糊化开与弹跳同时发生**；
- *   弹跳只有一次上落（不再有回弹那一下，看两下就不好看了）
+ *   只有一件事：整页从模糊化开变清晰（620ms）。不再有动作。
  */
-.dsh-open .dsh-hero-title {
-  animation: dsh-bounce 620ms cubic-bezier(0.22, 1, 0.36, 1) 0ms both;
-}
 .dsh-open.dsh-wait-blur,
 .dsh-open .dsh-wait-blur {
   animation: dsh-unblur 620ms ease-out 0ms both;
@@ -553,7 +543,6 @@ select:-webkit-autofill {
 
 @media (prefers-reduced-motion: reduce) {
   .dsh-wait-blur { filter: none; opacity: 1; }
-  .dsh-open .dsh-hero-title,
   .dsh-open.dsh-wait-blur,
   .dsh-open .dsh-wait-blur { animation: none; }
 }
