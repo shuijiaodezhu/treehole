@@ -318,7 +318,7 @@ export default function HomePage() {
             <>
               <Ornament />
 
-              <div className="mt-14 grid gap-8 sm:grid-cols-[minmax(0,1fr)_168px] sm:items-end">
+              <div className="mt-14 grid gap-8 sm:grid-cols-[minmax(0,26rem)_168px] sm:items-start sm:justify-center sm:gap-12">
               <motion.div
                 initial={{ opacity: 0, y: 16 }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -333,7 +333,7 @@ export default function HomePage() {
               </motion.div>
 
               {/* 冬日信箱：挪到引言旁边（你圈的图二位置），带副标题，尺寸受控 */}
-              <div className="relative mx-auto w-[168px] sm:mx-0 sm:w-full">
+              <div className="relative mx-auto w-[168px] sm:mx-0 sm:w-full sm:self-end">
                 <FallingBits className="-inset-x-8 -top-4 bottom-6" />
                 <MailboxArt onOpen={() => setMailboxOpen(true)} />
               </div>
@@ -345,7 +345,7 @@ export default function HomePage() {
 
       {/* 页脚：条款与说明入口 */}
       <footer className="mx-auto w-full max-w-5xl px-6 pb-12 sm:px-8">
-        <div className="flex flex-wrap items-center justify-between gap-x-5 gap-y-3 border-t border-[#ece3d4] pt-6 text-[12px]">
+        <div className="flex flex-wrap items-center gap-x-6 gap-y-3 border-t border-[#ece3d4] pt-6 text-[12px]">
           {[
             { slug: 'community', label: '社区公约' },
             { slug: 'reporting', label: '举报与申诉' },
@@ -363,7 +363,7 @@ export default function HomePage() {
           ))}
           <Link
             href="/p"
-            className="text-[11px] text-[var(--accent-muted)] transition hover:text-[var(--accent-deep)]"
+            className="ml-auto text-[11px] text-[var(--accent-muted)] transition hover:text-[var(--accent-deep)]"
           >
             全部条款 →
           </Link>
