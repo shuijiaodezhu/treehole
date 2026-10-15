@@ -208,10 +208,6 @@ export default function FriendsPage() {
         .filter((m) => canViewPost(m, meId, audienceMap)),
     [moments, hidden, meId, audienceMap],
   )
-  const shownFriends = useMemo(
-    () => friends.filter((f) => !hidden.has(f.friend_id)),
-    [friends, hidden],
-  )
   const shownRequests = useMemo(
     () => requests.filter((r) => !hidden.has(r.requester_id)),
     [requests, hidden],
@@ -229,6 +225,40 @@ export default function FriendsPage() {
     }
     return map
   }, [unread.friendIdByConversation])
+
+  /*
+   * 好友列表排序（朋友一多，这条就是能不能用的分界线）：
+   *   1. 有未读的排在前面
+   *   2. 其余按「最后一条消息」的时间倒序 —— 刚聊过的在上
+   *   3. 都没有消息记录的，按昵称排，位置稳定不跳
+   *
+   * 排在最前面的判据是「最后一条消息的时间」，它包含自己发的：
+   * 你刚给谁发完，谁也应该待在最上面。
+   */
+  const sortedFriends = useMemo(() => {
+    const lastAt = unread.lastAtByConversation
+    const counts = unread.byConversation
+    return [...friends].sort((a, b) => {
+      const convA = conversationByFriend[a.friend_id]
+      const convB = conversationByFriend[b.friend_id]
+      const unreadA = convA ? counts[convA] ?? 0 : 0
+      const unreadB = convB ? counts[convB] ?? 0 : 0
+
+      if ((unreadA > 0) !== (unreadB > 0)) return unreadB > 0 ? 1 : -1
+      if (unreadA !== unreadB && unreadA > 0) return unreadB - unreadA
+
+      const timeA = convA ? lastAt[convA] ?? '' : ''
+      const timeB = convB ? lastAt[convB] ?? '' : ''
+      if (timeA !== timeB) return timeB.localeCompare(timeA)
+
+      return (a.nickname || a.username).localeCompare(b.nickname || b.username, 'zh-CN')
+    })
+  }, [friends, conversationByFriend, unread.lastAtByConversation, unread.byConversation])
+
+  const shownFriends = useMemo(
+    () => sortedFriends.filter((f) => !hidden.has(f.friend_id)),
+    [sortedFriends, hidden],
+  )
 
   useEffect(() => {
     // loadAll 是函数声明（提升），此处引用安全；规则无法识别
@@ -250,6 +280,10 @@ export default function FriendsPage() {
       // 正看着这个会话 → 顺手记为已读，别让角标又冒出来
       if (conversationId && incoming.sender_id !== meId && currentFriend) {
         unread.markConversationRead(conversationId, currentFriend.friend_id)
+      } else if (incoming.sender_id !== meId) {
+        // 不是当前会话（比如你在看列表）→ 重算一次未读，
+        // 让那个好友的小点冒出来、并顶到列表最上面
+        unread.refresh()
       }
     },
     // unread 每次渲染都是新对象，写进依赖会让上面的回调不断重建

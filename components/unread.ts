@@ -52,18 +52,23 @@ const UNREAD_CACHE_TTL_MS = 24 * 60 * 60 * 1000
 type UnreadCache = {
   counts: Record<string, number>
   friends: Record<string, string>
+  lastAt: Record<string, string>
   at: number
 }
 
-function readUnreadCache(userId: string): { counts: Record<string, number>; friends: Record<string, string> } {
-  const empty = { counts: {}, friends: {} }
+function readUnreadCache(userId: string): {
+  counts: Record<string, number>
+  friends: Record<string, string>
+  lastAt: Record<string, string>
+} {
+  const empty = { counts: {}, friends: {}, lastAt: {} }
   try {
     const raw = window.localStorage.getItem(`${UNREAD_CACHE_PREFIX}${userId}`)
     if (!raw) return empty
     const parsed = JSON.parse(raw) as Partial<UnreadCache>
     if (!parsed || typeof parsed.at !== 'number') return empty
     if (Date.now() - parsed.at > UNREAD_CACHE_TTL_MS) return empty
-    return { counts: parsed.counts ?? {}, friends: parsed.friends ?? {} }
+    return { counts: parsed.counts ?? {}, friends: parsed.friends ?? {}, lastAt: parsed.lastAt ?? {} }
   } catch {
     return empty
   }
@@ -73,9 +78,10 @@ function writeUnreadCache(
   userId: string,
   counts: Record<string, number>,
   friends: Record<string, string>,
+  lastAt: Record<string, string>,
 ): void {
   try {
-    const payload: UnreadCache = { counts, friends, at: Date.now() }
+    const payload: UnreadCache = { counts, friends, lastAt, at: Date.now() }
     window.localStorage.setItem(`${UNREAD_CACHE_PREFIX}${userId}`, JSON.stringify(payload))
   } catch {
     /* 隐私模式忽略 */
@@ -89,6 +95,8 @@ export type UnreadMessages = {
   byConversation: Record<string, number>
   /** 会话 id → 好友 id（用于在小屋好友列表里对应到人） */
   friendIdByConversation: Record<string, string>
+  /** 会话 id → 最后一条消息的时间（好友列表靠它把刚聊过的顶上去） */
+  lastAtByConversation: Record<string, string>
   total: number
   /** 打开某个好友后调用，把这个会话标记为已读 */
   markConversationRead: (conversationId: string, friendId: string) => void
@@ -99,6 +107,7 @@ export type UnreadMessages = {
 export function useUnreadMessages(userId: string | null): UnreadMessages {
   const [byConversation, setByConversation] = useState<Record<string, number>>({})
   const [friendIdByConversation, setFriendIdByConversation] = useState<Record<string, string>>({})
+  const [lastAtByConversation, setLastAtByConversation] = useState<Record<string, string>>({})
   const [refreshKey, setRefreshKey] = useState(0)
   /** 查询是否已经回来过一次 —— 没回来之前不许写缓存，否则会把上次的结果擦掉 */
   const [loaded, setLoaded] = useState(false)
@@ -119,6 +128,7 @@ export function useUnreadMessages(userId: string | null): UnreadMessages {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setByConversation(cached.counts)
     setFriendIdByConversation(cached.friends)
+    setLastAtByConversation(cached.lastAt)
   }, [userId])
 
   useEffect(() => {
@@ -167,25 +177,37 @@ export function useUnreadMessages(userId: string | null): UnreadMessages {
           return
         }
 
-        // 加 order + limit：未读只看最近的，别把几年的私信全拉回来算
+        // order + limit：只看最近的，别把几年的私信全拉回来算
+        // 不再排除自己发的 —— 好友列表排序要用「最后一条消息」，
+        // 自己刚发完的那个人也应该待在最上面；统计未读时再跳过自己的。
         const { data: msgs, error: msgError } = await supabase
           .from('messages')
           .select('id, conversation_id, sender_id, created_at')
           .in('conversation_id', convIds)
-          .neq('sender_id', userId)
           .order('created_at', { ascending: false })
-          .limit(300)
+          .limit(400)
 
         if (msgError) throw msgError
         if (cancelled) return
 
         const counts: Record<string, number> = {}
-        for (const msg of (msgs ?? []) as { conversation_id: string; created_at: string }[]) {
+        const lastAt: Record<string, string> = {}
+        for (const msg of (msgs ?? []) as {
+          conversation_id: string
+          sender_id: string
+          created_at: string
+        }[]) {
+          // 最后一条：查询已按时间倒序，第一次见到就是最新的
+          if (!lastAt[msg.conversation_id]) lastAt[msg.conversation_id] = msg.created_at
+
+          // 未读：只算别人发来的
+          if (msg.sender_id === userId) continue
           const seenAt = readKey(`${CONV_SEEN_PREFIX}${userId}:${msg.conversation_id}`)
           if (!isNewer(msg.created_at, seenAt)) continue
           counts[msg.conversation_id] = (counts[msg.conversation_id] ?? 0) + 1
         }
         setByConversation(counts)
+        setLastAtByConversation(lastAt)
         setLoaded(true)
       } catch (err) {
         if (!cancelled) console.error('私信未读统计失败:', err)
@@ -201,8 +223,8 @@ export function useUnreadMessages(userId: string | null): UnreadMessages {
   // 算完之后把结果存下来，供下次进页面预热（loaded 之前不写，免得擦掉上次的）
   useEffect(() => {
     if (!userId || !loaded) return
-    writeUnreadCache(userId, byConversation, friendIdByConversation)
-  }, [userId, loaded, byConversation, friendIdByConversation])
+    writeUnreadCache(userId, byConversation, friendIdByConversation, lastAtByConversation)
+  }, [userId, loaded, byConversation, friendIdByConversation, lastAtByConversation])
 
   const markConversationRead = useCallback(
     (conversationId: string, friendId: string) => {
@@ -234,7 +256,14 @@ export function useUnreadMessages(userId: string | null): UnreadMessages {
 
   const total = Object.values(byConversation).reduce((sum, n) => sum + n, 0)
 
-  return { byConversation, friendIdByConversation, total, markConversationRead, refresh }
+  return {
+    byConversation,
+    friendIdByConversation,
+    lastAtByConversation,
+    total,
+    markConversationRead,
+    refresh,
+  }
 }
 
 /* ==================== 朋友圈新动态 ==================== */
