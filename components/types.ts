@@ -38,8 +38,11 @@ export type NavSection = {
   href: string
   title: string
   desc: string
-  Icon: (props: { className?: string }) => React.ReactElement
-  gradient: string
-  accent: string
-  tag: string
+  /** 下面这几个是"卡片网格"时代的字段，改成可选：
+   *  首页已经换成清单式排版，不再需要图标/渐变/配色/标签。
+   *  留着可选，是为了别的地方想用还能用。 */
+  Icon?: (props: { className?: string }) => React.ReactElement
+  gradient?: string
+  accent?: string
+  tag?: string
 }

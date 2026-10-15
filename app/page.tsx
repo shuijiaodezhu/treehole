@@ -6,11 +6,8 @@ import { useRouter } from 'next/navigation'
 import { createClient } from './lib/supabase'
 
 import {
-  DailyQuoteCard,
   FriendRequestBanner,
-  LoginStreakCard,
   NavCardGrid,
-  WeatherCard,
 } from '../components/home'
 import { IconMail, IconRefresh, IconSearch } from '../components/icons'
 import {
@@ -256,31 +253,45 @@ export default function HomePage() {
         </div>
       )}
 
-      <div className="relative max-w-5xl mx-auto px-8 py-10 flex gap-8 items-stretch">
-        {/*
-          左侧留白里的冬日信箱。
-          相对**内容容器**定位（不是视口），所以窗口宽窄变化时，
-          它和左侧那一栏始终是同一个间距，不会挤到卡片上；
-          用绝对定位所以**不参与 flex 布局**，中间内容一点都不会偏移。
-          竖直方向对齐左侧第三张卡「今天的一句话」（容器内 top-285）。
-          只有够宽（2xl = 1536px 以上）留白放得下时才出现。
-        */}
-        <div className="absolute -left-[176px] top-[285px] hidden w-[168px] 2xl:block">
+      <div className="relative max-w-5xl mx-auto px-8 py-10">
+        {/* 2xl 以上才出现的信箱插图（相对内容容器定位，不参与布局） */}
+        <div className="absolute -left-[176px] top-[36px] hidden w-[168px] 2xl:block">
           <MailboxArt onOpen={() => setMailboxOpen(true)} />
         </div>
 
-        {/* 左侧面板 */}
-        <aside className="w-64 flex-shrink-0 flex flex-col gap-4">
-          <WeatherCard weather={weather} dateText={dateText} />
-          <LoginStreakCard streak={streak} />
-          <DailyQuoteCard quote={quote} />
-        </aside>
+        <div className="mx-auto max-w-2xl">
+          {/* 今天的几件事，压成一行 */}
+          <div className="flex flex-wrap items-baseline gap-x-5 gap-y-1 border-b border-[var(--accent-line)] pb-4">
+            <span className="text-sm text-[#2b2430]">{dateText}</span>
+            <span className="text-sm text-[var(--accent-muted)]">
+              {weather.city} · {weather.condition}
+            </span>
+            <span className="text-sm text-[#2b2430]">
+              {weather.temp}°
+              <span className="text-[var(--accent-light)]"> / {weather.tempMin}°</span>
+            </span>
+            <span className="ml-auto text-[11px] text-[var(--accent-light)]">
+              陪你走过 {streak.days} 天
+            </span>
+          </div>
 
-        {/* 右侧主内容 */}
-        <main className="flex-1 flex flex-col gap-4">
+          {/* 今天的一句话：只留引用本身和出处 */}
+          {quote && (
+            <div className="border-b border-[var(--accent-line)] py-6">
+              <p className="font-serif-cn text-[15px] leading-[1.9] text-[#3a3229]">
+                「{quote}」
+              </p>
+              <p className="mt-2 text-[11px] text-[var(--accent-light)]">来自陌生人的问候</p>
+            </div>
+          )}
+
           <FriendRequestBanner requests={requests} />
-          <NavCardGrid badges={badges} />
-        </main>
+
+          <nav className="pt-8">
+            <p className="mb-1 text-[11px] tracking-wide text-[var(--accent-light)]">去哪儿</p>
+            <NavCardGrid badges={badges} />
+          </nav>
+        </div>
       </div>
 
       {/* 页脚：条款与说明入口 */}

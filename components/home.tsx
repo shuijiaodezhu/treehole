@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import type { ReactElement } from 'react'
-import { IconArrow, IconBox, IconFlame, IconHome, IconLeaf, IconMail, IconSparkle, WeatherIcon } from './icons'
+import { IconArrow, IconFlame, IconMail, WeatherIcon } from './icons'
 import { avatarFallback } from './utils'
 import { markModuleSeen } from './module-badges'
 import { weatherAdvice, type WeatherState } from './weather'
@@ -126,102 +126,52 @@ export function FriendRequestBanner({ requests }: { requests: FriendRequest[] })
 /* ==================== 功能导航卡片网格 ==================== */
 
 const SECTIONS: NavSection[] = [
-  {
-    href: '/friends',
-    title: '小屋',
-    desc: '好久没见啦',
-    Icon: IconHome,
-    gradient: 'from-[var(--accent-soft)] to-[var(--accent-line)]',
-    accent: 'var(--accent)',
-    tag: '私密',
-  },
-  {
-    href: '/world',
-    title: '院子',
-    desc: '大家都在聊什么',
-    Icon: IconLeaf,
-    gradient: 'from-[#eef6e8] to-[#dceccf]',
-    accent: '#7ea86a',
-    tag: '公开',
-  },
-  {
-    href: '/play',
-    title: '聚会',
-    desc: '又有什么新鲜玩意',
-    Icon: IconSparkle,
-    gradient: 'from-[var(--accent-soft)] to-[#f8dbe3]',
-    accent: '#c97a8a',
-    tag: '轻松',
-  },
-  {
-    href: '/me',
-    title: '我的',
-    desc: '我把心跳藏在这里',
-    Icon: IconBox,
-    gradient: 'from-[#f0ecf7] to-[#e2d9ef]',
-    accent: '#8a7aaa',
-    tag: '私藏',
-  },
+  { href: '/friends', title: '小屋', desc: '好友与私聊' },
+  { href: '/world', title: '院子', desc: '大家在想什么' },
+  { href: '/play', title: '聚会', desc: '活动、小工具、一起听歌' },
+  { href: '/me', title: '我的', desc: '资料、收藏、设置' },
 ]
 
 export function NavCardGrid({ badges }: { badges?: Partial<Record<string, { count?: number; dot?: boolean }>> }): ReactElement {
+  /*
+   * 原来是四张彩色渐变卡 + 圆形图标 + 药丸标签 —— 那种"卡片网格"是最容易
+   * 显得像模板的东西。改成一行一行的清单：左边名字、中间一句说明、
+   * 右边角标与箭头。同一屏能看到的信息更多，也更像人排的版。
+   */
   return (
-    <div className="flex-1 grid grid-cols-2 gap-4">
+    <ul className="divide-y divide-[var(--accent-line)] border-y border-[var(--accent-line)]">
       {SECTIONS.map((section) => {
         const key = section.href.replace('/', '')
         const badge = badges?.[key]
         return (
-          <Link
-            key={section.href}
-            href={section.href}
-            /*
-             * 点下去就立刻记「已看」——角标当场消失，不用等路由跳完、页面挂载。
-             * 原来只在目标页挂载后才清，中间那几百毫秒角标还挂着，
-             * 看起来就像「点了也没消」。
-             */
-            onClick={() => {
-              if (key === 'friends' || key === 'world' || key === 'play') markModuleSeen(key)
-            }}
-            className={`group relative rounded-2xl border border-[var(--accent-line)] bg-gradient-to-br ${section.gradient} p-5 transition-all shadow-sm hover:shadow-sm hover:-translate-y-0.5 flex flex-col`}
-          >
-            {/* 未读提示：有精确数量就显示数字，否则只显示一个半明显的点（都在右上角） */}
-            {badge?.count ? (
-              <span className="absolute top-3.5 right-3.5 min-w-[18px] h-[18px] px-1 rounded-full bg-[var(--accent)] text-white text-[11px] leading-[18px] text-center font-medium ring-2 ring-white/70">
-                {badge.count > 99 ? '99+' : badge.count}
-              </span>
-            ) : badge?.dot ? (
-              <span className="absolute top-4 right-4 flex h-2.5 w-2.5">
-                <span className="absolute inline-flex h-full w-full rounded-full bg-[var(--accent)] opacity-60 animate-ping" />
-                <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-[var(--accent)]" />
-              </span>
-            ) : null}
-
-            <div className="mb-4">
-            <div
-              className="w-11 h-11 rounded-full flex items-center justify-center bg-white/70 backdrop-blur"
-              style={{ color: section.accent, boxShadow: `0 2px 8px ${section.accent}22` }}
+          <li key={section.href}>
+            <Link
+              href={section.href}
+              onClick={() => markModuleSeen(key as Parameters<typeof markModuleSeen>[0])}
+              className="group flex items-center gap-4 py-3.5 transition hover:bg-[var(--accent-soft)]/50"
             >
-              <section.Icon className="w-5 h-5" />
-            </div>
-          </div>
+              <span className="w-12 flex-shrink-0 text-sm font-medium text-[#2b2430]">
+                {section.title}
+              </span>
+              <span className="min-w-0 flex-1 truncate text-xs text-[var(--accent-muted)]">
+                {section.desc}
+              </span>
 
-          <div className="flex-1 flex flex-col justify-center">
-            <h2 className="text-base font-semibold text-[#2b2620]">{section.title}</h2>
-            <p className="text-xs text-[#6a6058] mt-1">{section.desc}</p>
-          </div>
+              {badge?.count ? (
+                <span className="flex-shrink-0 text-[11px] tabular-nums text-[var(--accent)]">
+                  {badge.count > 99 ? '99+' : badge.count}
+                </span>
+              ) : badge?.dot ? (
+                <span className="h-1.5 w-1.5 flex-shrink-0 rounded-full bg-[var(--accent)]" />
+              ) : null}
 
-          <div className="flex items-center justify-between mt-4">
-            <span
-              className="text-[11px] px-2 py-0.5 rounded-full bg-white/60 backdrop-blur font-medium"
-              style={{ color: section.accent }}
-            >
-              {section.tag}
-            </span>
-            <IconArrow className="w-4 h-4 text-[var(--accent-muted)] group-hover:translate-x-0.5 transition-transform" />
-          </div>
-        </Link>
+              <span className="flex-shrink-0 text-sm text-[var(--accent-light)] transition group-hover:translate-x-0.5 group-hover:text-[var(--accent)]">
+                →
+              </span>
+            </Link>
+          </li>
         )
       })}
-    </div>
+    </ul>
   )
 }
