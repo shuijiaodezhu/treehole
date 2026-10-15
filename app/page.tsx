@@ -134,7 +134,7 @@ export default function HomePage() {
       window.setTimeout(() => {
         setOpening(false)
         setWaiting(false)
-      }, 2200)
+      }, 900)
     }
     window.addEventListener('dsh:letter-done', onDone)
     return () => window.removeEventListener('dsh:letter-done', onDone)
@@ -159,7 +159,7 @@ export default function HomePage() {
       window.setTimeout(() => {
         setOpening(false)
         setWaiting(false)
-      }, 2200)
+      }, 900)
     }
 
     if (isLoginTransitioning()) {

@@ -534,22 +534,21 @@ select:-webkit-autofill {
 /* 弹跳放慢、幅度收小：上一版 620ms + 12px/1.05 太快太夸张 */
 @keyframes dsh-bounce {
   0%   { transform: translate3d(0, 0, 0) scale(1); }
-  32%  { transform: translate3d(0, -8px, 0) scale(1.03); }
-  62%  { transform: translate3d(0, 2px, 0) scale(0.99); }
+  40%  { transform: translate3d(0, -10px, 0) scale(1.04); }
   100% { transform: translate3d(0, 0, 0) scale(1); }
 }
 
 /*
  * 播放阶段（.dsh-open）：
- *   标题：延时 200ms，1100ms 慢慢弹一下（动画会盖住静态模糊，所以延时期间仍是糊的）
- *   整页：延时 1200ms（等弹跳落定），700ms 化开变清晰
+ *   标题与整页都从 0ms 开始、同样 620ms：**模糊化开与弹跳同时发生**；
+ *   弹跳只有一次上落（不再有回弹那一下，看两下就不好看了）
  */
 .dsh-open .dsh-hero-title {
-  animation: dsh-bounce 1100ms cubic-bezier(0.34, 1.4, 0.64, 1) 200ms both;
+  animation: dsh-bounce 620ms cubic-bezier(0.22, 1, 0.36, 1) 0ms both;
 }
 .dsh-open.dsh-wait-blur,
 .dsh-open .dsh-wait-blur {
-  animation: dsh-unblur 700ms ease-out 1200ms both;
+  animation: dsh-unblur 620ms ease-out 0ms both;
 }
 
 @media (prefers-reduced-motion: reduce) {
