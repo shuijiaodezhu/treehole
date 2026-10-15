@@ -159,6 +159,9 @@ export function MailboxArt({ onOpen }: { onOpen: () => void }) {
         <br />
         寄给会回信的人。
       </span>
+      <span className="mt-2.5 inline-flex items-center gap-1.5 rounded-full bg-[var(--accent-soft)] px-2.5 py-1 font-serif-cn text-[10px] text-[var(--accent-deep)]">
+        匿名 · 只有站主看得到
+      </span>
     </button>
   )
 }

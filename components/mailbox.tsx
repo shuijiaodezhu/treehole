@@ -319,7 +319,7 @@ export function MailboxDialog({
           <div className="min-w-0 flex-1">
             <h2 className="font-serif-cn text-sm font-semibold text-[#2b2620]">冬日信箱</h2>
             <p className="mt-0.5 font-serif-cn text-[10px] text-[var(--accent-muted)]">
-              {isOwner ? '你是站主 · 大家写来的烦心事都在后台' : '写给站主一个人 · 不公开，别人看不到'}
+              {isOwner ? '你是站主 · 大家写来的烦心事都在后台' : '匿名 · 只写给站主一个人'}
             </p>
           </div>
           <button
@@ -372,11 +372,18 @@ export function MailboxDialog({
                   不用组织语言，也不必写得体面。
                 </p>
 
+                <div className="mt-4 text-center">
+                  <span className="inline-flex items-center gap-1.5 rounded-full bg-[var(--accent-soft)] px-3 py-1.5 font-serif-cn text-[11px] text-[var(--accent-deep)]">
+                    <Icon name="lock" className="h-3 w-3" />
+                    匿名 · 站主看不到你的名字
+                  </span>
+                </div>
+
               <ol className="mt-6 space-y-3">
                 {[
                   { t: '想到什么写什么', d: '写一句也行，慢慢说也行' },
                   { t: '站主会认真回', d: '读得仔细，也尽量帮你想办法' },
-                  { t: '只有你和他看得到', d: '不公开、不进动态，别人不会知道' },
+                  { t: '匿名，只给你和他看', d: '他没有你的名字；不公开、不进动态' },
                 ].map((step, i) => (
                   <li key={step.t} className="flex items-start gap-3">
                     <span className="mt-0.5 flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-[var(--accent-soft)] font-serif-cn text-[10px] text-[var(--accent-deep)]">
@@ -452,7 +459,7 @@ export function MailboxDialog({
               </button>
             </div>
             <p className="mt-1.5 text-[9px] text-[var(--accent-muted)]">
-              {draft.length}/500 · Ctrl+Enter 寄出
+              {draft.length}/500 · Ctrl+Enter 寄出 · 匿名，只有站主看得到
             </p>
           </div>
         )}

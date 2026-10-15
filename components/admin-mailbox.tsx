@@ -17,6 +17,11 @@ import { MailboxSetup } from './mailbox-setup'
  * 在那里看不到——信箱必须有自己的收件箱。
  *
  * 谁能看到：由 winter_letters 的 RLS 决定（只有写信人本人和站主）。
+ *
+ * 匿名：这里**不查、也不显示**写信人的名字。列表里只给一个由 uuid 末尾
+ * 随机四位组成的固定代号（如「来信人 7F3A」）——代号稳定，所以能跟同一
+ * 个人的往来，但看不出是谁。（数据库里仍记着这封信属于哪个信箱，
+ * 否则回信送不到；所以这是界面层面的匿名。）
  * 已读状态放在本地（localStorage 里一个 threadId → 时间 的表），
  * 不给表加 update 策略，信寄出去就改不了。
  */
@@ -34,7 +39,8 @@ type Letter = {
 
 type Row = {
   threadUserId: string
-  name: string
+  /** 匿名代号，不是真名 */
+  label: string
   lastAt: string
   lastText: string
   fromMe: boolean
@@ -56,6 +62,15 @@ function writeSeenMap(uid: string, map: Record<string, string>) {
   } catch {
     /* 隐私模式忽略 */
   }
+}
+
+/**
+ * 匿名代号：取 uuid 去掉横线后的末尾四位。
+ * uuid v4 末四位是随机的，不含任何身份信息；同一个信箱永远得到同一个代号，
+ * 所以站主能延续同一段对话，却不知道对方是谁。
+ */
+function labelOf(threadUserId: string): string {
+  return '来信人 ' + threadUserId.replace(/-/g, '').slice(-4).toUpperCase()
 }
 
 function stamp(iso: string): string {
@@ -109,20 +124,13 @@ export function AdminMailbox({ adminId }: { adminId: string }) {
         if (!latest.has(letter.thread_user_id)) latest.set(letter.thread_user_id, letter)
       }
 
-      const ids = [...latest.keys()]
-      const { data: profiles } = await supabase.from('profiles').select('id, nickname, username').in('id', ids)
-      const nameOf = (id: string) => {
-        const p = (profiles ?? []).find((x) => x.id === id)
-        return p?.nickname || p?.username || '某人'
-      }
-
       const seenNow = readSeenMap(adminId)
-      const built: Row[] = ids
+      const built: Row[] = [...latest.keys()]
         .map((threadUserId) => {
           const last = latest.get(threadUserId)!
           return {
             threadUserId,
-            name: nameOf(threadUserId),
+            label: labelOf(threadUserId),
             lastAt: last.created_at,
             lastText: last.content,
             fromMe: last.sender_id === adminId,
@@ -240,7 +248,10 @@ export function AdminMailbox({ adminId }: { adminId: string }) {
             这里收到的，都是他们不好意思跟别人说的话
           </p>
           <p className="mt-0.5 text-[10px] text-[#b8a8c8]">
-            共 {total} 位来信人 · 回信只有对方看得到
+            共 {total} 位来信人 · 匿名，你不会知道他们是谁
+          </p>
+          <p className="mt-0.5 text-[10px] text-[#b8a8c8]">
+            回信会送到对方信箱，只有他看得到
           </p>
         </div>
         <button
@@ -283,7 +294,7 @@ export function AdminMailbox({ adminId }: { adminId: string }) {
                 }`}
               >
                 <span className="flex items-center gap-2">
-                  <span className="truncate text-xs font-medium text-[#2b2430]">{r.name}</span>
+                  <span className="truncate text-xs font-medium text-[#2b2430]">{r.label}</span>
                   {r.unread && <span className="h-1.5 w-1.5 flex-shrink-0 rounded-full bg-[#a88ab8]" />}
                   <span className="ml-auto flex-shrink-0 text-[9px] text-[#b8a8c8]">{stamp(r.lastAt)}</span>
                 </span>
@@ -302,7 +313,7 @@ export function AdminMailbox({ adminId }: { adminId: string }) {
             ) : (
               <>
                 <div className="flex flex-wrap items-center gap-x-2 gap-y-1 border-b border-[#ece4f4] px-4 py-3">
-                  <span className="text-xs font-medium text-[#2b2430]">{active.name}</span>
+                  <span className="text-xs font-medium text-[#2b2430]">{active.label}</span>
                   <span className="text-[10px] text-[#b8a8c8]">写来的</span>
                   <span className="ml-auto text-[10px] text-[#c8b8d8]">只有你和对方看得到</span>
                   {message && <span className="w-full text-[10px] text-[#8a7aaa]">{message}</span>}
@@ -349,7 +360,7 @@ export function AdminMailbox({ adminId }: { adminId: string }) {
                       }}
                       rows={2}
                       maxLength={500}
-                      placeholder={`回 ${active.name} 一封…`}
+                      placeholder={`回 ${active.label} 一封…`}
                       className="min-w-0 flex-1 resize-none rounded-2xl border border-[#e0d4e8] bg-white px-3.5 py-2.5 font-serif-cn text-[12.5px] text-[#2b2430] focus:border-[#a88ab8] focus:outline-none"
                     />
                     <EmojiPicker onPick={(emoji) => setDraft((cur) => cur + emoji)} align="right" />
