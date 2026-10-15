@@ -15,8 +15,9 @@ import { pageAccentVars, type PageKey } from './theme'
  *
  * 几个刻意的取舍：
  *   · 只画线，不填色，只用主色系里最淡的两档 → 不抢内容
- *   · fixed 覆盖层 + pointer-events-none，不影响任何交互
- *   · z-40，低于所有弹窗（弹窗 z-50 起），不会盖住对话框
+ *   · absolute 挂在页面顶部（不是 fixed）—— 随页面滚动，滚过首屏就看不见；
+ *     pointer-events-none，不影响任何交互
+ *   · z-0 压在最底层，只画线、极淡，不影响阅读
  *   · lg 以下不显示，手机上留白本来就少
  *
  * 路径用 window.location 在挂载后读，不用 usePathname：
@@ -105,7 +106,7 @@ export function PageDecor() {
     <div
       aria-hidden="true"
       style={pageAccentVars(page)}
-      className="pointer-events-none fixed inset-0 z-40 hidden select-none lg:block"
+      className="pointer-events-none absolute inset-x-0 top-0 z-0 hidden h-screen select-none lg:block"
     >
       {/* 纸边：离屏幕边一点点的一圈细虚线 */}
       <div className="absolute inset-4 rounded-[30px] border border-dashed border-[var(--accent-line)]" />

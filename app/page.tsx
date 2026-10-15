@@ -418,8 +418,8 @@ export default function HomePage() {
 
             {/* 信箱：中心落在**引文的正下方**（引文有 pl-8 缩进，所以这里也加 pl-8
                 再用 flex 居中，中心才和引文对齐） */}
-            <div className="mt-10 flex justify-center pl-8">
-              <div className="relative w-[150px]">
+            <div className="mt-10 flex justify-center pl-2">
+              <div className="relative w-[170px]">
                 <FallingBits className="-inset-x-8 -top-4 bottom-6" />
                 <MailboxArt onOpen={() => setMailboxOpen(true)} />
               </div>
