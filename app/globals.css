@@ -499,11 +499,8 @@ html.dsh-navigating .dsh-nav-mask {
   .dsh-fall { display: none; }
 }
 
-
-
-
--
-   Chrome 的 :-webkit-autofill 会用浅蓝刷满输入框，跟暖纸完全不搭，
+/* ---------- 盖掉浏览器自动填充的浅蓝底 ----------
+   Chrome 的 :-webkit-autofill 会用浅蓝刷满输入框，跟暖纸完全不搭；
    而且它**不可被 background-color 覆盖**，只能用 inset box-shadow 盖住。 */
 input:-webkit-autofill,
 input:-webkit-autofill:hover,
