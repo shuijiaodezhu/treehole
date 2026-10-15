@@ -7,7 +7,6 @@ import { createClient } from './lib/supabase'
 
 import {
   FriendRequestBanner,
-  NavCardGrid,
 } from '../components/home'
 import { IconMail, IconRefresh, IconSearch } from '../components/icons'
 import {
@@ -23,6 +22,7 @@ import { useWeather } from '../components/weather'
 import { useModuleBadges } from '../components/module-badges'
 import { NotificationBell } from '../components/notifications'
 import { WelcomeLetter } from '../components/welcome-letter'
+import { SiteScene } from '../components/site-scene'
 import type { FriendRequest, FriendshipRow, LoginStreak } from '../components/types'
 import { pageAccentVars } from '../components/theme'
 import { SkeletonHome } from '../components/skeleton'
@@ -276,9 +276,9 @@ export default function HomePage() {
           {/* 今天的一句话：只留引用本身和出处 */}
           <FriendRequestBanner requests={requests} />
 
-          {/* 四条主入口：目录式，大字序号 + 衬线大字名字 */}
-          <div className="pt-7">
-            <NavCardGrid badges={badges} />
+          {/* 一幅画：小屋、院子、聚会、拿信的人都在里面，四处各可点 */}
+          <div className="pt-6">
+            <SiteScene badges={badges} />
           </div>
 
           {/* 今天的一句话放下面：它是安静的角落，不该跟入口抢注意力 */}
