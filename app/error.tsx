@@ -48,14 +48,14 @@ export default function Error({
       </p>
 
       {error.digest && (
-        <p className="mt-2 font-mono text-[10px] text-[var(--accent-muted)]">编号 {error.digest}</p>
+        <p className="mt-2 font-mono text-[11px] text-[var(--accent-muted)]">编号 {error.digest}</p>
       )}
 
       <div className="mt-6 flex items-center gap-2">
         <button
           type="button"
           onClick={reset}
-          className="rounded-full bg-gradient-to-r from-[var(--accent-light)] to-[var(--accent)] px-5 py-2.5 font-serif-cn text-[12.5px] text-white transition hover:shadow-[0_8px_24px_rgba(217,119,87,0.3)]"
+          className="rounded-full bg-[var(--accent)] px-5 py-2.5 font-serif-cn text-[12.5px] text-white transition hover:shadow-sm"
         >
           再试一次
         </button>

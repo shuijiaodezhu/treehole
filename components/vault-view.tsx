@@ -68,21 +68,21 @@ export function VaultView({ userId }: { userId: string | null }) {
   return (
     <div className="mx-auto max-w-3xl">
       {/* 顶部：容量与上传 */}
-      <div className="mb-4 rounded-2xl border border-[var(--accent-line)] bg-white/80 p-5 shadow-[0_2px_12px_rgba(217,119,87,0.04)] backdrop-blur">
+      <div className="mb-4 rounded-2xl border border-[var(--accent-line)] bg-white/80 p-5 shadow-sm backdrop-blur">
         <div className="flex flex-wrap items-center gap-3">
           <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-br from-[var(--accent-light)] to-[var(--accent-light)]">
             <Icon name="box" className="h-5 w-5 text-[var(--accent-deep)]" />
           </div>
           <div className="min-w-0 flex-1">
             <p className="text-sm font-semibold text-[#2b2620]">储物箱</p>
-            <p className="mt-0.5 text-[10px] text-[var(--accent-muted)]">
+            <p className="mt-0.5 text-[11px] text-[var(--accent-muted)]">
               只你自己能看 · 单文件不超过 {MAX_FILE_BYTES / 1024 / 1024}MB
               {vault.files.length > 0 && ` · 共 ${vault.files.length} 个 / ${formatBytes(vault.totalBytes)}`}
             </p>
           </div>
 
           <label
-            className={`cursor-pointer rounded-xl bg-gradient-to-r from-[var(--accent-light)] to-[var(--accent)] px-4 py-2 text-sm font-medium text-white transition hover:shadow-[0_6px_20px_rgba(217,119,87,0.3)] ${
+            className={`cursor-pointer rounded-xl bg-[var(--accent)] px-4 py-2 text-sm font-medium text-white transition hover:shadow-sm ${
               vault.uploading ? 'pointer-events-none opacity-60' : ''
             }`}
           >
@@ -159,7 +159,7 @@ export function VaultView({ userId }: { userId: string | null }) {
                 <p className="truncate text-sm text-[#2b2620]" title={f.name}>
                   {f.name}
                 </p>
-                <p className="mt-0.5 text-[10px] text-[var(--accent-muted)]">
+                <p className="mt-0.5 text-[11px] text-[var(--accent-muted)]">
                   {CATEGORY_LABEL[f.category]} · {formatBytes(f.size)} · {formatTime(f.created_at)}
                 </p>
               </div>
@@ -203,7 +203,7 @@ export function VaultView({ userId }: { userId: string | null }) {
         </div>
       )}
 
-      <p className="mt-4 text-center text-[10px] leading-relaxed text-[#c0b8ae]">
+      <p className="mt-4 text-center text-[11px] leading-relaxed text-[#c0b8ae]">
         文件存在私有空间里，只有你自己能下载；删除后无法恢复。
       </p>
     </div>

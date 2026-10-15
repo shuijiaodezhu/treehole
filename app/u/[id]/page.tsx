@@ -150,7 +150,6 @@ function UserShowcase() {
 
   return (
     <div className="min-h-screen relative overflow-hidden" style={pageAccentVars('friends')}>
-      <div className="absolute -top-20 -right-20 w-96 h-96 bg-[var(--accent-light)] opacity-20 rounded-full blur-3xl pointer-events-none"></div>
 
       <div className="relative max-w-xl mx-auto px-6 py-10">
         <header className="mb-6 flex items-center justify-between">
@@ -173,9 +172,9 @@ function UserShowcase() {
 
         <main className="space-y-4">
           {/* 资料 */}
-          <section className="rounded-3xl border border-[var(--accent-line)] bg-white/80 p-6 backdrop-blur shadow-[0_8px_40px_rgba(217,119,87,0.06)]">
+          <section className="rounded-2xl border border-[var(--accent-line)] bg-white/80 p-6 backdrop-blur shadow-sm">
             <div className="flex items-start gap-4">
-              <div className="flex h-16 w-16 flex-shrink-0 items-center justify-center overflow-hidden rounded-2xl bg-gradient-to-br from-[var(--accent-line)] to-[var(--accent-light)] text-2xl shadow-sm">
+              <div className="flex h-16 w-16 flex-shrink-0 items-center justify-center overflow-hidden rounded-2xl bg-[var(--accent-soft)] text-2xl shadow-sm">
                 {profile?.avatar_url ? (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img src={profile.avatar_url} alt="" className="h-full w-full object-cover" />
@@ -216,7 +215,7 @@ function UserShowcase() {
               {isFriend ? (
                 <Link
                   href={`/friends/chat/${targetId}`}
-                  className="rounded-xl bg-gradient-to-r from-[var(--accent-light)] to-[var(--accent)] px-5 py-2 text-sm font-medium text-white transition-all hover:shadow-[0_6px_20px_rgba(217,119,87,0.3)]"
+                  className="rounded-xl bg-[var(--accent)] px-5 py-2 text-sm font-medium text-white transition-all hover:shadow-sm"
                 >
                   去小屋聊聊
                 </Link>
@@ -237,7 +236,7 @@ function UserShowcase() {
           </section>
 
           {/* 公开的帖子 */}
-          <section className="rounded-3xl border border-[var(--accent-line)] bg-white/80 p-6 backdrop-blur">
+          <section className="rounded-2xl border border-[var(--accent-line)] bg-white/80 p-6 backdrop-blur">
             <h2 className="text-sm font-semibold text-[#2b2430]">
               {isMe ? '我在院子里说过的' : `TA 在院子里说过的`}
             </h2>
@@ -257,7 +256,7 @@ function UserShowcase() {
                     <p className="line-clamp-3 whitespace-pre-wrap text-xs leading-relaxed text-[#4a3f38]">
                       {post.content}
                     </p>
-                    <div className="mt-1.5 flex items-center gap-3 text-[10px] text-[var(--accent-light)]">
+                    <div className="mt-1.5 flex items-center gap-3 text-[11px] text-[var(--accent-light)]">
                       <span>{new Date(post.created_at).toLocaleDateString('zh-CN')}</span>
                       {post.image_urls && post.image_urls.length > 0 && (
                         <span className="flex items-center gap-1">
@@ -271,7 +270,7 @@ function UserShowcase() {
               </ul>
             )}
 
-            <p className="mt-4 text-[10px] leading-relaxed text-[var(--accent-light)]">
+            <p className="mt-4 text-[11px] leading-relaxed text-[var(--accent-light)]">
               只显示公开的帖子。<span className="text-[var(--accent-muted)]">匿名说的不会出现在这里。</span>
             </p>
           </section>

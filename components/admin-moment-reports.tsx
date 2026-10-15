@@ -195,7 +195,7 @@ export function MomentReportsSection({ adminId }: { adminId: string }) {
         <button
           type="button"
           onClick={() => void load()}
-          className="rounded-lg border border-[#f0e6dc] px-2.5 py-1 text-[10px] text-[#8a7a9a] transition hover:text-[#c96447]"
+          className="rounded-lg border border-[#f0e6dc] px-2.5 py-1 text-[11px] text-[#8a7a9a] transition hover:text-[#c96447]"
         >
           刷新
         </button>
@@ -213,14 +213,14 @@ export function MomentReportsSection({ adminId }: { adminId: string }) {
                 由 <span className="text-[#8a7aaa]">{report.reporter_name}</span> 举报 ·{' '}
                 {new Date(report.created_at).toLocaleString('zh-CN')}
               </p>
-              <p className="mt-2 text-[10px] text-[#8a7a9a]">
+              <p className="mt-2 text-[11px] text-[#8a7a9a]">
                 被举报内容（{report.author_name} 发的{report.hasImage ? '，含配图' : ''}）
               </p>
               <p className="mt-1 whitespace-pre-wrap text-xs leading-relaxed text-[#3a3229]">
                 {report.content}
               </p>
               {report.reason && (
-                <p className="mt-2 text-[10px] text-[#8a7a9a]">
+                <p className="mt-2 text-[11px] text-[#8a7a9a]">
                   理由：<span className="text-[#3a3229]">{report.reason}</span>
                 </p>
               )}
@@ -250,7 +250,7 @@ export function MomentReportsSection({ adminId }: { adminId: string }) {
         </ul>
       )}
 
-      {hint && <p className="mt-3 whitespace-pre-line text-[10px] text-[#8a7a9a]">{hint}</p>}
+      {hint && <p className="mt-3 whitespace-pre-line text-[11px] text-[#8a7a9a]">{hint}</p>}
     </section>
   )
 }

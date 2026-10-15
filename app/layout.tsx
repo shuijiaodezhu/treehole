@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Suspense } from "react";
 import { Cormorant_Garamond, Noto_Serif_SC } from "next/font/google";
 import "./globals.css";
@@ -26,6 +26,21 @@ const notoSerif = Noto_Serif_SC({
  * 不设的话分享卡片会指向 localhost，微信/QQ 抓不到图。
  */
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000'
+
+/*
+ * viewportFit: 'cover' —— 让页面铺到 iPhone 的刘海与底部横条后面，
+ *   配合 globals.css 里的 env(safe-area-inset-*) 使用；
+ *   不加这个，iPhone 底部会留一条黑边，固定底栏也会被横条压住。
+ * maximumScale 不设 1：允许用户放大（禁止缩放对看不清的人不友好）。
+ */
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  viewportFit: 'cover',
+  themeColor: [
+    { media: '(prefers-color-scheme: light)', color: '#f5f0e8' },
+  ],
+};
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),

@@ -12,13 +12,12 @@ import type { FriendRequest, LoginStreak, NavSection } from './types'
 
 export function WeatherCard({ weather, dateText }: { weather: WeatherState; dateText: string }) {
   return (
-    <div className="rounded-2xl border border-[var(--accent-line)] bg-gradient-to-br from-[var(--accent-soft)] via-[var(--accent-soft)] to-[var(--accent-line)] p-5 relative overflow-hidden shadow-[0_2px_12px_rgba(217,119,87,0.04)]">
-      <div className="absolute -top-6 -right-6 w-24 h-24 bg-[var(--accent-light)] opacity-20 rounded-full blur-2xl pointer-events-none"></div>
+    <div className="rounded-2xl border border-[var(--accent-line)] bg-gradient-to-br from-[var(--accent-soft)] via-[var(--accent-soft)] to-[var(--accent-line)] p-5 relative overflow-hidden shadow-sm">
 
       <div className="relative">
         <div className="flex items-center justify-between mb-3">
           <WeatherIcon name={weather.icon} className="w-7 h-7 text-[var(--accent-light)]" />
-          <span className="text-[10px] text-[var(--accent-muted)] tracking-wider">今日天气</span>
+          <span className="text-[11px] text-[var(--accent-muted)] tracking-wider">今日天气</span>
         </div>
 
         <p className="text-xs text-[var(--accent-muted)]">{dateText}</p>
@@ -39,10 +38,10 @@ export function WeatherCard({ weather, dateText }: { weather: WeatherState; date
 
 export function LoginStreakCard({ streak }: { streak: LoginStreak }) {
   return (
-    <div className="rounded-2xl border border-[var(--accent-line)] bg-white p-5 relative overflow-hidden shadow-[0_2px_12px_rgba(217,119,87,0.04)]">
+    <div className="rounded-2xl border border-[var(--accent-line)] bg-white p-5 relative overflow-hidden shadow-sm">
       <div className="flex items-center gap-2 mb-3">
         <IconFlame className="w-4 h-4 text-[var(--accent-light)]" />
-        <span className="text-[10px] text-[var(--accent-muted)] tracking-wider">已经陪你走过</span>
+        <span className="text-[11px] text-[var(--accent-muted)] tracking-wider">已经陪你走过</span>
       </div>
 
       <p className="text-[var(--accent-deep)]">
@@ -50,7 +49,7 @@ export function LoginStreakCard({ streak }: { streak: LoginStreak }) {
         <span className="text-xs ml-1 text-[var(--accent-muted)]">天</span>
       </p>
 
-      <p className="text-[10px] text-[var(--accent-muted)] mt-2">
+      <p className="text-[11px] text-[var(--accent-muted)] mt-2">
         {streak.sinceLast <= 1 ? '今天是重逢的第一天' : `距上次见面 ${streak.sinceLast} 天`}
       </p>
     </div>
@@ -59,16 +58,15 @@ export function LoginStreakCard({ streak }: { streak: LoginStreak }) {
 
 export function DailyQuoteCard({ quote }: { quote: string }) {
   return (
-    <div className="flex-1 rounded-2xl border border-[var(--accent-line)] bg-gradient-to-br from-[var(--accent-soft)] to-[var(--accent-soft)] p-5 relative overflow-hidden flex flex-col shadow-[0_2px_12px_rgba(217,119,87,0.04)]">
-      <div className="absolute -bottom-6 -left-6 w-20 h-20 bg-[var(--accent)] opacity-[0.07] rounded-full blur-2xl pointer-events-none"></div>
+    <div className="flex-1 rounded-2xl border border-[var(--accent-line)] bg-[var(--accent-soft)] p-5 relative overflow-hidden flex flex-col shadow-sm">
       <div className="absolute top-2 right-4 text-[var(--accent-line)] font-art text-6xl leading-none select-none pointer-events-none">
         &ldquo;
       </div>
 
       <div className="relative flex-1 flex flex-col justify-center">
-        <p className="text-[10px] text-[var(--accent-muted)] mb-3 tracking-wider">今天的一句话</p>
+        <p className="text-[11px] text-[var(--accent-muted)] mb-3 tracking-wider">今天的一句话</p>
         <p className="text-sm text-[#4a423c] leading-relaxed font-art italic">{quote || '……'}</p>
-        <p className="text-[10px] text-[var(--accent-muted)] mt-3">— 来自陌生人的问候</p>
+        <p className="text-[11px] text-[var(--accent-muted)] mt-3">— 来自陌生人的问候</p>
       </div>
     </div>
   )
@@ -84,7 +82,7 @@ export function FriendRequestBanner({ requests }: { requests: FriendRequest[] })
   return (
     <Link
       href="/friends"
-      className="group flex items-center justify-between rounded-2xl border border-[var(--accent-line)] bg-gradient-to-r from-[var(--accent-soft)] to-[var(--accent-soft)] px-5 py-3 transition-all hover:shadow-[0_4px_16px_rgba(217,119,87,0.1)] hover:-translate-y-0.5 shadow-[0_2px_12px_rgba(217,119,87,0.04)]"
+      className="group flex items-center justify-between rounded-2xl border border-[var(--accent-line)] bg-gradient-to-r from-[var(--accent-soft)] to-[var(--accent-soft)] px-5 py-3 transition-all hover:shadow-sm hover:-translate-y-0.5 shadow-sm"
     >
       <div className="flex items-center gap-3 min-w-0">
         <div className="relative flex-shrink-0">
@@ -102,7 +100,7 @@ export function FriendRequestBanner({ requests }: { requests: FriendRequest[] })
             {preview.map((r) => (
               <span
                 key={r.friendship_id}
-                className="w-5 h-5 rounded-full overflow-hidden bg-[var(--accent-line)] flex items-center justify-center text-[10px] text-[var(--accent-deep)] flex-shrink-0"
+                className="w-5 h-5 rounded-full overflow-hidden bg-[var(--accent-line)] flex items-center justify-center text-[11px] text-[var(--accent-deep)] flex-shrink-0"
                 title={r.nickname || r.username}
               >
                 {r.avatar_url ? (
@@ -113,7 +111,7 @@ export function FriendRequestBanner({ requests }: { requests: FriendRequest[] })
                 )}
               </span>
             ))}
-            <span className="text-[10px] text-[var(--accent-muted)] ml-0.5">
+            <span className="text-[11px] text-[var(--accent-muted)] ml-0.5">
               {requests.length > preview.length ? `等 ${requests.length} 人` : '点开看看是谁'}
             </span>
           </div>
@@ -184,11 +182,11 @@ export function NavCardGrid({ badges }: { badges?: Partial<Record<string, { coun
             onClick={() => {
               if (key === 'friends' || key === 'world' || key === 'play') markModuleSeen(key)
             }}
-            className={`group relative rounded-2xl border border-[var(--accent-line)] bg-gradient-to-br ${section.gradient} p-5 transition-all shadow-[0_2px_12px_rgba(217,119,87,0.04)] hover:shadow-[0_8px_24px_rgba(217,119,87,0.12)] hover:-translate-y-0.5 flex flex-col`}
+            className={`group relative rounded-2xl border border-[var(--accent-line)] bg-gradient-to-br ${section.gradient} p-5 transition-all shadow-sm hover:shadow-sm hover:-translate-y-0.5 flex flex-col`}
           >
             {/* 未读提示：有精确数量就显示数字，否则只显示一个半明显的点（都在右上角） */}
             {badge?.count ? (
-              <span className="absolute top-3.5 right-3.5 min-w-[18px] h-[18px] px-1 rounded-full bg-[var(--accent)] text-white text-[10px] leading-[18px] text-center font-medium ring-2 ring-white/70">
+              <span className="absolute top-3.5 right-3.5 min-w-[18px] h-[18px] px-1 rounded-full bg-[var(--accent)] text-white text-[11px] leading-[18px] text-center font-medium ring-2 ring-white/70">
                 {badge.count > 99 ? '99+' : badge.count}
               </span>
             ) : badge?.dot ? (
@@ -214,7 +212,7 @@ export function NavCardGrid({ badges }: { badges?: Partial<Record<string, { coun
 
           <div className="flex items-center justify-between mt-4">
             <span
-              className="text-[10px] px-2 py-0.5 rounded-full bg-white/60 backdrop-blur font-medium"
+              className="text-[11px] px-2 py-0.5 rounded-full bg-white/60 backdrop-blur font-medium"
               style={{ color: section.accent }}
             >
               {section.tag}

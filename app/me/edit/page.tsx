@@ -91,8 +91,6 @@ export default function EditProfilePage() {
 
   return (
     <div className="min-h-screen relative overflow-hidden" style={pageAccentVars('me')}>
-      <div className="absolute -top-20 -right-20 w-96 h-96 bg-[var(--accent-light)] opacity-20 rounded-full blur-3xl pointer-events-none"></div>
-      <div className="absolute -bottom-20 -left-20 w-96 h-96 bg-[var(--accent)] opacity-10 rounded-full blur-3xl pointer-events-none"></div>
 
       <div className="relative max-w-xl mx-auto px-6 py-10">
         <header className="mb-6">
@@ -101,8 +99,7 @@ export default function EditProfilePage() {
           <p className="text-sm text-[var(--accent-muted)] mt-1">让别人多认识你一点</p>
         </header>
 
-        <form onSubmit={handleSave} className="rounded-3xl border border-[var(--accent-line)] bg-white/80 backdrop-blur-lg p-6 shadow-[0_8px_40px_rgba(168,138,184,0.06)] space-y-5 relative overflow-hidden">
-          <div className="absolute -top-8 -right-8 w-32 h-32 bg-[var(--accent-light)] opacity-[0.12] rounded-full blur-2xl pointer-events-none"></div>
+        <form onSubmit={handleSave} className="rounded-2xl border border-[var(--accent-line)] bg-white p-6 shadow-sm space-y-5 relative overflow-hidden">
 
           <div className="relative space-y-5">
             <div>
@@ -128,7 +125,7 @@ export default function EditProfilePage() {
             <div>
               <label className="block text-xs text-[var(--accent-muted)] mb-1.5 tracking-wide">头像图片链接</label>
               <input type="url" value={avatarUrl} onChange={(e) => setAvatarUrl(e.target.value)} placeholder="https://..." className="w-full px-4 py-2.5 rounded-xl border border-[var(--accent-line)] bg-[var(--accent-soft)] text-sm text-[#2b2430] focus:outline-none focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent)]/10 transition" />
-              <p className="text-[10px] text-[var(--accent-light)] mt-1.5">可以粘贴链接，也可以直接上传。</p>
+              <p className="text-[11px] text-[var(--accent-light)] mt-1.5">可以粘贴链接，也可以直接上传。</p>
               <label className="mt-2 inline-flex cursor-pointer items-center gap-1.5 rounded-xl border border-[var(--accent-line)] bg-white px-3 py-1.5 text-xs text-[var(--accent-deep)] transition hover:bg-[var(--accent-soft)]">
                 {uploadingAvatar ? '上传中…' : '＋ 上传头像'}
                 <input
@@ -153,7 +150,7 @@ export default function EditProfilePage() {
               </div>
             )}
 
-            <button type="submit" disabled={saving} className="w-full py-2.5 rounded-xl bg-gradient-to-r from-[var(--accent-light)] to-[var(--accent)] text-white text-sm font-medium hover:shadow-[0_6px_20px_rgba(168,138,184,0.3)] transition-all disabled:opacity-60 disabled:cursor-not-allowed">
+            <button type="submit" disabled={saving} className="w-full py-2.5 rounded-xl bg-[var(--accent)] text-white text-sm font-medium hover:shadow-sm transition-all disabled:opacity-60 disabled:cursor-not-allowed">
               {saving ? '保存中...' : '保 存'}
             </button>
 

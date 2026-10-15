@@ -209,14 +209,14 @@ export function AdminSitePages() {
   }
 
   return (
-    <section className="rounded-3xl border border-[#e0d4e8] bg-white/80 p-6 backdrop-blur shadow-[0_2px_12px_rgba(168,138,184,0.06)]">
+    <section className="rounded-2xl border border-[#e0d4e8] bg-white/80 p-6 backdrop-blur shadow-sm">
       <div className="mb-5 flex items-center gap-3">
         <div className="flex h-9 w-9 items-center justify-center rounded-full bg-[#f0e6f8]">
           <Icon name="file" className="h-4 w-4 text-[#8a7aaa]" />
         </div>
         <div className="flex-1">
           <h2 className="text-sm font-semibold text-[#2b2430]">站点页面</h2>
-          <p className="mt-0.5 text-[10px] text-[#b8a8c8]">
+          <p className="mt-0.5 text-[11px] text-[#b8a8c8]">
             公约、隐私、协议这些，改完点保存就生效，不用重新部署
           </p>
         </div>
@@ -245,7 +245,7 @@ export function AdminSitePages() {
             type="button"
             disabled={seeding}
             onClick={() => void handleSeed()}
-            className="rounded-xl bg-gradient-to-r from-[#b89ac8] to-[#a88ab8] px-4 py-1.5 text-xs text-white transition hover:shadow-[0_4px_16px_rgba(168,138,184,0.3)] disabled:opacity-50"
+            className="rounded-xl bg-gradient-to-r from-[#b89ac8] to-[#a88ab8] px-4 py-1.5 text-xs text-white transition hover:shadow-sm disabled:opacity-50"
           >
             {seeding ? '写入中…' : '写入初稿'}
           </button>
@@ -287,11 +287,11 @@ export function AdminSitePages() {
                   href={`/p/${active.slug}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-[10px] text-[#8a7aaa] underline"
+                  className="text-[11px] text-[#8a7aaa] underline"
                 >
                   看前台效果 ↗
                 </a>
-                <span className="text-[10px] text-[#b8a8c8]">
+                <span className="text-[11px] text-[#b8a8c8]">
                   更新于 {formatUpdated(active.updated_at)} · {draft.length} 字
                 </span>
               </div>
@@ -309,7 +309,7 @@ export function AdminSitePages() {
                   type="button"
                   disabled={saving || !dirty}
                   onClick={() => void handleSave()}
-                  className="rounded-xl bg-gradient-to-r from-[#b89ac8] to-[#a88ab8] px-5 py-2 text-sm text-white transition hover:shadow-[0_6px_20px_rgba(168,138,184,0.3)] disabled:opacity-50"
+                  className="rounded-xl bg-gradient-to-r from-[#b89ac8] to-[#a88ab8] px-5 py-2 text-sm text-white transition hover:shadow-sm disabled:opacity-50"
                 >
                   {saving ? '保存中…' : dirty ? '保存' : '没有改动'}
                 </button>
@@ -321,7 +321,7 @@ export function AdminSitePages() {
                 >
                   放弃改动
                 </button>
-                <span className="text-[10px] text-[#b8a8c8]">
+                <span className="text-[11px] text-[#b8a8c8]">
                   空行分段；一行一条的列表用 · 或 1. 开头即可
                 </span>
               </div>

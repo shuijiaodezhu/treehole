@@ -68,8 +68,6 @@ export default function MyPostsPage() {
 
   return (
     <div className="min-h-screen relative overflow-hidden">
-      <div className="absolute -top-20 -right-20 w-96 h-96 bg-[#c8b8d8] opacity-20 rounded-full blur-3xl pointer-events-none"></div>
-      <div className="absolute -bottom-20 -left-20 w-96 h-96 bg-[#a88ab8] opacity-10 rounded-full blur-3xl pointer-events-none"></div>
 
       <div className="relative max-w-xl mx-auto px-6 py-10">
         <header className="mb-6">
@@ -89,14 +87,14 @@ export default function MyPostsPage() {
             </div>
           ) : (
             posts.map((post) => (
-              <div key={post.id} className="group rounded-2xl border border-[#e0d4e8] bg-white/80 backdrop-blur p-5 hover:shadow-[0_4px_16px_rgba(168,138,184,0.08)] transition-all relative overflow-hidden">
+              <div key={post.id} className="group rounded-2xl border border-[#e0d4e8] bg-white p-5 hover:shadow-sm transition-all relative overflow-hidden">
                 <div className="flex justify-between items-start mb-3">
                   <span className="text-[11px] text-[#b8a8c8] tracking-wide">
                     {new Date(post.created_at).toLocaleString('zh-CN', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' })}
                   </span>
                   <div className="flex gap-2 items-center flex-shrink-0">
-                    {post.is_anonymous && (<span className="text-[10px] bg-[#f0e6f8] text-[#8a7aaa] px-2 py-0.5 rounded-full font-medium">匿名</span>)}
-                    {post.is_hidden && (<span className="text-[10px] bg-red-50 text-red-500 px-2 py-0.5 rounded-full font-medium">已隐藏</span>)}
+                    {post.is_anonymous && (<span className="text-[11px] bg-[#f0e6f8] text-[#8a7aaa] px-2 py-0.5 rounded-full font-medium">匿名</span>)}
+                    {post.is_hidden && (<span className="text-[11px] bg-red-50 text-red-500 px-2 py-0.5 rounded-full font-medium">已隐藏</span>)}
                     <button onClick={() => handleDelete(post.id)} className="text-[#b8a8c8] hover:text-red-500 transition p-1 rounded-md hover:bg-red-50" title="删除">
                       <IconTrash className="w-3.5 h-3.5" />
                     </button>

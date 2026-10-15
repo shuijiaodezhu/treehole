@@ -90,7 +90,7 @@ export function ChatMessages({
           <div key={m.id}>
             {newDay && (
               <div className="flex justify-center py-3.5">
-                <span className="rounded-full bg-[var(--accent-soft)] px-3 py-1 font-serif-cn text-[10px] text-[var(--accent-muted)]">
+                <span className="rounded-full bg-[var(--accent-soft)] px-3 py-1 font-serif-cn text-[11px] text-[var(--accent-muted)]">
                   {dayLabel(m.created_at)}
                 </span>
               </div>
@@ -116,8 +116,8 @@ export function ChatMessages({
                 <div
                   className={`animate-fade-in px-4 py-2.5 text-[13.5px] leading-relaxed ${
                     mine
-                      ? 'bg-gradient-to-br from-[var(--accent-light)] to-[var(--accent)] text-white shadow-[0_8px_20px_-10px_rgba(217,119,87,0.7)]'
-                      : 'border border-[var(--accent-line)] bg-white text-[#2b2620] shadow-[0_8px_20px_-14px_rgba(217,119,87,0.45)]'
+                      ? 'bg-gradient-to-br from-[var(--accent-light)] to-[var(--accent)] text-white shadow-sm'
+                      : 'border border-[var(--accent-line)] bg-white text-[#2b2620] shadow-sm'
                   } rounded-[20px] ${lastOfGroup ? (mine ? 'rounded-br-[7px]' : 'rounded-bl-[7px]') : ''}`}
                 >
                   <p className="whitespace-pre-wrap break-words">{m.content}</p>
@@ -125,7 +125,7 @@ export function ChatMessages({
 
                 {/* 时间挪到气泡外面：气泡就能保持紧凑 */}
                 {lastOfGroup && (
-                  <span className="mt-1 px-1 font-serif-cn text-[10px] text-[var(--accent-muted)]">
+                  <span className="mt-1 px-1 font-serif-cn text-[11px] text-[var(--accent-muted)]">
                     {clock(m.created_at)}
                   </span>
                 )}

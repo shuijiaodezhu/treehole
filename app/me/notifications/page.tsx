@@ -38,7 +38,6 @@ export default function NotificationsPage() {
 
   return (
     <div className="min-h-screen relative overflow-hidden" style={pageAccentVars('me')}>
-      <div className="absolute -top-20 -right-20 w-96 h-96 bg-[var(--accent-light)] opacity-20 rounded-full blur-3xl pointer-events-none"></div>
 
       <div className="relative max-w-xl mx-auto px-6 py-10">
         <header className="mb-6">

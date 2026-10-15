@@ -125,7 +125,7 @@ export function UserBanSection({ adminId }: { adminId: string }) {
   return (
     <section className="rounded-2xl border border-[#f0e6dc] bg-white/80 p-4">
       <h2 className="text-xs tracking-wider text-[#8a7a9a]">用户管理 · 停用账号</h2>
-      <p className="mt-2 text-[10.5px] leading-relaxed text-[#8a7a9a]">
+      <p className="mt-2 text-[11.5px] leading-relaxed text-[#8a7a9a]">
         停用是真的封禁（改 auth 里的 banned_until），被封的人登录不上、
         旧登录态也会失效。解除后可以立刻重新登录。
       </p>
@@ -154,7 +154,7 @@ export function UserBanSection({ adminId }: { adminId: string }) {
       </div>
 
       {found.length === 0 && (
-        <p className="mt-3 text-[10px] leading-relaxed text-[#8a7a9a]">
+        <p className="mt-3 text-[11px] leading-relaxed text-[#8a7a9a]">
           没找到这个人。昵称要写得完整一些；也可以直接粘贴他的**用户 id**
           （后台的「注销申请」「举报」里都能看到 id）。
           {' '}
@@ -166,7 +166,7 @@ export function UserBanSection({ adminId }: { adminId: string }) {
       )}
 
       {found.length > 0 && (
-        <p className="mt-3 text-[10px] text-[#b0a89e]">
+        <p className="mt-3 text-[11px] text-[#b0a89e]">
           {searched ? `搜索结果 ${found.length} 人` : '最近注册的 20 人（在下面直接点）'}
         </p>
       )}
@@ -183,7 +183,7 @@ export function UserBanSection({ adminId }: { adminId: string }) {
                   <span className="block truncate text-xs text-[#3a3229]">
                     {person.nickname || person.username || '（无昵称）'}
                   </span>
-                  <span className="mt-0.5 block truncate text-[10px] text-[#a89a8e]">
+                  <span className="mt-0.5 block truncate text-[11px] text-[#a89a8e]">
                     @{person.username ?? '—'} · {person.id.slice(0, 8)}
                   </span>
                 </span>
@@ -199,7 +199,7 @@ export function UserBanSection({ adminId }: { adminId: string }) {
                     type="button"
                     disabled={busy === person.id}
                     onClick={() => void setBan(person, option.days)}
-                    className="rounded-lg border border-[#f0e6dc] px-2.5 py-1 text-[10px] text-[#8a7a9a] transition hover:border-[#e0a184] hover:text-[#c96447] disabled:opacity-50"
+                    className="rounded-lg border border-[#f0e6dc] px-2.5 py-1 text-[11px] text-[#8a7a9a] transition hover:border-[#e0a184] hover:text-[#c96447] disabled:opacity-50"
                   >
                     {option.label}
                   </button>
@@ -208,7 +208,7 @@ export function UserBanSection({ adminId }: { adminId: string }) {
                   type="button"
                   disabled={busy === person.id}
                   onClick={() => void setBan(person, 0)}
-                  className="flex items-center gap-1 rounded-lg border border-[#f0e6dc] px-2.5 py-1 text-[10px] text-[#8a7a9a] transition hover:text-[#3a3229] disabled:opacity-50"
+                  className="flex items-center gap-1 rounded-lg border border-[#f0e6dc] px-2.5 py-1 text-[11px] text-[#8a7a9a] transition hover:text-[#3a3229] disabled:opacity-50"
                 >
                   <Icon name="check" className="h-3 w-3" />
                   解除
@@ -219,7 +219,7 @@ export function UserBanSection({ adminId }: { adminId: string }) {
         </ul>
       )}
 
-      {hint && <p className="mt-3 whitespace-pre-line text-[10px] text-[#8a7a9a]">{hint}</p>}
+      {hint && <p className="mt-3 whitespace-pre-line text-[11px] text-[#8a7a9a]">{hint}</p>}
     </section>
   )
 }

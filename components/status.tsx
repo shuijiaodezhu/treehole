@@ -177,7 +177,7 @@ export function useStatusMap(userIds: string[]): Record<string, string> {
 export function StatusLabel({ text }: { text: string | null }) {
   if (!text) return null
   return (
-    <span className="flex-shrink-0 font-serif-cn text-[10px] leading-none text-[var(--accent)]">
+    <span className="flex-shrink-0 font-serif-cn text-[11px] leading-none text-[var(--accent)]">
       {text}
     </span>
   )
@@ -191,7 +191,7 @@ export function StatusPicker({ userId }: { userId: string | null }) {
     return (
       <section className="rounded-2xl border border-[var(--accent-line)] bg-white/80 p-4">
         <p className="text-xs font-medium text-[#2b2430]">状态</p>
-        <p className="mt-1 text-[10.5px] leading-relaxed text-[var(--accent-muted)]">
+        <p className="mt-1 text-[11.5px] leading-relaxed text-[var(--accent-muted)]">
           还没开通：先在 Supabase 里执行 <code>supabase-status.sql</code>。
         </p>
       </section>
@@ -202,11 +202,11 @@ export function StatusPicker({ userId }: { userId: string | null }) {
     <section className="rounded-2xl border border-[var(--accent-line)] bg-white/80 p-4">
       <div className="flex items-baseline justify-between gap-3">
         <p className="text-xs font-medium text-[#2b2430]">状态</p>
-        <p className="text-[10px] text-[var(--accent-light)]">
+        <p className="text-[11px] text-[var(--accent-light)]">
           {text ? `当前：${text}` : '默认不显示'}
         </p>
       </div>
-      <p className="mt-1 text-[10.5px] leading-relaxed text-[var(--accent-muted)]">
+      <p className="mt-1 text-[11.5px] leading-relaxed text-[var(--accent-muted)]">
         选一个，或者自己写（最多三个字）。设好之后只在小屋的聊天抬头、头像旁边出现。
       </p>
 
@@ -262,7 +262,7 @@ export function StatusPicker({ userId }: { userId: string | null }) {
         )}
       </div>
 
-      {hint && <p className="mt-2 text-[10.5px] text-[var(--accent-muted)]">{hint}</p>}
+      {hint && <p className="mt-2 text-[11.5px] text-[var(--accent-muted)]">{hint}</p>}
     </section>
   )
 }

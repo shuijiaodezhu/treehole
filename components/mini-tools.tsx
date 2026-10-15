@@ -200,22 +200,22 @@ export function MiniTools() {
               onClick={() => setActive(tool.key)}
               className={`rounded-2xl border p-4 text-left transition-all ${
                 on
-                  ? 'border-[var(--accent)] bg-[var(--accent-soft)] shadow-[0_6px_20px_rgba(217,119,87,0.12)]'
-                  : 'border-[var(--accent-line)] bg-white/90 hover:-translate-y-0.5 hover:shadow-[0_8px_24px_rgba(217,119,87,0.1)]'
+                  ? 'border-[var(--accent)] bg-[var(--accent-soft)] shadow-sm'
+                  : 'border-[var(--accent-line)] bg-white/90 hover:-translate-y-0.5 hover:shadow-sm'
               }`}
             >
               <div className="mb-2 flex h-9 w-9 items-center justify-center rounded-xl bg-white/80">
                 <Icon name={tool.icon} className="h-5 w-5 text-[var(--accent)]" />
               </div>
               <p className="text-sm font-semibold text-[#2b2430]">{tool.name}</p>
-              <p className="mt-0.5 text-[10.5px] text-[var(--accent-muted)]">{tool.desc}</p>
+              <p className="mt-0.5 text-[11.5px] text-[var(--accent-muted)]">{tool.desc}</p>
             </button>
           )
         })}
       </div>
 
       {/* 当前工具 */}
-      <div className="rounded-3xl border border-[var(--accent-line)] bg-white/90 p-5 backdrop-blur">
+      <div className="rounded-2xl border border-[var(--accent-line)] bg-white/90 p-5 backdrop-blur">
         {active === 'dice' && (
           <div>
             <div className="flex flex-wrap items-center gap-3">
@@ -233,7 +233,7 @@ export function MiniTools() {
                 type="button"
                 onClick={rollDice}
                 disabled={rolling}
-                className="ml-auto rounded-xl bg-gradient-to-r from-[var(--accent-light)] to-[var(--accent)] px-5 py-2 text-xs font-medium text-white transition hover:shadow-[0_6px_20px_rgba(217,119,87,0.3)] disabled:opacity-60"
+                className="ml-auto rounded-xl bg-[var(--accent)] px-5 py-2 text-xs font-medium text-white transition hover:shadow-sm disabled:opacity-60"
               >
                 {rolling ? '掷…' : '掷'}
               </button>
@@ -249,7 +249,7 @@ export function MiniTools() {
                     className={`flex h-14 w-14 items-center justify-center rounded-2xl border text-2xl font-semibold transition ${
                       rolling
                         ? 'border-[var(--accent-line)] bg-[var(--accent-soft)] text-[var(--accent-light)]'
-                        : 'border-[var(--accent)] bg-white text-[var(--accent-deep)] shadow-[0_4px_14px_rgba(217,119,87,0.14)]'
+                        : 'border-[var(--accent)] bg-white text-[var(--accent-deep)] shadow-sm'
                     }`}
                   >
                     {face}
@@ -283,7 +283,7 @@ export function MiniTools() {
                 type="button"
                 onClick={flipCoins}
                 disabled={rolling}
-                className="ml-auto rounded-xl bg-gradient-to-r from-[var(--accent-light)] to-[var(--accent)] px-5 py-2 text-xs font-medium text-white transition hover:shadow-[0_6px_20px_rgba(217,119,87,0.3)] disabled:opacity-60"
+                className="ml-auto rounded-xl bg-[var(--accent)] px-5 py-2 text-xs font-medium text-white transition hover:shadow-sm disabled:opacity-60"
               >
                 {rolling ? '抛…' : '抛'}
               </button>
@@ -321,7 +321,7 @@ export function MiniTools() {
 
         {active === 'pick' && (
           <div>
-            <p className="text-[10.5px] leading-relaxed text-[var(--accent-muted)]">
+            <p className="text-[11.5px] leading-relaxed text-[var(--accent-muted)]">
               一行一个选项。抽签只用在你犹豫的时候——决定了就别再抽了。
             </p>
             <textarea
@@ -340,14 +340,14 @@ export function MiniTools() {
                 />
                 不重复（抽完自动重新开始）
               </label>
-              <span className="text-[10.5px] text-[var(--accent-light)]">
+              <span className="text-[11.5px] text-[var(--accent-light)]">
                 共 {options.length} 个
                 {noRepeatPick && pickedHistory.length > 0 && ` · 已抽 ${pickedHistory.length}`}
               </span>
               <button
                 type="button"
                 onClick={pickOne}
-                className="ml-auto rounded-xl bg-gradient-to-r from-[var(--accent-light)] to-[var(--accent)] px-5 py-2 text-xs font-medium text-white transition hover:shadow-[0_6px_20px_rgba(217,119,87,0.3)]"
+                className="ml-auto rounded-xl bg-[var(--accent)] px-5 py-2 text-xs font-medium text-white transition hover:shadow-sm"
               >
                 抽一个
               </button>
@@ -355,7 +355,7 @@ export function MiniTools() {
 
             <div className="mt-5 flex min-h-[64px] items-center justify-center">
               {picked ? (
-                <p className="rounded-2xl border border-[var(--accent)] bg-white px-6 py-4 text-xl font-semibold text-[var(--accent-deep)] shadow-[0_4px_14px_rgba(217,119,87,0.14)]">
+                <p className="rounded-2xl border border-[var(--accent)] bg-white px-6 py-4 text-xl font-semibold text-[var(--accent-deep)] shadow-sm">
                   {picked}
                 </p>
               ) : (
@@ -394,7 +394,7 @@ export function MiniTools() {
               <button
                 type="button"
                 onClick={rollNumbers}
-                className="ml-auto rounded-xl bg-gradient-to-r from-[var(--accent-light)] to-[var(--accent)] px-5 py-2 text-xs font-medium text-white transition hover:shadow-[0_6px_20px_rgba(217,119,87,0.3)]"
+                className="ml-auto rounded-xl bg-[var(--accent)] px-5 py-2 text-xs font-medium text-white transition hover:shadow-sm"
               >
                 生成
               </button>
@@ -411,7 +411,7 @@ export function MiniTools() {
             </label>
 
             {numberError && (
-              <p className="mt-2 text-[10.5px] leading-relaxed text-red-500">{numberError}</p>
+              <p className="mt-2 text-[11.5px] leading-relaxed text-red-500">{numberError}</p>
             )}
 
             <div className="mt-5 flex min-h-[64px] flex-wrap items-center justify-center gap-2">
@@ -436,11 +436,11 @@ export function MiniTools() {
       {history.length > 0 && (
         <div className="rounded-2xl border border-[var(--accent-line)] bg-white/70 p-4">
           <div className="flex items-center justify-between gap-3">
-            <p className="text-[10.5px] tracking-wide text-[var(--accent-muted)]">最近结果（只存在这台设备上）</p>
+            <p className="text-[11.5px] tracking-wide text-[var(--accent-muted)]">最近结果（只存在这台设备上）</p>
             <button
               type="button"
               onClick={() => setHistory([])}
-              className="text-[10.5px] text-[var(--accent-light)] transition hover:text-red-500"
+              className="text-[11.5px] text-[var(--accent-light)] transition hover:text-red-500"
             >
               清空
             </button>
@@ -450,7 +450,7 @@ export function MiniTools() {
               <li key={row.at} className="flex items-center gap-2 text-[11px]">
                 <span className="text-[var(--accent-light)]">{row.tool}</span>
                 <span className="min-w-0 flex-1 truncate text-[#2b2430]">{row.result}</span>
-                <span className="flex-shrink-0 text-[10px] text-[var(--accent-light)]">
+                <span className="flex-shrink-0 text-[11px] text-[var(--accent-light)]">
                   {new Date(row.at).toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' })}
                 </span>
               </li>

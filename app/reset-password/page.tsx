@@ -70,7 +70,7 @@ export default function ResetPasswordPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center px-4">
-      <div className="w-full max-w-sm rounded-3xl border border-[var(--accent-line)] bg-white/80 p-7 backdrop-blur shadow-[0_8px_40px_rgba(217,119,87,0.08)]">
+      <div className="w-full max-w-sm rounded-2xl border border-[var(--accent-line)] bg-white/80 p-7 backdrop-blur shadow-sm">
         <h1 className="font-serif-cn text-lg font-semibold text-[#2b2620]">设置新密码</h1>
 
         {checking ? (
@@ -90,7 +90,7 @@ export default function ResetPasswordPage() {
             </p>
             <Link
               href="/forgot-password"
-              className="mt-3 inline-block rounded-full bg-gradient-to-r from-[var(--accent-light)] to-[var(--accent)] px-4 py-2 font-serif-cn text-[11.5px] text-white"
+              className="mt-3 inline-block rounded-full bg-[var(--accent)] px-4 py-2 font-serif-cn text-[11.5px] text-white"
             >
               重新申请
             </Link>
@@ -119,7 +119,7 @@ export default function ResetPasswordPage() {
             <button
               type="submit"
               disabled={loading || !password || !confirm}
-              className="w-full rounded-2xl bg-gradient-to-r from-[var(--accent-light)] to-[var(--accent)] py-3 font-serif-cn text-[13px] text-white transition hover:shadow-[0_8px_24px_rgba(217,119,87,0.3)] disabled:opacity-50"
+              className="w-full rounded-2xl bg-[var(--accent)] py-3 font-serif-cn text-[13px] text-white transition hover:shadow-sm disabled:opacity-50"
             >
               {loading ? '保存中…' : '保存新密码'}
             </button>

@@ -130,8 +130,6 @@ export default function MePage() {
 
   return (
     <div className="min-h-screen relative overflow-hidden" style={pageAccentVars('me')}>
-      <div className="absolute -top-20 -right-20 w-96 h-96 bg-[var(--accent-light)] opacity-20 rounded-full blur-3xl pointer-events-none"></div>
-      <div className="absolute -bottom-20 -left-20 w-96 h-96 bg-[var(--accent)] opacity-10 rounded-full blur-3xl pointer-events-none"></div>
 
       <div className="relative max-w-xl mx-auto px-6 py-10">
         <header className="mb-6">
@@ -141,11 +139,10 @@ export default function MePage() {
         </header>
 
         <main className="space-y-4">
-          <div className="rounded-3xl border border-[var(--accent-line)] bg-white/80 backdrop-blur-lg p-6 shadow-[0_8px_40px_rgba(168,138,184,0.06)] relative overflow-hidden">
-            <div className="absolute -top-8 -right-8 w-32 h-32 bg-[var(--accent-light)] opacity-[0.15] rounded-full blur-2xl pointer-events-none"></div>
+          <div className="rounded-2xl border border-[var(--accent-line)] bg-white p-6 shadow-sm relative overflow-hidden">
 
             <div className="relative flex items-start gap-4">
-              <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[var(--accent-line)] to-[var(--accent-light)] flex items-center justify-center text-2xl overflow-hidden flex-shrink-0 shadow-sm">
+              <div className="w-16 h-16 rounded-2xl bg-[var(--accent-soft)] flex items-center justify-center text-2xl overflow-hidden flex-shrink-0 shadow-sm">
                 {profile?.avatar_url ? (
                   <img src={profile.avatar_url} alt="avatar" className="w-full h-full object-cover" />
                 ) : (
@@ -173,7 +170,7 @@ export default function MePage() {
 
             <Link
               href="/me/edit"
-              className="relative mt-5 inline-block px-5 py-2 rounded-xl bg-gradient-to-r from-[var(--accent-light)] to-[var(--accent)] text-white text-sm font-medium hover:shadow-[0_6px_20px_rgba(168,138,184,0.3)] transition-all"
+              className="relative mt-5 inline-block px-5 py-2 rounded-xl bg-[var(--accent)] text-white text-sm font-medium hover:shadow-sm transition-all"
             >
               编辑资料
             </Link>
@@ -186,7 +183,7 @@ export default function MePage() {
           <ShowcaseSettingsSection userId={profile?.id ?? null} />
 
           <div className="grid grid-cols-2 gap-4">
-            <div className="rounded-2xl border border-[var(--accent-line)] bg-gradient-to-br from-[var(--accent-soft)] to-[var(--accent-soft)] p-5 text-center relative overflow-hidden">
+            <div className="rounded-2xl border border-[var(--accent-line)] bg-[var(--accent-soft)] p-5 text-center relative overflow-hidden">
               <div className="absolute -top-4 -right-4 w-16 h-16 bg-[var(--accent-light)] opacity-[0.15] rounded-full blur-xl pointer-events-none"></div>
               <p className="relative text-3xl font-bold text-[var(--accent-deep)]">{postCount}</p>
               <p className="relative text-[11px] text-[var(--accent-muted)] mt-1.5 tracking-wide">已发帖</p>

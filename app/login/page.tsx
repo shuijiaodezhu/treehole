@@ -55,8 +55,6 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen relative overflow-hidden flex items-center justify-center px-4">
       {/* 背景装饰光晕 */}
-      <div className="absolute -top-20 -left-20 w-96 h-96 bg-[#f0b078] opacity-20 rounded-full blur-3xl pointer-events-none"></div>
-      <div className="absolute -bottom-20 -right-20 w-96 h-96 bg-[#d97757] opacity-10 rounded-full blur-3xl pointer-events-none"></div>
 
       {/* 左侧装饰文字（大屏可见） */}
       <div className={`hidden lg:block absolute left-20 top-1/2 -translate-y-1/2 max-w-sm ${entering ? 'th-page-out' : ''}`}>
@@ -90,7 +88,7 @@ export default function LoginPage() {
 
       {/* 登录卡片 */}
       <div className={`relative w-full max-w-sm ml-auto mr-auto lg:mr-32 ${entering ? 'th-page-out' : ''}`}>
-        <div className="rounded-3xl border border-[#f0e4d4] bg-white/80 backdrop-blur-lg p-8 shadow-[0_8px_40px_rgba(217,119,87,0.08)]">
+        <div className="rounded-2xl border border-[#f0e4d4] bg-white p-8 shadow-sm">
           <div className="lg:hidden text-center mb-6">
             <h1 className="text-2xl font-bold text-[#2b2620]">你的来信</h1>
             <p className="mt-1 font-art italic text-[#c96447]">Dear You</p>
@@ -131,7 +129,7 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-2.5 rounded-xl bg-gradient-to-r from-[#e8a87c] to-[#d97757] text-white text-sm font-medium hover:shadow-[0_6px_20px_rgba(217,119,87,0.3)] transition-all disabled:opacity-60 disabled:cursor-not-allowed"
+              className="w-full py-2.5 rounded-xl bg-gradient-to-r from-[#e8a87c] to-[#d97757] text-white text-sm font-medium hover:shadow-sm transition-all disabled:opacity-60 disabled:cursor-not-allowed"
             >
               {loading ? '登录中...' : '登 录'}
             </button>
@@ -155,7 +153,7 @@ export default function LoginPage() {
           </div>
         </div>
 
-        <p className="text-center text-[10px] text-[#b0a89e] mt-4 tracking-wider">
+        <p className="text-center text-[11px] text-[#b0a89e] mt-4 tracking-wider">
           © 你的来信 · Dear You
         </p>
       </div>

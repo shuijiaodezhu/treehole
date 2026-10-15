@@ -310,7 +310,7 @@ export default function SearchPage() {
             }`}
           >
             帖子
-            {hasQuery && <span className="text-[10px] text-[#b0a89e]">{shownPosts.length}</span>}
+            {hasQuery && <span className="text-[11px] text-[#b0a89e]">{shownPosts.length}</span>}
           </button>
           <button
             type="button"
@@ -322,7 +322,7 @@ export default function SearchPage() {
             }`}
           >
             活动
-            {hasQuery && <span className="text-[10px] text-[#b0a89e]">{shownActivities.length}</span>}
+            {hasQuery && <span className="text-[11px] text-[#b0a89e]">{shownActivities.length}</span>}
           </button>
           <button
             type="button"
@@ -334,7 +334,7 @@ export default function SearchPage() {
             }`}
           >
             朋友圈
-            {hasQuery && <span className="text-[10px] text-[#b0a89e]">{shownMoments.length}</span>}
+            {hasQuery && <span className="text-[11px] text-[#b0a89e]">{shownMoments.length}</span>}
           </button>
           <button
             type="button"
@@ -346,7 +346,7 @@ export default function SearchPage() {
             }`}
           >
             用户
-            {hasQuery && <span className="text-[10px] text-[#b0a89e]">{shownUsers.length}</span>}
+            {hasQuery && <span className="text-[11px] text-[#b0a89e]">{shownUsers.length}</span>}
           </button>
         </div>
 
@@ -377,7 +377,7 @@ export default function SearchPage() {
                 <Link
                   key={p.id}
                   href={`/world?post=${p.id}`}
-                  className="block rounded-2xl border border-[var(--accent-line)] bg-white/80 backdrop-blur p-4 hover:shadow-[0_4px_16px_rgba(217,119,87,0.08)] hover:-translate-y-0.5 transition"
+                  className="block rounded-2xl border border-[var(--accent-line)] bg-white p-4 hover:shadow-sm hover:-translate-y-0.5 transition"
                 >
                   <div className="flex items-center gap-2.5 mb-2">
                     <span className="w-7 h-7 rounded-full bg-[#f3e2d3] flex items-center justify-center overflow-hidden flex-shrink-0 text-[11px] text-[var(--accent-deep)]">
@@ -389,7 +389,7 @@ export default function SearchPage() {
                       )}
                     </span>
                     <span className="text-xs text-[#5a4a3a] truncate">{p.authorName}</span>
-                    <span className="text-[10px] text-[#b0a89e] ml-auto flex-shrink-0">
+                    <span className="text-[11px] text-[#b0a89e] ml-auto flex-shrink-0">
                       {relativeTime(p.created_at)}
                     </span>
                   </div>
@@ -408,11 +408,11 @@ export default function SearchPage() {
                 <Link
                   key={a.id}
                   href={`/play?activity=${a.id}`}
-                  className="block rounded-2xl border border-[#d8e0e8] bg-white/80 backdrop-blur p-4 hover:shadow-[0_4px_16px_rgba(90,122,154,0.1)] hover:-translate-y-0.5 transition"
+                  className="block rounded-2xl border border-[#d8e0e8] bg-white p-4 hover:shadow-sm hover:-translate-y-0.5 transition"
                 >
                   <div className="flex items-center gap-2 mb-2">
                     <span className="text-sm font-medium text-[#2b3a4a] truncate">{a.title}</span>
-                    <span className="text-[10px] text-[#9aa8b4] ml-auto flex-shrink-0">
+                    <span className="text-[11px] text-[#9aa8b4] ml-auto flex-shrink-0">
                       {relativeTime(a.created_at)}
                     </span>
                   </div>
@@ -422,7 +422,7 @@ export default function SearchPage() {
                     </p>
                   )}
                   {a.activity_time && (
-                    <p className="text-[10px] text-[#7a8a9a] mt-2">
+                    <p className="text-[11px] text-[#7a8a9a] mt-2">
                       活动时间：
                       {new Intl.DateTimeFormat('zh-CN', {
                         month: 'numeric',
@@ -444,11 +444,11 @@ export default function SearchPage() {
                 <Link
                   key={m.id}
                   href={`/friends/moments?post=${m.id}`}
-                  className="block rounded-2xl border border-[var(--accent-line)] bg-white/80 backdrop-blur p-4 hover:shadow-[0_4px_16px_rgba(217,119,87,0.08)] hover:-translate-y-0.5 transition"
+                  className="block rounded-2xl border border-[var(--accent-line)] bg-white p-4 hover:shadow-sm hover:-translate-y-0.5 transition"
                 >
                   <div className="flex items-center gap-2 mb-2">
-                    <span className="text-[10px] text-[#b0a89e]">朋友圈</span>
-                    <span className="text-[10px] text-[#b0a89e] ml-auto flex-shrink-0">
+                    <span className="text-[11px] text-[#b0a89e]">朋友圈</span>
+                    <span className="text-[11px] text-[#b0a89e] ml-auto flex-shrink-0">
                       {relativeTime(m.created_at)}
                     </span>
                   </div>
@@ -469,7 +469,7 @@ export default function SearchPage() {
                 return (
                   <div
                     key={u.id}
-                    className="flex items-center gap-3 rounded-2xl border border-[var(--accent-line)] bg-white/80 backdrop-blur p-4"
+                    className="flex items-center gap-3 rounded-2xl border border-[var(--accent-line)] bg-white p-4"
                   >
                     <span className="w-10 h-10 rounded-full bg-gradient-to-br from-[#fae0cc] to-[#f9d5ba] flex items-center justify-center overflow-hidden flex-shrink-0 text-sm text-[var(--accent-deep)] font-semibold">
                       {u.avatar_url ? (
@@ -483,13 +483,13 @@ export default function SearchPage() {
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-medium text-[#2b2620] truncate">
                         {name}
-                        {isMe && <span className="ml-1.5 text-[10px] text-[var(--accent-deep)]">（我）</span>}
+                        {isMe && <span className="ml-1.5 text-[11px] text-[var(--accent-deep)]">（我）</span>}
                       </p>
                       {u.username && (
-                        <p className="text-[10px] text-[#b0a89e] truncate">@{u.username}</p>
+                        <p className="text-[11px] text-[#b0a89e] truncate">@{u.username}</p>
                       )}
                       {u.signature && (
-                        <p className="text-[10px] text-[#a88868] truncate mt-0.5">{u.signature}</p>
+                        <p className="text-[11px] text-[#a88868] truncate mt-0.5">{u.signature}</p>
                       )}
                     </div>
 

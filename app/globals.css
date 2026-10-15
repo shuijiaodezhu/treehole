@@ -1,5 +1,48 @@
 @import "tailwindcss";
 
+/* ============================================================
+   手机适配的基础几件（都在这里集中说明，免得散落各处）
+   ============================================================ */
+
+/* iPhone 刘海 / 底部横条的安全区，供 pb-safe / pt-safe 用 */
+:root {
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  /* 移动端浏览器地址栏会伸缩，用 dvh 比 vh 稳 */
+  --app-height: 100dvh;
+}
+
+/* 横向兜底：某个元素不小心超出宽度时，不要让整页可以左右拖 */
+html,
+body {
+  overflow-x: hidden;
+}
+
+/* iOS 上横屏时不要自动放大字号 */
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+/* 手机上点按钮时的灰色高亮块很难看，去掉；改用 :active 自己给反馈 */
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* 固定底栏（聊天输入框之类）留出安全区，不然会被横条压住 */
+.pb-safe {
+  padding-bottom: calc(var(--safe-bottom) + 0.5rem);
+}
+.pt-safe {
+  padding-top: calc(var(--safe-top) + 0.5rem);
+}
+
+/* 小屏幕上把行高放宽一点，中文小字挤在一起更难看 */
+@media (max-width: 640px) {
+  body {
+    line-height: 1.7;
+  }
+}
+
 :root {
   --paper: #f5f0e8;
   --card: #ffffff;

@@ -138,7 +138,7 @@ export default function FavoritesPage() {
                 }`}
               >
                 {label}
-                <span className="text-[10px] text-[var(--accent-muted)]">{counts[t]}</span>
+                <span className="text-[11px] text-[var(--accent-muted)]">{counts[t]}</span>
               </button>
             )
           })}
@@ -166,7 +166,7 @@ export default function FavoritesPage() {
             />
             <Link
               href="/world"
-              className="mt-5 inline-flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-[var(--accent-light)] to-[var(--accent)] px-4 py-2 text-sm text-white hover:shadow-[0_6px_20px_rgba(168,138,184,0.3)] transition-all"
+              className="mt-5 inline-flex items-center gap-1.5 rounded-xl bg-[var(--accent)] px-4 py-2 text-sm text-white hover:shadow-sm transition-all"
             >
               去院子逛逛
             </Link>
@@ -178,16 +178,16 @@ export default function FavoritesPage() {
             {visible.map((f) => (
               <div
                 key={f.id}
-                className="rounded-2xl border border-[var(--accent-line)] bg-white/85 backdrop-blur p-4 shadow-[0_2px_12px_rgba(168,138,184,0.05)]"
+                className="rounded-2xl border border-[var(--accent-line)] bg-white p-4 shadow-sm"
               >
                 <div className="flex items-center gap-2 mb-2">
-                  <span className="rounded-full bg-[var(--accent-soft)] px-2 py-0.5 text-[10px] text-[var(--accent-deep)]">
+                  <span className="rounded-full bg-[var(--accent-soft)] px-2 py-0.5 text-[11px] text-[var(--accent-deep)]">
                     {FAVORITE_KIND_LABEL[f.kind]}
                   </span>
                   {f.author_name && (
-                    <span className="text-[10px] text-[var(--accent-muted)] truncate">{f.author_name}</span>
+                    <span className="text-[11px] text-[var(--accent-muted)] truncate">{f.author_name}</span>
                   )}
-                  <span className="ml-auto flex-shrink-0 text-[10px] text-[var(--accent-muted)]">
+                  <span className="ml-auto flex-shrink-0 text-[11px] text-[var(--accent-muted)]">
                     收藏于 {formatTime(f.created_at)}
                   </span>
                 </div>

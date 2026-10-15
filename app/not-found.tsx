@@ -46,7 +46,7 @@ export default function NotFound() {
         <div className="mt-7 flex flex-wrap items-center justify-center gap-3">
           <Link
             href="/"
-            className="rounded-xl bg-gradient-to-r from-[var(--accent-light)] to-[var(--accent)] px-5 py-2.5 text-sm font-medium text-white transition hover:shadow-[0_6px_20px_rgba(217,119,87,0.3)]"
+            className="rounded-xl bg-[var(--accent)] px-5 py-2.5 text-sm font-medium text-white transition hover:shadow-sm"
           >
             回首页
           </Link>

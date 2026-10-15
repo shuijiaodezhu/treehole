@@ -79,7 +79,7 @@ export function ShowcaseSettingsSection({ userId }: { userId: string | null }) {
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
           <p className="text-xs font-medium text-[#2b2430]">展示页</p>
-          <p className="mt-1 text-[10.5px] leading-relaxed text-[var(--accent-muted)]">
+          <p className="mt-1 text-[11.5px] leading-relaxed text-[var(--accent-muted)]">
             每个朋友都有一个展示页：别人点你的头像能看到你的头像、昵称、签名、状态。
             内容就是下面资料里填的那些。
           </p>
@@ -107,7 +107,7 @@ export function ShowcaseSettingsSection({ userId }: { userId: string | null }) {
           <span className="block text-xs font-medium text-[#2b2430]">
             在展示页列出我公开的帖子
           </span>
-          <span className="mt-0.5 block text-[10.5px] leading-relaxed text-[var(--accent-muted)]">
+          <span className="mt-0.5 block text-[11.5px] leading-relaxed text-[var(--accent-muted)]">
             只列院子里公开说过的话（最多 5 条）。
             <span className="text-[var(--accent-deep)]">匿名说的永远不会出现在展示页。</span>
           </span>
@@ -115,12 +115,12 @@ export function ShowcaseSettingsSection({ userId }: { userId: string | null }) {
       </label>
 
       {missing && (
-        <p className="mt-3 rounded-xl border border-[var(--accent-line)] bg-[var(--accent-soft)] px-3 py-2 text-[10.5px] leading-relaxed text-[var(--accent-muted)]">
+        <p className="mt-3 rounded-xl border border-[var(--accent-line)] bg-[var(--accent-soft)] px-3 py-2 text-[11.5px] leading-relaxed text-[var(--accent-muted)]">
           展示页还没开通：先在 Supabase 里执行 <code>supabase-profile-page.sql</code>。
           （没跑也能看展示页，只是少那个开关）
         </p>
       )}
-      {hint && <p className="mt-2 text-[10.5px] text-[var(--accent-muted)]">{hint}</p>}
+      {hint && <p className="mt-2 text-[11.5px] text-[var(--accent-muted)]">{hint}</p>}
     </section>
   )
 }

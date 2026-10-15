@@ -240,7 +240,7 @@ export function MusicRoom() {
     <section className="mt-8">
       <div className="mb-4 flex flex-wrap items-baseline justify-between gap-2">
         <h2 className="text-sm font-semibold text-[#2b2430]">听音乐</h2>
-        <p className="text-[10.5px] text-[var(--accent-muted)]">
+        <p className="text-[11.5px] text-[var(--accent-muted)]">
           传一首，或者听别人传的。同一条曲目下可以说话，也可以匿名说。
         </p>
       </div>
@@ -256,10 +256,10 @@ export function MusicRoom() {
               {/* 上传 */}
               <form
                 onSubmit={handleUpload}
-                className="rounded-3xl border border-[var(--accent-line)] bg-white/80 p-5 backdrop-blur"
+                className="rounded-2xl border border-[var(--accent-line)] bg-white/80 p-5 backdrop-blur"
               >
                 <h2 className="text-sm font-semibold text-[#2b2430]">上传一首</h2>
-                <p className="mt-1 text-[10.5px] leading-relaxed text-[var(--accent-muted)]">
+                <p className="mt-1 text-[11.5px] leading-relaxed text-[var(--accent-muted)]">
                   支持 MP3 / M4A / OGG / WAV / FLAC，单首不超过 {Math.round(MAX_AUDIO_BYTES / 1024 / 1024)}MB。
                   音频不做压缩（浏览器里没有可靠的转码），所以传之前挑一下码率。
                 </p>
@@ -296,21 +296,21 @@ export function MusicRoom() {
                 <button
                   type="submit"
                   disabled={uploading || !file}
-                  className="mt-3 w-full rounded-xl bg-gradient-to-r from-[var(--accent-light)] to-[var(--accent)] px-4 py-2 text-xs font-medium text-white transition hover:shadow-[0_6px_20px_rgba(217,119,87,0.3)] disabled:opacity-50"
+                  className="mt-3 w-full rounded-xl bg-[var(--accent)] px-4 py-2 text-xs font-medium text-white transition hover:shadow-sm disabled:opacity-50"
                 >
                   {uploading ? '上传中…' : '上传'}
                 </button>
 
                 {uploadHint && (
-                  <p className="mt-2 text-[10.5px] leading-relaxed text-[var(--accent-muted)]">{uploadHint}</p>
+                  <p className="mt-2 text-[11.5px] leading-relaxed text-[var(--accent-muted)]">{uploadHint}</p>
                 )}
               </form>
 
               {/* 曲库 */}
-              <div className="rounded-3xl border border-[var(--accent-line)] bg-white/80 p-5 backdrop-blur">
+              <div className="rounded-2xl border border-[var(--accent-line)] bg-white/80 p-5 backdrop-blur">
                 <div className="flex items-baseline justify-between gap-3">
                   <h2 className="text-sm font-semibold text-[#2b2430]">曲库 · {tracks.length}</h2>
-                  <span className="text-[10px] text-[var(--accent-light)]">已用 {formatBytes(totalBytes)}</span>
+                  <span className="text-[11px] text-[var(--accent-light)]">已用 {formatBytes(totalBytes)}</span>
                 </div>
 
                 {loading ? (
@@ -343,7 +343,7 @@ export function MusicRoom() {
                                 )}
                                 {track.title}
                               </span>
-                              <span className="mt-0.5 block truncate text-[10px] text-[var(--accent-light)]">
+                              <span className="mt-0.5 block truncate text-[11px] text-[var(--accent-light)]">
                                 {track.artist ? `${track.artist} · ` : ''}
                                 {formatDuration(track.duration_sec)} · {formatBytes(track.size_bytes)}
                               </span>
@@ -375,7 +375,7 @@ export function MusicRoom() {
             {/* ============ 右：播放 + 在场 + 聊天 ============ */}
             <div className={`w-full space-y-4 md:flex-1 ${showRoomOnMobile ? '' : 'hidden md:block'}`}>
               {!current ? (
-                <div className="flex h-64 flex-col items-center justify-center rounded-3xl border border-dashed border-[var(--accent-line)] bg-[var(--accent-soft)]/40 px-6 text-center">
+                <div className="flex h-64 flex-col items-center justify-center rounded-2xl border border-dashed border-[var(--accent-line)] bg-[var(--accent-soft)]/40 px-6 text-center">
                   <div className="flex h-14 w-14 items-center justify-center rounded-full bg-white/80">
                     <Icon name="music" className="h-6 w-6 text-[var(--accent)]" />
                   </div>
@@ -389,12 +389,12 @@ export function MusicRoom() {
               ) : (
                 <>
                   {/* 播放器 */}
-                  <div className="rounded-3xl border border-[var(--accent-line)] bg-white/85 p-5 backdrop-blur">
+                  <div className="rounded-2xl border border-[var(--accent-line)] bg-white/85 p-5 backdrop-blur">
                     <div className="flex items-start justify-between gap-3">
                       <div className="min-w-0">
                         <h2 className="truncate text-sm font-semibold text-[#2b2430]">{current.title}</h2>
                         {current.artist && (
-                          <p className="mt-0.5 truncate text-[10.5px] text-[var(--accent-muted)]">
+                          <p className="mt-0.5 truncate text-[11.5px] text-[var(--accent-muted)]">
                             {current.artist}
                           </p>
                         )}
@@ -410,7 +410,7 @@ export function MusicRoom() {
                         {/* 几个人在听 */}
                         <span
                           title="正在听这首歌的人（实时）"
-                          className="flex items-center gap-1 rounded-full bg-[var(--accent-soft)] px-2.5 py-1 text-[10px] text-[var(--accent-deep)]"
+                          className="flex items-center gap-1 rounded-full bg-[var(--accent-soft)] px-2.5 py-1 text-[11px] text-[var(--accent-deep)]"
                         >
                           <span className="h-1.5 w-1.5 rounded-full bg-[var(--accent)]" />
                           {listeners} 人在听
@@ -428,16 +428,16 @@ export function MusicRoom() {
                       className="mt-4 w-full"
                     />
 
-                    <p className="mt-2 text-[10px] text-[var(--accent-light)]">
+                    <p className="mt-2 text-[11px] text-[var(--accent-light)]">
                       {formatDuration(current.duration_sec)} · {formatBytes(current.size_bytes)}
                     </p>
                   </div>
 
                   {/* 聊天 */}
-                  <div className="rounded-3xl border border-[var(--accent-line)] bg-white/85 backdrop-blur">
+                  <div className="rounded-2xl border border-[var(--accent-line)] bg-white ">
                     <div className="flex items-center justify-between gap-3 border-b border-[var(--accent-line)] px-5 py-3">
                       <h2 className="text-xs font-semibold text-[#2b2430]">边听边说</h2>
-                      <label className="flex cursor-pointer items-center gap-1.5 text-[10.5px] text-[var(--accent-muted)]">
+                      <label className="flex cursor-pointer items-center gap-1.5 text-[11.5px] text-[var(--accent-muted)]">
                         <input
                           type="checkbox"
                           checked={anonymous}
@@ -464,7 +464,7 @@ export function MusicRoom() {
                             <div key={row.id} className={`flex ${mine ? 'justify-end' : 'justify-start'}`}>
                               <div className="max-w-[85%]">
                                 <p
-                                  className={`mb-0.5 text-[9.5px] ${
+                                  className={`mb-0.5 text-[11.5px] ${
                                     row.is_anonymous
                                       ? 'text-[var(--accent-light)]'
                                       : 'text-[var(--accent-muted)]'

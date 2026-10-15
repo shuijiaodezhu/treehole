@@ -111,8 +111,8 @@ export function EmojiPicker({
         aria-expanded={open}
         className={`flex ${t.box} items-center justify-center rounded-full border transition-all duration-200 ${
           open
-            ? 'border-[var(--accent)] bg-[var(--accent)] text-white shadow-[0_4px_12px_rgba(0,0,0,0.08)]'
-            : 'border-[var(--accent-line)] bg-[var(--accent-soft)] text-[var(--accent-deep)] hover:-translate-y-0.5 hover:border-[var(--accent-light)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.06)]'
+            ? 'border-[var(--accent)] bg-[var(--accent)] text-white shadow-sm'
+            : 'border-[var(--accent-line)] bg-[var(--accent-soft)] text-[var(--accent-deep)] hover:-translate-y-0.5 hover:border-[var(--accent-light)] hover:shadow-sm'
         }`}
       >
         <CuteFace className={`${t.icon} transition-transform duration-200 ${open ? 'scale-110' : ''}`} />
@@ -120,7 +120,7 @@ export function EmojiPicker({
 
       {open && (
         <div
-          className={`absolute bottom-full z-40 mb-3 w-72 overflow-hidden rounded-3xl border border-[var(--accent-line)] bg-white shadow-[0_12px_36px_rgba(0,0,0,0.12)] ${
+          className={`absolute bottom-full z-40 mb-3 w-72 overflow-hidden rounded-2xl border border-[var(--accent-line)] bg-white shadow-sm ${
             align === 'right' ? 'right-0' : 'left-0'
           }`}
         >
@@ -137,7 +137,7 @@ export function EmojiPicker({
                 key={g.name}
                 type="button"
                 onClick={() => setGroup(i)}
-                className={`rounded-full px-2.5 py-1 text-[10px] transition ${
+                className={`rounded-full px-2.5 py-1 text-[11px] transition ${
                   i === group
                     ? 'bg-white font-medium text-[var(--accent-deep)] shadow-sm'
                     : 'text-[var(--accent-muted)] hover:bg-white/70'
@@ -161,7 +161,7 @@ export function EmojiPicker({
             ))}
           </div>
 
-          <p className="border-t border-[var(--accent-line)] px-3.5 py-2 text-[9px] text-[var(--accent-muted)]">
+          <p className="border-t border-[var(--accent-line)] px-3.5 py-2 text-[11px] text-[var(--accent-muted)]">
             点一下就插到光标处
           </p>
         </div>

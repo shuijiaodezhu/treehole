@@ -31,7 +31,7 @@ export function MailboxSetup({ onRetry, accent = 'warm' }: { onRetry: () => void
           title: 'text-[#2b2430]',
           body: 'text-[var(--accent-muted)]',
           btn: 'border-[var(--accent-line)] bg-white text-[var(--accent-deep)] hover:bg-white/80',
-          primary: 'bg-gradient-to-r from-[var(--accent-light)] to-[var(--accent)] text-white',
+          primary: 'bg-[var(--accent)] text-white',
         }
 
   async function copy() {
@@ -86,7 +86,7 @@ export function MailboxSetup({ onRetry, accent = 'warm' }: { onRetry: () => void
       </div>
 
       {showSql && (
-        <pre className="mt-3 max-h-64 overflow-auto rounded-xl border border-black/5 bg-white/80 p-3 text-[10px] leading-relaxed text-[#4a4238]">
+        <pre className="mt-3 max-h-64 overflow-auto rounded-xl border border-black/5 bg-white/80 p-3 text-[11px] leading-relaxed text-[#4a4238]">
           {WINTER_MAILBOX_SQL}
         </pre>
       )}

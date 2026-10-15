@@ -56,14 +56,14 @@ function SitePageInner() {
           全部条款与说明
         </Link>
 
-        <article className="mt-5 rounded-3xl border border-[var(--accent-line)] bg-white/85 p-7 shadow-[0_4px_24px_rgba(217,119,87,0.06)] backdrop-blur">
+        <article className="mt-5 rounded-2xl border border-[var(--accent-line)] bg-white/85 p-7 shadow-sm backdrop-blur">
           <header className="border-b border-dashed border-[var(--accent-line)] pb-4">
             <h1 className="font-serif-cn text-2xl font-semibold tracking-wide text-[#2b2620]">{title}</h1>
             {page?.summary && (
               <p className="mt-1.5 font-serif-cn text-xs text-[var(--accent-muted)]">{page.summary}</p>
             )}
             {page?.updated_at && (
-              <p className="mt-2 text-[10px] text-[var(--accent-muted)]">
+              <p className="mt-2 text-[11px] text-[var(--accent-muted)]">
                 最后更新：{formatUpdated(page.updated_at)}
               </p>
             )}

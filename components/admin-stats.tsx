@@ -166,14 +166,14 @@ export function AdminStats() {
   const maxTrend = Math.max(1, ...trend.map((t) => t.count))
 
   return (
-    <section className="mb-5 rounded-3xl border border-[#e0d4e8] bg-white/80 p-6 backdrop-blur shadow-[0_2px_12px_rgba(168,138,184,0.06)]">
+    <section className="mb-5 rounded-2xl border border-[#e0d4e8] bg-white/80 p-6 backdrop-blur shadow-sm">
       <div className="mb-5 flex items-center gap-3">
         <div className="flex h-9 w-9 items-center justify-center rounded-full bg-[#f0e6f8]">
           <Icon name="users" className="h-4 w-4 text-[#8a7aaa]" />
         </div>
         <div className="flex-1">
           <h2 className="text-sm font-semibold text-[#2b2430]">规模与活跃</h2>
-          <p className="mt-0.5 text-[10px] text-[#b8a8c8]">
+          <p className="mt-0.5 text-[11px] text-[#b8a8c8]">
             在线为实时；日活按每人每天记一次
           </p>
         </div>
@@ -198,15 +198,15 @@ export function AdminStats() {
           {/* 四个核心数字 */}
           <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
             <div className="rounded-2xl border border-[#e0d4e8] bg-[#fcf8ff] p-4">
-              <p className="text-[10px] text-[#b8a8c8]">注册人数</p>
+              <p className="text-[11px] text-[#b8a8c8]">注册人数</p>
               <p className="mt-1 text-2xl font-bold text-[#7a5a9a]">{counts.registered}</p>
-              <p className="mt-1 text-[10px] text-[#b8a8c8]">
+              <p className="mt-1 text-[11px] text-[#b8a8c8]">
                 今日 +{counts.newToday} · 近 7 天 +{counts.newWeek}
               </p>
             </div>
 
             <div className="rounded-2xl border border-[#cfe0bd] bg-[#f6faf1] p-4">
-              <p className="flex items-center gap-1.5 text-[10px] text-[#7a9a6a]">
+              <p className="flex items-center gap-1.5 text-[11px] text-[#7a9a6a]">
                 <span className="relative flex h-2 w-2">
                   {online.count > 0 && (
                     <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#7ea86a] opacity-60" />
@@ -216,36 +216,36 @@ export function AdminStats() {
                 当前在线
               </p>
               <p className="mt-1 text-2xl font-bold text-[#5a8a4a]">{online.count}</p>
-              <p className="mt-1 text-[10px] text-[#7a9a6a]">
+              <p className="mt-1 text-[11px] text-[#7a9a6a]">
                 {online.ready ? `近 ${ONLINE_WINDOW_MIN} 分钟活跃 ${counts.activeOnline}` : '订阅中…'}
               </p>
             </div>
 
             <div className="rounded-2xl border border-[#e0d4e8] bg-[#fcf8ff] p-4">
-              <p className="text-[10px] text-[#b8a8c8]">今日活跃（DAU）</p>
+              <p className="text-[11px] text-[#b8a8c8]">今日活跃（DAU）</p>
               <p className="mt-1 text-2xl font-bold text-[#7a5a9a]">{counts.dauToday}</p>
-              <p className="mt-1 text-[10px] text-[#b8a8c8]">
+              <p className="mt-1 text-[11px] text-[#b8a8c8]">
                 占注册 {counts.registered > 0 ? Math.round((counts.dauToday / counts.registered) * 100) : 0}%
               </p>
             </div>
 
             <div className="rounded-2xl border border-[#e0d4e8] bg-[#fcf8ff] p-4">
-              <p className="text-[10px] text-[#b8a8c8]">7 日 / 30 日活跃</p>
+              <p className="text-[11px] text-[#b8a8c8]">7 日 / 30 日活跃</p>
               <p className="mt-1 text-2xl font-bold text-[#7a5a9a]">
                 {counts.wau}
                 <span className="text-sm font-normal text-[#b8a8c8]"> / {counts.mau}</span>
               </p>
-              <p className="mt-1 text-[10px] text-[#b8a8c8]">去重用户数</p>
+              <p className="mt-1 text-[11px] text-[#b8a8c8]">去重用户数</p>
             </div>
           </div>
 
           {/* 近 14 天趋势 */}
           <div className="mt-4 rounded-2xl border border-[#e0d4e8] bg-[#fcf8ff] p-4">
-            <p className="mb-3 text-[10px] text-[#b8a8c8]">近 {TREND_DAYS} 天日活</p>
+            <p className="mb-3 text-[11px] text-[#b8a8c8]">近 {TREND_DAYS} 天日活</p>
             <div className="flex h-24 items-end gap-1">
               {trend.map((point) => (
                 <div key={point.day} className="group flex flex-1 flex-col items-center gap-1">
-                  <span className="text-[9px] text-[#b8a8c8] opacity-0 transition group-hover:opacity-100">
+                  <span className="text-[11px] text-[#b8a8c8] opacity-0 transition group-hover:opacity-100">
                     {point.count}
                   </span>
                   <div
@@ -256,7 +256,7 @@ export function AdminStats() {
                 </div>
               ))}
             </div>
-            <div className="mt-1.5 flex justify-between text-[9px] text-[#c8bcd8]">
+            <div className="mt-1.5 flex justify-between text-[11px] text-[#c8bcd8]">
               <span>{trend[0]?.day.slice(5)}</span>
               <span>{trend[trend.length - 1]?.day.slice(5)}</span>
             </div>
@@ -271,13 +271,13 @@ export function AdminStats() {
               { label: '朋友圈', value: counts.moments },
             ].map((item) => (
               <div key={item.label} className="rounded-2xl border border-[#ece4f4] bg-white p-3">
-                <p className="text-[10px] text-[#b8a8c8]">{item.label}</p>
+                <p className="text-[11px] text-[#b8a8c8]">{item.label}</p>
                 <p className="mt-0.5 text-lg font-semibold text-[#5a4a6a]">{item.value}</p>
               </div>
             ))}
           </div>
 
-          <p className="mt-4 text-[10px] leading-relaxed text-[#c8bcd8]">
+          <p className="mt-4 text-[11px] leading-relaxed text-[#c8bcd8]">
             「当前在线」由 Realtime Presence 实时统计（同一账号多标签页算一个人）；「近 {ONLINE_WINDOW_MIN} 分钟活跃」
             与「今日活跃」来自数据库记录，关闭页面后仍保留。
           </p>

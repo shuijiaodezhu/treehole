@@ -194,7 +194,7 @@ export function MentionInput({
 
       {open && candidates.length > 0 && (
         <div className="absolute bottom-full left-0 z-30 mb-1 w-56 overflow-hidden rounded-xl border border-[#d8e8c8] bg-white shadow-lg">
-          <p className="border-b border-[#f0f7e8] px-3 py-1.5 text-[10px] text-[#9aa88a]">
+          <p className="border-b border-[#f0f7e8] px-3 py-1.5 text-[11px] text-[#9aa88a]">
             选一个人 @ 一下
           </p>
           {candidates.map((f, i) => (
@@ -210,7 +210,7 @@ export function MentionInput({
                 i === activeIndex ? 'bg-[#f0f7e8] text-[#3a4a2a]' : 'text-[#5a6a4a] hover:bg-[#f7fbf2]'
               }`}
             >
-              <span className="h-5 w-5 flex-shrink-0 overflow-hidden rounded-full bg-[#e0e8d8] flex items-center justify-center text-[9px] text-[#5a8a4a]">
+              <span className="h-5 w-5 flex-shrink-0 overflow-hidden rounded-full bg-[#e0e8d8] flex items-center justify-center text-[11px] text-[#5a8a4a]">
                 {f.avatar_url ? (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img src={f.avatar_url} alt="" className="h-full w-full object-cover" />

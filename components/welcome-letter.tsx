@@ -169,13 +169,13 @@ export function WelcomeLetter({ userId }: { userId: string | null }) {
       aria-label={letter.title}
     >
       {/* 信头 */}
-      <div className="flex flex-shrink-0 items-start gap-3 border-b border-[var(--accent-line)] bg-gradient-to-br from-[var(--accent-soft)] to-[var(--accent-line)] px-6 py-5">
+      <div className="flex flex-shrink-0 items-start gap-3 border-b border-[var(--accent-line)] bg-[var(--accent-soft)] px-6 py-5">
         <span className="mt-0.5 flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full bg-white/80">
           <Icon name="mail" className="h-4 w-4 text-[var(--accent-deep)]" />
         </span>
         <div className="mx-auto min-w-0 max-w-xl flex-1">
           <h2 className="font-serif-cn text-sm font-semibold text-[#2b2430]">{letter.title}</h2>
-          <p className="mt-0.5 text-[10.5px] text-[var(--accent-muted)]">
+          <p className="mt-0.5 text-[11.5px] text-[var(--accent-muted)]">
             读完点下面的按钮就好 —— 它不常出现，只在内容更新后露一次面。
           </p>
         </div>
@@ -203,7 +203,7 @@ export function WelcomeLetter({ userId }: { userId: string | null }) {
           <button
             type="button"
             onClick={close}
-            className="rounded-xl bg-gradient-to-r from-[var(--accent-light)] to-[var(--accent)] px-6 py-2.5 text-xs font-medium text-white transition hover:shadow-[0_6px_20px_rgba(217,119,87,0.3)]"
+            className="rounded-xl bg-[var(--accent)] px-6 py-2.5 text-xs font-medium text-white transition hover:shadow-sm"
           >
             我记住了，进去吧
           </button>

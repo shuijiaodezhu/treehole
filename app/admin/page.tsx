@@ -357,7 +357,6 @@ export default function AdminPage() {
 
   return (
     <div className="min-h-screen bg-[#f2eef7] relative overflow-hidden">
-      <div className="absolute -top-20 -right-20 w-96 h-96 bg-[#c8b8d8] opacity-20 rounded-full blur-3xl pointer-events-none"></div>
 
       <div className="relative max-w-4xl mx-auto px-6 pt-24 pb-8">
         <header className="mb-6">
@@ -426,7 +425,7 @@ export default function AdminPage() {
               </div>
             ) : (
               categories.map((cat) => (
-                <div key={cat.id} className="rounded-2xl border border-[#e0d4e8] bg-white/80 backdrop-blur p-5 shadow-[0_2px_12px_rgba(168,138,184,0.06)]">
+                <div key={cat.id} className="rounded-2xl border border-[#e0d4e8] bg-white p-5 shadow-sm">
                   <div className="flex items-center justify-between gap-4">
                     <div className="flex-1 min-w-0">
                       <p className="text-base font-semibold text-[#2b2430]">
@@ -439,7 +438,7 @@ export default function AdminPage() {
                     </div>
 
                     <div className="flex gap-2 flex-shrink-0">
-                      <button onClick={() => handleCategoryApprove(cat.id)} className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-gradient-to-r from-[#b89ac8] to-[#a88ab8] text-white text-xs font-medium hover:shadow-[0_4px_16px_rgba(168,138,184,0.3)] transition">
+                      <button onClick={() => handleCategoryApprove(cat.id)} className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-gradient-to-r from-[#b89ac8] to-[#a88ab8] text-white text-xs font-medium hover:shadow-sm transition">
                         <Icon name="check" className="w-3.5 h-3.5" />通过
                       </button>
                       <button onClick={() => handleCategoryReject(cat.id)} className="flex items-center gap-1.5 px-4 py-2 rounded-xl border border-[#e0d4e8] text-[#8a7a9a] text-xs hover:bg-[#f8f2fc] transition">
@@ -465,7 +464,7 @@ export default function AdminPage() {
                   </div>
                 ) : (
                   reports.map((report) => (
-                    <div key={report.id} className="rounded-2xl border border-[#e0d4e8] bg-white/80 backdrop-blur p-5 shadow-[0_2px_12px_rgba(168,138,184,0.06)]">
+                    <div key={report.id} className="rounded-2xl border border-[#e0d4e8] bg-white p-5 shadow-sm">
                       <div className="flex items-start gap-3 mb-3">
                         <Icon name="alert" className="w-4 h-4 text-[#a88ab8] flex-shrink-0 mt-1" />
                         <div className="flex-1 min-w-0">
@@ -478,7 +477,7 @@ export default function AdminPage() {
                       </div>
 
                       <div className="rounded-xl bg-[#faf5ff] p-4 mb-4">
-                        <p className="text-[10px] text-[#8a7a9a] mb-1.5">被举报内容</p>
+                        <p className="text-[11px] text-[#8a7a9a] mb-1.5">被举报内容</p>
                         <p className="text-sm text-[#4a3a5a] whitespace-pre-wrap break-words">{report.target_content}</p>
                       </div>
 
@@ -508,13 +507,13 @@ export default function AdminPage() {
                   </div>
                 ) : (
                   activityReports.map((a) => (
-                    <div key={a.activity_id} className="rounded-2xl border border-[#e0d4e8] bg-white/80 backdrop-blur p-5 shadow-[0_2px_12px_rgba(168,138,184,0.06)]">
+                    <div key={a.activity_id} className="rounded-2xl border border-[#e0d4e8] bg-white p-5 shadow-sm">
                       <div className="flex items-start gap-3 mb-3">
                         <Icon name="alert" className="w-4 h-4 text-[#a88ab8] flex-shrink-0 mt-1" />
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2 flex-wrap">
                             <h3 className="text-base font-semibold text-[#2b2430]">{a.title}</h3>
-                            <span className="text-[10px] bg-[#f0e6f8] text-[#8a7aaa] px-2 py-0.5 rounded-full font-medium">
+                            <span className="text-[11px] bg-[#f0e6f8] text-[#8a7aaa] px-2 py-0.5 rounded-full font-medium">
                               被举报 {a.report_count} 次
                             </span>
                           </div>
@@ -526,7 +525,7 @@ export default function AdminPage() {
 
                       {a.content && (
                         <div className="rounded-xl bg-[#faf5ff] p-4 mb-3">
-                          <p className="text-[10px] text-[#8a7a9a] mb-1.5">活动内容</p>
+                          <p className="text-[11px] text-[#8a7a9a] mb-1.5">活动内容</p>
                           <p className="text-sm text-[#4a3a5a] whitespace-pre-wrap break-words">{a.content}</p>
                         </div>
                       )}

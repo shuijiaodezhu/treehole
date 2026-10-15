@@ -207,8 +207,6 @@ export default function SettingsPage() {
 
   return (
     <div className="min-h-screen relative overflow-hidden" style={pageAccentVars('me')}>
-      <div className="absolute -top-20 -right-20 w-96 h-96 bg-[var(--accent-light)] opacity-20 rounded-full blur-3xl pointer-events-none"></div>
-      <div className="absolute -bottom-20 -left-20 w-96 h-96 bg-[var(--accent)] opacity-10 rounded-full blur-3xl pointer-events-none"></div>
 
       <div className="relative max-w-xl mx-auto px-6 py-10">
         <header className="mb-6">
@@ -233,8 +231,7 @@ export default function SettingsPage() {
           <DeleteAccountSection userId={meId} />
 
           {/* ==================== 修改密码（两步点击） ==================== */}
-          <section className="rounded-3xl border border-[var(--accent-line)] bg-white/80 backdrop-blur-lg p-6 shadow-[0_8px_40px_rgba(168,138,184,0.06)] relative overflow-hidden">
-            <div className="absolute -top-8 -right-8 w-32 h-32 bg-[var(--accent-light)] opacity-[0.12] rounded-full blur-2xl pointer-events-none"></div>
+          <section className="rounded-2xl border border-[var(--accent-line)] bg-white p-6 shadow-sm relative overflow-hidden">
 
             <div className="relative">
               <div className="flex items-center gap-3 mb-5">
@@ -243,7 +240,7 @@ export default function SettingsPage() {
                 </div>
                 <div>
                   <h2 className="text-sm font-semibold text-[#2b2430]">修改密码</h2>
-                  <p className="text-[10px] text-[var(--accent-light)] mt-0.5">至少 8 位，含字母和数字</p>
+                  <p className="text-[11px] text-[var(--accent-light)] mt-0.5">至少 8 位，含字母和数字</p>
                 </div>
               </div>
 
@@ -263,7 +260,7 @@ export default function SettingsPage() {
               {pwStep === 'editing' && (
                 <form onSubmit={handlePasswordNext}>
                   {/* 在这个时刻才出现：正好在想新密码 */}
-                  <div className="mb-4 flex gap-2.5 rounded-2xl border border-[var(--accent-soft)] bg-gradient-to-br from-[var(--accent-soft)] to-[var(--accent-soft)] px-4 py-3">
+                  <div className="mb-4 flex gap-2.5 rounded-2xl border border-[var(--accent-soft)] bg-[var(--accent-soft)] px-4 py-3">
                     <span className="mt-0.5 select-none font-art text-2xl leading-none text-[var(--accent-line)]">
                       &ldquo;
                     </span>
@@ -299,7 +296,7 @@ export default function SettingsPage() {
                     </button>
                     <button
                       type="submit"
-                      className="flex-1 py-2.5 rounded-xl bg-gradient-to-r from-[var(--accent-light)] to-[var(--accent)] text-white text-sm font-medium hover:shadow-[0_6px_20px_rgba(168,138,184,0.3)] transition-all"
+                      className="flex-1 py-2.5 rounded-xl bg-[var(--accent)] text-white text-sm font-medium hover:shadow-sm transition-all"
                     >
                       下一步
                     </button>
@@ -324,7 +321,7 @@ export default function SettingsPage() {
                       type="button"
                       disabled={pwLoading}
                       onClick={() => void handlePasswordConfirm()}
-                      className="flex-1 py-2.5 rounded-xl bg-gradient-to-r from-[var(--accent-light)] to-[var(--accent)] text-white text-sm font-medium hover:shadow-[0_6px_20px_rgba(168,138,184,0.3)] transition-all disabled:opacity-60"
+                      className="flex-1 py-2.5 rounded-xl bg-[var(--accent)] text-white text-sm font-medium hover:shadow-sm transition-all disabled:opacity-60"
                     >
                       {pwLoading ? '保存中…' : '确认修改'}
                     </button>
@@ -341,14 +338,14 @@ export default function SettingsPage() {
           </section>
 
           {/* ==================== 拉黑 / 屏蔽 ==================== */}
-          <section className="rounded-3xl border border-[var(--accent-line)] bg-white/80 backdrop-blur-lg p-6 shadow-[0_8px_40px_rgba(168,138,184,0.06)]">
+          <section className="rounded-2xl border border-[var(--accent-line)] bg-white p-6 shadow-sm">
             <div className="flex items-center gap-3 mb-5">
               <div className="w-9 h-9 rounded-full bg-[var(--accent-soft)] flex items-center justify-center">
                 <Icon name="shield" className="w-4 h-4 text-[var(--accent-deep)]" />
               </div>
               <div>
                 <h2 className="text-sm font-semibold text-[#2b2430]">拉黑与屏蔽</h2>
-                <p className="text-[10px] text-[var(--accent-light)] mt-0.5">
+                <p className="text-[11px] text-[var(--accent-light)] mt-0.5">
                   互相看不到对方的帖子、评论、朋友圈和活动
                 </p>
               </div>
@@ -389,7 +386,7 @@ export default function SettingsPage() {
                     {searchHit.nickname || searchHit.username}
                   </p>
                   {searchHit.username && (
-                    <p className="text-[10px] text-[var(--accent-light)] truncate">@{searchHit.username}</p>
+                    <p className="text-[11px] text-[var(--accent-light)] truncate">@{searchHit.username}</p>
                   )}
                 </div>
                 <button
@@ -405,7 +402,7 @@ export default function SettingsPage() {
 
             {/* 已拉黑列表 */}
             <div className="border-t border-[var(--accent-soft)] pt-4">
-              <p className="text-[10px] text-[var(--accent-light)] tracking-wide mb-2">
+              <p className="text-[11px] text-[var(--accent-light)] tracking-wide mb-2">
                 已拉黑 · {blocks.blockedUsers.length}
               </p>
 
@@ -448,14 +445,14 @@ export default function SettingsPage() {
           </section>
 
           {/* ==================== 好友分组 ==================== */}
-          <section className="rounded-3xl border border-[var(--accent-line)] bg-white/80 backdrop-blur-lg p-6 shadow-[0_8px_40px_rgba(168,138,184,0.06)]">
+          <section className="rounded-2xl border border-[var(--accent-line)] bg-white p-6 shadow-sm">
             <div className="flex items-center gap-3 mb-5">
               <div className="w-9 h-9 rounded-full bg-[var(--accent-soft)] flex items-center justify-center">
                 <Icon name="users" className="w-4 h-4 text-[var(--accent-deep)]" />
               </div>
               <div>
                 <h2 className="text-sm font-semibold text-[#2b2430]">好友分组</h2>
-                <p className="text-[10px] text-[var(--accent-light)] mt-0.5">
+                <p className="text-[11px] text-[var(--accent-light)] mt-0.5">
                   发朋友圈时可以选「指定分组可见」
                 </p>
               </div>
@@ -498,8 +495,8 @@ export default function SettingsPage() {
                       >
                         <Icon name={open ? 'check' : 'users'} className="w-3.5 h-3.5 text-[var(--accent-deep)]" />
                         <span className="text-sm text-[#2b2430]">{g.name}</span>
-                        <span className="text-[10px] text-[var(--accent-light)]">{g.memberIds.length} 人</span>
-                        <span className="ml-auto text-[10px] text-[var(--accent-light)]">
+                        <span className="text-[11px] text-[var(--accent-light)]">{g.memberIds.length} 人</span>
+                        <span className="ml-auto text-[11px] text-[var(--accent-light)]">
                           {open ? '收起' : '编辑成员'}
                         </span>
                       </button>
@@ -507,7 +504,7 @@ export default function SettingsPage() {
                         type="button"
                         disabled={groupApi.busy}
                         onClick={() => void handleDeleteGroup(g.id, g.name)}
-                        className="text-[10px] text-[var(--accent-light)] hover:text-red-500 transition disabled:opacity-50"
+                        className="text-[11px] text-[var(--accent-light)] hover:text-red-500 transition disabled:opacity-50"
                       >
                         删除
                       </button>
@@ -545,19 +542,19 @@ export default function SettingsPage() {
           </section>
 
           {/* 页面配色 */}
-          <section className="rounded-3xl border border-[var(--accent-line)] bg-white/80 backdrop-blur-lg p-6 shadow-[0_8px_40px_rgba(168,138,184,0.06)]">
+          <section className="rounded-2xl border border-[var(--accent-line)] bg-white p-6 shadow-sm">
             <div className="flex items-center gap-3 mb-5">
               <div className="w-9 h-9 rounded-full bg-[var(--accent-soft)] flex items-center justify-center">
                 <Icon name="sparkle" className="w-4 h-4 text-[var(--accent-deep)]" />
               </div>
               <div className="flex-1">
                 <h2 className="text-sm font-semibold text-[#2b2430]">页面配色</h2>
-                <p className="text-[10px] text-[var(--accent-light)] mt-0.5">
+                <p className="text-[11px] text-[var(--accent-light)] mt-0.5">
                   每页一个主色，深浅自动配好；只有你自己看得到
                 </p>
               </div>
               {themeApi.dirty && (
-                <span className="rounded-full bg-[var(--accent-soft)] px-2 py-0.5 text-[10px] text-[var(--accent-deep)]">
+                <span className="rounded-full bg-[var(--accent-soft)] px-2 py-0.5 text-[11px] text-[var(--accent-deep)]">
                   未保存
                 </span>
               )}
@@ -572,8 +569,8 @@ export default function SettingsPage() {
                       style={{ backgroundColor: themeApi.theme[page] }}
                     />
                     <span className="text-xs font-medium text-[#2b2430]">{PAGE_LABEL[page]}</span>
-                    <span className="truncate text-[10px] text-[var(--accent-light)]">{PAGE_DESC[page]}</span>
-                    <label className="ml-auto flex flex-shrink-0 cursor-pointer items-center gap-1.5 rounded-lg border border-[var(--accent-line)] bg-white px-2 py-1 text-[10px] text-[var(--accent-deep)]">
+                    <span className="truncate text-[11px] text-[var(--accent-light)]">{PAGE_DESC[page]}</span>
+                    <label className="ml-auto flex flex-shrink-0 cursor-pointer items-center gap-1.5 rounded-lg border border-[var(--accent-line)] bg-white px-2 py-1 text-[11px] text-[var(--accent-deep)]">
                       自定义
                       <input
                         type="color"
@@ -621,7 +618,7 @@ export default function SettingsPage() {
               >
                 恢复默认
               </button>
-              <span className="text-[10px] text-[var(--accent-light)]">
+              <span className="text-[11px] text-[var(--accent-light)]">
                 改动会立即生效，满意了再点保存
               </span>
             </div>
@@ -632,14 +629,14 @@ export default function SettingsPage() {
           </section>
 
           {/* 关于与条款 */}
-          <section className="rounded-3xl border border-[var(--accent-line)] bg-white/80 backdrop-blur-lg p-6 shadow-[0_8px_40px_rgba(168,138,184,0.06)]">
+          <section className="rounded-2xl border border-[var(--accent-line)] bg-white p-6 shadow-sm">
             <div className="flex items-center gap-3 mb-4">
               <div className="w-9 h-9 rounded-full bg-[var(--accent-soft)] flex items-center justify-center">
                 <Icon name="file" className="w-4 h-4 text-[var(--accent-deep)]" />
               </div>
               <div>
                 <h2 className="text-sm font-semibold text-[#2b2430]">关于与条款</h2>
-                <p className="text-[10px] text-[var(--accent-light)] mt-0.5">
+                <p className="text-[11px] text-[var(--accent-light)] mt-0.5">
                   这个站怎么运转、你的东西怎么被对待
                 </p>
               </div>

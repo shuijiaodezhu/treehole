@@ -117,7 +117,7 @@ export function LoginDevicesSection({ userId }: { userId: string | null }) {
   }, [userId])
 
   return (
-    <section className="rounded-3xl border border-[var(--accent-line)] bg-white/80 backdrop-blur p-6 shadow-[0_2px_12px_rgba(217,119,87,0.04)]">
+    <section className="rounded-2xl border border-[var(--accent-line)] bg-white p-6 shadow-sm">
       <div className="flex items-center gap-3">
         <div className="flex h-9 w-9 items-center justify-center rounded-full bg-[var(--accent-soft)]">
           <Icon name="shield" className="h-4 w-4 text-[var(--accent-deep)]" />
@@ -153,12 +153,12 @@ export function LoginDevicesSection({ userId }: { userId: string | null }) {
                   <span className="flex items-center gap-2">
                     <span className="truncate text-xs font-medium text-[#2b2430]">{describeDevice(r.user_agent)}</span>
                     {i === 0 && (
-                      <span className="rounded-full bg-[var(--accent-soft)] px-2 py-0.5 text-[9px] text-[var(--accent-deep)]">
+                      <span className="rounded-full bg-[var(--accent-soft)] px-2 py-0.5 text-[11px] text-[var(--accent-deep)]">
                         本次
                       </span>
                     )}
                   </span>
-                  <span className="mt-0.5 block text-[10px] text-[var(--accent-muted)]">{relativeTime(r.created_at)}</span>
+                  <span className="mt-0.5 block text-[11px] text-[var(--accent-muted)]">{relativeTime(r.created_at)}</span>
                 </span>
               </li>
             ))}

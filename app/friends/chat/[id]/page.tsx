@@ -203,11 +203,9 @@ function ChatInner() {
   return (
     <div className="min-h-screen bg-[var(--accent-soft)] relative" style={pageAccentVars('friends')}>
       {/* 背景光晕 */}
-      <div className="fixed -top-20 -right-20 w-96 h-96 bg-[var(--accent-light)] opacity-15 rounded-full blur-3xl pointer-events-none"></div>
-      <div className="fixed -bottom-20 -left-20 w-96 h-96 bg-[var(--accent)] opacity-[0.08] rounded-full blur-3xl pointer-events-none"></div>
 
       {/* 顶部 */}
-      <header className="fixed top-0 left-0 right-0 z-20 border-b border-[var(--accent-line)] bg-white/95 backdrop-blur-lg shadow-[0_2px_12px_rgba(217,119,87,0.06)]">
+      <header className="fixed top-0 left-0 right-0 z-20 border-b border-[var(--accent-line)] bg-white/95 backdrop-blur-lg shadow-sm">
         <div className="max-w-xl mx-auto px-5 py-4 flex items-center gap-3">
           <Link
             href="/friends"
@@ -231,7 +229,7 @@ function ChatInner() {
           </Link>
           {friendStatus && <StatusLabel text={friendStatus} />}
           {friendTyping && (
-            <span className="font-serif-cn text-[10px] leading-none text-[var(--accent-light)]">正在输入…</span>
+            <span className="font-serif-cn text-[11px] leading-none text-[var(--accent-light)]">正在输入…</span>
           )}
           {!affinityHidden && <AffinityScore amount={affinity.mine} friendName={friendName} />}
         </div>
@@ -257,7 +255,7 @@ function ChatInner() {
       </main>
 
       {/* 底部 */}
-      <footer className="fixed bottom-0 left-0 right-0 z-20 border-t border-[var(--accent-line)] bg-white/95 backdrop-blur-lg shadow-[0_-2px_12px_rgba(217,119,87,0.06)]">
+      <footer className="fixed bottom-0 left-0 right-0 z-20 border-t border-[var(--accent-line)] bg-white/95 backdrop-blur-lg shadow-sm">
         <form onSubmit={handleSend} className="max-w-xl mx-auto px-5 py-4 flex items-center gap-2">
           <input
             ref={inputRef}
@@ -275,7 +273,7 @@ function ChatInner() {
           <button
             type="submit"
             disabled={sending || !content.trim()}
-            className="w-11 h-11 rounded-full bg-gradient-to-r from-[var(--accent-light)] to-[var(--accent)] text-white flex items-center justify-center hover:shadow-[0_6px_20px_rgba(217,119,87,0.3)] transition-all disabled:opacity-50 disabled:cursor-not-allowed flex-shrink-0"
+            className="w-11 h-11 rounded-full bg-[var(--accent)] text-white flex items-center justify-center hover:shadow-sm transition-all disabled:opacity-50 disabled:cursor-not-allowed flex-shrink-0"
           >
             <IconSend className="w-4 h-4" />
           </button>

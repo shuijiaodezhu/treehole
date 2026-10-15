@@ -216,7 +216,7 @@ export function NotificationBell({
     >
       <Icon name="bell" className="h-4 w-4" />
       {unread > 0 && (
-        <span className="absolute -right-0.5 -top-0.5 min-w-[16px] rounded-full bg-[var(--accent)] px-1 text-[10px] font-medium leading-4 text-white">
+        <span className="absolute -right-0.5 -top-0.5 min-w-[16px] rounded-full bg-[var(--accent)] px-1 text-[11px] font-medium leading-4 text-white">
           {unread > 99 ? '99+' : unread}
         </span>
       )}
@@ -238,11 +238,11 @@ export function NotificationsList({ userId }: { userId: string | null }) {
           <span className="font-medium text-[var(--accent-deep)]">内容</span>
           （打开那个文件复制全文，不是把这行字打进去）。
         </p>
-        <p className="mt-1.5 text-[10.5px] text-[var(--accent-light)]">
+        <p className="mt-1.5 text-[11.5px] text-[var(--accent-light)]">
           没跑也不影响别的功能，只是收不到提醒。
         </p>
         {errorText && (
-          <p className="mt-2.5 whitespace-pre-wrap rounded-xl bg-[var(--accent-soft)] px-3 py-2 text-[10.5px] text-[var(--accent-deep)]">
+          <p className="mt-2.5 whitespace-pre-wrap rounded-xl bg-[var(--accent-soft)] px-3 py-2 text-[11.5px] text-[var(--accent-deep)]">
             数据库的原话：{errorText}
           </p>
         )}
@@ -281,7 +281,7 @@ export function NotificationsList({ userId }: { userId: string | null }) {
       {!loading && items.length === 0 ? (
         <div className="rounded-2xl border border-dashed border-[var(--accent-line)] bg-white/60 px-4 py-10 text-center">
           <p className="text-xs text-[var(--accent-muted)]">还没有通知</p>
-          <p className="mt-1 text-[10.5px] text-[var(--accent-light)]">
+          <p className="mt-1 text-[11.5px] text-[var(--accent-light)]">
             有人提到你、回了你的信、处理了你的举报，都会出现在这里。
           </p>
         </div>
@@ -302,12 +302,12 @@ export function NotificationsList({ userId }: { userId: string | null }) {
                     >
                       {notice.title}
                     </span>
-                    <span className="flex-shrink-0 text-[10px] text-[var(--accent-light)]">
+                    <span className="flex-shrink-0 text-[11px] text-[var(--accent-light)]">
                       {relativeTime(notice.created_at)}
                     </span>
                   </span>
                   {notice.body && (
-                    <span className="mt-1 line-clamp-2 block text-[10.5px] leading-relaxed text-[var(--accent-muted)]">
+                    <span className="mt-1 line-clamp-2 block text-[11.5px] leading-relaxed text-[var(--accent-muted)]">
                       {notice.body}
                     </span>
                   )}
@@ -321,7 +321,7 @@ export function NotificationsList({ userId }: { userId: string | null }) {
             const rowClass = `flex items-start gap-3 rounded-2xl border px-4 py-3 transition ${
               notice.read_at
                 ? 'border-[var(--accent-line)] bg-white/60'
-                : 'border-[var(--accent-line)] bg-white/90 shadow-[0_2px_10px_rgba(217,119,87,0.06)]'
+                : 'border-[var(--accent-line)] bg-white/90 shadow-sm'
             }`
 
             // 有链接就整条可点；点的时候顺手标记已读

@@ -198,9 +198,7 @@ export default function HomePage() {
   return (
     <div className="min-h-screen">
       {/* 顶部 header */}
-      <header className="w-full bg-gradient-to-br from-[var(--accent-soft)] via-[#fae4d4] to-[var(--accent-line)] border-b border-[var(--accent-line)] relative overflow-hidden shadow-[0_2px_16px_rgba(217,119,87,0.06)]">
-        <div className="absolute -top-10 -right-10 w-48 h-48 bg-[var(--accent)] opacity-10 rounded-full blur-3xl pointer-events-none"></div>
-        <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-[var(--accent)] opacity-[0.07] rounded-full blur-3xl pointer-events-none"></div>
+      <header className="w-full bg-gradient-to-br from-[var(--accent-soft)] via-[#fae4d4] to-[var(--accent-line)] border-b border-[var(--accent-line)] relative overflow-hidden shadow-sm">
 
         <div className="max-w-5xl mx-auto px-8 py-10 flex justify-between items-center relative">
           <div>
@@ -322,7 +320,7 @@ export default function HomePage() {
           onClick={() => setConfirmLogout(false)}
         >
           <div
-            className="w-full max-w-xs rounded-3xl bg-white p-6 shadow-2xl text-center"
+            className="w-full max-w-xs rounded-2xl bg-white p-6 shadow-2xl text-center"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="mx-auto mb-3 w-11 h-11 rounded-full bg-[var(--accent-soft)] flex items-center justify-center">
@@ -343,7 +341,7 @@ export default function HomePage() {
               <button
                 type="button"
                 onClick={handleLogout}
-                className="flex-1 rounded-xl bg-gradient-to-r from-[var(--accent-light)] to-[var(--accent)] px-4 py-2 text-sm font-medium text-white hover:shadow-[0_6px_20px_rgba(217,119,87,0.3)] transition-all"
+                className="flex-1 rounded-xl bg-[var(--accent)] px-4 py-2 text-sm font-medium text-white hover:shadow-sm transition-all"
               >
                 退出登录
               </button>

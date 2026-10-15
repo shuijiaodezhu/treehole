@@ -479,8 +479,6 @@ export default function PlayPage() {
 
   return (
     <div className="min-h-screen bg-[var(--accent-soft)] relative overflow-hidden" style={pageAccentVars('play')}>
-      <div className="absolute -top-20 -right-20 w-96 h-96 bg-[var(--accent-light)] opacity-20 rounded-full blur-3xl pointer-events-none"></div>
-      <div className="absolute -bottom-20 -left-20 w-96 h-96 bg-[var(--accent)] opacity-[0.08] rounded-full blur-3xl pointer-events-none"></div>
 
       <div className="relative max-w-6xl mx-auto px-6 pt-24 pb-8">
         <header className="mb-6">
@@ -541,7 +539,7 @@ export default function PlayPage() {
                       {canDelete && (
                         <button
                           onClick={(e) => handleDeleteType(t.id, e)}
-                          className={`absolute right-1.5 top-1/2 -translate-y-1/2 w-4 h-4 rounded-full flex items-center justify-center text-[10px] opacity-0 group-hover:opacity-100 transition ${currentType?.id === t.id ? 'text-white/70 hover:text-white hover:bg-white/20' : 'text-[var(--accent-muted)] hover:text-red-500 hover:bg-red-50'}`}
+                          className={`absolute right-1.5 top-1/2 -translate-y-1/2 w-4 h-4 rounded-full flex items-center justify-center text-[11px] opacity-0 group-hover:opacity-100 transition ${currentType?.id === t.id ? 'text-white/70 hover:text-white hover:bg-white/20' : 'text-[var(--accent-muted)] hover:text-red-500 hover:bg-red-50'}`}
                           title="删除"
                         >
                           ×
@@ -561,7 +559,7 @@ export default function PlayPage() {
 
               <button
                 onClick={() => setShowPostModal(true)}
-                className="px-5 py-2 rounded-full bg-gradient-to-r from-[var(--accent-light)] to-[var(--accent)] text-white text-sm font-medium hover:shadow-[0_6px_20px_rgba(90,122,154,0.3)] transition-all flex items-center gap-1.5 flex-shrink-0"
+                className="px-5 py-2 rounded-full bg-[var(--accent)] text-white text-sm font-medium hover:shadow-sm transition-all flex items-center gap-1.5 flex-shrink-0"
               >
                 <Icon name="plus" className="w-4 h-4" />发活动
               </button>
@@ -594,7 +592,7 @@ export default function PlayPage() {
                           setDetailActivity(act)
                         }
                       }}
-                      className="relative cursor-pointer rounded-2xl border border-[var(--accent-line)] bg-white/90 backdrop-blur p-5 shadow-[0_2px_12px_rgba(90,122,154,0.06)] hover:shadow-[0_8px_24px_rgba(90,122,154,0.12)] hover:-translate-y-0.5 transition-all text-left flex flex-col focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/30"
+                      className="relative cursor-pointer rounded-2xl border border-[var(--accent-line)] bg-white p-5 shadow-sm hover:shadow-sm hover:-translate-y-0.5 transition-all text-left flex flex-col focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/30"
                     >
                       {/* 收藏（放在卡片右上角，与"打开详情"的点击区分开） */}
                       <button
@@ -625,7 +623,7 @@ export default function PlayPage() {
                           </div>
                         )}
                         <div className="flex-1 min-w-0">
-                          {act.type_name && <p className="text-[10px] text-[var(--accent-muted)] tracking-wide">{act.type_name}</p>}
+                          {act.type_name && <p className="text-[11px] text-[var(--accent-muted)] tracking-wide">{act.type_name}</p>}
                           <h3 className="text-base font-semibold text-[var(--accent-ink)] mt-0.5 break-words">{act.title}</h3>
                         </div>
                       </div>
@@ -644,7 +642,7 @@ export default function PlayPage() {
                       </div>
 
                       <div className="mt-auto pt-3 border-t border-[var(--accent-soft)] flex items-center justify-between gap-3">
-                        <span className="text-[10px] text-[var(--accent-muted)] truncate">{act.author_name} 发起</span>
+                        <span className="text-[11px] text-[var(--accent-muted)] truncate">{act.author_name} 发起</span>
                         {isMine ? (
                           confirmDeleteActivity === act.id ? (
                             <button
@@ -701,7 +699,7 @@ export default function PlayPage() {
       </div>
 
       {detailActivity && (
-        <div className="fixed inset-0 bg-black/30 backdrop-blur-sm z-50 flex items-center justify-center px-4" onClick={() => setDetailActivity(null)}>          <div className="bg-white rounded-3xl w-full max-w-lg p-6 shadow-2xl max-h-[85vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
+        <div className="fixed inset-0 bg-black/30 backdrop-blur-sm z-50 flex items-center justify-center px-4" onClick={() => setDetailActivity(null)}>          <div className="bg-white rounded-2xl w-full max-w-lg p-6 shadow-2xl max-h-[85vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
             <div className="flex items-start justify-between gap-3 mb-4">
               <div className="flex items-start gap-3 flex-1 min-w-0">
                 {detailActivity.type_icon && (
@@ -710,7 +708,7 @@ export default function PlayPage() {
                   </div>
                 )}
                 <div className="flex-1 min-w-0">
-                  {detailActivity.type_name && <p className="text-[10px] text-[var(--accent-muted)] tracking-wide">{detailActivity.type_name}</p>}
+                  {detailActivity.type_name && <p className="text-[11px] text-[var(--accent-muted)] tracking-wide">{detailActivity.type_name}</p>}
                   <h2 className="text-lg font-semibold text-[var(--accent-ink)] mt-0.5 break-words">{detailActivity.title}</h2>
                 </div>
               </div>
@@ -749,11 +747,11 @@ export default function PlayPage() {
                   {detailActivity.signups.map((s) => (
                     <div key={s.user_id} className="flex items-center gap-2">
                       <div className="w-6 h-6 rounded-full bg-[var(--accent-soft)] flex items-center justify-center overflow-hidden flex-shrink-0">
-                        {s.user_avatar ? <img src={s.user_avatar} alt="" className="w-full h-full object-cover" /> : <span className="text-[10px] text-[var(--accent)]">{s.user_name[0]}</span>}
+                        {s.user_avatar ? <img src={s.user_avatar} alt="" className="w-full h-full object-cover" /> : <span className="text-[11px] text-[var(--accent)]">{s.user_name[0]}</span>}
                       </div>
                       <span className="text-xs text-[var(--accent-ink)]">
                         {s.user_name}
-                        {s.user_id === detailActivity.author_id && <span className="text-[10px] text-[var(--accent-muted)] ml-1">（发起人）</span>}
+                        {s.user_id === detailActivity.author_id && <span className="text-[11px] text-[var(--accent-muted)] ml-1">（发起人）</span>}
                       </span>
                     </div>
                   ))}
@@ -802,7 +800,7 @@ export default function PlayPage() {
                 <button
                   onClick={() => handleSignup(detailActivity)}
                   disabled={signingUp === detailActivity.id}
-                  className="flex-1 py-2.5 rounded-xl bg-gradient-to-r from-[var(--accent-light)] to-[var(--accent)] text-white text-sm font-medium hover:shadow-[0_4px_16px_rgba(90,122,154,0.3)] transition"
+                  className="flex-1 py-2.5 rounded-xl bg-[var(--accent)] text-white text-sm font-medium hover:shadow-sm transition"
                 >
                   {signingUp === detailActivity.id ? '...' : '我要参加'}
                 </button>
@@ -834,7 +832,7 @@ export default function PlayPage() {
 
       {showReportModal && detailActivity && (
         <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-[60] flex items-center justify-center px-4" onClick={() => setShowReportModal(false)}>
-          <form onSubmit={handleReport} className="bg-white rounded-3xl w-full max-w-md p-6 shadow-2xl" onClick={(e) => e.stopPropagation()}>
+          <form onSubmit={handleReport} className="bg-white rounded-2xl w-full max-w-md p-6 shadow-2xl" onClick={(e) => e.stopPropagation()}>
             <h2 className="text-lg font-semibold text-[var(--accent-ink)] mb-1">举报这个活动</h2>
             <p className="text-xs text-[var(--accent-muted)] mb-4">告诉我们原因，站主会看</p>
 
@@ -854,7 +852,7 @@ export default function PlayPage() {
 
             <div className="flex gap-2 justify-end">
               <button type="button" onClick={() => { setShowReportModal(false); setReportReason(''); setReportMessage('') }} className="px-5 py-2 rounded-xl text-sm text-[var(--accent-muted)] hover:bg-[var(--accent-soft)] transition">取消</button>
-              <button type="submit" disabled={reporting || !reportReason.trim()} className="px-5 py-2 rounded-xl bg-gradient-to-r from-[var(--accent-light)] to-[var(--accent)] text-white text-sm font-medium hover:shadow-[0_6px_20px_rgba(90,122,154,0.3)] transition-all disabled:opacity-50">
+              <button type="submit" disabled={reporting || !reportReason.trim()} className="px-5 py-2 rounded-xl bg-[var(--accent)] text-white text-sm font-medium hover:shadow-sm transition-all disabled:opacity-50">
                 {reporting ? '提交中...' : '提交'}
               </button>
             </div>
@@ -864,7 +862,7 @@ export default function PlayPage() {
 
       {showPostModal && (
         <div className="fixed inset-0 bg-black/30 backdrop-blur-sm z-50 flex items-center justify-center px-4" onClick={() => setShowPostModal(false)}>
-          <form onSubmit={handlePost} className="bg-white rounded-3xl w-full max-w-lg p-6 shadow-2xl" onClick={(e) => e.stopPropagation()}>
+          <form onSubmit={handlePost} className="bg-white rounded-2xl w-full max-w-lg p-6 shadow-2xl" onClick={(e) => e.stopPropagation()}>
             <h2 className="text-lg font-semibold text-[var(--accent-ink)] mb-4">发活动</h2>
 
             <div className="mb-3">
@@ -893,7 +891,7 @@ export default function PlayPage() {
               />
               <div className="mt-1.5 flex items-center justify-between">
                 <EmojiPicker onPick={insertActivityEmoji} />
-                <span className="text-[10px] text-[var(--accent-muted)]">{newContent.length}/200</span>
+                <span className="text-[11px] text-[var(--accent-muted)]">{newContent.length}/200</span>
               </div>
             </div>
 
@@ -918,7 +916,7 @@ export default function PlayPage() {
 
             <div className="flex gap-2 justify-end">
               <button type="button" onClick={() => setShowPostModal(false)} className="px-5 py-2 rounded-xl text-sm text-[var(--accent-muted)] hover:bg-[var(--accent-soft)] transition">取消</button>
-              <button type="submit" disabled={posting || !newTitle.trim()} className="px-5 py-2 rounded-xl bg-gradient-to-r from-[var(--accent-light)] to-[var(--accent)] text-white text-sm font-medium hover:shadow-[0_6px_20px_rgba(90,122,154,0.3)] transition-all disabled:opacity-50">
+              <button type="submit" disabled={posting || !newTitle.trim()} className="px-5 py-2 rounded-xl bg-[var(--accent)] text-white text-sm font-medium hover:shadow-sm transition-all disabled:opacity-50">
                 {posting ? '发布中...' : '发布'}
               </button>
             </div>
@@ -928,7 +926,7 @@ export default function PlayPage() {
 
       {showNewTypeModal && (
         <div className="fixed inset-0 bg-black/30 backdrop-blur-sm z-50 flex items-center justify-center px-4" onClick={() => setShowNewTypeModal(false)}>
-          <form onSubmit={handleCreateType} className="bg-white rounded-3xl w-full max-w-md p-6 shadow-2xl" onClick={(e) => e.stopPropagation()}>
+          <form onSubmit={handleCreateType} className="bg-white rounded-2xl w-full max-w-md p-6 shadow-2xl" onClick={(e) => e.stopPropagation()}>
             <h2 className="text-lg font-semibold text-[var(--accent-ink)] mb-1">新建类型</h2>
             <p className="text-xs text-[var(--accent-muted)] mb-4">建好后直接生效</p>
 
@@ -948,7 +946,7 @@ export default function PlayPage() {
 
             <div className="flex gap-2 justify-end">
               <button type="button" onClick={() => { setShowNewTypeModal(false); setNewTypeName(''); setCreateTypeMessage('') }} className="px-5 py-2 rounded-xl text-sm text-[var(--accent-muted)] hover:bg-[var(--accent-soft)] transition">取消</button>
-              <button type="submit" disabled={creatingType || !newTypeName.trim()} className="px-5 py-2 rounded-xl bg-gradient-to-r from-[var(--accent-light)] to-[var(--accent)] text-white text-sm font-medium hover:shadow-[0_6px_20px_rgba(90,122,154,0.3)] transition-all disabled:opacity-50">
+              <button type="submit" disabled={creatingType || !newTypeName.trim()} className="px-5 py-2 rounded-xl bg-[var(--accent)] text-white text-sm font-medium hover:shadow-sm transition-all disabled:opacity-50">
                 {creatingType ? '提交中...' : '添加'}
               </button>
             </div>

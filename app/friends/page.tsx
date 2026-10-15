@@ -861,8 +861,6 @@ export default function FriendsPage() {
 
   return (
     <div className="min-h-screen bg-[var(--accent-soft)] relative overflow-hidden">
-      <div className="absolute -top-20 -right-20 w-96 h-96 bg-[var(--accent-light)] opacity-15 rounded-full blur-3xl pointer-events-none"></div>
-      <div className="absolute -bottom-20 -left-20 w-96 h-96 bg-[var(--accent)] opacity-[0.08] rounded-full blur-3xl pointer-events-none"></div>
 
       {/* pt-24：顶部空间更大，返回键不会被浏览器顶栏挡住 */}
       <div className="relative max-w-6xl mx-auto px-6 pt-24 pb-8">
@@ -887,7 +885,7 @@ export default function FriendsPage() {
             >
               好友
               {unread.total > 0 && (
-                <span className="min-w-[16px] h-4 px-1 rounded-full bg-[var(--accent)] text-white text-[10px] leading-4 text-center font-medium">
+                <span className="min-w-[16px] h-4 px-1 rounded-full bg-[var(--accent)] text-white text-[11px] leading-4 text-center font-medium">
                   {unread.total > 99 ? '99+' : unread.total}
                 </span>
               )}
@@ -936,14 +934,14 @@ export default function FriendsPage() {
           <div className="flex gap-5 h-[calc(100vh-320px)] min-h-[500px]">            <aside className={`w-72 flex-shrink-0 flex-col gap-3 ${showChatOnMobile ? 'hidden md:flex' : 'flex'}`}>
               <button
                 onClick={() => setShowAdd(!showAdd)}
-                className="w-full py-2.5 rounded-2xl bg-gradient-to-r from-[var(--accent-light)] to-[var(--accent)] text-white text-sm font-medium hover:shadow-[0_6px_20px_rgba(217,119,87,0.3)] transition-all flex items-center justify-center gap-2 flex-shrink-0"
+                className="w-full py-2.5 rounded-2xl bg-[var(--accent)] text-white text-sm font-medium hover:shadow-sm transition-all flex items-center justify-center gap-2 flex-shrink-0"
               >
                 <IconPlus className="w-4 h-4" />
                 {showAdd ? '收起' : '加好友'}
               </button>
 
               {showAdd && (
-                <div className="rounded-2xl border border-[var(--accent-line)] bg-white/80 backdrop-blur p-4 shadow-[0_2px_12px_rgba(217,119,87,0.04)] flex-shrink-0">
+                <div className="rounded-2xl border border-[var(--accent-line)] bg-white p-4 shadow-sm flex-shrink-0">
                   <div className="flex gap-2">
                     <input
                       type="text"
@@ -963,7 +961,7 @@ export default function FriendsPage() {
                   </div>
 
                   {searchMessage && (
-                    <p className="text-[10px] text-red-500 mt-2">{searchMessage}</p>
+                    <p className="text-[11px] text-red-500 mt-2">{searchMessage}</p>
                   )}
 
                   {searchResult && (
@@ -973,7 +971,7 @@ export default function FriendsPage() {
                           {searchResult.avatar_url ? (
                             <img src={searchResult.avatar_url} alt="" className="w-full h-full object-cover" />
                           ) : (
-                            <span className="text-[10px] text-[var(--accent-deep)]">
+                            <span className="text-[11px] text-[var(--accent-deep)]">
                               {(searchResult.nickname || searchResult.username)[0]}
                             </span>
                           )}
@@ -984,7 +982,7 @@ export default function FriendsPage() {
                       </div>
                       <button
                         onClick={() => handleAddFriend(searchResult.id)}
-                        className="px-2.5 py-1 rounded-full bg-[var(--accent)] text-white text-[10px] hover:bg-[var(--accent-deep)] transition flex-shrink-0"
+                        className="px-2.5 py-1 rounded-full bg-[var(--accent)] text-white text-[11px] hover:bg-[var(--accent-deep)] transition flex-shrink-0"
                       >
                         加
                       </button>
@@ -994,8 +992,8 @@ export default function FriendsPage() {
               )}
 
               {shownRequests.length > 0 && (
-                <div className="rounded-2xl border border-[var(--accent-line)] bg-gradient-to-br from-[var(--accent-soft)] to-[var(--accent-soft)] p-3 flex-shrink-0">
-                  <p className="text-[10px] text-[var(--accent-deep)] font-medium mb-2 tracking-wide">
+                <div className="rounded-2xl border border-[var(--accent-line)] bg-[var(--accent-soft)] p-3 flex-shrink-0">
+                  <p className="text-[11px] text-[var(--accent-deep)] font-medium mb-2 tracking-wide">
                     新的招呼 · {shownRequests.length}
                   </p>
                   <div className="space-y-2">
@@ -1005,7 +1003,7 @@ export default function FriendsPage() {
                           {r.avatar_url ? (
                             <img src={r.avatar_url} alt="" className="w-full h-full object-cover" />
                           ) : (
-                            <span className="text-[10px] text-[var(--accent-deep)]">
+                            <span className="text-[11px] text-[var(--accent-deep)]">
                               {(r.nickname || r.username)[0]}
                             </span>
                           )}
@@ -1013,13 +1011,13 @@ export default function FriendsPage() {
                         <p className="text-xs flex-1 truncate">{r.nickname || r.username}</p>
                         <button
                           onClick={() => handleAccept(r.friendship_id)}
-                          className="text-[10px] px-2 py-0.5 rounded-full bg-[var(--accent)] text-white"
+                          className="text-[11px] px-2 py-0.5 rounded-full bg-[var(--accent)] text-white"
                         >
                           同意
                         </button>
                         <button
                           onClick={() => handleReject(r.friendship_id)}
-                          className="text-[10px] px-2 py-0.5 rounded-full bg-white text-[var(--accent-muted)] border border-[var(--accent-line)]"
+                          className="text-[11px] px-2 py-0.5 rounded-full bg-white text-[var(--accent-muted)] border border-[var(--accent-line)]"
                         >
                           拒
                         </button>
@@ -1029,9 +1027,9 @@ export default function FriendsPage() {
                 </div>
               )}
 
-              <div className="rounded-2xl border border-[var(--accent-line)] bg-white/80 backdrop-blur shadow-[0_2px_12px_rgba(217,119,87,0.04)] overflow-hidden flex-1 overflow-y-auto">
+              <div className="rounded-2xl border border-[var(--accent-line)] bg-white shadow-sm overflow-hidden flex-1 overflow-y-auto">
                 <div className="px-4 py-3 border-b border-[var(--accent-line)]">
-                  <p className="text-[10px] text-[var(--accent-muted)] tracking-wide">
+                  <p className="text-[11px] text-[var(--accent-muted)] tracking-wide">
                     我的好友 · {shownFriends.length}
                   </p>
                 </div>
@@ -1073,26 +1071,26 @@ export default function FriendsPage() {
                                   {f.nickname || f.username}
                                 </p>
                                 {friendStatusMap[f.friend_id] && (
-                                  <span className="flex-shrink-0 font-serif-cn text-[10px] leading-none text-[var(--accent)]">
+                                  <span className="flex-shrink-0 font-serif-cn text-[11px] leading-none text-[var(--accent)]">
                                     {friendStatusMap[f.friend_id]}
                                   </span>
                                 )}
                                 {!affinityHidden && (affinityScores[f.friend_id] ?? 0) > 0 && (
-                                  <span className="flex flex-shrink-0 items-center gap-0.5 font-serif-cn text-[10px] leading-none text-[var(--accent-light)]">
+                                  <span className="flex flex-shrink-0 items-center gap-0.5 font-serif-cn text-[11px] leading-none text-[var(--accent-light)]">
                                     <Icon name="heart" className="h-2.5 w-2.5" />
                                     {affinityScores[f.friend_id]}
                                   </span>
                                 )}
                               </div>
                               {f.signature && (
-                                <p className="text-[10px] text-[var(--accent-muted)] truncate">{f.signature}</p>
+                                <p className="text-[11px] text-[var(--accent-muted)] truncate">{f.signature}</p>
                               )}
                             </button>
                           </div>
 
                           {/* 这个好友的未读私信条数：右下角 */}
                           {unreadCount > 0 && (
-                            <span className="pointer-events-none absolute bottom-2 right-3 min-w-[16px] h-4 px-1 rounded-full bg-[var(--accent)] text-white text-[10px] leading-4 text-center font-medium">
+                            <span className="pointer-events-none absolute bottom-2 right-3 min-w-[16px] h-4 px-1 rounded-full bg-[var(--accent)] text-white text-[11px] leading-4 text-center font-medium">
                               {unreadCount > 99 ? '99+' : unreadCount}
                             </span>
                           )}
@@ -1108,7 +1106,7 @@ export default function FriendsPage() {
               <div
                 className={`rounded-2xl border backdrop-blur overflow-hidden flex-1 flex flex-col ${
                   currentFriend
-                    ? 'border-[var(--accent-line)] bg-white/80 shadow-[0_2px_12px_rgba(217,119,87,0.04)]'
+                    ? 'border-[var(--accent-line)] bg-white/80 shadow-sm'
                     : /* 没选人时整块淡下去，一眼看出「这里还没开始」 */
                       'border-dashed border-[var(--accent-line)] bg-[var(--accent-soft)]/40'
                 }`}
@@ -1142,7 +1140,7 @@ export default function FriendsPage() {
                       </Link>
                       {friendStatus && <StatusLabel text={friendStatus} />}
                       {friendTyping && (
-                        <span className="font-serif-cn text-[10px] leading-none text-[var(--accent-light)]">
+                        <span className="font-serif-cn text-[11px] leading-none text-[var(--accent-light)]">
                           正在输入…
                         </span>
                       )}
@@ -1212,7 +1210,7 @@ export default function FriendsPage() {
                     <button
                       type="submit"
                       disabled={sending || !content.trim()}
-                      className="w-11 h-11 rounded-full bg-gradient-to-r from-[var(--accent-light)] to-[var(--accent)] text-white flex items-center justify-center hover:shadow-[0_6px_20px_rgba(217,119,87,0.3)] transition-all disabled:opacity-50 flex-shrink-0"
+                      className="w-11 h-11 rounded-full bg-[var(--accent)] text-white flex items-center justify-center hover:shadow-sm transition-all disabled:opacity-50 flex-shrink-0"
                     >
                       <IconSend className="w-4 h-4" />
                     </button>
@@ -1225,7 +1223,7 @@ export default function FriendsPage() {
           <div className="max-w-2xl mx-auto">
             <form
               onSubmit={handlePostMoment}
-              className="rounded-2xl border border-[var(--accent-line)] bg-white/80 backdrop-blur p-5 mb-5 shadow-[0_2px_12px_rgba(217,119,87,0.04)]"
+              className="rounded-2xl border border-[var(--accent-line)] bg-white p-5 mb-5 shadow-sm"
             >
               <textarea
                 ref={momentRef}
@@ -1267,7 +1265,7 @@ export default function FriendsPage() {
                   ))}
                 </div>
 
-                <p className="mt-2 text-[10px] text-[var(--accent-muted)]">{VISIBILITY_HINT[visibility]}</p>
+                <p className="mt-2 text-[11px] text-[var(--accent-muted)]">{VISIBILITY_HINT[visibility]}</p>
 
                 {showPicker && visibility === 'friends' && (
                   <div className="mt-2 max-h-40 overflow-y-auto rounded-xl border border-[var(--accent-line)] bg-[var(--accent-soft)] p-3">
@@ -1317,7 +1315,7 @@ export default function FriendsPage() {
                             className="accent-[var(--accent)]"
                           />
                           <span className="truncate">{g.name}</span>
-                          <span className="text-[10px] text-[var(--accent-muted)]">{g.memberIds.length} 人</span>
+                          <span className="text-[11px] text-[var(--accent-muted)]">{g.memberIds.length} 人</span>
                         </label>
                       ))
                     )}
@@ -1329,7 +1327,7 @@ export default function FriendsPage() {
                 <button
                   type="submit"
                   disabled={postingMoment || (!momentContent.trim() && momentImages.length === 0)}
-                  className="px-6 py-2 rounded-xl bg-gradient-to-r from-[var(--accent-light)] to-[var(--accent)] text-white text-sm font-medium hover:shadow-[0_6px_20px_rgba(217,119,87,0.3)] transition-all disabled:opacity-50"
+                  className="px-6 py-2 rounded-xl bg-[var(--accent)] text-white text-sm font-medium hover:shadow-sm transition-all disabled:opacity-50"
                 >
                   {postingMoment ? '发布中...' : '发布'}
                 </button>
@@ -1345,7 +1343,7 @@ export default function FriendsPage() {
                 visibleMoments.map((post) => (
                   <div
                     key={post.id}
-                    className="rounded-2xl border border-[var(--accent-line)] bg-white/80 backdrop-blur p-5 shadow-[0_2px_12px_rgba(217,119,87,0.04)]"
+                    className="rounded-2xl border border-[var(--accent-line)] bg-white p-5 shadow-sm"
                   >
                     <div className="flex items-center gap-3 mb-3">
                       <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-[var(--accent-light)] to-[var(--accent-light)] flex items-center justify-center overflow-hidden flex-shrink-0">
@@ -1359,7 +1357,7 @@ export default function FriendsPage() {
                       </div>
                       <div className="flex-1 min-w-0">
                         <p className="text-sm font-medium text-[#2b2620]">{post.author_name}</p>
-                        <p className="text-[10px] text-[var(--accent-muted)] mt-0.5">
+                        <p className="text-[11px] text-[var(--accent-muted)] mt-0.5">
                           {new Date(post.created_at).toLocaleString('zh-CN', {
                             year: 'numeric',
                             month: '2-digit',
@@ -1403,7 +1401,7 @@ export default function FriendsPage() {
                       <p className="text-sm text-[#4a423c] whitespace-pre-wrap break-words leading-relaxed pl-1 mb-3">
                         {post.content}
                         {momentEditor.wasSaved('moment', post.id) && (
-                          <span className="ml-2 text-[10px] text-[#7ea86a]">已保存</span>
+                          <span className="ml-2 text-[11px] text-[#7ea86a]">已保存</span>
                         )}
                       </p>
                     )}
@@ -1449,7 +1447,7 @@ export default function FriendsPage() {
 
                       {/* 自己的动态：可见范围标签 + 编辑 + 删除 */}
                       {post.author_id === meId && post.visibility !== 'public' && (
-                        <span className="rounded-full bg-[var(--accent-soft)] px-2 py-0.5 text-[10px] text-[var(--accent-deep)]">
+                        <span className="rounded-full bg-[var(--accent-soft)] px-2 py-0.5 text-[11px] text-[var(--accent-deep)]">
                           {VISIBILITY_SHORT[(post.visibility ?? 'public') as Visibility]}
                         </span>
                       )}
@@ -1512,7 +1510,7 @@ export default function FriendsPage() {
                                         className="w-full h-full object-cover"
                                       />
                                     ) : (
-                                      <span className="text-[10px] text-[var(--accent-deep)]">
+                                      <span className="text-[11px] text-[var(--accent-deep)]">
                                         {parent.author_name[0]}
                                       </span>
                                     )}
@@ -1530,11 +1528,11 @@ export default function FriendsPage() {
                                           setReplyingTo(parent)
                                           setOpenCommentId(post.id)
                                         }}
-                                        className="text-[10px] text-[var(--accent-muted)] hover:text-[var(--accent)]"
+                                        className="text-[11px] text-[var(--accent-muted)] hover:text-[var(--accent)]"
                                       >
                                         回复
                                       </button>
-                                      <span className="text-[10px] text-[var(--accent-muted)]">
+                                      <span className="text-[11px] text-[var(--accent-muted)]">
                                         {formatTime(parent.created_at)}
                                       </span>
                                     </div>
@@ -1553,7 +1551,7 @@ export default function FriendsPage() {
                                               className="w-full h-full object-cover"
                                             />
                                           ) : (
-                                            <span className="text-[9px] text-[var(--accent-deep)]">
+                                            <span className="text-[11px] text-[var(--accent-deep)]">
                                               {c.author_name[0]}
                                             </span>
                                           )}
@@ -1580,11 +1578,11 @@ export default function FriendsPage() {
                                                 setReplyingTo(c)
                                                 setOpenCommentId(post.id)
                                               }}
-                                              className="text-[10px] text-[var(--accent-muted)] hover:text-[var(--accent)]"
+                                              className="text-[11px] text-[var(--accent-muted)] hover:text-[var(--accent)]"
                                             >
                                               回复
                                             </button>
-                                            <span className="text-[10px] text-[var(--accent-muted)]">
+                                            <span className="text-[11px] text-[var(--accent-muted)]">
                                               {formatTime(c.created_at)}
                                             </span>
                                           </div>
@@ -1603,7 +1601,7 @@ export default function FriendsPage() {
                       <div className="mt-3">
                         {replyingTo && (
                           <div className="flex items-center justify-between mb-2 px-2">
-                            <p className="text-[10px] text-[var(--accent-muted)]">
+                            <p className="text-[11px] text-[var(--accent-muted)]">
                               正在回复{' '}
                               <span className="text-[var(--accent-deep)] font-medium">
                                 {replyingTo.author_name}
@@ -1611,7 +1609,7 @@ export default function FriendsPage() {
                             </p>
                             <button
                               onClick={() => setReplyingTo(null)}
-                              className="text-[10px] text-[var(--accent-muted)] hover:text-[var(--accent-deep)]"
+                              className="text-[11px] text-[var(--accent-muted)] hover:text-[var(--accent-deep)]"
                             >
                               取消
                             </button>
@@ -1635,7 +1633,7 @@ export default function FriendsPage() {
                             disabled={
                               postingComment === post.id || !commentInputs[post.id]?.trim()
                             }
-                            className="px-4 py-2 rounded-full bg-gradient-to-r from-[var(--accent-light)] to-[var(--accent)] text-white text-xs font-medium transition-all disabled:opacity-50"
+                            className="px-4 py-2 rounded-full bg-[var(--accent)] text-white text-xs font-medium transition-all disabled:opacity-50"
                           >
                             {postingComment === post.id ? '...' : '发送'}
                           </button>

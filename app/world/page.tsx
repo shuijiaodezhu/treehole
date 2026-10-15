@@ -635,8 +635,6 @@ export default function WorldPage() {
 
   return (
     <div className="min-h-screen bg-[var(--accent-soft)] relative overflow-hidden" style={pageAccentVars('world')}>
-      <div className="absolute -top-20 -right-20 w-96 h-96 bg-[var(--accent-line)] opacity-20 rounded-full blur-3xl pointer-events-none"></div>
-      <div className="absolute -bottom-20 -left-20 w-96 h-96 bg-[var(--accent)] opacity-[0.08] rounded-full blur-3xl pointer-events-none"></div>
 
       <div className="relative max-w-6xl mx-auto px-6 pt-24 pb-8">
         <header className="mb-6">
@@ -651,15 +649,15 @@ export default function WorldPage() {
           <aside className="w-56 flex-shrink-0 flex flex-col gap-3">
             <button
               onClick={() => { setPostCategoryId(currentCategory?.id || ''); setShowPostModal(true) }}
-              className="w-full py-2.5 rounded-2xl bg-gradient-to-r from-[var(--accent-line)] to-[var(--accent)] text-white text-sm font-medium hover:shadow-[0_6px_20px_rgba(126,168,106,0.3)] transition-all flex flex-col items-center justify-center gap-0.5"
+              className="w-full py-2.5 rounded-2xl bg-gradient-to-r from-[var(--accent-line)] to-[var(--accent)] text-white text-sm font-medium hover:shadow-sm transition-all flex flex-col items-center justify-center gap-0.5"
             >
               <span className="flex items-center gap-2"><Icon name="pen" className="w-4 h-4" />发帖</span>
-              <span className="text-[10px] text-white/80 font-normal">发到「{currentLocationName}」</span>
+              <span className="text-[11px] text-white/80 font-normal">发到「{currentLocationName}」</span>
             </button>
 
-            <div className="rounded-2xl border border-[var(--accent-line)] bg-white/80 backdrop-blur shadow-[0_2px_12px_rgba(126,168,106,0.04)] overflow-hidden">
+            <div className="rounded-2xl border border-[var(--accent-line)] bg-white shadow-sm overflow-hidden">
               <div className="px-4 py-3 border-b border-[var(--accent-soft)]">
-                <p className="text-[10px] text-[var(--accent-muted)] tracking-wide">分区 · 看哪儿的帖子</p>
+                <p className="text-[11px] text-[var(--accent-muted)] tracking-wide">分区 · 看哪儿的帖子</p>
               </div>
               <div className="p-2">
                 <button
@@ -683,12 +681,12 @@ export default function WorldPage() {
                           <Icon name={categoryIconMap[cat.name] || 'spiral'} className="w-4 h-4" />
                           {cat.name}
                         </span>
-                        <span className="text-[10px] text-[var(--accent-muted)]">{isExpanded ? '▾' : '▸'}</span>
+                        <span className="text-[11px] text-[var(--accent-muted)]">{isExpanded ? '▾' : '▸'}</span>
                       </button>
 
                       {isExpanded && (
                         <div className="ml-4 mt-1 space-y-0.5">
-                          {children.length === 0 && (<p className="px-3 py-1.5 text-[10px] text-[var(--accent-muted)]">暂无子区</p>)}
+                          {children.length === 0 && (<p className="px-3 py-1.5 text-[11px] text-[var(--accent-muted)]">暂无子区</p>)}
                           {children.map((sub) => (
                             <button
                               key={sub.id}
@@ -719,7 +717,7 @@ export default function WorldPage() {
               </div>
             </div>
 
-            <div className="rounded-2xl border border-[var(--accent-line)] bg-white/80 backdrop-blur shadow-[0_2px_12px_rgba(126,168,106,0.04)] overflow-hidden">
+            <div className="rounded-2xl border border-[var(--accent-line)] bg-white shadow-sm overflow-hidden">
               <Link href="/friends" className="flex items-center gap-2 px-4 py-3 text-sm text-[var(--accent-ink)] hover:bg-[var(--accent-soft)] transition border-b border-[var(--accent-soft)]">
                 <Icon name="home" className="w-4 h-4 text-[var(--accent-muted)]" />小屋
               </Link>
@@ -736,7 +734,7 @@ export default function WorldPage() {
             <div className="mb-3 flex items-center gap-2 text-xs text-[var(--accent-muted)]">
               <span>正在看：</span><span className="text-[var(--accent-deep)] font-medium">{currentLocationName}</span>
               {replies.count > 0 && (
-                <span className="ml-1 min-w-[16px] h-4 px-1 rounded-full bg-[#d97757] text-white text-[10px] leading-4 text-center font-medium">
+                <span className="ml-1 min-w-[16px] h-4 px-1 rounded-full bg-[#d97757] text-white text-[11px] leading-4 text-center font-medium">
                   {replies.count > 99 ? '99+' : replies.count}
                 </span>
               )}
@@ -769,12 +767,12 @@ export default function WorldPage() {
                     {!focusPostId && index === newPostIndex && (
                       <div className="relative mb-3 flex items-center gap-3 py-1">
                         <span className="h-px flex-1 bg-[var(--accent-line)]" />
-                        <span className="text-[10px] text-[var(--accent-muted)] tracking-wide">上次看到这里</span>
+                        <span className="text-[11px] text-[var(--accent-muted)] tracking-wide">上次看到这里</span>
                         <span className="h-px flex-1 bg-[var(--accent-line)]" />
                       </div>
                     )}
 
-                    <div className="rounded-2xl border border-[var(--accent-line)] bg-white/80 backdrop-blur p-5 shadow-[0_2px_12px_rgba(126,168,106,0.04)]">
+                    <div className="rounded-2xl border border-[var(--accent-line)] bg-white p-5 shadow-sm">
                     <div className="flex items-center gap-3 mb-3">
                       {post.is_anonymous ? (
                         <div className="w-10 h-10 rounded-2xl bg-[var(--accent-line)] flex items-center justify-center flex-shrink-0">
@@ -787,7 +785,7 @@ export default function WorldPage() {
                       )}
                       <div className="flex-1 min-w-0">
                         <p className="text-sm font-medium text-[var(--accent-ink)] truncate">{post.author_name}</p>
-                        <p className="text-[10px] text-[var(--accent-muted)] mt-0.5">{formatTime(post.created_at)}</p>
+                        <p className="text-[11px] text-[var(--accent-muted)] mt-0.5">{formatTime(post.created_at)}</p>
                       </div>
                     </div>
                     {editor.isEditing('world_post', post.id) ? (
@@ -816,7 +814,7 @@ export default function WorldPage() {
                           >
                             取消
                           </button>
-                          <span className="ml-auto text-[10px] text-[var(--accent-muted)]">
+                          <span className="ml-auto text-[11px] text-[var(--accent-muted)]">
                             {editor.draft.length}/{editor.maxLength.world_post}
                           </span>
                         </div>
@@ -825,7 +823,7 @@ export default function WorldPage() {
                       <p className="text-sm text-[var(--accent-ink)] whitespace-pre-wrap break-words leading-relaxed pl-1">
                         {post.content}
                         {editor.wasSaved('world_post', post.id) && (
-                          <span className="ml-2 text-[10px] text-[var(--accent)]">已保存</span>
+                          <span className="ml-2 text-[11px] text-[var(--accent)]">已保存</span>
                         )}
                       </p>
                     )}
@@ -963,7 +961,7 @@ export default function WorldPage() {
                                       </div>
                                     ) : (
                                       <div className="w-6 h-6 rounded-full bg-[var(--accent-line)] flex items-center justify-center overflow-hidden flex-shrink-0 mt-0.5">
-                                        {parent.author_avatar ? <img src={parent.author_avatar} alt="" className="w-full h-full object-cover" /> : <span className="text-[10px] text-[var(--accent-deep)]">{parent.author_name[0]}</span>}
+                                        {parent.author_avatar ? <img src={parent.author_avatar} alt="" className="w-full h-full object-cover" /> : <span className="text-[11px] text-[var(--accent-deep)]">{parent.author_name[0]}</span>}
                                       </div>
                                     )}
                                     <div className="flex-1 min-w-0 bg-[var(--accent-soft)] rounded-xl px-3 py-2">
@@ -983,14 +981,14 @@ export default function WorldPage() {
                                               type="button"
                                               disabled={editor.isBusy('world_comment', parent.id)}
                                               onClick={() => void handleSaveComment(parent.id)}
-                                              className="rounded-md bg-[var(--accent)] px-2 py-0.5 text-[10px] text-white hover:bg-[var(--accent-deep)] transition disabled:opacity-50"
+                                              className="rounded-md bg-[var(--accent)] px-2 py-0.5 text-[11px] text-white hover:bg-[var(--accent-deep)] transition disabled:opacity-50"
                                             >
                                               {editor.isBusy('world_comment', parent.id) ? '保存中…' : '保存'}
                                             </button>
                                             <button
                                               type="button"
                                               onClick={() => editor.cancel()}
-                                              className="rounded-md border border-[var(--accent-line)] px-2 py-0.5 text-[10px] text-[var(--accent-muted)] transition"
+                                              className="rounded-md border border-[var(--accent-line)] px-2 py-0.5 text-[11px] text-[var(--accent-muted)] transition"
                                             >
                                               取消
                                             </button>
@@ -1000,17 +998,17 @@ export default function WorldPage() {
                                         <p className="text-xs text-[var(--accent-ink)] mt-0.5 whitespace-pre-wrap break-words">
                                           {renderMentions(parent.content, mentionNames)}
                                           {editor.wasSaved('world_comment', parent.id) && (
-                                            <span className="ml-1.5 text-[10px] text-[var(--accent)]">已保存</span>
+                                            <span className="ml-1.5 text-[11px] text-[var(--accent)]">已保存</span>
                                           )}
                                         </p>
                                       )}
                                       <div className="flex items-center justify-between mt-1 gap-2">
                                         <div className="flex items-center gap-2">
-                                          <button onClick={() => setReplyingTo(parent)} className="text-[10px] text-[var(--accent-muted)] hover:text-[var(--accent)]">回复</button>
+                                          <button onClick={() => setReplyingTo(parent)} className="text-[11px] text-[var(--accent-muted)] hover:text-[var(--accent)]">回复</button>
                                           {editor.canEdit(parent.author_id) && !editor.isEditing('world_comment', parent.id) && (
                                             <button
                                               onClick={() => editor.start('world_comment', parent.id, parent.content)}
-                                              className="text-[10px] text-[var(--accent-muted)] hover:text-[var(--accent-deep)] transition"
+                                              className="text-[11px] text-[var(--accent-muted)] hover:text-[var(--accent-deep)] transition"
                                             >
                                               编辑
                                             </button>
@@ -1020,7 +1018,7 @@ export default function WorldPage() {
                                               <button
                                                 disabled={deleter.busyId === parent.id}
                                                 onClick={() => void handleDeleteComment(parent.id, parent.author_id)}
-                                                className="text-[10px] text-red-500 hover:underline disabled:opacity-50"
+                                                className="text-[11px] text-red-500 hover:underline disabled:opacity-50"
                                               >
                                                 {deleter.busyId === parent.id ? '删除中…' : '确认删除'}
                                               </button>
@@ -1033,14 +1031,14 @@ export default function WorldPage() {
                                                     4000,
                                                   )
                                                 }}
-                                                className="text-[10px] text-[var(--accent-muted)] hover:text-red-500 transition"
+                                                className="text-[11px] text-[var(--accent-muted)] hover:text-red-500 transition"
                                               >
                                                 删除
                                               </button>
                                             )
                                           )}
                                         </div>
-                                        <span className="text-[10px] text-[var(--accent-muted)]">{formatTime(parent.created_at)}</span>
+                                        <span className="text-[11px] text-[var(--accent-muted)]">{formatTime(parent.created_at)}</span>
                                       </div>
                                     </div>
                                   </div>
@@ -1054,7 +1052,7 @@ export default function WorldPage() {
                                             </div>
                                           ) : (
                                             <div className="w-5 h-5 rounded-full bg-[var(--accent-line)] flex items-center justify-center overflow-hidden flex-shrink-0 mt-0.5">
-                                              {c.author_avatar ? <img src={c.author_avatar} alt="" className="w-full h-full object-cover" /> : <span className="text-[9px] text-[var(--accent-deep)]">{c.author_name[0]}</span>}
+                                              {c.author_avatar ? <img src={c.author_avatar} alt="" className="w-full h-full object-cover" /> : <span className="text-[11px] text-[var(--accent-deep)]">{c.author_name[0]}</span>}
                                             </div>
                                           )}
                                           <div className="flex-1 min-w-0 bg-[var(--accent-soft)] rounded-xl px-3 py-1.5">
@@ -1079,14 +1077,14 @@ export default function WorldPage() {
                                                   type="button"
                                                   disabled={editor.isBusy('world_comment', c.id)}
                                                   onClick={() => void handleSaveComment(c.id)}
-                                                  className="rounded-md bg-[var(--accent)] px-2 py-0.5 text-[10px] text-white hover:bg-[var(--accent-deep)] transition disabled:opacity-50"
+                                                  className="rounded-md bg-[var(--accent)] px-2 py-0.5 text-[11px] text-white hover:bg-[var(--accent-deep)] transition disabled:opacity-50"
                                                 >
                                                   {editor.isBusy('world_comment', c.id) ? '…' : '保存'}
                                                 </button>
                                                 <button
                                                   type="button"
                                                   onClick={() => editor.cancel()}
-                                                  className="rounded-md border border-[var(--accent-line)] px-2 py-0.5 text-[10px] text-[var(--accent-muted)] transition"
+                                                  className="rounded-md border border-[var(--accent-line)] px-2 py-0.5 text-[11px] text-[var(--accent-muted)] transition"
                                                 >
                                                   取消
                                                 </button>
@@ -1094,7 +1092,7 @@ export default function WorldPage() {
                                             )}
                                             <div className="flex items-center justify-between mt-1 gap-2">
                                               <div className="flex items-center gap-2">
-                                                <button onClick={() => setReplyingTo(c)} className="text-[10px] text-[var(--accent-muted)] hover:text-[var(--accent)]">回复</button>
+                                                <button onClick={() => setReplyingTo(c)} className="text-[11px] text-[var(--accent-muted)] hover:text-[var(--accent)]">回复</button>
                               {c.author_id !== meId && (
                                 <button
                                   onClick={() =>
@@ -1102,7 +1100,7 @@ export default function WorldPage() {
                                       ? void handleWithdrawCommentReport(c.id)
                                       : void handleReportComment(c.id)
                                   }
-                                  className="text-[10px] text-[var(--accent-muted)] transition hover:text-[var(--accent-deep)]"
+                                  className="text-[11px] text-[var(--accent-muted)] transition hover:text-[var(--accent-deep)]"
                                   title={reportedComments.has(c.id) ? '撤回举报' : '举报'}
                                 >
                                   {reportedComments.has(c.id) ? '已举报' : '举报'}
@@ -1111,7 +1109,7 @@ export default function WorldPage() {
                                                 {editor.canEdit(c.author_id) && !editor.isEditing('world_comment', c.id) && (
                                                   <button
                                                     onClick={() => editor.start('world_comment', c.id, c.content)}
-                                                    className="text-[10px] text-[var(--accent-muted)] hover:text-[var(--accent-deep)] transition"
+                                                    className="text-[11px] text-[var(--accent-muted)] hover:text-[var(--accent-deep)] transition"
                                                   >
                                                     编辑
                                                   </button>
@@ -1121,7 +1119,7 @@ export default function WorldPage() {
                                                     <button
                                                       disabled={deleter.busyId === c.id}
                                                       onClick={() => void handleDeleteComment(c.id, c.author_id)}
-                                                      className="text-[10px] text-red-500 hover:underline disabled:opacity-50"
+                                                      className="text-[11px] text-red-500 hover:underline disabled:opacity-50"
                                                     >
                                                       {deleter.busyId === c.id ? '删除中…' : '确认删除'}
                                                     </button>
@@ -1134,14 +1132,14 @@ export default function WorldPage() {
                                                           4000,
                                                         )
                                                       }}
-                                                      className="text-[10px] text-[var(--accent-muted)] hover:text-red-500 transition"
+                                                      className="text-[11px] text-[var(--accent-muted)] hover:text-red-500 transition"
                                                     >
                                                       删除
                                                     </button>
                                                   )
                                                 )}
                                               </div>
-                                              <span className="text-[10px] text-[var(--accent-muted)]">{formatTime(c.created_at)}</span>
+                                              <span className="text-[11px] text-[var(--accent-muted)]">{formatTime(c.created_at)}</span>
                                             </div>
                                           </div>
                                         </div>
@@ -1156,8 +1154,8 @@ export default function WorldPage() {
 
                         {replyingTo && (
                           <div className="flex items-center justify-between mb-2 px-2">
-                            <p className="text-[10px] text-[var(--accent-muted)]">正在回复 <span className="text-[var(--accent-deep)] font-medium">{replyingTo.author_name}</span></p>
-                            <button onClick={() => setReplyingTo(null)} className="text-[10px] text-[var(--accent-muted)] hover:text-[var(--accent-deep)]">取消</button>
+                            <p className="text-[11px] text-[var(--accent-muted)]">正在回复 <span className="text-[var(--accent-deep)] font-medium">{replyingTo.author_name}</span></p>
+                            <button onClick={() => setReplyingTo(null)} className="text-[11px] text-[var(--accent-muted)] hover:text-[var(--accent-deep)]">取消</button>
                           </div>
                         )}
 
@@ -1172,7 +1170,7 @@ export default function WorldPage() {
                             withEmoji
                             className="w-full px-4 py-2 rounded-full border border-[var(--accent-line)] bg-[var(--accent-soft)] text-xs focus:outline-none focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent)]/10 transition"
                           />
-                          <label className="flex items-center gap-1 text-[10px] text-[var(--accent-muted)] cursor-pointer flex-shrink-0">
+                          <label className="flex items-center gap-1 text-[11px] text-[var(--accent-muted)] cursor-pointer flex-shrink-0">
                             <input type="checkbox" checked={commentAnonymous[post.id] || false} onChange={(e) => setCommentAnonymous({ ...commentAnonymous, [post.id]: e.target.checked })} className="accent-[var(--accent)]" />
                             匿名
                           </label>
@@ -1197,7 +1195,7 @@ export default function WorldPage() {
 
       {showPostModal && (
         <div className="fixed inset-0 bg-black/30 backdrop-blur-sm z-50 flex items-center justify-center px-4" onClick={() => setShowPostModal(false)}>
-          <form onSubmit={handlePost} className="bg-white rounded-3xl w-full max-w-lg p-6 shadow-2xl" onClick={(e) => e.stopPropagation()}>
+          <form onSubmit={handlePost} className="bg-white rounded-2xl w-full max-w-lg p-6 shadow-2xl" onClick={(e) => e.stopPropagation()}>
             <h2 className="text-lg font-semibold text-[var(--accent-ink)] mb-4">发帖</h2>
             <div className="mb-4">
               <label className="block text-xs text-[var(--accent-muted)] mb-1.5 tracking-wide">发到哪里</label>
@@ -1212,7 +1210,7 @@ export default function WorldPage() {
                   </optgroup>
                 ))}
               </select>
-              <p className="text-[10px] text-[var(--accent-muted)] mt-1.5">这条会发到「<span className="text-[var(--accent-deep)]">{selectedCategoryName}</span>」</p>
+              <p className="text-[11px] text-[var(--accent-muted)] mt-1.5">这条会发到「<span className="text-[var(--accent-deep)]">{selectedCategoryName}</span>」</p>
             </div>
             <textarea ref={postRef} value={postContent} onChange={(e) => setPostContent(e.target.value)} placeholder="写点什么… 用 #话题# 加标签，也可以发个表情" rows={5} maxLength={500} autoFocus className="w-full px-4 py-3 rounded-xl border border-[var(--accent-line)] bg-[var(--accent-soft)] text-sm resize-none focus:outline-none focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent)]/10 transition mb-4" />
 
@@ -1235,7 +1233,7 @@ export default function WorldPage() {
             </div>
             <div className="flex gap-2 justify-end">
               <button type="button" onClick={() => setShowPostModal(false)} className="px-5 py-2 rounded-xl text-sm text-[var(--accent-muted)] hover:bg-[var(--accent-soft)] transition">取消</button>
-              <button type="submit" disabled={posting || !postContent.trim()} className="px-5 py-2 rounded-xl bg-gradient-to-r from-[var(--accent-line)] to-[var(--accent)] text-white text-sm font-medium hover:shadow-[0_6px_20px_rgba(126,168,106,0.3)] transition-all disabled:opacity-50 flex items-center gap-1.5">
+              <button type="submit" disabled={posting || !postContent.trim()} className="px-5 py-2 rounded-xl bg-gradient-to-r from-[var(--accent-line)] to-[var(--accent)] text-white text-sm font-medium hover:shadow-sm transition-all disabled:opacity-50 flex items-center gap-1.5">
                 <Icon name="send" className="w-3.5 h-3.5" />
                 {posting ? '发布中...' : '发送'}
               </button>
@@ -1246,14 +1244,14 @@ export default function WorldPage() {
 
       {showNewCategoryModal && (
         <div className="fixed inset-0 bg-black/30 backdrop-blur-sm z-50 flex items-center justify-center px-4" onClick={() => setShowNewCategoryModal(false)}>
-          <form onSubmit={handleCreateCategory} className="bg-white rounded-3xl w-full max-w-md p-6 shadow-2xl" onClick={(e) => e.stopPropagation()}>
+          <form onSubmit={handleCreateCategory} className="bg-white rounded-2xl w-full max-w-md p-6 shadow-2xl" onClick={(e) => e.stopPropagation()}>
             <h2 className="text-lg font-semibold text-[var(--accent-ink)] mb-1">新建{newCategoryParent ? '子区' : '分区'}</h2>
             <p className="text-xs text-[var(--accent-muted)] mb-4">{newCategoryParent ? `在「${newCategoryParent.name}」下新建` : '建好后需要站主审核，通过后才可见'}</p>
             <input type="text" value={newCategoryName} onChange={(e) => setNewCategoryName(e.target.value)} placeholder="分区名字" maxLength={10} autoFocus className="w-full px-4 py-2.5 rounded-xl border border-[var(--accent-line)] bg-[var(--accent-soft)] text-sm focus:outline-none focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent)]/10 transition mb-4" />
             {createCategoryMessage && <p className={`text-xs mb-3 ${createCategoryMessage.includes('失败') ? 'text-red-500' : 'text-green-600'}`}>{createCategoryMessage}</p>}
             <div className="flex gap-2 justify-end">
               <button type="button" onClick={() => { setShowNewCategoryModal(false); setNewCategoryName(''); setNewCategoryParent(null); setCreateCategoryMessage('') }} className="px-5 py-2 rounded-xl text-sm text-[var(--accent-muted)] hover:bg-[var(--accent-soft)] transition">取消</button>
-              <button type="submit" disabled={creatingCategory || !newCategoryName.trim()} className="px-5 py-2 rounded-xl bg-gradient-to-r from-[var(--accent-line)] to-[var(--accent)] text-white text-sm font-medium hover:shadow-[0_6px_20px_rgba(126,168,106,0.3)] transition-all disabled:opacity-50">
+              <button type="submit" disabled={creatingCategory || !newCategoryName.trim()} className="px-5 py-2 rounded-xl bg-gradient-to-r from-[var(--accent-line)] to-[var(--accent)] text-white text-sm font-medium hover:shadow-sm transition-all disabled:opacity-50">
                 {creatingCategory ? '提交中...' : '提交审核'}
               </button>
             </div>
@@ -1263,7 +1261,7 @@ export default function WorldPage() {
 
       {showDepressedWarning && (
         <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center px-4" onClick={() => { setShowDepressedWarning(false); setDepressedCategory(null) }}>
-          <div className="bg-white rounded-3xl w-full max-w-md p-7 shadow-2xl" onClick={(e) => e.stopPropagation()}>
+          <div className="bg-white rounded-2xl w-full max-w-md p-7 shadow-2xl" onClick={(e) => e.stopPropagation()}>
             <div className="flex items-center gap-2 mb-4">
               <Icon name="alert" className="w-5 h-5 text-[var(--accent)]" />
               <h2 className="text-lg font-semibold text-[var(--accent-ink)]">进区前，请先看一眼</h2>

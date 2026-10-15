@@ -329,8 +329,6 @@ export default function MomentsPage() {
   return (
     <div className="min-h-screen relative overflow-hidden">
       {/* 背景光晕 */}
-      <div className="absolute -top-20 -right-20 w-96 h-96 bg-[#f0b078] opacity-20 rounded-full blur-3xl pointer-events-none"></div>
-      <div className="absolute -bottom-20 -left-20 w-96 h-96 bg-[#d97757] opacity-10 rounded-full blur-3xl pointer-events-none"></div>
 
       <div className="relative max-w-xl mx-auto px-6 py-10">
         <header className="mb-6">
@@ -358,9 +356,8 @@ export default function MomentsPage() {
           {/* 发布区 */}
           <form
             onSubmit={handlePost}
-            className="rounded-3xl border border-[#f0e4d4] bg-white/80 backdrop-blur p-5 shadow-[0_2px_16px_rgba(217,119,87,0.05)] relative overflow-hidden"
+            className="rounded-2xl border border-[#f0e4d4] bg-white p-5 shadow-sm relative overflow-hidden"
           >
-            <div className="absolute -top-6 -right-6 w-24 h-24 bg-[#f0b078] opacity-[0.1] rounded-full blur-2xl pointer-events-none"></div>
 
             <div className="relative">
               <textarea
@@ -405,7 +402,7 @@ export default function MomentsPage() {
                   })}
                 </div>
 
-                <p className="text-[10px] text-[#b0a89e] mt-2">{VISIBILITY_HINT[visibility]}</p>
+                <p className="text-[11px] text-[#b0a89e] mt-2">{VISIBILITY_HINT[visibility]}</p>
 
                 {showPicker && visibility === 'friends' && (
                   <div className="mt-2 max-h-40 overflow-y-auto rounded-xl border border-[#ece6dd] bg-[#fefcf9] p-3">
@@ -461,7 +458,7 @@ export default function MomentsPage() {
                             className="accent-[#d97757]"
                           />
                           <span className="truncate">{g.name}</span>
-                          <span className="text-[10px] text-[#b0a89e]">{g.memberIds.length} 人</span>
+                          <span className="text-[11px] text-[#b0a89e]">{g.memberIds.length} 人</span>
                         </label>
                       ))
                     )}
@@ -474,7 +471,7 @@ export default function MomentsPage() {
                 <button
                   type="submit"
                   disabled={posting || !content.trim()}
-                  className="px-6 py-2 rounded-xl bg-gradient-to-r from-[#e8a87c] to-[#d97757] text-white text-sm font-medium hover:shadow-[0_6px_20px_rgba(217,119,87,0.3)] transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="px-6 py-2 rounded-xl bg-gradient-to-r from-[#e8a87c] to-[#d97757] text-white text-sm font-medium hover:shadow-sm transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {posting ? '发布中...' : '发布'}
                 </button>
@@ -497,7 +494,7 @@ export default function MomentsPage() {
                 <div
                   key={post.id}
                   data-moment-id={post.id}
-                  className={`rounded-2xl border bg-white/80 backdrop-blur p-5 shadow-[0_2px_12px_rgba(217,119,87,0.04)] relative overflow-hidden transition ${
+                  className={`rounded-2xl border bg-white p-5 shadow-sm relative overflow-hidden transition ${
                     focusPostId === post.id
                       ? 'border-[#d97757] ring-2 ring-[#d97757]/25'
                       : 'border-[#ece6dd]'
@@ -517,7 +514,7 @@ export default function MomentsPage() {
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-medium text-[#2b2620]">{post.author_name}</p>
-                      <p className="text-[10px] text-[#b0a89e] mt-0.5">
+                      <p className="text-[11px] text-[#b0a89e] mt-0.5">
                         {new Date(post.created_at).toLocaleString('zh-CN', {
                           year: 'numeric',
                           month: '2-digit',
@@ -527,7 +524,7 @@ export default function MomentsPage() {
                         })}
                         {/* 自己的动态标出可见范围 */}
                         {post.author_id === userId && post.visibility !== 'public' && (
-                          <span className="ml-2 rounded-full bg-[#f3e2d3] px-1.5 py-0.5 text-[9px] text-[#c96447]">
+                          <span className="ml-2 rounded-full bg-[#f3e2d3] px-1.5 py-0.5 text-[11px] text-[#c96447]">
                             {VISIBILITY_SHORT[(post.visibility ?? 'public') as Visibility]}
                           </span>
                         )}
@@ -561,7 +558,7 @@ export default function MomentsPage() {
                         >
                           取消
                         </button>
-                        <span className="ml-auto text-[10px] text-[#b0a89e]">
+                        <span className="ml-auto text-[11px] text-[#b0a89e]">
                           {editor.draft.length}/{editor.maxLength.moment}
                         </span>
                       </div>
@@ -570,7 +567,7 @@ export default function MomentsPage() {
                     <p className="text-sm text-[#4a423c] whitespace-pre-wrap break-words leading-relaxed pl-1">
                       {post.content}
                       {editor.wasSaved('moment', post.id) && (
-                        <span className="ml-2 text-[10px] text-[#7ea86a]">已保存</span>
+                        <span className="ml-2 text-[11px] text-[#7ea86a]">已保存</span>
                       )}
                     </p>
                   )}

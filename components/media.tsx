@@ -248,7 +248,7 @@ export function ImagePicker({
           />
         </label>
 
-        <span className="text-[10px] text-[#c0b8ae]">
+        <span className="text-[11px] text-[#c0b8ae]">
           {urls.length}/{MAX_IMAGES}
         </span>
 
