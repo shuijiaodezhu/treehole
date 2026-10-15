@@ -39,6 +39,7 @@ import { pageAccentVars } from '../components/theme'
 import { SkeletonHome } from '../components/skeleton'
 import { MailboxDialog, useMailbox } from '../components/mailbox'
 import { MailboxArt } from '../components/mailbox-art'
+import { WinterScene } from '../components/winter-scene'
 import { FallingBits, Ornament, PaperPattern } from '../components/paper-pattern'
 
 // 客户端单例：放在模块级，保证引用稳定（useCallback / useEffect 不会每次渲染都重跑）
@@ -317,26 +318,40 @@ export default function HomePage() {
           {quote && (
             <>
               <Ornament />
+            <div className="mt-14 grid gap-12 sm:grid-cols-2 sm:items-start">
+              {/* 左栏：引言位置不变，信箱移到它正下方 */}
+              <div>
+                <motion.div
+                  initial={{ opacity: 0, y: 16 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: false, margin: '-80px' }}
+                  transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+                  className="border-l-2 border-[#ece3d4] pl-5"
+                >
+                  <p className="font-serif-cn text-[16px] leading-[2.1] text-[#3f332a]">「{quote}」</p>
+                  <p className="mt-3 text-[12px] tracking-[0.08em] text-[#9c8f7d]">
+                    来自陌生人的问候 · <span className="text-[#a8563a]">睡觉的猪</span>
+                  </p>
+                </motion.div>
 
-              <div className="mt-14 grid gap-8 sm:grid-cols-[minmax(0,26rem)_168px] sm:items-start sm:justify-center sm:gap-12">
+                {/* 冬日信箱：在引言正下方（含副标题，点它打开信箱） */}
+                <div className="relative mt-10 w-[150px]">
+                  <FallingBits className="-inset-x-8 -top-4 bottom-6" />
+                  <MailboxArt onOpen={() => setMailboxOpen(true)} />
+                </div>
+              </div>
+
+              {/* 右栏：雪中分别 —— 填掉原来空出来的那一大块 */}
               <motion.div
-                initial={{ opacity: 0, y: 16 }}
+                initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: false, margin: '-80px' }}
-                transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-                className="border-l-2 border-[#ece3d4] pl-5"
+                transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+                className="relative mx-auto w-full max-w-[300px] sm:mx-0"
               >
-              <p className="font-serif-cn text-[16px] leading-[2.1] text-[#3f332a]">「{quote}」</p>
-              <p className="mt-3 text-[12px] tracking-[0.08em] text-[#9c8f7d]">
-                来自陌生人的问候 · <span className="text-[#a8563a]">睡觉的猪</span>
-              </p>
+                <FallingBits className="-inset-x-6 -top-6 bottom-2" />
+                <WinterScene className="w-full" />
               </motion.div>
-
-              {/* 冬日信箱：挪到引言旁边（你圈的图二位置），带副标题，尺寸受控 */}
-              <div className="relative mx-auto w-[168px] sm:mx-0 sm:w-full sm:self-end">
-                <FallingBits className="-inset-x-8 -top-4 bottom-6" />
-                <MailboxArt onOpen={() => setMailboxOpen(true)} />
-              </div>
             </div>
             </>
           )}
