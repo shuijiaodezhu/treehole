@@ -1,11 +1,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-label="你的来信">
   <rect width="32" height="32" rx="8" fill="#fdf0e6"/>
-  <g transform="translate(4 4)">
-    <circle cx="12" cy="12" r="9.2" fill="none" stroke="#d97757" stroke-width="1.4"/>
-    <path d="M8.4 10.5A1.2 1.05 0 0 1 10.8 10.5A1.2 0.35 0 0 0 8.4 10.5Z" fill="#d97757"/>
-    <path d="M13.2 10.5A1.2 1.05 0 0 1 15.6 10.5A1.2 0.35 0 0 0 13.2 10.5Z" fill="#d97757"/>
-    <path d="M9 14.2A3 1.35 0 0 0 15 14.2" fill="none" stroke="#d97757" stroke-width="1.15" stroke-linecap="round"/>
-    <circle cx="6.9" cy="13" r="0.85" fill="#d97757" opacity="0.32"/>
-    <circle cx="17.1" cy="13" r="0.85" fill="#d97757" opacity="0.32"/>
+  <g transform="translate(4.5 4.8) scale(0.95)">
+    <rect x="0" y="4" width="24" height="15.5" rx="2.4" fill="none" stroke="#d97757" stroke-width="1.95"/>
+    <path d="M1 5.5 L12 13.2 L23 5.5" fill="none" stroke="#d97757" stroke-width="1.95" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="12" cy="13.9" r="1.5" fill="#d97757"/>
   </g>
 </svg>
