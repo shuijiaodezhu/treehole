@@ -5,6 +5,7 @@ import type { ReactElement } from 'react'
 import { IconArrow, IconFlame, IconMail, WeatherIcon } from './icons'
 import { avatarFallback } from './utils'
 import { markModuleSeen } from './module-badges'
+import { ModuleArt } from './module-art'
 import { weatherAdvice, type WeatherState } from './weather'
 import type { FriendRequest, LoginStreak } from './types'
 
@@ -135,12 +136,12 @@ const BLOCKS = [
 
 export function NavCardGrid({ badges }: { badges?: Partial<Record<string, { count?: number; dot?: boolean }>> }): ReactElement {
   /*
-   * 信封块：每块顶部一条 V 形封盖线（沿用登录动画的信封语言），
-   * 底部一行「致 · 小屋」式的地址小字。
-   * 全局只用一个重色（火漆赭红），悬停时封盖线才变红 —— 很含蓄的反馈。
+   * 每块左边是手绘插画（小屋/院子/聚会/小人），右边是名字与说明。
+   * 插画走 currentColor，所以悬停时整张画的线条一起转成火漆红 ——
+   * 一点含蓄的反馈，不用整块变色。
    */
   return (
-    <div className="grid grid-cols-1 gap-3 sm:grid-cols-3 sm:gap-4">
+    <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4">
       {BLOCKS.map((block) => {
         const key = block.href.replace('/', '')
         const badge = badges?.[key]
@@ -149,39 +150,22 @@ export function NavCardGrid({ badges }: { badges?: Partial<Record<string, { coun
             key={block.href}
             href={block.href}
             onClick={() => markModuleSeen(key as Parameters<typeof markModuleSeen>[0])}
-            className={`group relative flex min-h-[124px] flex-col justify-between overflow-hidden rounded-lg border border-[#e0d3bd] bg-white/60 px-5 pb-5 pt-7 transition hover:border-[#a8563a] hover:bg-white sm:min-h-[150px] ${block.span ? 'sm:col-span-2' : ''}`}
+            className="group flex items-center gap-5 rounded-lg border border-[#e0d3bd] bg-white/60 px-5 py-5 text-[#3a2f26] transition hover:border-[#a8563a] hover:bg-white hover:text-[#a8563a]"
           >
-            {/* V 形封盖线：贴着卡片顶部，像信封背面那道折线 */}
-            <svg
-              aria-hidden="true"
-              viewBox="0 0 100 12"
-              preserveAspectRatio="none"
-              className={`pointer-events-none absolute left-0 right-0 top-0 h-4 w-full text-[#e0d3bd] transition group-hover:text-[#a8563a]`}
-            >
-              <path
-                d="M0 0 L50 11 L100 0"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.5"
-                vectorEffect="non-scaling-stroke"
-              />
-            </svg>
+            <ModuleArt kind={key} className="h-16 w-[86px] flex-shrink-0 sm:h-[72px] sm:w-[96px]" />
 
-            <div className="flex items-start justify-between gap-3">
-              <span className="font-serif-cn text-xl text-[#3a2f26] sm:text-2xl">{block.title}</span>
-
-              {badge?.count ? (
-                <span className="mt-1 text-[11px] tabular-nums text-[#a8563a]">
-                  {badge.count > 99 ? '99+' : badge.count}
-                </span>
-              ) : badge?.dot ? (
-                <span className="mt-2 h-1.5 w-1.5 rounded-full bg-[#a8563a]" />
-              ) : null}
-            </div>
-
-            <div className="mt-4 flex items-baseline gap-2">
-              <span className="font-serif-cn text-[11px] text-[#a8563a]">致</span>
-              <span className="truncate text-xs text-[#8a7a68]">{block.desc}</span>
+            <div className="min-w-0 flex-1">
+              <div className="flex items-baseline gap-2">
+                <span className="font-serif-cn text-xl text-[#3a2f26]">{block.title}</span>
+                {badge?.count ? (
+                  <span className="text-[11px] tabular-nums text-[#a8563a]">
+                    {badge.count > 99 ? '99+' : badge.count}
+                  </span>
+                ) : badge?.dot ? (
+                  <span className="h-1.5 w-1.5 rounded-full bg-[#a8563a]" />
+                ) : null}
+              </div>
+              <p className="mt-1.5 truncate text-xs text-[#8a7a68]">{block.desc}</p>
             </div>
           </Link>
         )
