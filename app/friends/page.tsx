@@ -7,6 +7,23 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { markMomentsSeen, useMomentsBadge, useUnreadMessages } from '../../components/unread'
 import { useBlocks } from '../../components/blocks'
+import { ImageGrid, ImagePicker } from '../../components/media'
+import { HashtagList } from '../../components/hashtags'
+import { MentionInput, renderMentions } from '../../components/mentions'
+import { useEditContent } from '../../components/edit-content'
+import { useFavorites } from '../../components/favorites'
+import {
+  VISIBILITY_HINT,
+  VISIBILITY_LABEL,
+  VISIBILITY_ORDER,
+  VISIBILITY_SHORT,
+  canViewPost,
+  expandGroupMembers,
+  fetchAudienceMap,
+  useFriendGroups,
+  useFriendList,
+  type Visibility,
+} from '../../components/visibility'
 
 type Friend = {
   friendship_id: string
@@ -62,6 +79,8 @@ type Moment = {
   like_count: number
   liked_by_me: boolean
   comments: Comment[]
+  visibility: string
+  image_urls: string[] | null
 }
 
 function IconPlus({ className = '' }: { className?: string }) {
@@ -149,6 +168,29 @@ export default function FriendsPage() {
   // 拉黑：被拉黑（含拉黑我的）的人不出现在好友列表 / 申请列表，其消息也不显示
   const blocks = useBlocks(meId)
   const hidden = blocks.hiddenIds
+
+  /* ---------- 朋友圈：图片 / 可见范围 / 编辑 / 收藏 ---------- */
+  const [momentImages, setMomentImages] = useState<string[]>([])
+  const [visibility, setVisibility] = useState<Visibility>('public')
+  const [selectedFriends, setSelectedFriends] = useState<string[]>([])
+  const [selectedGroups, setSelectedGroups] = useState<string[]>([])
+  const [showPicker, setShowPicker] = useState(false)
+  const [audienceMap, setAudienceMap] = useState<Map<string, Set<string>>>(new Map())
+
+  const { friends: visFriends } = useFriendList(meId)
+  const { groups: visGroups } = useFriendGroups(meId)
+  const momentEditor = useEditContent(meId)
+  const momentFavorites = useFavorites(meId)
+  const mentionNames = useMemo(() => visFriends.map((f) => f.name), [visFriends])
+
+  /** 朋友圈最终展示列表：先去掉被拉黑的，再按可见范围过滤 */
+  const visibleMoments = useMemo(
+    () =>
+      moments
+        .filter((m) => !hidden.has(m.author_id))
+        .filter((m) => canViewPost(m, meId, audienceMap)),
+    [moments, hidden, meId, audienceMap],
+  )
   const shownFriends = useMemo(
     () => friends.filter((f) => !hidden.has(f.friend_id)),
     [friends, hidden],
@@ -362,7 +404,7 @@ export default function FriendsPage() {
 
     const { data: postsData } = await supabase
       .from('friend_posts')
-      .select('id, author_id, content, created_at')
+      .select('id, author_id, content, created_at, visibility, image_urls')
       .in('author_id', allowedIds)
       .order('created_at', { ascending: false })
       .limit(50)
@@ -371,6 +413,12 @@ export default function FriendsPage() {
       setMoments([])
       return
     }
+
+    // 可见名单（用于过滤别人的动态）
+    const audience = await fetchAudienceMap(
+      postsData.filter((p) => p.author_id !== uid).map((p) => p.id),
+    )
+    setAudienceMap(audience)
 
     const postIds = postsData.map((p) => p.id)
     const authorIds = [...new Set(postsData.map((p) => p.author_id))]
@@ -434,6 +482,8 @@ export default function FriendsPage() {
         like_count: postLikes.length,
         liked_by_me: postLikes.some((l) => l.user_id === uid),
         comments: postComments,
+        visibility: (p as { visibility?: string | null }).visibility ?? 'public',
+        image_urls: ((p as { image_urls?: string[] | null }).image_urls ?? null),
       }
     })
 
@@ -442,21 +492,107 @@ export default function FriendsPage() {
 
   async function handlePostMoment(e: React.FormEvent) {
     e.preventDefault()
-    if (!momentContent.trim() || !meId) return
+    // 允许「只有图片没文字」
+    if ((!momentContent.trim() && momentImages.length === 0) || !meId) return
+
+    // 分组可见 → 按发布时名单展开
+    const audienceIds =
+      visibility === 'friends'
+        ? selectedFriends
+        : visibility === 'groups'
+          ? expandGroupMembers(visGroups, selectedGroups)
+          : []
+
+    if ((visibility === 'friends' || visibility === 'groups') && audienceIds.length === 0) {
+      alert('还没选人，这条谁都看不到。先选好友或分组，或改成其他可见范围。')
+      return
+    }
 
     setPostingMoment(true)
-    const { error } = await supabase.from('friend_posts').insert({
-      author_id: meId,
-      content: momentContent.trim(),
-    })
+    try {
+      const { data: created, error } = await supabase
+        .from('friend_posts')
+        .insert({
+          author_id: meId,
+          content: momentContent.trim(),
+          visibility,
+          image_urls: momentImages.length > 0 ? momentImages : null,
+        })
+        .select('id')
+        .single()
 
-    if (error) {
-      alert('发布失败：' + error.message)
-    } else {
+      if (error) throw error
+
+      if (created && audienceIds.length > 0) {
+        const { error: audienceError } = await supabase
+          .from('friend_post_audience')
+          .insert(audienceIds.map((friend_id) => ({ post_id: created.id, friend_id })))
+        if (audienceError) throw audienceError
+      }
+
       setMomentContent('')
+      setMomentImages([])
+      setVisibility('public')
+      setSelectedFriends([])
+      setSelectedGroups([])
+      setShowPicker(false)
       await loadMoments(meId)
+    } catch (err) {
+      const msg =
+        err && typeof err === 'object' && 'message' in err
+          ? String((err as { message: unknown }).message)
+          : String(err)
+      alert('发布失败：' + msg)
+    } finally {
+      setPostingMoment(false)
     }
-    setPostingMoment(false)
+  }
+
+  /* ---------- 朋友圈：编辑 / 删除 ---------- */
+  async function handleSaveMoment(postId: string) {
+    const text = momentEditor.draft.trim()
+    const result = await momentEditor.save('moment', postId, text)
+    if (!result.ok) {
+      alert('保存失败：' + (result.message ?? '未知错误'))
+      return
+    }
+    setMoments((prev) => prev.map((m) => (m.id === postId ? { ...m, content: text } : m)))
+  }
+
+  async function handleDeleteMoment(postId: string, authorId: string) {
+    if (!meId || authorId !== meId) return
+    if (!confirm('删除这条动态？不可恢复。')) return
+    try {
+      // 先清图片，别留孤儿文件
+      const target = moments.find((m) => m.id === postId)
+      const urls = (target?.image_urls ?? []).filter(Boolean)
+      await supabase.from('friend_likes').delete().eq('post_id', postId)
+      await supabase.from('friend_comments').delete().eq('post_id', postId)
+      const { error } = await supabase.from('friend_posts').delete().eq('id', postId).eq('author_id', meId)
+      if (error) throw error
+
+      if (urls.length > 0) {
+        const paths = urls
+          .map((url) => {
+            const marker = '/object/public/media/'
+            const at = url.indexOf(marker)
+            return at >= 0 ? url.slice(at + marker.length) : null
+          })
+          .filter((p): p is string => Boolean(p))
+        if (paths.length > 0) {
+          const { error: storageError } = await supabase.storage.from('media').remove(paths)
+          if (storageError) console.error('清理图片失败:', storageError)
+        }
+      }
+
+      setMoments((prev) => prev.filter((m) => m.id !== postId))
+    } catch (err) {
+      const msg =
+        err && typeof err === 'object' && 'message' in err
+          ? String((err as { message: unknown }).message)
+          : String(err)
+      alert('删除失败：' + msg)
+    }
   }
 
   async function handleLike(postId: string, liked: boolean) {
@@ -903,15 +1039,103 @@ export default function FriendsPage() {
               <textarea
                 value={momentContent}
                 onChange={(e) => setMomentContent(e.target.value)}
-                placeholder="今天有什么想说的？"
+                placeholder="今天有什么想说的？用 #话题# 加标签"
                 rows={3}
                 className="w-full px-4 py-3 rounded-xl border border-[#ece6dd] bg-[#fefcf9] text-sm resize-none focus:outline-none focus:border-[#d97757] focus:ring-2 focus:ring-[#d97757]/10 transition"
                 maxLength={500}
               />
+
+              {/* 图片 */}
+              <ImagePicker
+                userId={meId}
+                urls={momentImages}
+                onChange={setMomentImages}
+                disabled={postingMoment}
+              />
+
+              {/* 谁可以看 */}
+              <div className="mt-3">
+                <div className="flex flex-wrap gap-2">
+                  {VISIBILITY_ORDER.map((v) => (
+                    <button
+                      key={v}
+                      type="button"
+                      onClick={() => {
+                        setVisibility(v)
+                        setShowPicker(v === 'friends' || v === 'groups')
+                      }}
+                      className={`rounded-full px-3 py-1 text-[11px] transition ${
+                        visibility === v
+                          ? 'bg-[#d97757] text-white'
+                          : 'border border-[#ece6dd] bg-white text-[#8a827a] hover:border-[#e0a184]'
+                      }`}
+                    >
+                      {VISIBILITY_LABEL[v]}
+                    </button>
+                  ))}
+                </div>
+
+                <p className="mt-2 text-[10px] text-[#b0a89e]">{VISIBILITY_HINT[visibility]}</p>
+
+                {showPicker && visibility === 'friends' && (
+                  <div className="mt-2 max-h-40 overflow-y-auto rounded-xl border border-[#ece6dd] bg-[#fefcf9] p-3">
+                    {visFriends.length === 0 ? (
+                      <p className="text-[11px] text-[#b0a89e]">还没有好友</p>
+                    ) : (
+                      visFriends.map((f) => (
+                        <label key={f.id} className="flex cursor-pointer items-center gap-2 py-1 text-xs text-[#4a423c]">
+                          <input
+                            type="checkbox"
+                            checked={selectedFriends.includes(f.id)}
+                            onChange={(e) =>
+                              setSelectedFriends((prev) =>
+                                e.target.checked ? [...prev, f.id] : prev.filter((id) => id !== f.id),
+                              )
+                            }
+                            className="accent-[#d97757]"
+                          />
+                          <span className="truncate">{f.name}</span>
+                        </label>
+                      ))
+                    )}
+                  </div>
+                )}
+
+                {showPicker && visibility === 'groups' && (
+                  <div className="mt-2 rounded-xl border border-[#ece6dd] bg-[#fefcf9] p-3">
+                    {visGroups.length === 0 ? (
+                      <p className="text-[11px] leading-relaxed text-[#b0a89e]">
+                        还没有分组。去{' '}
+                        <Link href="/me/settings" className="text-[#c96447] underline">
+                          设置
+                        </Link>{' '}
+                        里建一个。
+                      </p>
+                    ) : (
+                      visGroups.map((g) => (
+                        <label key={g.id} className="flex cursor-pointer items-center gap-2 py-1 text-xs text-[#4a423c]">
+                          <input
+                            type="checkbox"
+                            checked={selectedGroups.includes(g.id)}
+                            onChange={(e) =>
+                              setSelectedGroups((prev) =>
+                                e.target.checked ? [...prev, g.id] : prev.filter((id) => id !== g.id),
+                              )
+                            }
+                            className="accent-[#d97757]"
+                          />
+                          <span className="truncate">{g.name}</span>
+                          <span className="text-[10px] text-[#b0a89e]">{g.memberIds.length} 人</span>
+                        </label>
+                      ))
+                    )}
+                  </div>
+                )}
+              </div>
               <div className="flex justify-end mt-3">
                 <button
                   type="submit"
-                  disabled={postingMoment || !momentContent.trim()}
+                  disabled={postingMoment || (!momentContent.trim() && momentImages.length === 0)}
                   className="px-6 py-2 rounded-xl bg-gradient-to-r from-[#e8a87c] to-[#d97757] text-white text-sm font-medium hover:shadow-[0_6px_20px_rgba(217,119,87,0.3)] transition-all disabled:opacity-50"
                 >
                   {postingMoment ? '发布中...' : '发布'}
@@ -920,12 +1144,12 @@ export default function FriendsPage() {
             </form>
 
             <div className="space-y-3">
-              {moments.length === 0 ? (
+              {visibleMoments.length === 0 ? (
                 <div className="rounded-2xl border border-[#f0e4d4] bg-white/60 backdrop-blur p-10 text-center">
                   <p className="text-sm text-[#a88868]">还没有内容</p>
                 </div>
               ) : (
-                moments.map((post) => (
+                visibleMoments.map((post) => (
                   <div
                     key={post.id}
                     className="rounded-2xl border border-[#ece6dd] bg-white/80 backdrop-blur p-5 shadow-[0_2px_12px_rgba(217,119,87,0.04)]"
@@ -954,9 +1178,52 @@ export default function FriendsPage() {
                       </div>
                     </div>
 
-                    <p className="text-sm text-[#4a423c] whitespace-pre-wrap break-words leading-relaxed pl-1 mb-3">
-                      {post.content}
-                    </p>
+                    {momentEditor.isEditing('moment', post.id) ? (
+                      <div className="pl-1 mb-3">
+                        <textarea
+                          value={momentEditor.draft}
+                          onChange={(e) => momentEditor.setDraft(e.target.value)}
+                          rows={3}
+                          maxLength={momentEditor.maxLength.moment}
+                          autoFocus
+                          className="w-full rounded-xl border border-[#e8d0be] bg-[#fefcf9] px-3 py-2 text-sm text-[#4a423c] resize-none focus:outline-none focus:border-[#d97757] focus:ring-2 focus:ring-[#d97757]/10 transition"
+                        />
+                        <div className="mt-2 flex items-center gap-3">
+                          <button
+                            type="button"
+                            disabled={momentEditor.isBusy('moment', post.id)}
+                            onClick={() => void handleSaveMoment(post.id)}
+                            className="rounded-lg bg-[#d97757] px-3 py-1 text-xs text-white hover:bg-[#c96447] transition disabled:opacity-50"
+                          >
+                            {momentEditor.isBusy('moment', post.id) ? '保存中…' : '保存'}
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => momentEditor.cancel()}
+                            className="rounded-lg border border-[#ece6dd] px-3 py-1 text-xs text-[#8a827a] transition"
+                          >
+                            取消
+                          </button>
+                        </div>
+                      </div>
+                    ) : (
+                      <p className="text-sm text-[#4a423c] whitespace-pre-wrap break-words leading-relaxed pl-1 mb-3">
+                        {post.content}
+                        {momentEditor.wasSaved('moment', post.id) && (
+                          <span className="ml-2 text-[10px] text-[#7ea86a]">已保存</span>
+                        )}
+                      </p>
+                    )}
+
+                    {/* 图片墙 */}
+                    <ImageGrid urls={post.image_urls} className="mt-1 mb-3 pl-1" />
+
+                    {/* 话题标签 */}
+                    <HashtagList
+                      content={post.content}
+                      className="mb-3 pl-1"
+                      chipClassName="rounded-full bg-[#fbeee4] px-2 py-0.5 text-[11px] text-[#c96447] hover:bg-[#f7e2d3] transition"
+                    />
 
                     <div className="flex items-center gap-4 pl-1 pt-3 border-t border-[#f0e4d4]">
                       <button
@@ -979,6 +1246,51 @@ export default function FriendsPage() {
                       >
                         <IconComment className="w-4 h-4" />
                         <span>{post.comments.length > 0 ? post.comments.length : '评论'}</span>
+                      </button>
+
+                      {/* 自己的动态：可见范围标签 + 编辑 + 删除 */}
+                      {post.author_id === meId && post.visibility !== 'public' && (
+                        <span className="rounded-full bg-[#fbeee4] px-2 py-0.5 text-[10px] text-[#c96447]">
+                          {VISIBILITY_SHORT[(post.visibility ?? 'public') as Visibility]}
+                        </span>
+                      )}
+
+                      {momentEditor.canEdit(post.author_id) && !momentEditor.isEditing('moment', post.id) && (
+                        <button
+                          type="button"
+                          onClick={() => momentEditor.start('moment', post.id, post.content)}
+                          className="ml-auto flex items-center gap-1 text-xs text-[#a88868] hover:text-[#c96447] transition"
+                        >
+                          编辑
+                        </button>
+                      )}
+                      {post.author_id === meId && (
+                        <button
+                          type="button"
+                          onClick={() => void handleDeleteMoment(post.id, post.author_id)}
+                          className={`${momentEditor.canEdit(post.author_id) ? '' : 'ml-auto'} text-xs text-[#a88868] hover:text-red-500 transition`}
+                        >
+                          删除
+                        </button>
+                      )}
+                      <button
+                        type="button"
+                        disabled={momentFavorites.busyKey === `moment:${post.id}`}
+                        onClick={() =>
+                          void momentFavorites.toggle({
+                            kind: 'moment',
+                            targetId: post.id,
+                            content: post.content,
+                            authorName: post.author_name,
+                          })
+                        }
+                        className={`flex items-center gap-1 text-xs transition disabled:opacity-50 ${
+                          momentFavorites.isFavorited('moment', post.id)
+                            ? 'text-[#d97757]'
+                            : 'text-[#a88868] hover:text-[#d97757]'
+                        }`}
+                      >
+                        {momentFavorites.isFavorited('moment', post.id) ? '已收藏' : '收藏'}
                       </button>
                     </div>
 
@@ -1011,7 +1323,7 @@ export default function FriendsPage() {
                                       {parent.author_name}
                                     </p>
                                     <p className="text-xs text-[#4a423c] mt-0.5 whitespace-pre-wrap break-words">
-                                      {parent.content}
+                                      {renderMentions(parent.content, mentionNames)}
                                     </p>
                                     <div className="flex items-center justify-between mt-1">
                                       <button
@@ -1061,7 +1373,7 @@ export default function FriendsPage() {
                                               </>
                                             )}
                                             <span className="text-[#a88868]">：</span>
-                                            <span className="ml-1">{c.content}</span>
+                                            <span className="ml-1">{renderMentions(c.content, mentionNames)}</span>
                                           </p>
                                           <div className="flex items-center justify-between mt-1">
                                             <button
@@ -1107,23 +1419,16 @@ export default function FriendsPage() {
                           </div>
                         )}
                         <div className="flex gap-2">
-                          <input
-                            type="text"
+                          <MentionInput
+                            meId={meId}
                             value={commentInputs[post.id] || ''}
-                            onChange={(e) =>
-                              setCommentInputs({ ...commentInputs, [post.id]: e.target.value })
-                            }
-                            onKeyDown={(e) => {
-                              if (e.key === 'Enter' && !e.shiftKey) {
-                                e.preventDefault()
-                                handlePostComment(post.id)
-                              }
-                            }}
+                            onChange={(next) => setCommentInputs({ ...commentInputs, [post.id]: next })}
+                            onEnter={() => handlePostComment(post.id)}
                             placeholder={
-                              replyingTo ? `回复 ${replyingTo.author_name}...` : '写点什么...'
+                              replyingTo ? `回复 ${replyingTo.author_name}… 输入 @ 叫人` : '写点什么… 输入 @ 叫人'
                             }
                             maxLength={200}
-                            className="flex-1 px-4 py-2 rounded-full border border-[#ece6dd] bg-[#fefcf9] text-xs focus:outline-none focus:border-[#d97757] focus:ring-2 focus:ring-[#d97757]/10 transition"
+                            className="w-full px-4 py-2 rounded-full border border-[#ece6dd] bg-[#fefcf9] text-xs focus:outline-none focus:border-[#d97757] focus:ring-2 focus:ring-[#d97757]/10 transition"
                           />
                           <button
                             onClick={() => handlePostComment(post.id)}
