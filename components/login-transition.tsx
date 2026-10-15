@@ -53,6 +53,18 @@ export function loginNavigateDelay(): number {
   return window.matchMedia('(prefers-reduced-motion: reduce)').matches ? REDUCED_MS : NAVIGATE_MS
 }
 
+/**
+ * 订阅过场状态（true = 正在播）。
+ * 给「等动画放完再出现」的东西用，比如首次登录后那封信。
+ * 返回值是退订函数。
+ */
+export function subscribeLoginTransition(listener: Listener): () => void {
+  listeners.add(listener)
+  return () => {
+    listeners.delete(listener)
+  }
+}
+
 export function LoginTransitionOverlay() {
   const [active, setActive] = useState(transitioning)
 

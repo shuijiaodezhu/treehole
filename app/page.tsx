@@ -25,6 +25,7 @@ import {
 import { useWeather } from '../components/weather'
 import { useModuleBadges } from '../components/module-badges'
 import { NotificationBell } from '../components/notifications'
+import { WelcomeLetter } from '../components/welcome-letter'
 import type { FriendRequest, FriendshipRow, LoginStreak } from '../components/types'
 import { pageAccentVars } from '../components/theme'
 import { SkeletonHome } from '../components/skeleton'
@@ -350,6 +351,9 @@ export default function HomePage() {
           </div>
         </div>
       )}
+
+      {/* 第一次登录、信封动画放完之后，浮出这封信（只出现一次） */}
+      <WelcomeLetter userId={userId} />
     </div>
   )
 }
