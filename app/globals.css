@@ -500,28 +500,39 @@ html.dsh-navigating .dsh-nav-mask {
 }
 
 
+
+
 /* ============================================================
-   逐字落定 —— 首页「你的来信」的闪动
-   每个字从透明 + 下移 8px，按 70ms 依次落定，像一笔一笔写上去。
-   为什么不用字体交换那种：
-     那种取决于网速（快网一闪而过）；这一段是 CSS 动画，**每次都会发生**。
+   进主页的出场：朦胧 → 一起弹一下 → 立刻清晰（像拆信）
+   —— 上一版是"逐字落定"，不对；这一版是**整页先虚**、
+      四个字**一起**弹跳一下、弹完立刻清晰。
    ============================================================ */
-@keyframes dsh-char-in {
-  from { opacity: 0; transform: translate3d(0, 8px, 0); }
-  to   { opacity: 1; transform: translate3d(0, 0, 0); }
+
+/* 整页从朦胧到清晰：前 620ms 保持模糊（backwards 让延时期间就处于起始态），
+   等四个字弹完再开始变清晰 —— 也就是你说的"弹跳结束后立马清晰" */
+@keyframes dsh-unblur {
+  from { filter: blur(7px); opacity: 0.45; }
+  to   { filter: blur(0);   opacity: 1; }
 }
-.dsh-hero-title > span {
-  display: inline-block;
-  animation: dsh-char-in 560ms cubic-bezier(0.22, 1, 0.36, 1) both;
+
+/* 四个字一起弹一下：先上去一点、回弹压一下、落定 */
+@keyframes dsh-bounce {
+  0%   { transform: translate3d(0, 0, 0) scale(1); }
+  30%  { transform: translate3d(0, -12px, 0) scale(1.05); }
+  60%  { transform: translate3d(0, 3px, 0) scale(0.985); }
+  100% { transform: translate3d(0, 0, 0) scale(1); }
 }
-.dsh-hero-title > span:nth-child(1) { animation-delay: 0.04s; }
-.dsh-hero-title > span:nth-child(2) { animation-delay: 0.12s; }
-.dsh-hero-title > span:nth-child(3) { animation-delay: 0.20s; }
-.dsh-hero-title > span:nth-child(4) { animation-delay: 0.28s; }
-.dsh-hero-title > span:nth-child(5) { animation-delay: 0.36s; }
-.dsh-hero-title > span:nth-child(6) { animation-delay: 0.44s; }
-.dsh-hero-title > span:nth-child(n + 7) { animation-delay: 0.52s; }
+
+/* 只在"打开的那一下"生效：dsh-open 由首页在那封信关掉 / 登录过场结束时挂上，
+   1.4 秒后摘掉，所以不会反复播 */
+.dsh-open .dsh-page-blur {
+  animation: dsh-unblur 620ms ease-out 620ms both;
+}
+.dsh-open .dsh-hero-title {
+  animation: dsh-bounce 620ms cubic-bezier(0.34, 1.56, 0.64, 1) 120ms both;
+}
 
 @media (prefers-reduced-motion: reduce) {
-  .dsh-hero-title > span { animation: none; }
+  .dsh-open .dsh-page-blur,
+  .dsh-open .dsh-hero-title { animation: none; }
 }

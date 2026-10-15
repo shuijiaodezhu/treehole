@@ -115,10 +115,17 @@ export default function HomePage() {
    * CSS 动画于是从头再放一遍。触发时机 = 那封信关掉（或判定不弹）之后。
    */
   const [writeKey, setWriteKey] = useState(0)
+  /*
+   * 出场动画的开关：挂上 .dsh-open 就播一次（整页朦胧 → 四个字一起弹 → 立刻清晰），
+   * 1.4 秒后摘掉，所以不会反复播。
+   */
+  const [opening, setOpening] = useState(false)
 
   useEffect(() => {
     function onDone() {
       setWriteKey((k) => k + 1)
+      setOpening(true)
+      window.setTimeout(() => setOpening(false), 1400)
     }
     window.addEventListener('dsh:letter-done', onDone)
     return () => window.removeEventListener('dsh:letter-done', onDone)
@@ -139,6 +146,8 @@ export default function HomePage() {
       if (done) return
       done = true
       setWriteKey((k) => k + 1)
+      setOpening(true)
+      window.setTimeout(() => setOpening(false), 1400)
     }
 
     if (isLoginTransitioning()) {
@@ -316,7 +325,13 @@ export default function HomePage() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col bg-base-100 text-base-content" style={pageAccentVars('home')}>
+    <div
+      className={cn(
+        'dsh-page-blur flex min-h-screen flex-col bg-base-100 text-base-content',
+        opening && 'dsh-open',
+      )}
+      style={pageAccentVars('home')}
+    >
       {/* 顶栏：daisyUI navbar；站名用毛笔字 */}
       <div className="navbar mx-auto w-full max-w-6xl px-4">
         <div className="navbar-start">
