@@ -324,7 +324,7 @@ export function MailboxDialog({
           <div className="min-w-0 flex-1">
             <h2 className="font-serif-cn text-sm font-semibold text-[#2b2620]">冬日信箱</h2>
             <p className="mt-0.5 font-serif-cn text-[10px] text-[var(--accent-muted)]">
-              {isOwner ? '大家写给你的悄悄话' : '只有站主看得到，一封一封回'}
+              {isOwner ? '大家把不好说的烦心事写在这里，等你回一封' : '只写给站主一个人 · 他会认真读，也会认真回'}
             </p>
           </div>
           <button
@@ -344,12 +344,39 @@ export function MailboxDialog({
           ) : mailbox.error ? (
             <p className="py-10 text-center text-xs text-red-500">{mailbox.error}</p>
           ) : mailbox.messages.length === 0 ? (
-            <div className="py-10 text-center">
-              <p className="font-serif-cn text-sm text-[#5a4a3a]">信箱还是空的</p>
-              <p className="mt-1.5 font-serif-cn text-[11px] leading-relaxed text-[var(--accent-muted)]">
-                烦心事、说不出口的话，
+            /* 第一次打开：把「怎么用」讲清楚，措辞先安慰人 */
+            <div className="px-1 py-4">
+              <p className="text-center font-serif-cn text-[13px] leading-relaxed text-[#3a3229]">
+                有什么不好开口的，
                 <br />
-                写下来，站主会看。
+                写在这里就好。
+              </p>
+              <p className="mt-2 text-center font-serif-cn text-[11px] leading-relaxed text-[var(--accent-muted)]">
+                不用组织语言，也不必写得体面。
+              </p>
+
+              <ol className="mt-6 space-y-3">
+                {[
+                  { t: '想到什么写什么', d: '写一句也行，慢慢说也行' },
+                  { t: '站主会认真回', d: '读得仔细，也尽量帮你想办法' },
+                  { t: '只有你和他看得到', d: '不公开、不进动态，别人不会知道' },
+                ].map((step, i) => (
+                  <li key={step.t} className="flex items-start gap-3">
+                    <span className="mt-0.5 flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-[var(--accent-soft)] font-serif-cn text-[10px] text-[var(--accent-deep)]">
+                      {i + 1}
+                    </span>
+                    <span className="min-w-0">
+                      <span className="block font-serif-cn text-[12px] text-[#3a3229]">{step.t}</span>
+                      <span className="mt-0.5 block font-serif-cn text-[10.5px] leading-relaxed text-[var(--accent-muted)]">
+                        {step.d}
+                      </span>
+                    </span>
+                  </li>
+                ))}
+              </ol>
+
+              <p className="mt-5 text-center font-serif-cn text-[10.5px] text-[var(--accent-light)]">
+                说完就轻松一点了。
               </p>
             </div>
           ) : (
@@ -391,7 +418,7 @@ export function MailboxDialog({
               }}
               rows={2}
               maxLength={500}
-              placeholder={isOwner ? '回一封…' : '写给站主…'}
+              placeholder={isOwner ? '回一封…' : '写点想说的…'}
               className="min-w-0 flex-1 resize-none rounded-2xl border border-[var(--accent-line)] bg-[var(--accent-soft)] px-3.5 py-2.5 font-serif-cn text-[12.5px] text-[#2b2620] placeholder:text-[var(--accent-muted)] focus:border-[var(--accent)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/10"
             />
             <EmojiPicker onPick={insertEmoji} align="right" />

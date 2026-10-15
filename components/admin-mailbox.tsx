@@ -203,8 +203,11 @@ export function AdminMailbox({ adminId }: { adminId: string }) {
         </div>
         <div className="flex-1">
           <h2 className="text-sm font-semibold text-[#2b2430]">冬日信箱</h2>
+          <p className="mt-1 text-[11px] leading-relaxed text-[#8a7a9a]">
+            大家把不好说的烦心事写在这里，等你认真回一封
+          </p>
           <p className="mt-0.5 text-[10px] text-[#b8a8c8]">
-            用户从首页写给你的悄悄话 · 共 {total} 个来信人（含好友私信）
+            共 {total} 个来信人 · 回信只有对方看得到
           </p>
         </div>
         <button
@@ -224,7 +227,9 @@ export function AdminMailbox({ adminId }: { adminId: string }) {
       {loading && rows.length === 0 ? (
         <p className="py-10 text-center text-xs text-[#b8a8c8]">加载中…</p>
       ) : rows.length === 0 ? (
-        <p className="py-10 text-center text-xs text-[#b8a8c8]">还没有人来信</p>
+        <p className="py-10 text-center text-xs text-[#b8a8c8]">
+          暂时还没有人来信。有人写下烦心事，就会出现在这里。
+        </p>
       ) : (
         <div className="grid gap-4 md:grid-cols-[260px_1fr]">
           {/* 来信人列表 */}
@@ -258,12 +263,12 @@ export function AdminMailbox({ adminId }: { adminId: string }) {
               <p className="m-auto py-10 text-center text-xs text-[#b8a8c8]">
                 左边选一个人，看看他写了什么
               </p>
-            ) : (
-              <>
+            ) : (              <>
                 <div className="flex items-center gap-2 border-b border-[#ece4f4] px-4 py-3">
                   <span className="text-xs font-medium text-[#2b2430]">{active.otherName}</span>
-                  <span className="text-[10px] text-[#b8a8c8]">的来信</span>
-                  {message && <span className="ml-auto text-[10px] text-[#8a7aaa]">{message}</span>}
+                  <span className="text-[10px] text-[#b8a8c8]">写来的</span>
+                  <span className="ml-auto text-[10px] text-[#c8b8d8]">只有你和对方看得到</span>
+                  {message && <span className="text-[10px] text-[#8a7aaa]">{message}</span>}
                 </div>
 
                 <div ref={listRef} className="max-h-[300px] flex-1 space-y-3 overflow-y-auto px-4 py-4">
