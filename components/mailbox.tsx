@@ -6,6 +6,7 @@ import { createClient } from '../app/lib/supabase'
 import { Icon } from './icons'
 import { EmojiPicker, useEmojiInsert } from './emoji-picker'
 import { ADMIN_UUID } from './utils'
+import { MailboxSetup } from './mailbox-setup'
 
 /**
  * 冬日信箱
@@ -38,24 +39,27 @@ export type Mailbox = {
   loading: boolean
   sending: boolean
   error: string
+  errorKind: MailboxErrorKind | null
   send: (text: string) => Promise<{ ok: boolean; message?: string }>
   markRead: () => void
   refresh: () => void
 }
 
-/** 把底层报错翻译成能照着做的话（后台也用） */
-export function describeMailboxError(err: unknown): string {
+export type MailboxErrorKind = 'missing-table' | 'permission' | 'other'
+
+/** 把底层报错分类，页面好据此给出不同的下一步（后台也用） */
+export function describeMailboxError(err: unknown): { kind: MailboxErrorKind; message: string } {
   const text =
     err && typeof err === 'object' && 'message' in err
       ? String((err as { message: unknown }).message)
       : String(err)
   if (/does not exist|PGRST205|schema cache|404/i.test(text)) {
-    return '信箱还没开通：先在 Supabase 里执行 supabase-winter-mailbox.sql'
+    return { kind: 'missing-table', message: '信箱还没开通' }
   }
   if (/row-level security|permission denied|42501/i.test(text)) {
-    return '没有权限：检查 winter_letters 的 RLS 策略是否已建好'
+    return { kind: 'permission', message: '没有权限：检查 winter_letters 的 RLS 策略是否已建好' }
   }
-  return '信箱暂时打不开，稍后再试'
+  return { kind: 'other', message: '信箱暂时打不开，稍后再试' }
 }
 
 function readSeenAt(uid: string): string {
@@ -80,6 +84,7 @@ export function useMailbox(meId: string | null): Mailbox {
   const [loading, setLoading] = useState(false)
   const [sending, setSending] = useState(false)
   const [error, setError] = useState('')
+  const [errorKind, setErrorKind] = useState<MailboxErrorKind | null>(null)
   const [reloadKey, setReloadKey] = useState(0)
 
   // 首次挂载后再读本地记录，避免预渲染时访问 localStorage
@@ -112,10 +117,15 @@ export function useMailbox(meId: string | null): Mailbox {
         if (!cancelled) {
           setMessages((data ?? []) as MailboxMessage[])
           setError('')
+          setErrorKind(null)
         }
       } catch (err) {
         console.error('打开冬日信箱失败:', err)
-        if (!cancelled) setError(describeMailboxError(err))
+        if (!cancelled) {
+          const described = describeMailboxError(err)
+          setError(described.message)
+          setErrorKind(described.kind)
+        }
       } finally {
         if (!cancelled) setLoading(false)
       }
@@ -145,7 +155,7 @@ export function useMailbox(meId: string | null): Mailbox {
         return { ok: true }
       } catch (err) {
         console.error('寄信失败:', err)
-        return { ok: false, message: describeMailboxError(err) }
+        return { ok: false, message: describeMailboxError(err).message }
       } finally {
         setSending(false)
       }
@@ -173,6 +183,7 @@ export function useMailbox(meId: string | null): Mailbox {
     loading,
     sending,
     error,
+    errorKind,
     send,
     markRead,
     refresh: () => setReloadKey((k) => k + 1),
@@ -325,6 +336,8 @@ export function MailboxDialog({
         <div ref={listRef} className="flex-1 space-y-3 overflow-y-auto px-5 py-4">
           {mailbox.loading && mailbox.messages.length === 0 ? (
             <p className="py-10 text-center font-serif-cn text-xs text-[var(--accent-muted)]">开信箱中…</p>
+          ) : mailbox.errorKind === 'missing-table' ? (
+            <MailboxSetup onRetry={mailbox.refresh} />
           ) : mailbox.error ? (
             <p className="py-10 text-center text-xs text-red-500">{mailbox.error}</p>
           ) : mailbox.messages.length === 0 ? (

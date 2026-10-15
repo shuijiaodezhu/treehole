@@ -4,7 +4,8 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { createClient } from '../app/lib/supabase'
 import { Icon } from './icons'
 import { EmojiPicker } from './emoji-picker'
-import { describeMailboxError } from './mailbox'
+import { describeMailboxError, type MailboxErrorKind } from './mailbox'
+import { MailboxSetup } from './mailbox-setup'
 
 /**
  * 站主后台：冬日信箱收件箱
@@ -80,6 +81,7 @@ export function AdminMailbox({ adminId }: { adminId: string }) {
   const [sending, setSending] = useState(false)
   const [message, setMessage] = useState('')
   const [error, setError] = useState('')
+  const [errorKind, setErrorKind] = useState<MailboxErrorKind | null>(null)
   const listRef = useRef<HTMLDivElement>(null)
 
   const load = useCallback(async () => {
@@ -97,6 +99,7 @@ export function AdminMailbox({ adminId }: { adminId: string }) {
       if (all.length === 0) {
         setRows([])
         setError('')
+        setErrorKind(null)
         return
       }
 
@@ -131,9 +134,12 @@ export function AdminMailbox({ adminId }: { adminId: string }) {
 
       setRows(built)
       setError('')
+      setErrorKind(null)
     } catch (err) {
       console.error('加载冬日信箱失败:', err)
-      setError(describeMailboxError(err))
+      const described = describeMailboxError(err)
+      setError(described.message)
+      setErrorKind(described.kind)
     } finally {
       setLoading(false)
     }
@@ -165,7 +171,7 @@ export function AdminMailbox({ adminId }: { adminId: string }) {
         setRows((prev) => prev.map((r) => (r.threadUserId === row.threadUserId ? { ...r, unread: false } : r)))
       } catch (err) {
         console.error('读取来信失败:', err)
-        setMessage(describeMailboxError(err))
+        setMessage(describeMailboxError(err).message)
       } finally {
         setThreadLoading(false)
         window.requestAnimationFrame(() => {
@@ -206,7 +212,7 @@ export function AdminMailbox({ adminId }: { adminId: string }) {
       })
     } catch (err) {
       console.error('回信失败:', err)
-      setMessage(describeMailboxError(err))
+      setMessage(describeMailboxError(err).message)
     } finally {
       setSending(false)
     }
@@ -247,8 +253,14 @@ export function AdminMailbox({ adminId }: { adminId: string }) {
         </button>
       </div>
 
-      {error && (
-        <p className="mb-4 rounded-xl border border-red-100 bg-red-50 px-4 py-3 text-xs text-red-600">{error}</p>
+      {errorKind === 'missing-table' ? (
+        <div className="mb-4">
+          <MailboxSetup accent="purple" onRetry={() => void load()} />
+        </div>
+      ) : (
+        error && (
+          <p className="mb-4 rounded-xl border border-red-100 bg-red-50 px-4 py-3 text-xs text-red-600">{error}</p>
+        )
       )}
 
       {loading && rows.length === 0 ? (
