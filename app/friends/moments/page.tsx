@@ -12,6 +12,7 @@ import { useEditContent } from '../../../components/edit-content'
 import { HashtagList } from '../../../components/hashtags'
 import { ImageGrid, ImagePicker } from '../../../components/media'
 import { Icon } from '../../../components/icons'
+import { EmojiPicker, useEmojiInsert } from '../../../components/emoji-picker'
 import {
   VISIBILITY_HINT,
   VISIBILITY_LABEL,
@@ -39,6 +40,9 @@ type Post = {
 export default function MomentsPage() {
   const [posts, setPosts] = useState<Post[]>([])
   const [content, setContent] = useState('')
+
+  /** 发布框的表情插入（插到光标处） */
+  const { ref: composerRef, insert: insertEmoji } = useEmojiInsert<HTMLTextAreaElement>(content, setContent)
   const [loading, setLoading] = useState(true)
   const [posting, setPosting] = useState(false)
   const [userId, setUserId] = useState<string | null>(null)
@@ -272,9 +276,10 @@ export default function MomentsPage() {
 
             <div className="relative">
               <textarea
+                ref={composerRef}
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
-                placeholder="说点什么… 用 #话题# 加标签"
+                placeholder="说点什么… 用 #话题# 加标签，也可以发个表情"
                 rows={3}
                 className="w-full px-4 py-3 rounded-xl border border-[#ece6dd] bg-[#fefcf9] text-sm text-[#2b2620] resize-none focus:outline-none focus:border-[#d97757] focus:ring-2 focus:ring-[#d97757]/10 transition placeholder:text-[#c0b8ae]"
                 maxLength={500}
@@ -376,7 +381,8 @@ export default function MomentsPage() {
                 )}
               </div>
 
-              <div className="flex justify-end mt-3">
+              <div className="flex items-center justify-end gap-2 mt-3">
+                <EmojiPicker onPick={insertEmoji} align="right" />
                 <button
                   type="submit"
                   disabled={posting || !content.trim()}

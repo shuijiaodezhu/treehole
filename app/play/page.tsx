@@ -12,6 +12,7 @@ import { useFavorites } from '../../components/favorites'
 import { useDeleteContent } from '../../components/delete-content'
 import { useBlocks } from '../../components/blocks'
 import { pageAccentVars } from '../../components/theme'
+import { EmojiPicker, useEmojiInsert } from '../../components/emoji-picker'
 
 // 客户端提到模块级，保证引用稳定
 const supabase = createClient()
@@ -69,6 +70,8 @@ export default function PlayPage() {
   const [showPostModal, setShowPostModal] = useState(false)
   const [newTitle, setNewTitle] = useState('')
   const [newContent, setNewContent] = useState('')
+  /** 活动描述的表情插入（插到光标处） */
+  const { ref: activityRef, insert: insertActivityEmoji } = useEmojiInsert<HTMLTextAreaElement>(newContent, setNewContent)
   const [newTime, setNewTime] = useState('')
   const [newMaxPeople, setNewMaxPeople] = useState(5)
   const [newTypeId, setNewTypeId] = useState('')
@@ -885,13 +888,18 @@ export default function PlayPage() {
             <div className="mb-3">
               <label className="block text-xs text-[var(--accent-muted)] mb-1.5 tracking-wide">描述</label>
               <textarea
+                ref={activityRef}
                 value={newContent}
                 onChange={(e) => setNewContent(e.target.value)}
-                placeholder="说清楚要做什么，缺几个人"
+                placeholder="说清楚要做什么，缺几个人，也可以发个表情"
                 rows={3}
                 maxLength={200}
                 className="w-full px-4 py-2.5 rounded-xl border border-[var(--accent-line)] bg-[var(--accent-soft)] text-sm resize-none focus:outline-none focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent)]/10 transition"
               />
+              <div className="mt-1.5 flex items-center justify-between">
+                <EmojiPicker onPick={insertActivityEmoji} />
+                <span className="text-[10px] text-[var(--accent-muted)]">{newContent.length}/200</span>
+              </div>
             </div>
 
             <div className="grid grid-cols-2 gap-3 mb-3">

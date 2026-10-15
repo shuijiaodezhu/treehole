@@ -27,7 +27,7 @@ import {
 import { VaultView } from '../../components/vault-view'
 import { PlansView } from '../../components/plans-view'
 import { ImageWall } from '../../components/image-wall'
-import { EmojiPicker } from '../../components/emoji-picker'
+import { EmojiPicker, useEmojiInsert } from '../../components/emoji-picker'
 import { pageAccentVars } from '../../components/theme'
 
 type Friend = {
@@ -187,6 +187,12 @@ export default function FriendsPage() {
   const momentEditor = useEditContent(meId)
   const momentFavorites = useFavorites(meId)
   const mentionNames = useMemo(() => visFriends.map((f) => f.name), [visFriends])
+
+  /** 朋友圈发帖框的表情插入（插到光标处） */
+  const { ref: momentRef, insert: insertMomentEmoji } = useEmojiInsert<HTMLTextAreaElement>(
+    momentContent,
+    setMomentContent,
+  )
 
   /** 朋友圈最终展示列表：先去掉被拉黑的，再按可见范围过滤 */
   const visibleMoments = useMemo(
@@ -1062,9 +1068,10 @@ export default function FriendsPage() {
               className="rounded-2xl border border-[var(--accent-line)] bg-white/80 backdrop-blur p-5 mb-5 shadow-[0_2px_12px_rgba(217,119,87,0.04)]"
             >
               <textarea
+                ref={momentRef}
                 value={momentContent}
                 onChange={(e) => setMomentContent(e.target.value)}
-                placeholder="今天有什么想说的？用 #话题# 加标签"
+                placeholder="今天有什么想说的？用 #话题# 加标签，也可以发个表情"
                 rows={3}
                 className="w-full px-4 py-3 rounded-xl border border-[var(--accent-line)] bg-[var(--accent-soft)] text-sm resize-none focus:outline-none focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent)]/10 transition"
                 maxLength={500}
@@ -1157,7 +1164,8 @@ export default function FriendsPage() {
                   </div>
                 )}
               </div>
-              <div className="flex justify-end mt-3">
+              <div className="flex items-center justify-end gap-2 mt-3">
+                <EmojiPicker onPick={insertMomentEmoji} align="right" />
                 <button
                   type="submit"
                   disabled={postingMoment || (!momentContent.trim() && momentImages.length === 0)}

@@ -16,6 +16,7 @@ import { useEditContent } from '../../components/edit-content'
 import { HashtagList } from '../../components/hashtags'
 import { MentionInput, renderMentions } from '../../components/mentions'
 import { ImagePicker } from '../../components/media'
+import { EmojiPicker, useEmojiInsert } from '../../components/emoji-picker'
 import { ImageWall } from '../../components/image-wall'
 import { useFriendList } from '../../components/visibility'
 import { pageAccentVars } from '../../components/theme'
@@ -109,6 +110,8 @@ export default function WorldPage() {
   const [posting, setPosting] = useState(false)
   const [postCategoryId, setPostCategoryId] = useState<string>('')
   const [postImages, setPostImages] = useState<string[]>([])
+  /** 发帖框的表情插入（插到光标处） */
+  const { ref: postRef, insert: insertPostEmoji } = useEmojiInsert<HTMLTextAreaElement>(postContent, setPostContent)
 
   const [showDepressedWarning, setShowDepressedWarning] = useState(false)
   const [depressedCategory, setDepressedCategory] = useState<Category | null>(null)
@@ -1143,7 +1146,7 @@ export default function WorldPage() {
               </select>
               <p className="text-[10px] text-[var(--accent-muted)] mt-1.5">这条会发到「<span className="text-[var(--accent-deep)]">{selectedCategoryName}</span>」</p>
             </div>
-            <textarea value={postContent} onChange={(e) => setPostContent(e.target.value)} placeholder="写点什么… 用 #话题# 加标签" rows={5} maxLength={500} autoFocus className="w-full px-4 py-3 rounded-xl border border-[var(--accent-line)] bg-[var(--accent-soft)] text-sm resize-none focus:outline-none focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent)]/10 transition mb-4" />
+            <textarea ref={postRef} value={postContent} onChange={(e) => setPostContent(e.target.value)} placeholder="写点什么… 用 #话题# 加标签，也可以发个表情" rows={5} maxLength={500} autoFocus className="w-full px-4 py-3 rounded-xl border border-[var(--accent-line)] bg-[var(--accent-soft)] text-sm resize-none focus:outline-none focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent)]/10 transition mb-4" />
 
             {/* 图片：本地上传或粘贴链接 */}
             <ImagePicker
@@ -1157,7 +1160,10 @@ export default function WorldPage() {
                 <input type="checkbox" checked={isAnonymous} onChange={(e) => setIsAnonymous(e.target.checked)} className="accent-[var(--accent)]" />
                 匿名发布
               </label>
-              <span className="text-xs text-[var(--accent-muted)]">{postContent.length}/500</span>
+              <div className="flex items-center gap-2">
+                <EmojiPicker onPick={insertPostEmoji} align="right" />
+                <span className="text-xs text-[var(--accent-muted)]">{postContent.length}/500</span>
+              </div>
             </div>
             <div className="flex gap-2 justify-end">
               <button type="button" onClick={() => setShowPostModal(false)} className="px-5 py-2 rounded-xl text-sm text-[var(--accent-muted)] hover:bg-[var(--accent-soft)] transition">取消</button>

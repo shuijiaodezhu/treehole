@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 
 /**
  * 表情选择器（聊天 / 评论里用）
@@ -138,4 +138,38 @@ export function insertAtCursor(
 /** 一个不依赖 DOM 的简单版本：直接追加（评论框用这个就够） */
 export function appendText(value: string, text: string): string {
   return value + text
+}
+
+/**
+ * 给输入框用的便捷 hook：把表情插到光标处，并保持焦点
+ *
+ *   const emoji = useEmojiInsert(content, setContent)
+ *   <textarea ref={emoji.ref} … />
+ *   <EmojiPicker onPick={emoji.insert} />
+ */
+export function useEmojiInsert<T extends HTMLInputElement | HTMLTextAreaElement>(
+  value: string,
+  onChange: (next: string) => void,
+) {
+  const ref = useRef<T>(null)
+  const insert = useCallback(
+    (emoji: string) => {
+      const el = ref.current
+      const { next, caret } = insertAtCursor(el, value, emoji)
+      onChange(next)
+      // 等 React 更新完再把光标放回去
+      window.requestAnimationFrame(() => {
+        const node = ref.current
+        if (!node) return
+        node.focus()
+        try {
+          node.setSelectionRange(caret, caret)
+        } catch {
+          /* 某些 input 类型不支持 setSelectionRange，忽略 */
+        }
+      })
+    },
+    [value, onChange],
+  )
+  return { ref, insert }
 }
