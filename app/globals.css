@@ -398,6 +398,29 @@ html[data-first-load="1"] .dsh-splash {
   from { opacity: 1; visibility: visible; }
   to   { opacity: 0; visibility: hidden; }
 }
+/* splash 里的"你的来信"往左上收一点再消失 ——
+   眼睛跟着它走，主页标题就在那个方向升起来，两段动画就接住了 */
+@keyframes dsh-splash-title-out {
+  from { transform: translate3d(0, 0, 0) scale(1); }
+  to   { transform: translate3d(-12%, -16%, 0) scale(0.86); }
+}
+html[data-first-load="1"] .dsh-splash-inner {
+  animation:
+    dsh-splash-in 620ms cubic-bezier(0.22, 1, 0.36, 1) both,
+    dsh-splash-title-out 520ms cubic-bezier(0.4, 0, 0.2, 1) 780ms forwards;
+}
+/* 主页标题：等 splash 开始收的时候升起来，接住那四个字 */
+@keyframes dsh-hero-title-in {
+  from { opacity: 0; transform: translate3d(0, 10px, 0); }
+  to   { opacity: 1; transform: translate3d(0, 0, 0); }
+}
+html[data-first-load="1"] .dsh-hero-title {
+  animation: dsh-hero-title-in 620ms cubic-bezier(0.22, 1, 0.36, 1) 900ms both;
+}
+@media (prefers-reduced-motion: reduce) {
+  html[data-first-load="1"] .dsh-splash-inner,
+  html[data-first-load="1"] .dsh-hero-title { animation: none; }
+}
 
 /* 系统开了"减少动态效果"：直接不显示 splash，也不做过渡 */
 @media (prefers-reduced-motion: reduce) {

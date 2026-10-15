@@ -37,7 +37,7 @@ import { toast } from 'sonner'
 import type { FriendRequest, FriendshipRow, LoginStreak } from '../components/types'
 import { pageAccentVars } from '../components/theme'
 import { SkeletonHome } from '../components/skeleton'
-import { MailboxDialog, MailboxTrigger, useMailbox } from '../components/mailbox'
+import { MailboxDialog, useMailbox } from '../components/mailbox'
 import { MailboxArt } from '../components/mailbox-art'
 import { FallingBits, Ornament, PaperPattern } from '../components/paper-pattern'
 
@@ -224,7 +224,7 @@ export default function HomePage() {
           <div>
 
             <motion.div style={{ y: heroY, opacity: heroOpacity }}>
-            <h1 className="font-brush text-[40px] leading-tight tracking-[0.04em] text-[#3f332a] sm:text-[52px]">你的来信</h1>
+            <h1 className="dsh-hero-title font-brush text-[40px] leading-tight tracking-[0.04em] text-[#3f332a] sm:text-[52px]">你的来信</h1>
             <p className="mt-3 flex items-baseline gap-2 text-[#8a7a68]">
               <span className="font-art text-3xl text-[#a8563a]">Dear You</span>
               <span className="text-sm">· 这里有一封，你的来信</span>
@@ -262,10 +262,6 @@ export default function HomePage() {
             </p>
 
             <div className="flex items-center justify-end gap-3">
-              {/* sm 以上由右边的插画承担信箱入口，所以按钮只留给手机，避免两个入口 */}
-              <span className="sm:hidden">
-                <MailboxTrigger mailbox={mailbox} onOpen={() => setMailboxOpen(true)} />
-              </span>
               <NotificationBell userId={userId} />
               <Link
                 href="/search"
@@ -284,12 +280,7 @@ export default function HomePage() {
             </div>
           </div>
 
-          {/* 右栏：冬日信箱（主视觉）。放回 hero 内部，尺寸由容器控制 */}
-          <div className="relative hidden w-[170px] flex-shrink-0 sm:block">
-            {/* 飘落的小东西：让主视觉"活"起来 */}
-            <FallingBits className="-inset-x-10 -top-6 bottom-0" />
-            <MailboxArt onOpen={() => setMailboxOpen(true)} />
-          </div>
+
         </div>
       </header>
 
@@ -310,7 +301,7 @@ export default function HomePage() {
         </div>
       )}
 
-      <div className="relative mx-auto w-full max-w-2xl px-6 pb-20 pt-16 sm:px-8 sm:pt-24">
+      <div className="relative mx-auto w-full max-w-4xl px-6 pb-20 pt-16 sm:px-8 sm:pt-24">
         <PaperPattern />
 
         <div>
@@ -327,25 +318,33 @@ export default function HomePage() {
             <>
               <Ornament />
 
+              <div className="mt-14 grid gap-10 sm:grid-cols-[minmax(0,1fr)_200px] sm:items-center">
               <motion.div
-              initial={{ opacity: 0, y: 16 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: false, margin: '-80px' }}
-              transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-              className="mt-14 border-l-2 border-[#ece3d4] pl-5"
-            >
+                initial={{ opacity: 0, y: 16 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: false, margin: '-80px' }}
+                transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+                className="border-l-2 border-[#ece3d4] pl-5"
+              >
               <p className="font-serif-cn text-[16px] leading-[2.1] text-[#3f332a]">「{quote}」</p>
               <p className="mt-3 text-[12px] tracking-[0.08em] text-[#9c8f7d]">
                 来自陌生人的问候 · <span className="text-[#a8563a]">睡觉的猪</span>
               </p>
               </motion.div>
+
+              {/* 冬日信箱：挪到引言旁边（你圈的图二位置），带副标题，尺寸受控 */}
+              <div className="relative mx-auto w-[190px] sm:mx-0 sm:w-full">
+                <FallingBits className="-inset-x-8 -top-4 bottom-6" />
+                <MailboxArt onOpen={() => setMailboxOpen(true)} />
+              </div>
+            </div>
             </>
           )}
         </div>
       </div>
 
       {/* 页脚：条款与说明入口 */}
-      <footer className="mx-auto w-full max-w-2xl px-6 pb-12 sm:px-8">
+      <footer className="mx-auto w-full max-w-4xl px-6 pb-12 sm:px-8">
         <div className="flex flex-wrap items-center gap-x-5 gap-y-3 border-t border-[#ece3d4] pt-6 text-[12px]">
           {[
             { slug: 'community', label: '社区公约' },
