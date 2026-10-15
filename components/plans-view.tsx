@@ -96,7 +96,7 @@ export function PlansView({ userId }: { userId: string | null }) {
             <div>
               <h2 className="font-serif-cn text-2xl font-semibold tracking-wide text-[#2b2620]">计划书</h2>
               <p className="mt-1 font-serif-cn text-xs text-[#a88868]">
-                写下来，就有了形状 · {todayText}
+                写下来，梦想就有了形状 · {todayText}
               </p>
             </div>
             <div className="hidden text-right sm:block">
