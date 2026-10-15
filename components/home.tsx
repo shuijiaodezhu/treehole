@@ -6,7 +6,7 @@ import { IconArrow, IconFlame, IconMail, WeatherIcon } from './icons'
 import { avatarFallback } from './utils'
 import { markModuleSeen } from './module-badges'
 import { weatherAdvice, type WeatherState } from './weather'
-import type { FriendRequest, LoginStreak, NavSection } from './types'
+import type { FriendRequest, LoginStreak } from './types'
 
 /* ==================== 侧边栏：天气 + 登录天数 + 每日一句 ==================== */
 
@@ -125,44 +125,98 @@ export function FriendRequestBanner({ requests }: { requests: FriendRequest[] })
 
 /* ==================== 功能导航卡片网格 ==================== */
 
-const SECTIONS: NavSection[] = [
-  { href: '/friends', title: '小屋', desc: '好友与私聊' },
-  { href: '/world', title: '院子', desc: '大家在想什么' },
-  { href: '/play', title: '聚会', desc: '活动、小工具、一起听歌' },
-  { href: '/me', title: '我的', desc: '资料、收藏、设置' },
+type Block = {
+  href: string
+  title: string
+  desc: string
+  /** 实色底 + 文字色（不渐变、不描边、不阴影） */
+  bg: string
+  fg: string
+  sub: string
+  span: boolean
+}
+
+const BLOCKS: Block[] = [
+  {
+    href: '/friends',
+    title: '小屋',
+    desc: '好友与私聊，慢慢说',
+    bg: '#221d19',
+    fg: '#f5f0e8',
+    sub: 'rgba(245,240,232,0.62)',
+    span: true,
+  },
+  {
+    href: '/world',
+    title: '院子',
+    desc: '大家在想什么',
+    bg: '#5c6650',
+    fg: '#f7f5ef',
+    sub: 'rgba(247,245,239,0.68)',
+    span: false,
+  },
+  {
+    href: '/play',
+    title: '聚会',
+    desc: '活动、小工具、一起听歌',
+    bg: '#b8502c',
+    fg: '#fdf3ec',
+    sub: 'rgba(253,243,236,0.72)',
+    span: false,
+  },
+  {
+    href: '/me',
+    title: '我的',
+    desc: '资料、收藏、设置',
+    bg: '#d9c7a8',
+    fg: '#2b2620',
+    sub: 'rgba(43,38,32,0.58)',
+    span: false,
+  },
 ]
 
 
 export function NavCardGrid({ badges }: { badges?: Partial<Record<string, { count?: number; dot?: boolean }>> }): ReactElement {
   /*
-   * 实色大块：块本身就是"能点"的信号，不需要箭头去解释。
-   * 四块同一个暖色系（不是每页一个配色的彩虹），没有边框/阴影/渐变/图标。
+   * 海报式色块：四块实色、大小不一（小屋跨两列），文字用衬线大字。
+   * 不渐变、不描边、不阴影 —— 靠颜色和面积做层级。
    */
   return (
-    <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-      {SECTIONS.map((section) => {
-        const key = section.href.replace('/', '')
+    <div className="grid grid-cols-1 gap-3 sm:grid-cols-3 sm:gap-4">
+      {BLOCKS.map((block) => {
+        const key = block.href.replace('/', '')
         const badge = badges?.[key]
         return (
           <Link
-            key={section.href}
-            href={section.href}
+            key={block.href}
+            href={block.href}
             onClick={() => markModuleSeen(key as Parameters<typeof markModuleSeen>[0])}
-            className="group flex min-h-[92px] flex-col justify-between rounded-2xl bg-[var(--accent-soft)] px-5 py-4 transition hover:bg-[var(--accent-line)] active:bg-[var(--accent-line)]"
+            style={{ backgroundColor: block.bg, color: block.fg }}
+            className={`group flex min-h-[132px] flex-col justify-between rounded-2xl px-5 py-5 transition-transform duration-200 hover:-translate-y-1 sm:min-h-[168px] ${
+              block.span ? 'sm:col-span-2' : ''
+            }`}
           >
             <div className="flex items-start justify-between gap-3">
-              <span className="font-serif-cn text-xl text-[#2b2430]">{section.title}</span>
+              <span className="font-serif-cn text-2xl leading-none sm:text-3xl">{block.title}</span>
 
               {badge?.count ? (
-                <span className="mt-1 text-[11px] tabular-nums text-[var(--accent-deep)]">
+                <span
+                  className="mt-1 text-xs tabular-nums"
+                  style={{ color: block.sub }}
+                >
                   {badge.count > 99 ? '99+' : badge.count}
                 </span>
               ) : badge?.dot ? (
-                <span className="mt-2 h-1.5 w-1.5 rounded-full bg-[var(--accent)]" />
+                <span
+                  className="mt-2 h-1.5 w-1.5 rounded-full"
+                  style={{ backgroundColor: block.fg }}
+                />
               ) : null}
             </div>
 
-            <span className="mt-3 truncate text-xs text-[var(--accent-muted)]">{section.desc}</span>
+            <span className="mt-4 text-xs leading-relaxed" style={{ color: block.sub }}>
+              {block.desc}
+            </span>
           </Link>
         )
       })}

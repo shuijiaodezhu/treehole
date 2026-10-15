@@ -195,21 +195,26 @@ export default function HomePage() {
   return (
     <div className="min-h-screen">
       {/* 顶部 header */}
-      <header className="w-full bg-gradient-to-br from-[var(--accent-soft)] via-[#fae4d4] to-[var(--accent-line)] border-b border-[var(--accent-line)] relative overflow-hidden shadow-sm">
+      <header className="relative w-full overflow-hidden bg-[#221d19] text-[#f5f0e8]">
 
         <div className="max-w-5xl mx-auto px-8 py-10 flex justify-between items-center relative">
           <div>
-            <h1 className="text-3xl font-bold text-[#2b2620]">你的来信</h1>
-            <p className="mt-2 text-[var(--accent-muted)] flex items-baseline gap-2">
-              <span className="font-art text-2xl text-[var(--accent-deep)]">Dear You</span>
+            <h1 className="font-serif-cn text-4xl leading-none sm:text-5xl">你的来信</h1>
+            <p className="mt-4 text-[11px] tracking-wide text-[rgba(245,240,232,0.5)]">
+              {dateText} · {weather.city} {weather.condition} {weather.temp}° / {weather.tempMin}°
+              <span className="mx-2 opacity-40">|</span>
+              陪你走过 {streak.days} 天
+            </p>
+            <p className="mt-3 flex items-baseline gap-2 text-[rgba(245,240,232,0.62)]">
+              <span className="font-art text-3xl text-[#e2b9a2]">Dear You</span>
               <span className="text-sm">· 这里有一封，你的来信</span>
             </p>
           </div>
 
           <div className="text-right">
             <p className="text-sm mb-2">
-              <span className="text-[var(--accent-deep)] font-medium">欢迎回来，</span>
-              <span className="text-[var(--accent-muted)]">{email || '朋友'}</span>
+              <span className="font-medium text-[#e2b9a2]">欢迎回来，</span>
+              <span className="text-[rgba(245,240,232,0.62)]">{email || '朋友'}</span>
             </p>
 
             <div className="flex items-center justify-end gap-3">
@@ -220,14 +225,14 @@ export default function HomePage() {
               <Link
                 href="/search"
                 aria-label="搜索"
-                className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-[var(--accent-line)] bg-white/60 text-[var(--accent-muted)] hover:bg-white/90 hover:text-[var(--accent-deep)] transition"
+                className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-[rgba(245,240,232,0.25)] text-[rgba(245,240,232,0.75)] transition hover:border-[#e2b9a2] hover:text-[#e2b9a2]"
               >
                 <IconSearch className="w-[18px] h-[18px]" />
               </Link>
               <button
                 type="button"
                 onClick={() => setConfirmLogout(true)}
-                className="text-sm text-[var(--accent-deep)] hover:underline font-medium"
+                className="text-sm font-medium text-[rgba(245,240,232,0.75)] transition hover:text-[#e2b9a2]"
               >
                 退出登录
               </button>
@@ -260,21 +265,6 @@ export default function HomePage() {
         </div>
 
         <div className="mx-auto max-w-2xl">
-          {/* 今天的几件事，压成一行 */}
-          <div className="flex flex-wrap items-baseline gap-x-5 gap-y-1 border-b border-[var(--accent-line)] pb-4">
-            <span className="text-sm text-[#2b2430]">{dateText}</span>
-            <span className="text-sm text-[var(--accent-muted)]">
-              {weather.city} · {weather.condition}
-            </span>
-            <span className="text-sm text-[#2b2430]">
-              {weather.temp}°
-              <span className="text-[var(--accent-light)]"> / {weather.tempMin}°</span>
-            </span>
-            <span className="ml-auto text-[11px] text-[var(--accent-light)]">
-              陪你走过 {streak.days} 天
-            </span>
-          </div>
-
           {/* 今天的一句话：只留引用本身和出处 */}
           <FriendRequestBanner requests={requests} />
 
@@ -285,11 +275,13 @@ export default function HomePage() {
 
           {/* 今天的一句话放下面：它是安静的角落，不该跟入口抢注意力 */}
           {quote && (
-            <div className="mt-8 border-t border-[var(--accent-line)] pt-6">
-              <p className="font-serif-cn text-[15px] leading-[1.9] text-[#3a3229]">
+            <div className="mt-14 pb-4 text-center">
+              <p className="mx-auto max-w-xl font-serif-cn text-xl leading-[1.9] text-[#2b2620] sm:text-2xl">
                 「{quote}」
               </p>
-              <p className="mt-2 text-[11px] text-[var(--accent-light)]">来自陌生人的问候</p>
+              <p className="mt-4 text-[11px] tracking-wide text-[var(--accent-light)]">
+                来自陌生人的问候
+              </p>
             </div>
           )}
         </div>
