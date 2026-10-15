@@ -60,29 +60,44 @@ declare
   me           uuid;
   last_at      timestamptz;
   cnt          int;
-  sql          text;
 begin
-  -- 作者字段的值（不同表的字段名不一样，用 TG_ARGV 传进来）
-  execute format('select ($1).%I', author_col) into me using NEW;
+  -- 取这一行的作者。
+  -- 用 CASE 逐个表判断，而不是动态拼 ($1).字段 —— 后者要依赖行类型推断，
+  -- 出错时报的错也很难懂。plpgsql 只在走到那个分支时才编译该语句，
+  -- 所以这里引用别的表没有的字段不会报错。
+  if TG_TABLE_NAME = 'messages' then
+    me := NEW.sender_id;
+  elsif TG_TABLE_NAME = 'friend_posts' then
+    me := NEW.author_id;
+  elsif TG_TABLE_NAME = 'winter_letters' then
+    me := NEW.sender_id;
+  else
+    me := null;
+  end if;
 
   if me is null then
     return NEW;
   end if;
 
-  -- 上一条的时间
-  sql := format('select max(created_at) from public.%I where %I = $1', TG_TABLE_NAME, author_col);
-  execute sql into last_at using me;
+  -- 站主不受限：他可能要连着回几封信、回几条私信，
+  -- 被自己的规则卡住就荒唐了（也信任站主不会刷屏）
+  if me = 'b59a31c7-60f8-4b57-924a-b408cbfd910c'::uuid then
+    return NEW;
+  end if;
+
+  -- 这个作者上一条的时间
+  execute format('select max(created_at) from public.%I where %I = $1', TG_TABLE_NAME, author_col)
+    into last_at using me;
 
   if last_at is not null and now() - last_at < make_interval(secs => min_gap_sec) then
     raise exception '发送太频繁了，请稍等几秒再试' using errcode = 'check_violation';
   end if;
 
   -- 窗口内的条数
-  sql := format(
+  execute format(
     'select count(*) from public.%I where %I = $1 and created_at > now() - make_interval(secs => $2)',
     TG_TABLE_NAME, author_col
-  );
-  execute sql into cnt using me, win_sec;
+  ) into cnt using me, win_sec;
 
   if cnt >= max_in_win then
     raise exception '短时间内发送太多了，歇一会儿再来' using errcode = 'check_violation';
