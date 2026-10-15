@@ -425,9 +425,13 @@ export default function HomePage() {
               </motion.blockquote>
             )}
 
-            <div className="relative mt-10 w-[150px]">
-              <FallingBits className="-inset-x-8 -top-4 bottom-6" />
-              <MailboxArt onOpen={() => setMailboxOpen(true)} />
+            {/* 信箱：中心落在**引文的正下方**（引文有 pl-8 缩进，所以这里也加 pl-8
+                再用 flex 居中，中心才和引文对齐） */}
+            <div className="mt-10 flex justify-center pl-8">
+              <div className="relative w-[150px]">
+                <FallingBits className="-inset-x-8 -top-4 bottom-6" />
+                <MailboxArt onOpen={() => setMailboxOpen(true)} />
+              </div>
             </div>
           </div>
 
@@ -445,8 +449,8 @@ export default function HomePage() {
       </section>
 
       {/* 页脚：daisyUI footer */}
-      <footer className="mx-auto mt-auto flex w-full max-w-6xl flex-wrap items-center gap-x-6 gap-y-3 border-t border-base-300 px-4 pb-8 pt-6 text-xs opacity-75">
-        <nav className="flex flex-wrap gap-x-6 gap-y-2">
+      <footer className="mx-auto mt-auto flex w-full max-w-6xl flex-wrap items-end gap-x-6 gap-y-3 px-4 pb-8 pt-6 text-xs opacity-75">
+        <nav className="flex flex-wrap gap-x-6 gap-y-2 border-t border-base-300 pt-4">
           {[
             { slug: 'community', label: '社区公约' },
             { slug: 'reporting', label: '举报与申诉' },
@@ -459,7 +463,7 @@ export default function HomePage() {
             </Link>
           ))}
         </nav>
-        <Link href="/p" className="link link-hover ml-auto">
+        <Link href="/p" className="link link-hover ml-auto border-t border-base-300 pt-4">
           全部条款 →
         </Link>
       </footer>
