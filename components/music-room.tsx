@@ -1,13 +1,11 @@
 'use client'
 
 import { useEffect, useMemo, useRef, useState } from 'react'
-import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { createClient } from '../lib/supabase'
-import { pageAccentVars } from '../../components/theme'
-import { Icon } from '../../components/icons'
-import { SkeletonList } from '../../components/skeleton'
-import { checkRate, filterHint, filterText, noteSent } from '../../components/content-guard'
+import { createClient } from '../app/lib/supabase'
+import { Icon } from './icons'
+import { SkeletonList } from './skeleton'
+import { checkRate, filterHint, filterText, noteSent } from './content-guard'
 import {
   MAX_AUDIO_BYTES,
   formatBytes,
@@ -18,10 +16,10 @@ import {
   useMusicChat,
   useTracks,
   type Track,
-} from '../../components/music'
+} from './music'
 
 /**
- * 听音乐
+ * 听音乐（放在「聚会 → 小程序」里的那一块）
  *
  * 左边曲目、右边播放 + 在场人数 + 聊天（可匿名）。
  * 「几个人在听」用 Presence 实时算，不进数据库；聊天进 music_messages 并走实时订阅。
@@ -45,7 +43,7 @@ type ChatRow = {
   name: string
 }
 
-export default function MusicPage() {
+export function MusicRoom() {
   const router = useRouter()
 
   const [meId, setMeId] = useState<string | null>(null)
@@ -239,19 +237,13 @@ export default function MusicPage() {
   }
 
   return (
-    <div className="min-h-screen relative overflow-hidden" style={pageAccentVars('play')}>
-      <div className="absolute -top-20 -right-20 w-96 h-96 bg-[var(--accent-light)] opacity-20 rounded-full blur-3xl pointer-events-none"></div>
-
-      <div className="relative max-w-5xl mx-auto px-6 py-10">
-        <header className="mb-6">
-          <Link href="/" className="text-sm text-[var(--accent-muted)] transition hover:text-[var(--accent-deep)]">
-            ← 返回
-          </Link>
-          <h1 className="mt-2 text-3xl font-bold text-[#2b2430]">听音乐</h1>
-          <p className="mt-1 text-sm text-[var(--accent-muted)]">
-            传一首，或者听别人传的。同一条曲目下可以说话，也可以匿名说。
-          </p>
-        </header>
+    <section className="mt-8">
+      <div className="mb-4 flex flex-wrap items-baseline justify-between gap-2">
+        <h2 className="text-sm font-semibold text-[#2b2430]">听音乐</h2>
+        <p className="text-[10.5px] text-[var(--accent-muted)]">
+          传一首，或者听别人传的。同一条曲目下可以说话，也可以匿名说。
+        </p>
+      </div>
 
         {missing ? (
           <p className="rounded-2xl border border-[var(--accent-line)] bg-white/80 px-4 py-3 text-[11px] leading-relaxed text-[var(--accent-muted)]">
@@ -524,7 +516,6 @@ export default function MusicPage() {
             </div>
           </div>
         )}
-      </div>
-    </div>
+    </section>
   )
 }

@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import type { ReactElement } from 'react'
-import { Icon, IconArrow, IconBox, IconFlame, IconHome, IconLeaf, IconMail, IconSparkle, WeatherIcon } from './icons'
+import { IconArrow, IconBox, IconFlame, IconHome, IconLeaf, IconMail, IconSparkle, WeatherIcon } from './icons'
 import { avatarFallback } from './utils'
 import { markModuleSeen } from './module-badges'
 import { weatherAdvice, type WeatherState } from './weather'
@@ -127,11 +127,6 @@ export function FriendRequestBanner({ requests }: { requests: FriendRequest[] })
 
 /* ==================== 功能导航卡片网格 ==================== */
 
-/** 图标库里有 music，直接用通用 Icon 包一层，保持 SECTIONS 的结构 */
-function IconMusic({ className = '' }: { className?: string }) {
-  return <Icon name="music" className={className} />
-}
-
 const SECTIONS: NavSection[] = [
   {
     href: '/friends',
@@ -159,15 +154,6 @@ const SECTIONS: NavSection[] = [
     gradient: 'from-[var(--accent-soft)] to-[#f8dbe3]',
     accent: '#c97a8a',
     tag: '轻松',
-  },
-  {
-    href: '/music',
-    title: '听音乐',
-    desc: '一起听，一起说',
-    Icon: IconMusic,
-    gradient: 'from-[#e8f1f7] to-[#d4e5f0]',
-    accent: '#5b8fb0',
-    tag: '一起',
   },
   {
     href: '/me',

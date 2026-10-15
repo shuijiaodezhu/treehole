@@ -16,6 +16,7 @@ import { SkeletonList } from '../../components/skeleton'
 import { EmptyState } from '../../components/empty-state'
 import { EmojiPicker, useEmojiInsert } from '../../components/emoji-picker'
 import { MiniTools } from '../../components/mini-tools'
+import { MusicRoom } from '../../components/music-room'
 
 // 客户端提到模块级，保证引用稳定
 const supabase = createClient()
@@ -691,7 +692,12 @@ export default function PlayPage() {
           </>
         )}
 
-        {tab === 'minigames' && <MiniTools />}
+        {tab === 'minigames' && (
+          <>
+            <MiniTools />
+            <MusicRoom />
+          </>
+        )}
       </div>
 
       {detailActivity && (
