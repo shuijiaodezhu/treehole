@@ -20,6 +20,8 @@ import {
 } from '../components/utils'
 import { useWeather } from '../components/weather'
 import { markModuleSeen, useModuleBadges } from '../components/module-badges'
+import { TiltCard } from '../components/tilt-card'
+import { cn } from '../lib/utils'
 import { NotificationBell } from '../components/notifications'
 import { WelcomeLetter } from '../components/welcome-letter'
 import { motion, useScroll, useTransform } from 'motion/react'
@@ -64,11 +66,48 @@ export default function HomePage() {
   const [dateText, setDateText] = useState('')
 
   /* 四个模块：daisyUI 卡片要用的定义（图标 + 文案 + 角标键） */
+  /*
+   * 每块一个**暖家谱里的不同调子**：火漆红 / 蜜金 / 陶红 / 可可。
+   * daisyUI 给的是统一的骨架，这里给每块一点自己的颜色 ——
+   * 四块分得开，又不至于变成彩虹。
+   */
   const moduleCards = [
-    { key: 'friends', href: '/friends', title: '小屋', desc: '好友与私聊，慢慢说', Icon: House },
-    { key: 'world', href: '/world', title: '院子', desc: '大家在想什么', Icon: Trees },
-    { key: 'play', href: '/play', title: '聚会', desc: '活动、小工具、一起听歌', Icon: PartyPopper },
-    { key: 'me', href: '/me', title: '我的', desc: '资料、收藏、设置', Icon: UserRound },
+    {
+      key: 'friends',
+      href: '/friends',
+      title: '小屋',
+      desc: '好友与私聊，慢慢说',
+      Icon: House,
+      tint: 'bg-[#f7e8e0]',
+      ink: 'text-[#a8563a]',
+    },
+    {
+      key: 'world',
+      href: '/world',
+      title: '院子',
+      desc: '大家在想什么',
+      Icon: Trees,
+      tint: 'bg-[#f8efe0]',
+      ink: 'text-[#c08a3e]',
+    },
+    {
+      key: 'play',
+      href: '/play',
+      title: '聚会',
+      desc: '活动、小工具、一起听歌',
+      Icon: PartyPopper,
+      tint: 'bg-[#fbeae3]',
+      ink: 'text-[#c96a4e]',
+    },
+    {
+      key: 'me',
+      href: '/me',
+      title: '我的',
+      desc: '资料、收藏、设置',
+      Icon: UserRound,
+      tint: 'bg-[#f1e9df]',
+      ink: 'text-[#8a6a4a]',
+    },
   ] as const
 
   /* ---------- ③ 连续滚动（视差） ----------
@@ -300,34 +339,46 @@ export default function HomePage() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: '-60px' }}
               transition={{ duration: 0.45, delay: i * 0.06, ease: [0.22, 1, 0.36, 1] }}
+              className="h-full"
             >
-              <Link
-                href={card.href}
-                onClick={() => markModuleSeen(card.key as Parameters<typeof markModuleSeen>[0])}
-                className="card card-border h-full bg-base-100 transition-shadow hover:shadow-lg"
-              >
-                <div className="card-body flex-row items-center gap-5">
-                  <span className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-box bg-base-200 text-primary">
-                    <card.Icon className="h-6 w-6" strokeWidth={1.6} />
-                  </span>
+              <TiltCard className="relative h-full">
+                <Link
+                  href={card.href}
+                  onClick={() => markModuleSeen(card.key as Parameters<typeof markModuleSeen>[0])}
+                  className="card card-border group h-full overflow-hidden bg-base-100 transition-all duration-200 [--radius-box:1rem] hover:-translate-y-0.5 hover:shadow-xl"
+                >
+                  <div className="card-body flex-row items-center gap-5 py-6">
+                    <span
+                      className={cn(
+                        'flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-2xl transition-transform duration-200 group-hover:scale-105',
+                        card.tint,
+                        card.ink,
+                      )}
+                    >
+                      <card.Icon className="h-[26px] w-[26px]" strokeWidth={1.6} />
+                    </span>
 
-                  <div className="min-w-0 flex-1">
-                    <div className="flex items-center gap-2">
-                      <h2 className="font-serif-cn text-lg">{card.title}</h2>
-                      {badges?.[card.key]?.count ? (
-                        <span className="badge badge-primary badge-sm">
-                          {badges[card.key]!.count! > 99 ? '99+' : badges[card.key]!.count}
-                        </span>
-                      ) : badges?.[card.key]?.dot ? (
-                        <span className="badge badge-primary badge-xs" />
-                      ) : null}
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-baseline gap-2">
+                        <h2 className="font-serif-cn text-[18px] leading-none">{card.title}</h2>
+                        {badges?.[card.key]?.count ? (
+                          <span className="badge badge-primary badge-sm">
+                            {badges[card.key]!.count! > 99 ? '99+' : badges[card.key]!.count}
+                          </span>
+                        ) : badges?.[card.key]?.dot ? (
+                          <span className="badge badge-primary badge-xs" />
+                        ) : null}
+                      </div>
+                      <p className="mt-2 truncate text-[13px] opacity-60">{card.desc}</p>
                     </div>
-                    <p className="mt-1 truncate text-sm opacity-60">{card.desc}</p>
-                  </div>
 
-                  <ChevronRight className="h-5 w-5 flex-shrink-0 opacity-40" strokeWidth={1.8} />
-                </div>
-              </Link>
+                    <ChevronRight
+                      className="h-5 w-5 flex-shrink-0 opacity-40 transition-transform duration-200 group-hover:translate-x-1 group-hover:opacity-80"
+                      strokeWidth={1.8}
+                    />
+                  </div>
+                </Link>
+              </TiltCard>
             </motion.div>
           ))}
         </div>
