@@ -24,6 +24,7 @@ import {
   useFriendList,
   type Visibility,
 } from '../../components/visibility'
+import { VaultView } from '../../components/vault-view'
 
 type Friend = {
   friendship_id: string
@@ -127,7 +128,7 @@ function formatTime(dateStr: string) {
 }
 
 export default function FriendsPage() {
-  const [mode, setMode] = useState<'friends' | 'moments'>('friends')
+  const [mode, setMode] = useState<'friends' | 'moments' | 'vault'>('friends')
 
   const [friends, setFriends] = useState<Friend[]>([])
   const [requests, setRequests] = useState<Request[]>([])
@@ -772,12 +773,21 @@ export default function FriendsPage() {
                 </span>
               )}
             </button>
+            <button
+              onClick={() => setMode('vault')}
+              className={`pb-2.5 text-sm transition flex items-center gap-1.5 ${
+                mode === 'vault'
+                  ? 'border-b-2 border-[#d97757] text-[#d97757] font-medium'
+                  : 'text-[#8a827a] hover:text-[#2b2620]'
+              }`}
+            >
+              储物箱
+            </button>
           </div>
         </header>
 
         {mode === 'friends' ? (
-          <div className="flex gap-5 h-[calc(100vh-320px)] min-h-[500px]">
-            <aside className={`w-72 flex-shrink-0 flex-col gap-3 ${showChatOnMobile ? 'hidden md:flex' : 'flex'}`}>
+          <div className="flex gap-5 h-[calc(100vh-320px)] min-h-[500px]">            <aside className={`w-72 flex-shrink-0 flex-col gap-3 ${showChatOnMobile ? 'hidden md:flex' : 'flex'}`}>
               <button
                 onClick={() => setShowAdd(!showAdd)}
                 className="w-full py-2.5 rounded-2xl bg-gradient-to-r from-[#e8a87c] to-[#d97757] text-white text-sm font-medium hover:shadow-[0_6px_20px_rgba(217,119,87,0.3)] transition-all flex items-center justify-center gap-2 flex-shrink-0"
@@ -1030,7 +1040,7 @@ export default function FriendsPage() {
               </div>
             </main>
           </div>
-        ) : (
+        ) : mode === 'moments' ? (
           <div className="max-w-2xl mx-auto">
             <form
               onSubmit={handlePostMoment}
@@ -1447,6 +1457,9 @@ export default function FriendsPage() {
               )}
             </div>
           </div>
+        ) : (
+          /* 储物箱：号主私有文件（≤10MB，按类别归档） */
+          <VaultView userId={meId} />
         )}
       </div>
     </div>
