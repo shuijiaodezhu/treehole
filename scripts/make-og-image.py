@@ -24,7 +24,6 @@ PAPER, CARD = (245, 240, 232), (255, 253, 251)
 ACCENT, DEEP, INK, MUTED = (217, 119, 87), (177, 99, 73), (43, 38, 32), (180, 139, 126)
 LINE, STAMP = (243, 223, 214), (253, 243, 236)
 W1, W2 = (250, 221, 206), (238, 192, 170)          # 纸飞机两翼
-ENV = (233, 190, 168)                              # 信封描边
 POST = (238, 205, 187)                             # 邮戳
 FONT_DIR = "C:/Windows/Fonts/"
 
@@ -135,27 +134,23 @@ def plane(ox, oy, s):
 plane(985, 126, 3.0)
 
 
-# ---------- 装饰二：信封（左下，微微倾斜） ----------
-def envelope(cx, cy, width, angle):
+# ---------- 装饰二：信封（直接画，不用旋转图层） ----------
+
+
+def draw_envelope(cx, cy, width, color, seal=(240, 196, 176)):
     h = int(width * 0.66)
-    pad = 24
-    layer = Image.new("RGBA", (width + pad * 2, h + pad * 2), (0, 0, 0, 0))
-    dl = ImageDraw.Draw(layer)
-    x0, y0 = pad, pad
-    x1, y1 = pad + width, pad + h
-    rounded_on(dl, [x0, y0, x1, y1], 12, fill=(253, 246, 241), outline=ENV, w=3)
-    # 信封盖
-    dl.line([x0 + 4, y0 + 4, (x0 + x1) / 2, y0 + h * 0.44], fill=ENV, width=3)
-    dl.line([x1 - 4, y0 + 4, (x0 + x1) / 2, y0 + h * 0.44], fill=ENV, width=3)
+    x0, y0 = int(cx - width / 2), int(cy - h / 2)
+    x1, y1 = x0 + width, y0 + h
+    rounded_on(d, [x0, y0, x1, y1], 10, fill=(253, 246, 241), outline=color, w=3)
+    # 信封盖：两角向中间收
+    tipy = y0 + h * 0.46
+    d.line([x0 + 5, y0 + 5, (x0 + x1) / 2, tipy], fill=color, width=3)
+    d.line([x1 - 5, y0 + 5, (x0 + x1) / 2, tipy], fill=color, width=3)
     # 火漆印
-    scx, scy = (x0 + x1) / 2, y0 + h * 0.44 + 6
-    dl.ellipse([scx - 11, scy - 11, scx + 11, scy + 11], fill=(240, 196, 176))
-    dl.ellipse([scx - 5, scy - 5, scx + 5, scy + 5], fill=(250, 232, 223))
-    layer = layer.rotate(angle, resample=Image.BICUBIC, expand=True)
-    img.paste(layer, (int(cx - layer.width / 2), int(cy - layer.height / 2)), layer)
-
-
-envelope(240, 482, 112, -8)
+    scx, scy = (x0 + x1) / 2, tipy + 7
+    r = max(8, int(width * 0.075))
+    d.ellipse([scx - r, scy - r, scx + r, scy + r], fill=seal)
+    d.ellipse([scx - r / 2.4, scy - r / 2.4, scx + r / 2.4, scy + r / 2.4], fill=(252, 236, 228))
 
 
 # ---------- 装饰三：邮戳（右下） ----------
@@ -191,25 +186,8 @@ rounded_on(d, [sx0, sy0, sx1, sy1], 12, fill=STAMP, outline=(240, 208, 192))
 dashed_rounded([sx0 + 14, sy0 + 14, sx1 - 14, sy1 - 14], 8, (247, 224, 210), 2, 8, 9)
 
 
-def draw_face(ox, oy, size, color, bg):
-    """和站内表情按钮同一张笑脸（比例经渲染核对过）"""
-    k = size / 24.0
-
-    def P(x, y):
-        return (ox + x * k, oy + y * k)
-
-    d.ellipse([P(12 - 9.2, 12 - 9.2), P(12 + 9.2, 12 + 9.2)], fill=color)
-    inner = 9.2 - 0.7
-    d.ellipse([P(12 - inner, 12 - inner), P(12 + inner, 12 + inner)], fill=bg)
-    for cx in (9.6, 14.4):
-        d.polygon(arc_pts(*P(cx, 10.5), 1.2 * k, 1.05 * k, 180, 360)
-                  + arc_pts(*P(cx, 10.5), 1.2 * k, 0.35 * k, 180, 360), fill=color)
-    dots(d, arc_pts(*P(12, 14.2), 3.0 * k, 1.35 * k, 0, 180, up=False), color, max(2.0, 1.15 * k))
-    for cx in (6.9, 17.1):
-        d.ellipse([P(cx - 0.85, 13 - 0.85), P(cx + 0.85, 13 + 0.85)], fill=(240, 202, 190))
-
-
-draw_face(sx0 + 42, sy0 + 34, 136, ACCENT, STAMP)
+# 邮票里放信封（原来是笑脸）
+draw_envelope((sx0 + sx1) / 2, sy0 + 115, 150, ACCENT)
 
 f_title = ImageFont.truetype(FONT_DIR + "msyhbd.ttc", 78)
 f_sub = ImageFont.truetype(FONT_DIR + "msyh.ttc", 31)
@@ -218,7 +196,7 @@ f_top = ImageFont.truetype(FONT_DIR + "msyhbd.ttc", 27)
 f_tiny = ImageFont.truetype(FONT_DIR + "msyh.ttc", 18)
 
 label = "Dear You"
-d.text(((sx0 + sx1) / 2 - text_w(label, f_tiny) / 2, sy1 - 50), label, font=f_tiny, fill=(216, 166, 142))
+d.text(((sx0 + sx1) / 2 - text_w(label, f_tiny) / 2, sy0 + 184), label, font=f_tiny, fill=(216, 166, 142))
 
 # ---------- 文字 ----------
 tx = 442
