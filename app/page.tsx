@@ -195,26 +195,34 @@ export default function HomePage() {
   return (
     <div className="min-h-screen">
       {/* 顶部 header */}
-      <header className="relative w-full overflow-hidden bg-[#e6b877] text-[#3d2c22]">
+      <header className="relative w-full overflow-hidden border-b border-[#e0d3bd] bg-[#f4ebdd] text-[#3a2f26]">
 
         <div className="max-w-5xl mx-auto px-8 py-10 flex justify-between items-center relative">
           <div>
+            <div className="pointer-events-none absolute right-8 top-6 hidden h-20 w-20 -rotate-[9deg] items-center justify-center rounded-full border border-[rgba(168,86,58,0.28)] text-center sm:flex">
+              <span className="font-serif-cn text-[10px] leading-tight text-[rgba(168,86,58,0.5)]">
+                {dateText.replace(/\s*星期.*$/, '')}
+                <br />
+                来信
+              </span>
+            </div>
+
             <h1 className="font-serif-cn text-4xl leading-none sm:text-5xl">你的来信</h1>
-            <p className="mt-4 text-[11px] tracking-wide text-[rgba(61,44,34,0.62)]">
+            <p className="mt-4 text-[11px] tracking-wide text-[#8a7a68]">
               {dateText} · {weather.city} {weather.condition} {weather.temp}° / {weather.tempMin}°
               <span className="mx-2 opacity-40">|</span>
               陪你走过 {streak.days} 天
             </p>
-            <p className="mt-3 flex items-baseline gap-2 text-[rgba(61,44,34,0.66)]">
-              <span className="font-art text-3xl text-[#8c4a2f]">Dear You</span>
+            <p className="mt-3 flex items-baseline gap-2 text-[#8a7a68]">
+              <span className="font-art text-3xl text-[#a8563a]">Dear You</span>
               <span className="text-sm">· 这里有一封，你的来信</span>
             </p>
           </div>
 
           <div className="text-right">
             <p className="text-sm mb-2">
-              <span className="font-medium text-[#8c4a2f]">欢迎回来，</span>
-              <span className="text-[rgba(61,44,34,0.62)]">{email || '朋友'}</span>
+              <span className="font-medium text-[#8a6a4a]">欢迎回来，</span>
+              <span className="text-[#8a7a68]">{email || '朋友'}</span>
             </p>
 
             <div className="flex items-center justify-end gap-3">
@@ -225,14 +233,14 @@ export default function HomePage() {
               <Link
                 href="/search"
                 aria-label="搜索"
-                className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-[rgba(61,44,34,0.25)] text-[rgba(61,44,34,0.72)] transition hover:border-[#8c4a2f] hover:text-[#8c4a2f]"
+                className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-[#e0d3bd] text-[#8a7a68] transition hover:border-[#a8563a] hover:text-[#a8563a]"
               >
                 <IconSearch className="w-[18px] h-[18px]" />
               </Link>
               <button
                 type="button"
                 onClick={() => setConfirmLogout(true)}
-                className="text-sm font-medium text-[rgba(61,44,34,0.72)] transition hover:text-[#8c4a2f]"
+                className="text-sm font-medium text-[#8a7a68] transition hover:text-[#a8563a]"
               >
                 退出登录
               </button>
@@ -275,12 +283,15 @@ export default function HomePage() {
 
           {/* 今天的一句话放下面：它是安静的角落，不该跟入口抢注意力 */}
           {quote && (
-            <div className="mt-14 pb-4 text-center">
-              <p className="mx-auto max-w-xl font-serif-cn text-xl leading-[1.9] text-[#4a352a] sm:text-2xl">
+            <div className="mt-14 border-l-2 border-[#e0d3bd] pl-5 sm:mt-16">
+              <p className="max-w-xl font-serif-cn text-lg leading-[1.95] text-[#3a2f26] sm:text-xl">
                 「{quote}」
               </p>
-              <p className="mt-4 text-[11px] tracking-wide text-[var(--accent-light)]">
+              <p className="mt-3 text-right text-[11px] tracking-wide text-[#8a7a68]">
                 来自陌生人的问候
+              </p>
+              <p className="mt-6 text-right font-serif-cn text-xs text-[#8a6a4a]">
+                —— 睡觉的猪
               </p>
             </div>
           )}

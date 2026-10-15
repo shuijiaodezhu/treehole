@@ -125,61 +125,19 @@ export function FriendRequestBanner({ requests }: { requests: FriendRequest[] })
 
 /* ==================== 功能导航卡片网格 ==================== */
 
-type Block = {
-  href: string
-  title: string
-  desc: string
-  /** 实色底 + 文字色（不渐变、不描边、不阴影） */
-  bg: string
-  fg: string
-  sub: string
-  span: boolean
-}
-
-const BLOCKS: Block[] = [
-  {
-    href: '/friends',
-    title: '小屋',
-    desc: '好友与私聊，慢慢说',
-    bg: '#5a4034',
-    fg: '#f7ede0',
-    sub: 'rgba(247,237,224,0.66)',
-    span: true,
-  },
-  {
-    href: '/world',
-    title: '院子',
-    desc: '大家在想什么',
-    bg: '#d99a4e',
-    fg: '#3d2c22',
-    sub: 'rgba(61,44,34,0.62)',
-    span: false,
-  },
-  {
-    href: '/play',
-    title: '聚会',
-    desc: '活动、小工具、一起听歌',
-    bg: '#c96a4e',
-    fg: '#fdf1e8',
-    sub: 'rgba(253,241,232,0.74)',
-    span: false,
-  },
-  {
-    href: '/me',
-    title: '我的',
-    desc: '资料、收藏、设置',
-    bg: '#e8d5bd',
-    fg: '#3d2c22',
-    sub: 'rgba(61,44,34,0.58)',
-    span: false,
-  },
+const BLOCKS = [
+  { href: '/friends', title: '小屋', desc: '好友与私聊，慢慢说', span: true },
+  { href: '/world', title: '院子', desc: '大家在想什么', span: false },
+  { href: '/play', title: '聚会', desc: '活动、小工具、一起听歌', span: false },
+  { href: '/me', title: '我的', desc: '资料、收藏、设置', span: false },
 ]
 
 
 export function NavCardGrid({ badges }: { badges?: Partial<Record<string, { count?: number; dot?: boolean }>> }): ReactElement {
   /*
-   * 海报式色块：四块实色、大小不一（小屋跨两列），文字用衬线大字。
-   * 不渐变、不描边、不阴影 —— 靠颜色和面积做层级。
+   * 信封块：每块顶部一条 V 形封盖线（沿用登录动画的信封语言），
+   * 底部一行「致 · 小屋」式的地址小字。
+   * 全局只用一个重色（火漆赭红），悬停时封盖线才变红 —— 很含蓄的反馈。
    */
   return (
     <div className="grid grid-cols-1 gap-3 sm:grid-cols-3 sm:gap-4">
@@ -191,32 +149,40 @@ export function NavCardGrid({ badges }: { badges?: Partial<Record<string, { coun
             key={block.href}
             href={block.href}
             onClick={() => markModuleSeen(key as Parameters<typeof markModuleSeen>[0])}
-            style={{ backgroundColor: block.bg, color: block.fg }}
-            className={`group flex min-h-[132px] flex-col justify-between rounded-2xl px-5 py-5 transition-transform duration-200 hover:-translate-y-1 sm:min-h-[168px] ${
-              block.span ? 'sm:col-span-2' : ''
-            }`}
+            className={`group relative flex min-h-[124px] flex-col justify-between overflow-hidden rounded-lg border border-[#e0d3bd] bg-white/60 px-5 pb-5 pt-7 transition hover:border-[#a8563a] hover:bg-white sm:min-h-[150px] ${block.span ? 'sm:col-span-2' : ''}`}
           >
+            {/* V 形封盖线：贴着卡片顶部，像信封背面那道折线 */}
+            <svg
+              aria-hidden="true"
+              viewBox="0 0 100 12"
+              preserveAspectRatio="none"
+              className={`pointer-events-none absolute left-0 right-0 top-0 h-4 w-full text-[#e0d3bd] transition group-hover:text-[#a8563a]`}
+            >
+              <path
+                d="M0 0 L50 11 L100 0"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                vectorEffect="non-scaling-stroke"
+              />
+            </svg>
+
             <div className="flex items-start justify-between gap-3">
-              <span className="font-serif-cn text-2xl leading-none sm:text-3xl">{block.title}</span>
+              <span className="font-serif-cn text-xl text-[#3a2f26] sm:text-2xl">{block.title}</span>
 
               {badge?.count ? (
-                <span
-                  className="mt-1 text-xs tabular-nums"
-                  style={{ color: block.sub }}
-                >
+                <span className="mt-1 text-[11px] tabular-nums text-[#a8563a]">
                   {badge.count > 99 ? '99+' : badge.count}
                 </span>
               ) : badge?.dot ? (
-                <span
-                  className="mt-2 h-1.5 w-1.5 rounded-full"
-                  style={{ backgroundColor: block.fg }}
-                />
+                <span className="mt-2 h-1.5 w-1.5 rounded-full bg-[#a8563a]" />
               ) : null}
             </div>
 
-            <span className="mt-4 text-xs leading-relaxed" style={{ color: block.sub }}>
-              {block.desc}
-            </span>
+            <div className="mt-4 flex items-baseline gap-2">
+              <span className="font-serif-cn text-[11px] text-[#a8563a]">致</span>
+              <span className="truncate text-xs text-[#8a7a68]">{block.desc}</span>
+            </div>
           </Link>
         )
       })}
