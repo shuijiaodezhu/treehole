@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { createClient } from '../lib/supabase'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { LoginTransition } from '../../components/login-transition'
+import { loginNavigateDelay, startLoginTransition } from '../../components/login-transition'
 import { markJustLoggedIn } from '../../components/login-handoff'
 
 export default function LoginPage() {
@@ -29,8 +29,14 @@ export default function LoginPage() {
       setLoading(false)
       return
     }
-    // 交给过场动画：信封打开后再进主页
+    // 过场动画由 layout 上的覆盖层负责（这样换页也不会中断）：
+    // 先让登录页两边淡出、幕布合上，再把主页换到后面去加载
     setEntering(true)
+    startLoginTransition()
+    window.setTimeout(() => {
+      markJustLoggedIn()
+      router.push('/')
+    }, loginNavigateDelay())
   }
 
   return (
@@ -38,13 +44,6 @@ export default function LoginPage() {
       {/* 背景装饰光晕 */}
       <div className="absolute -top-20 -left-20 w-96 h-96 bg-[#f0b078] opacity-20 rounded-full blur-3xl pointer-events-none"></div>
       <div className="absolute -bottom-20 -right-20 w-96 h-96 bg-[#d97757] opacity-10 rounded-full blur-3xl pointer-events-none"></div>
-
-      {/* 登录成功的过场：信封飞来、开盖、进主页 */}
-      {entering && <LoginTransition onDone={() => {
-          // 打个一次性标记：目标页据此整页淡入、并跳过首屏加载动画
-          markJustLoggedIn()
-          router.push('/')
-        }} />}
 
       {/* 左侧装饰文字（大屏可见） */}
       <div className={`hidden lg:block absolute left-20 top-1/2 -translate-y-1/2 max-w-sm ${entering ? 'th-page-out' : ''}`}>

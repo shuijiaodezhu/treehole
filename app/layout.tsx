@@ -5,7 +5,7 @@ import "./globals.css";
 import { OnlinePresence } from "../components/presence";
 import { ThemeProvider } from "../components/theme";
 import { PageDecor } from "../components/page-decor";
-import { PostLoginFade } from "../components/login-handoff";
+import { LoginTransitionOverlay } from "../components/login-transition";
 
 const cormorant = Cormorant_Garamond({
   subsets: ["latin"],
@@ -61,8 +61,8 @@ export default function RootLayout({
           {/* 整站边缘的极淡装饰（颜色与图案跟着当前页面走） */}
           <Suspense fallback={null}>
             <PageDecor />
-            {/* 登录后目标页整页淡入；平常导航不渲染任何东西 */}
-            <PostLoginFade />
+            {/* 登录过场：挂在 layout 上，所以换页时动画不会中断 */}
+            <LoginTransitionOverlay />
           </Suspense>
           {children}
         </ThemeProvider>

@@ -1,59 +1,99 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
+import { useEffect, useState } from 'react'
+import { clearJustLoggedIn } from './login-handoff'
 
 /**
- * 登录成功后的过场动画
+ * 登录过场：一封长信封从左侧飞来、翻开盖子，然后化开露出主页
  *
- * 顺序：两边文字与登录框淡出（登录页自己加 .th-page-out）
- *   → 0.18s 一封长信封用 0.6s 从左边斜着飞进来、带一点回弹
- *   → 0.82s 封盖绕顶边翻开（就是「打开」的那一下）
- *   → 1.50s 整幕淡出并轻微放大，同时跳到主页
- *   → 1.85s 调用 onDone（router.push('/')）
+ * 关键设计：这个覆盖层挂在**根 layout** 上，不在登录页里。
+ * 原因是登录成功后会**立刻换页**（让主页在后面开始加载数据），
+ * 覆盖层若挂在登录页里会随页面一起被卸载，动画就断了。
+ * 挂在 layout 上它就能横跨整次跳转，动画从头到尾不断。
  *
- * 造型上刻意做减法：**简笔画的信封**——只有粗描边的外框 + 一个 V 形封盖，
- * 不放信纸（放信纸反而啰嗦），也没有柔光和投影，就是几根线。
- * 颜色取自当前页面的主色系，所以不会在暖色纸底上跳出一块白。
+ * 时间线（从 startLoginTransition() 起算）：
+ *   0.00s  登录页两边淡出（登录页自己加 .th-page-out，0.34s）
+ *   0.28s  纸色幕布淡入（把后面正在加载的主页盖住，避免露出骨架屏）
+ *   0.45s  登录页执行 router.push('/') —— 幕布已经盖上了
+ *   0.40s  信封飞入（0.6s，带一点回弹）
+ *   1.05s  封盖翻开（0.46s）
+ *   1.75s  整幕淡出（0.45s）
+ *   2.20s  覆盖层自行卸载，标记一并清掉
  *
- * 覆盖层故意**不加背景色**：底下的登录页要能被看见地淡出。
- * 系统开了「减少动态效果」时直接跳转（动画由 globals.css 关掉）。
+ * 于是观感是：两边淡出 → 幕布合上 → 信封飞来翻开 → 幕布化开，
+ * 后面已经是**加载完成的主页**，中间不会闪出骨架屏。
+ *
+ * 系统开了「减少动态效果」时不做动画，直接换页。
  */
 
-const TOTAL_MS = 1850
-const REDUCED_MS = 120
+const TOTAL_MS = 2200
+const REDUCED_MS = 150
+/** 等登录页两边淡完就换页 */
+const NAVIGATE_MS = 450
 
-/** 信封比例偏长：340 × 200 */
-const ENV_W = 340
-const ENV_H = 200
+type Listener = (active: boolean) => void
 
-export function LoginTransition({ onDone }: { onDone: () => void }) {
-  // 用 ref 存回调，避免父组件重渲染时把定时器重置掉
-  // （在 effect 里更新，渲染期间不写 ref）
-  const doneRef = useRef(onDone)
+let transitioning = false
+const listeners = new Set<Listener>()
+
+function notify() {
+  for (const l of listeners) l(transitioning)
+}
+
+/** 登录成功后调用：开始过场（覆盖层在 layout 上，会横跨跳转继续播） */
+export function startLoginTransition() {
+  if (transitioning) return
+  transitioning = true
+  notify()
+}
+
+/** 等两边淡完再换页；返回给调用方做 router.push 用 */
+export function loginNavigateDelay(): number {
+  if (typeof window === 'undefined') return 0
+  return window.matchMedia('(prefers-reduced-motion: reduce)').matches ? REDUCED_MS : NAVIGATE_MS
+}
+
+export function LoginTransitionOverlay() {
+  const [active, setActive] = useState(transitioning)
 
   useEffect(() => {
-    doneRef.current = onDone
-  }, [onDone])
-
-  useEffect(() => {
-    const reduce =
-      typeof window !== 'undefined' &&
-      window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    const timer = window.setTimeout(() => doneRef.current(), reduce ? REDUCED_MS : TOTAL_MS)
-    return () => window.clearTimeout(timer)
+    const listener: Listener = (next) => setActive(next)
+    listeners.add(listener)
+    return () => {
+      listeners.delete(listener)
+    }
   }, [])
+
+  // 播完自行卸载，并清掉「刚登录完」标记
+  useEffect(() => {
+    if (!active) return
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    const timer = window.setTimeout(
+      () => {
+        transitioning = false
+        clearJustLoggedIn()
+        notify()
+      },
+      reduce ? REDUCED_MS : TOTAL_MS,
+    )
+    return () => window.clearTimeout(timer)
+  }, [active])
+
+  if (!active) return null
 
   return (
     <div
       aria-hidden="true"
       className="th-overlay-out pointer-events-none fixed inset-0 z-[80] flex items-center justify-center"
     >
-      <div className="th-envelope-in" style={{ perspective: '1200px' }}>
-        <div className="relative" style={{ width: ENV_W, height: ENV_H }}>
-          {/* 信封体：粗描边 + 极淡的暖色底 */}
+      {/* 纸色幕布：换页前淡入，把后面正在加载的主页盖住 */}
+      <div className="th-veil absolute inset-0 bg-[var(--paper)]" />
+
+      {/* 长信封：简笔画，只有粗描边外框 + 一个 V 形封盖 */}
+      <div className="th-envelope-in relative" style={{ perspective: '1200px' }}>
+        <div className="relative h-[200px] w-[340px]">
           <div className="absolute inset-0 rounded-[26px] border-[5px] border-[var(--accent)] bg-[var(--accent-soft)]" />
 
-          {/* 封盖：一个 V，绕顶边翻开就是「打开」 */}
           <div className="th-flap absolute inset-x-0 top-0 z-10 origin-top">
             <svg viewBox="0 0 340 100" className="block h-[100px] w-full" fill="none">
               <path

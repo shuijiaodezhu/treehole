@@ -1,7 +1,6 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { usePathname } from 'next/navigation'
 
 /**
  * 登录 → 主页的交接
@@ -51,52 +50,13 @@ function peekJustLoggedIn(): boolean {
   }
 }
 
-/** 读并清掉（只有真正要播放淡入的地方才消费） */
-function consumeJustLoggedIn(): boolean {
-  const yes = peekJustLoggedIn()
+/** 清掉标记（过场结束时调用：此后 loading 动画恢复正常） */
+export function clearJustLoggedIn() {
   try {
     window.sessionStorage.removeItem(KEY)
   } catch {
     /* 忽略 */
   }
-  return yes
-}
-
-/**
- * 登录后给目标页盖一层纸色，再淡出 → 整页「淡入」
- *
- * 挂在根 layout 上（而不是首页里），原因：
- *   · layout 不随导航重挂载，所以用 usePathname 判断「到没到 /」
- *   · 首页首帧是骨架屏、之后还有一次早退分支，挂在首页里容易漏掉
- *
- * 平常导航到主页时没有标记，它什么都不渲染，等于没有这层。
- */
-export function PostLoginFade() {
-  const pathname = usePathname()
-  const [active, setActive] = useState(false)
-
-  // 登录固定跳 /，所以到 / 时消费标记
-  useEffect(() => {
-    if (pathname !== '/') return
-    // 读 sessionStorage 后同步切换：这个覆盖层只在客户端存在，不影响水合
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    if (consumeJustLoggedIn()) setActive(true)
-  }, [pathname])
-
-  // 动画放完就卸掉，别留一个透明覆盖层
-  useEffect(() => {
-    if (!active) return
-    const timer = window.setTimeout(() => setActive(false), 650)
-    return () => window.clearTimeout(timer)
-  }, [active])
-
-  if (!active) return null
-  return (
-    <div
-      aria-hidden="true"
-      className="th-page-in pointer-events-none fixed inset-0 z-[75] bg-[var(--paper)]"
-    />
-  )
 }
 
 /** 首屏加载动画；刚登录完的那一次不显示（登录动画已经表达过加载了） */

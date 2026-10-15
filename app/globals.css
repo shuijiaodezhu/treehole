@@ -214,7 +214,7 @@ body {
   .th-envelope-in,
   .th-flap,
   .th-overlay-out,
-  .th-page-in {
+  .th-veil {
     animation: none !important;
   }
 }
@@ -244,23 +244,23 @@ body {
   to { opacity: 0; transform: scale(1.07); }
 }
 
-/* 登录后目标页整页淡入：一层纸色盖住，再化开 */
-@keyframes th-page-in {
-  from { opacity: 1; }
-  to   { opacity: 0; }
+/* 登录过场的纸色幕布：换页前淡入，把后面加载中的主页盖住 */
+@keyframes th-veil-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
 }
 
 /* 两边的文字与登录框淡出 */
 .th-page-out { animation: th-page-out 0.34s ease-in both; }
 
 /* 信封：从左边斜着飞进来，落定时有一点回弹 */
-.th-envelope-in { animation: th-envelope-in 0.6s cubic-bezier(0.22, 0.9, 0.3, 1.08) 0.18s both; }
+.th-envelope-in { animation: th-envelope-in 0.6s cubic-bezier(0.22, 0.9, 0.3, 1.08) 0.4s both; }
 
 /* 信封盖绕顶边翻开 */
-.th-flap { transform-origin: top center; animation: th-flap-open 0.46s ease-in-out 0.82s both; }
+.th-flap { transform-origin: top center; animation: th-flap-open 0.46s ease-in-out 1.05s both; }
 
 /* 整幕淡出并轻微放大，随后进入主页 */
-.th-overlay-out { animation: th-overlay-out 0.38s ease-in 1.5s both; }
+.th-overlay-out { animation: th-overlay-out 0.45s ease-in 1.75s both; }
 
-/* 登录后目标页的整页淡入 */
-.th-page-in { animation: th-page-in 0.5s ease-out both; }
+/* 幕布淡入（0.28s 起，0.28s） */
+.th-veil { animation: th-veil-in 0.28s ease-out 0.28s both; }
