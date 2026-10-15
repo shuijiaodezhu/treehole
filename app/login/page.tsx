@@ -57,15 +57,13 @@ export default function LoginPage() {
       {/* 背景装饰光晕 */}
 
       {/* 左侧装饰文字（大屏可见） */}
-      <div className={`hidden lg:block w-[266px] shrink-0 text-center ${entering ? 'th-page-out' : ''}`}>
-        <h1 className="font-brush text-[52px] leading-[1] tracking-[0.04em] text-[#2b2620] sm:text-[64px]">你的来信</h1>
+      <div className={`hidden lg:block w-[334px] shrink-0 text-center ${entering ? 'th-page-out' : ''}`}>
+        <h1 className="font-brush text-[38px] leading-[1] tracking-[0.04em] text-[#2b2620] sm:text-[44px]">你的来信</h1>
         <p className="mt-2 flex items-baseline justify-center gap-2 text-[#8a6a4a]">
           <span className="font-art text-3xl text-[#c96447]">Dear You</span>
         </p>
         <p className="mt-5 font-serif-cn text-sm leading-relaxed text-[#8a827a]">
-          这里有一封，你的来信。
-          <br />
-          陌生人、朋友，和自己。
+          这里有一封，你的来信。陌生人、朋友，和自己。
         </p>
 
         {/* 一点点装饰：短线 + 小信封 + 短线（中间那片空就留着） */}
@@ -90,7 +88,7 @@ export default function LoginPage() {
       <div className={`relative w-full max-w-sm ml-auto mr-auto lg:mr-32 ${entering ? 'th-page-out' : ''}`}>
         <div className="rounded-2xl border border-[#f0e4d4] bg-white p-8 shadow-sm">
           <div className="lg:hidden text-center mb-6">
-            <h1 className="font-brush text-3xl leading-[1] tracking-[0.04em] text-[#2b2620]">你的来信</h1>
+            <h1 className="font-brush text-[26px] leading-[1] tracking-[0.04em] text-[#2b2620]">你的来信</h1>
             <p className="mt-1 font-art italic text-[#c96447]">Dear You</p>
           </div>
 
