@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { createClient } from '../../lib/supabase'
 import { Icon } from '../../../components/icons'
 import { useBlocks } from '../../../components/blocks'
+import { useFriendGroups, useFriendList } from '../../../components/visibility'
 
 // 单例放模块级，保证引用稳定
 const supabase = createClient()
@@ -43,6 +44,42 @@ export default function SettingsPage() {
   const [searchMessage, setSearchMessage] = useState('')
   const [searchHit, setSearchHit] = useState<SearchHit | null>(null)
   const [actionMessage, setActionMessage] = useState('')
+
+  /* ---------- 好友分组（朋友圈"指定分组可见"用） ---------- */
+  const friendList = useFriendList(meId)
+  const groupApi = useFriendGroups(meId)
+  const [newGroupName, setNewGroupName] = useState('')
+  const [expandedGroup, setExpandedGroup] = useState<string | null>(null)
+  const [groupMessage, setGroupMessage] = useState('')
+
+  async function handleCreateGroup(e: React.FormEvent) {
+    e.preventDefault()
+    setGroupMessage('')
+    const result = await groupApi.createGroup(newGroupName)
+    if (!result.ok) {
+      setGroupMessage('创建失败：' + (result.message ?? '未知错误'))
+      return
+    }
+    setNewGroupName('')
+    setGroupMessage('分组已创建')
+  }
+
+  async function handleToggleMember(groupId: string, memberId: string, checked: boolean) {
+    const group = groupApi.groups.find((g) => g.id === groupId)
+    if (!group) return
+    const next = checked
+      ? [...group.memberIds, memberId]
+      : group.memberIds.filter((id) => id !== memberId)
+    const result = await groupApi.setMembers(groupId, next)
+    if (!result.ok) setGroupMessage('保存失败：' + (result.message ?? '未知错误'))
+  }
+
+  async function handleDeleteGroup(groupId: string, name: string) {
+    if (!confirm(`删除分组「${name}」？（已发过的动态不受影响）`)) return
+    const result = await groupApi.deleteGroup(groupId)
+    if (!result.ok) setGroupMessage('删除失败：' + (result.message ?? '未知错误'))
+    else if (expandedGroup === groupId) setExpandedGroup(null)
+  }
 
   useEffect(() => {
     let cancelled = false
@@ -366,6 +403,105 @@ export default function SettingsPage() {
             {actionMessage && (
               <p className="text-xs text-center mt-4 text-[#7a5a9a]">{actionMessage}</p>
             )}
+          </section>
+
+          {/* ==================== 好友分组 ==================== */}
+          <section className="rounded-3xl border border-[#e0d4e8] bg-white/80 backdrop-blur-lg p-6 shadow-[0_8px_40px_rgba(168,138,184,0.06)]">
+            <div className="flex items-center gap-3 mb-5">
+              <div className="w-9 h-9 rounded-full bg-[#f0e6f8] flex items-center justify-center">
+                <Icon name="users" className="w-4 h-4 text-[#8a7aaa]" />
+              </div>
+              <div>
+                <h2 className="text-sm font-semibold text-[#2b2430]">好友分组</h2>
+                <p className="text-[10px] text-[#b8a8c8] mt-0.5">
+                  发朋友圈时可以选「指定分组可见」
+                </p>
+              </div>
+            </div>
+
+            <form onSubmit={handleCreateGroup} className="flex gap-2 mb-4">
+              <input
+                type="text"
+                value={newGroupName}
+                onChange={(e) => setNewGroupName(e.target.value)}
+                placeholder="新分组名，比如：家人 / 同事"
+                maxLength={20}
+                className="flex-1 px-4 py-2.5 rounded-xl border border-[#e0d4e8] bg-[#fcf8ff] text-sm text-[#2b2430] focus:outline-none focus:border-[#a88ab8] focus:ring-2 focus:ring-[#a88ab8]/10 transition"
+              />
+              <button
+                type="submit"
+                disabled={groupApi.busy || !newGroupName.trim()}
+                className="px-4 py-2.5 rounded-xl bg-[#a88ab8] text-white text-sm hover:bg-[#9a7aa8] transition disabled:opacity-50"
+              >
+                新建
+              </button>
+            </form>
+
+            {groupApi.error && <p className="text-xs text-red-500 mb-3">{groupApi.error}</p>}
+            {groupApi.loading && groupApi.groups.length === 0 && (
+              <p className="text-xs text-[#b8a8c8]">加载中…</p>
+            )}
+            {!groupApi.loading && groupApi.groups.length === 0 && !groupApi.error && (
+              <p className="text-xs text-[#b8a8c8]">还没有分组</p>
+            )}
+
+            <div className="space-y-2">
+              {groupApi.groups.map((g) => {
+                const open = expandedGroup === g.id
+                return (
+                  <div key={g.id} className="rounded-2xl border border-[#f0e6f8] bg-[#fcf8ff] p-3">
+                    <div className="flex items-center gap-2">
+                      <button
+                        type="button"
+                        onClick={() => setExpandedGroup(open ? null : g.id)}
+                        className="flex flex-1 items-center gap-2 text-left"
+                      >
+                        <Icon name={open ? 'check' : 'users'} className="w-3.5 h-3.5 text-[#8a7aaa]" />
+                        <span className="text-sm text-[#2b2430]">{g.name}</span>
+                        <span className="text-[10px] text-[#b8a8c8]">{g.memberIds.length} 人</span>
+                        <span className="ml-auto text-[10px] text-[#b8a8c8]">
+                          {open ? '收起' : '编辑成员'}
+                        </span>
+                      </button>
+                      <button
+                        type="button"
+                        disabled={groupApi.busy}
+                        onClick={() => void handleDeleteGroup(g.id, g.name)}
+                        className="text-[10px] text-[#b8a8c8] hover:text-red-500 transition disabled:opacity-50"
+                      >
+                        删除
+                      </button>
+                    </div>
+
+                    {open && (
+                      <div className="mt-3 max-h-48 overflow-y-auto border-t border-[#f0e6f8] pt-2">
+                        {friendList.friends.length === 0 ? (
+                          <p className="text-[11px] text-[#b8a8c8]">还没有好友</p>
+                        ) : (
+                          friendList.friends.map((f) => (
+                            <label
+                              key={f.id}
+                              className="flex cursor-pointer items-center gap-2 py-1 text-xs text-[#5a4a6a]"
+                            >
+                              <input
+                                type="checkbox"
+                                checked={g.memberIds.includes(f.id)}
+                                disabled={groupApi.busy}
+                                onChange={(e) => void handleToggleMember(g.id, f.id, e.target.checked)}
+                                className="accent-[#a88ab8]"
+                              />
+                              <span className="truncate">{f.name}</span>
+                            </label>
+                          ))
+                        )}
+                      </div>
+                    )}
+                  </div>
+                )
+              })}
+            </div>
+
+            {groupMessage && <p className="text-xs text-center mt-4 text-[#7a5a9a]">{groupMessage}</p>}
           </section>
 
           <div className="rounded-2xl border border-[#e0d4e8] bg-gradient-to-br from-[#f8f2fc] to-[#f0e6f8] p-5 relative overflow-hidden">
