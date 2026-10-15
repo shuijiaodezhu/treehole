@@ -359,9 +359,11 @@ export default function FriendsPage() {
       })
       setFriends(list)
 
-      if (list.length > 0 && !currentFriend) {
-        openFriend(list[0], uid)
-      }
+      /*
+       * 这里原来会**自动打开第一个好友的聊天**（openFriend(list[0])）。
+       * 那是替用户做了决定：一进小屋就冷不丁看到某人的聊天记录，
+       * 手机端还会直接跳掉列表。现在什么都不点，右边就是一块留白提示。
+       */
     } else {
       setFriends([])
     }
@@ -1041,7 +1043,14 @@ export default function FriendsPage() {
             </aside>
 
             <main className={`flex-1 flex-col min-w-0 ${showChatOnMobile ? 'flex' : 'hidden md:flex'}`}>
-              <div className="rounded-2xl border border-[var(--accent-line)] bg-white/80 backdrop-blur shadow-[0_2px_12px_rgba(217,119,87,0.04)] overflow-hidden flex-1 flex flex-col">
+              <div
+                className={`rounded-2xl border backdrop-blur overflow-hidden flex-1 flex flex-col ${
+                  currentFriend
+                    ? 'border-[var(--accent-line)] bg-white/80 shadow-[0_2px_12px_rgba(217,119,87,0.04)]'
+                    : /* 没选人时整块淡下去，一眼看出「这里还没开始」 */
+                      'border-dashed border-[var(--accent-line)] bg-[var(--accent-soft)]/40'
+                }`}
+              >
                 <div className="px-5 py-3 border-b border-[var(--accent-line)] flex items-center gap-3 flex-shrink-0">
                   {currentFriend && (
                     <>
@@ -1065,13 +1074,28 @@ export default function FriendsPage() {
 
                 <div className="th-scroll flex-1 overflow-y-auto px-5 py-4">
                   {!currentFriend ? (
-                    <div className="h-full flex flex-col items-center justify-center text-center">
-                      <div className="w-14 h-14 rounded-full bg-[var(--accent-soft)] flex items-center justify-center mb-3">
-                        <svg className="w-6 h-6 text-[var(--accent)]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6">
+                    /* 还没点任何人的占位状态：不是空白，也绝不是某人的聊天 */
+                    <div className="h-full flex flex-col items-center justify-center px-6 text-center">
+                      <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-white/70">
+                        <svg
+                          className="h-7 w-7 text-[var(--accent-light)]"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="1.6"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          aria-hidden="true"
+                        >
                           <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
                         </svg>
                       </div>
-                      <p className="text-sm text-[var(--accent-muted)]">选一个好友开始聊天</p>
+                      <p className="font-serif-cn text-sm text-[#5a4a3a]">选一个好友，开始聊</p>
+                      <p className="mt-2 font-serif-cn text-[11.5px] leading-relaxed text-[var(--accent-muted)]">
+                        左边点一个名字就好。
+                        <br />
+                        想先看看大家在聊什么，也可以去院子和朋友圈。
+                      </p>
                     </div>
                   ) : shownMessages.length === 0 ? (
                     <div className="h-full flex flex-col items-center justify-center">
