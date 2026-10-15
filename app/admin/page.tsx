@@ -5,6 +5,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { createClient } from '../lib/supabase'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import { AdminStats } from '../../components/admin-stats'
 
 // 客户端提到模块级，保证引用稳定
 const supabase = createClient()
@@ -149,7 +150,7 @@ export default function AdminPage() {
 
       // 只保留 ≥ 3 次的
       const targetIds = Object.entries(countMap)
-        .filter(([_count, count]) => count >= 3)
+        .filter((pair) => pair[1] >= 3)
         .map(([id]) => id)
 
       if (targetIds.length > 0) {
@@ -314,6 +315,9 @@ export default function AdminPage() {
             </div>
           </div>
         </header>
+
+        {/* 规模与活跃统计 */}
+        <AdminStats />
 
         <div className="flex gap-6 mb-6 border-b border-[#e0d4e8]">
           <button

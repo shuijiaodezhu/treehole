@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Cormorant_Garamond, Noto_Serif_SC } from "next/font/google";
 import "./globals.css";
+import { OnlinePresence } from "../components/presence";
 
 const cormorant = Cormorant_Garamond({
   subsets: ["latin"],
@@ -27,7 +28,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="zh-CN" className={`${cormorant.variable} ${notoSerif.variable}`}>
-      <body>{children}</body>
+      <body>
+        {/* 进站即上报当日活跃 + 加入在线频道（后台统计用） */}
+        <OnlinePresence />
+        {children}
+      </body>
     </html>
   );
 }
