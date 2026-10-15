@@ -10,6 +10,7 @@ import { EmojiPicker, useEmojiInsert } from '../../../../components/emoji-picker
 import { ChatMessages } from '../../../../components/chat-bubbles'
 import { useChatRealtime } from '../../../../components/chat-realtime'
 import { useTypingIndicator } from '../../../../components/chat-typing'
+import { useUnreadMessages } from '../../../../components/unread'
 import { AffinityScore, readAffinityHidden, useAffinity } from '../../../../components/affinity'
 import { StatusLabel, useStatusText } from '../../../../components/status'
 import { pageAccentVars } from '../../../../components/theme'
@@ -85,9 +86,24 @@ function ChatInner() {
   // 「对方正在输入…」（Presence，不需要 SQL）
   const { friendTyping, reportTyping, stopTyping } = useTypingIndicator(conversationId, meId, friendId)
 
+  /*
+   * 未读标记：**进来读了就要清掉**。
+   * 之前这一页没有做这件事 —— 在小屋里点开聊会清，但（手机上或从展示页
+   * 「去小屋聊聊」进来的）独立聊天页读完不清，于是首页/小屋的角标一直挂着。
+   */
+  const { markConversationRead } = useUnreadMessages(meId)
+
+  useEffect(() => {
+    if (conversationId && friendId) markConversationRead(conversationId, friendId)
+  }, [conversationId, friendId, markConversationRead])
+
   // 实时收消息（实现见 components/chat-realtime.ts）
   useChatRealtime(conversationId, (incoming) => {
     setMessages((prev) => (prev.some((m) => m.id === incoming.id) ? prev : [...prev, incoming]))
+    // 正看着这个会话，来的消息当场算读过
+    if (conversationId && incoming.sender_id !== meId) {
+      markConversationRead(conversationId, friendId)
+    }
   }, () => {
     if (conversationId) void loadMessages(conversationId)
   })
