@@ -39,7 +39,7 @@ import { pageAccentVars } from '../components/theme'
 import { SkeletonHome } from '../components/skeleton'
 import { MailboxDialog, MailboxTrigger, useMailbox } from '../components/mailbox'
 import { MailboxArt } from '../components/mailbox-art'
-import { Ornament, PaperPattern } from '../components/paper-pattern'
+import { FallingBits, Ornament, PaperPattern } from '../components/paper-pattern'
 
 // 客户端单例：放在模块级，保证引用稳定（useCallback / useEffect 不会每次渲染都重跑）
 const supabase = createClient()
@@ -285,7 +285,9 @@ export default function HomePage() {
           </div>
 
           {/* 右栏：冬日信箱（主视觉）。放回 hero 内部，尺寸由容器控制 */}
-          <div className="hidden w-[170px] flex-shrink-0 sm:block">
+          <div className="relative hidden w-[170px] flex-shrink-0 sm:block">
+            {/* 飘落的小东西：让主视觉"活"起来 */}
+            <FallingBits className="-inset-x-10 -top-6 bottom-0" />
             <MailboxArt onOpen={() => setMailboxOpen(true)} />
           </div>
         </div>

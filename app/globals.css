@@ -442,3 +442,21 @@ html.dsh-navigating .dsh-nav-mask {
 @media (prefers-reduced-motion: reduce) {
   .dsh-pattern-drift { animation: none; }
 }
+
+
+/* ---------- 飘落的小东西 ----------
+   慢（11-18s）、少（6 点）、淡 —— 让人"觉得有风"，不是在看特效 */
+@keyframes dsh-fall {
+  0%   { transform: translate3d(0, 0, 0) rotate(0deg); opacity: 0; }
+  12%  { opacity: 1; }
+  85%  { opacity: 0.85; }
+  100% { transform: translate3d(14px, 260px, 0) rotate(200deg); opacity: 0; }
+}
+.dsh-fall {
+  animation-name: dsh-fall;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .dsh-fall { display: none; }
+}

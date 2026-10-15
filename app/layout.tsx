@@ -8,6 +8,7 @@ import { PageDecor } from "../components/page-decor"
 import { SmoothScroll } from "../components/smooth-scroll"
 import { Splash } from "../components/splash"
 import { PageTransition } from "../components/page-transition"
+import { PaperGrain } from "../components/paper-pattern"
 import { Toaster } from "../components/ui/sonner";
 import { LoginTransitionOverlay } from "../components/login-transition";
 
@@ -106,7 +107,8 @@ export default function RootLayout({
             <LoginTransitionOverlay />
           </Suspense>
           {children}
-          <SmoothScroll />
+          <PaperGrain />
+        <SmoothScroll />
         <Splash />
         <Suspense fallback={null}>
           <PageTransition />

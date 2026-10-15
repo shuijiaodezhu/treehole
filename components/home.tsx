@@ -140,6 +140,7 @@ const BLOCKS = [
     title: '小屋',
     desc: '好友与私聊，慢慢说',
     Icon: House,
+    ornament: 'gable',
     tint: 'bg-[#f7e8e0]',
     ink: 'text-[#a8563a]',
   },
@@ -148,6 +149,7 @@ const BLOCKS = [
     title: '院子',
     desc: '大家在想什么',
     Icon: Trees,
+    ornament: 'grass',
     tint: 'bg-[#f8efe0]',
     ink: 'text-[#c08a3e]',
   },
@@ -156,6 +158,7 @@ const BLOCKS = [
     title: '聚会',
     desc: '活动、小工具、一起听歌',
     Icon: PartyPopper,
+    ornament: 'dots',
     tint: 'bg-[#fbeae3]',
     ink: 'text-[#c96a4e]',
   },
@@ -164,11 +167,50 @@ const BLOCKS = [
     title: '我的',
     desc: '资料、收藏、设置',
     Icon: UserRound,
+    ornament: 'rings',
     tint: 'bg-[#f1e9df]',
     ink: 'text-[#8a6a4a]',
   },
 ]
 
+
+/** 四张卡各自的角饰：各不相同，但都是同一套笔画语言 */
+function CornerOrnament({ kind }: { kind?: string }) {
+  const common = 'pointer-events-none absolute bottom-3 right-3 h-9 w-9 opacity-30 transition-all duration-300 group-hover:scale-110 group-hover:opacity-70';
+  if (kind === 'gable') {
+    return (
+      <svg className={common} viewBox="0 0 36 36" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round">
+        <path d="M4 20 18 8l14 12" />
+        <path d="M10 24h16" />
+      </svg>
+    );
+  }
+  if (kind === 'grass') {
+    return (
+      <svg className={common} viewBox="0 0 36 36" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round">
+        <path d="M9 28q2-9 4 0M17 28q2-12 4 0M25 28q2-8 4 0" />
+        <circle cx="30" cy="10" r="2" />
+      </svg>
+    );
+  }
+  if (kind === 'dots') {
+    return (
+      <svg className={common} viewBox="0 0 36 36" fill="none" stroke="currentColor" strokeWidth="1.4">
+        <circle cx="10" cy="12" r="2.4" />
+        <circle cx="18" cy="20" r="2.4" />
+        <circle cx="26" cy="12" r="2.4" />
+        <path d="M6 28h24" strokeLinecap="round" />
+      </svg>
+    );
+  }
+  return (
+    <svg className={common} viewBox="0 0 36 36" fill="none" stroke="currentColor" strokeWidth="1.4">
+      <circle cx="18" cy="18" r="10" />
+      <circle cx="18" cy="18" r="5" />
+      <circle cx="18" cy="18" r="1.4" fill="currentColor" />
+    </svg>
+  );
+}
 
 export function NavCardGrid({ badges }: { badges?: Partial<Record<string, { count?: number; dot?: boolean }>> }): ReactElement {
   /*
@@ -230,18 +272,9 @@ export function NavCardGrid({ badges }: { badges?: Partial<Record<string, { coun
                   {block.desc}
                 </p>
               </div>
-
-              {/* 右下角点阵角落纹：平时很淡，悬停淡入并扩开一点 */}
-              <span
-                aria-hidden="true"
-                className="pointer-events-none absolute bottom-0 right-0 h-16 w-20 rounded-tr-2xl opacity-40 transition-all duration-300 group-hover:scale-110 group-hover:opacity-90"
-                style={{
-                  backgroundImage: 'radial-gradient(rgba(168,86,58,0.22) 1px, transparent 1.2px)',
-                  backgroundSize: '9px 9px',
-                  maskImage: 'linear-gradient(315deg, #000 10%, transparent 72%)',
-                  WebkitMaskImage: 'linear-gradient(315deg, #000 10%, transparent 72%)',
-                }}
-              />
+              <span className={block.ink}>
+                <CornerOrnament kind={block.ornament} />
+              </span>
 
               <ChevronRight
                 className="h-4 w-4 flex-shrink-0 self-center text-[#cfc3b0] transition-transform duration-200 group-hover:translate-x-1 group-hover:text-[#a8563a]"

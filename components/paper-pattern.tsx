@@ -54,3 +54,71 @@ export function Ornament() {
     </div>
   );
 }
+
+
+/**
+ * 纸纹颗粒：一层极淡的噪点，固定铺满全页
+ *
+ * 用 SVG 的 feTurbulence 现算噪点，不用图片：
+ *   · 图片要么糊、要么大；噪点用滤镜算，任何倍率都是真噪点
+ *   · 3.5% 透明度 + 正片叠底 —— 只在斜着看时才发觉"这张纸不光滑"
+ * 挂在 layout 上，所以全站每一页都有，不用逐页加
+ */
+export function PaperGrain() {
+  return (
+    <div
+      aria-hidden="true"
+      className="pointer-events-none fixed inset-0 z-[5] opacity-[0.035]"
+      style={{ mixBlendMode: "multiply" }}
+    >
+      <svg className="h-full w-full">
+        <filter id="dsh-grain">
+          <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" stitchTiles="stitch" />
+          <feColorMatrix type="saturate" values="0" />
+        </filter>
+        <rect width="100%" height="100%" filter="url(#dsh-grain)" />
+      </svg>
+    </div>
+  );
+}
+
+/**
+ * 飘落的小东西（纸屑 / 花瓣）
+ *
+ * 放在 hero 的信箱插画周围：几点小东西慢慢落下来，主视觉才"活"。
+ * 分寸：数量少（6 点）、速度慢（11-16s）、透明度低 —— 让人"觉得有风"，
+ * 而不是在看特效。减少动态效果时直接不显示。
+ */
+const BITS = [
+  { left: "16%", delay: 0, dur: 13, size: 6, round: true },
+  { left: "34%", delay: 2.6, dur: 16, size: 5, round: false },
+  { left: "52%", delay: 1.2, dur: 11, size: 7, round: true },
+  { left: "68%", delay: 4.4, dur: 15, size: 5, round: false },
+  { left: "84%", delay: 3.1, dur: 14, size: 6, round: true },
+  { left: "44%", delay: 6.8, dur: 18, size: 4, round: false },
+];
+
+export function FallingBits({ className = "" }: { className?: string }) {
+  return (
+    <div
+      aria-hidden="true"
+      className={`pointer-events-none absolute inset-0 overflow-hidden ${className}`}
+    >
+      {BITS.map((b, i) => (
+        <span
+          key={i}
+          className="dsh-fall absolute -top-2"
+          style={{
+            left: b.left,
+            width: b.size,
+            height: b.size,
+            borderRadius: b.round ? "9999px" : "50% 0 50% 0",
+            background: i % 2 === 0 ? "rgba(168,86,58,0.34)" : "rgba(217,154,78,0.42)",
+            animationDelay: `${b.delay}s`,
+            animationDuration: `${b.dur}s`,
+          }}
+        />
+      ))}
+    </div>
+  );
+}
