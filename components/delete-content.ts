@@ -2,6 +2,7 @@
 
 import { useCallback, useMemo, useState } from 'react'
 import { createClient } from '../app/lib/supabase'
+import { MEDIA_BUCKET } from './media'
 
 /**
  * 「自己发的，现在能删」
@@ -113,12 +114,20 @@ export function useDeleteContent(meId: string | null) {
     [meId],
   )
 
-  /* ---------- 朋友圈：硬删（连带点赞与评论） ---------- */
+  /* ---------- 朋友圈：硬删（连带点赞、评论、以及已上传的图片） ---------- */
   const deleteMoment = useCallback(
     async (momentId: string, authorId: string): Promise<DeleteResult> => {
       if (!meId || authorId !== meId) return { ok: false, message: '只能删自己发的' }
       setBusyId(momentId)
       try {
+        // 先记下图片地址：删掉行之后就找不到了
+        const { data: row } = await supabase
+          .from('friend_posts')
+          .select('image_urls')
+          .eq('id', momentId)
+          .maybeSingle()
+        const imageUrls = ((row?.image_urls ?? []) as string[]).filter(Boolean)
+
         // 先清关联，避免外键挡住
         await supabase.from('friend_likes').delete().eq('post_id', momentId)
         await supabase.from('friend_comments').delete().eq('post_id', momentId)
@@ -129,6 +138,20 @@ export function useDeleteContent(meId: string | null) {
           .eq('id', momentId)
           .eq('author_id', meId)
         if (error) throw error
+
+        // 顺手删掉 Storage 里的图片，别留孤儿文件（失败不影响删除结果）
+        const paths = imageUrls
+          .map((url) => {
+            const marker = `/object/public/${MEDIA_BUCKET}/`
+            const at = url.indexOf(marker)
+            return at >= 0 ? url.slice(at + marker.length) : null
+          })
+          .filter((p): p is string => Boolean(p))
+
+        if (paths.length > 0) {
+          const { error: storageError } = await supabase.storage.from(MEDIA_BUCKET).remove(paths)
+          if (storageError) console.error('清理图片失败（动态已删除）:', storageError)
+        }
 
         setDeletedMoments((prev) => new Set(prev).add(momentId))
         return { ok: true }
