@@ -201,29 +201,32 @@ export function useModuleBadges(userId: string | null): ModuleBadges {
     try {
       const friendSeen = readSeenAt('friends')
 
-      const [pendingRes, friendRes, convRes] = await Promise.all([
-        supabase
-          .from('friendships')
-          .select('id')
-          .eq('addressee_id', uid)
-          .eq('status', 'pending'),
+      // 一次取回和「我」有关的所有好友关系，再在本地拆成待处理/已通过：
+      // 少一个网络来回，角标到得更快
+      const [shipRes, convRes] = await Promise.all([
         supabase
           .from('friendships')
           .select('requester_id, addressee_id, status')
-          .or(`requester_id.eq.${uid},addressee_id.eq.${uid}`)
-          .eq('status', 'accepted'),
+          .or(`requester_id.eq.${uid},addressee_id.eq.${uid}`),
         supabase
           .from('conversations')
           .select('id, user1_id, user2_id')
           .or(`user1_id.eq.${uid},user2_id.eq.${uid}`),
       ])
 
-      if (pendingRes.error) throw pendingRes.error
-      setPendingFriends(pendingRes.data?.length ?? 0)
+      if (shipRes.error) throw shipRes.error
+      const ships = (shipRes.data ?? []) as {
+        requester_id: string
+        addressee_id: string
+        status: string
+      }[]
+      setPendingFriends(ships.filter((s) => s.status === 'pending' && s.addressee_id === uid).length)
 
       // 只算「对方是我好友」的会话
       const friendIds = new Set(
-        (friendRes.data ?? []).map((f) => (f.requester_id === uid ? f.addressee_id : f.requester_id)),
+        ships
+          .filter((s) => s.status === 'accepted')
+          .map((s) => (s.requester_id === uid ? s.addressee_id : s.requester_id)),
       )
       const convIds = ((convRes.data ?? []) as { id: string; user1_id: string; user2_id: string }[])
         .filter((c) => friendIds.has(c.user1_id === uid ? c.user2_id : c.user1_id))
@@ -272,9 +275,14 @@ export function useModuleBadges(userId: string | null): ModuleBadges {
         { event: '*', schema: 'public', table: 'friendships', filter: `addressee_id=eq.${userId}` },
         () => { void loadFriendsBadge(userId) },
       )
-      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'messages' }, () => {
-        void loadFriendsBadge(userId)
-      })
+      // 只关心别人发来的：自己发的不可能是未读，不必触发重算
+      .on(
+        'postgres_changes',
+        { event: 'INSERT', schema: 'public', table: 'messages', filter: `sender_id=neq.${userId}` },
+        () => {
+          void loadFriendsBadge(userId)
+        },
+      )
       .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'world_posts' }, () => {
         refreshSeenBadges()
       })

@@ -4,6 +4,7 @@ import Link from 'next/link'
 import type { ReactElement } from 'react'
 import { IconArrow, IconBox, IconFlame, IconHome, IconLeaf, IconMail, IconSparkle, WeatherIcon } from './icons'
 import { avatarFallback } from './utils'
+import { markModuleSeen } from './module-badges'
 import { weatherAdvice, type WeatherState } from './weather'
 import type { FriendRequest, LoginStreak, NavSection } from './types'
 
@@ -169,11 +170,20 @@ export function NavCardGrid({ badges }: { badges?: Partial<Record<string, { coun
   return (
     <div className="flex-1 grid grid-cols-2 gap-4">
       {SECTIONS.map((section) => {
-        const badge = badges?.[section.href.replace('/', '')]
+        const key = section.href.replace('/', '')
+        const badge = badges?.[key]
         return (
           <Link
             key={section.href}
             href={section.href}
+            /*
+             * 点下去就立刻记「已看」——角标当场消失，不用等路由跳完、页面挂载。
+             * 原来只在目标页挂载后才清，中间那几百毫秒角标还挂着，
+             * 看起来就像「点了也没消」。
+             */
+            onClick={() => {
+              if (key === 'friends' || key === 'world' || key === 'play') markModuleSeen(key)
+            }}
             className={`group relative rounded-2xl border border-[var(--accent-line)] bg-gradient-to-br ${section.gradient} p-5 transition-all shadow-[0_2px_12px_rgba(217,119,87,0.04)] hover:shadow-[0_8px_24px_rgba(217,119,87,0.12)] hover:-translate-y-0.5 flex flex-col`}
           >
             {/* 未读提示：有精确数量就显示数字，否则只显示一个半明显的点（都在右上角） */}
