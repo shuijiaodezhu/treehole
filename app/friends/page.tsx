@@ -9,6 +9,7 @@ import { markMomentsSeen, useMomentsBadge, useUnreadMessages } from '../../compo
 import { markModuleSeen } from '../../components/module-badges'
 import { ChatMessages } from '../../components/chat-bubbles'
 import { useChatRealtime } from '../../components/chat-realtime'
+import { useTypingIndicator } from '../../components/chat-typing'
 import { checkRate, filterHint, filterText, noteSent } from '../../components/content-guard'
 import { useBlocks } from '../../components/blocks'
 import { ImagePicker } from '../../components/media'
@@ -291,6 +292,13 @@ export default function FriendsPage() {
     [conversationId, meId, currentFriend?.friend_id],
   )
 
+  // 「对方正在输入…」（Presence，不需要 SQL）
+  const { friendTyping, reportTyping, stopTyping } = useTypingIndicator(
+    conversationId,
+    meId,
+    currentFriend?.friend_id ?? null,
+  )
+
   useChatRealtime(conversationId, handleIncoming, () => {
     // loadMessages 是函数声明（提升），此处引用安全；规则无法识别
     // eslint-disable-next-line react-hooks/immutability
@@ -474,6 +482,7 @@ export default function FriendsPage() {
       setContent(text)
     } else {
       noteSent('message')
+      stopTyping()
       if (filtered.hits.length > 0) alert(filterHint(filtered.hits))
       await loadMessages(conversationId)
     }
@@ -1068,6 +1077,11 @@ export default function FriendsPage() {
                       <h2 className="text-sm font-semibold text-[#2b2620] truncate">
                         {friendName}
                       </h2>
+                      {friendTyping && (
+                        <span className="font-serif-cn text-[10.5px] text-[var(--accent-light)]">
+                          正在输入…
+                        </span>
+                      )}
                     </>
                   )}
                 </div>
@@ -1119,7 +1133,10 @@ export default function FriendsPage() {
                     <input
                       type="text"
                       value={content}
-                      onChange={(e) => setContent(e.target.value)}
+                      onChange={(e) => {
+                        setContent(e.target.value)
+                        reportTyping()
+                      }}
                       placeholder="说点什么... 也可以发个表情"
                       className="flex-1 px-4 py-2.5 rounded-full border border-[var(--accent-line)] bg-[var(--accent-soft)] text-sm focus:outline-none focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent)]/10 transition"
                       maxLength={500}

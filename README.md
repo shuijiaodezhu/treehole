@@ -12,8 +12,17 @@ pnpm install
 pnpm dev          # http://localhost:3000
 ```
 
-Supabase 的地址与 publishable key 直接写在 `app/lib/supabase.ts` 里
-（那个 key 是设计上公开的，放进前端没有任何问题）。
+Supabase 的地址与 publishable key 有**两份来源**：优先读环境变量，
+读不到就用 `app/lib/supabase.ts` 里写好的默认值。
+
+```
+NEXT_PUBLIC_SUPABASE_URL        （可选）
+NEXT_PUBLIC_SUPABASE_ANON_KEY   （可选）
+```
+
+留着默认值是故意的：那个 key 是设计上公开的（publishable），写在前端没有问题，
+而且**不配变量也能跑**——本地开发和临时部署不会因为忘设变量而白屏。
+要换 Supabase 项目时，在 Vercel 里设这两个变量就不用改代码。
 
 > ⚠️ `NEXT_PUBLIC_SITE_URL` 目前只在 `app/layout.tsx` 里用来生成分享卡片的地址。
 > 本地不设也行（默认 `http://localhost:3000`）；部署时**必须**设成正式域名，

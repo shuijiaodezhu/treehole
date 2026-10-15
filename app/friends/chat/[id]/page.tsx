@@ -7,6 +7,7 @@ import Link from 'next/link'
 import { EmojiPicker, useEmojiInsert } from '../../../../components/emoji-picker'
 import { ChatMessages } from '../../../../components/chat-bubbles'
 import { useChatRealtime } from '../../../../components/chat-realtime'
+import { useTypingIndicator } from '../../../../components/chat-typing'
 import { pageAccentVars } from '../../../../components/theme'
 
 type Message = {
@@ -64,6 +65,9 @@ function ChatInner() {
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [messages])
+
+  // 「对方正在输入…」（Presence，不需要 SQL）
+  const { friendTyping, reportTyping, stopTyping } = useTypingIndicator(conversationId, meId, friendId)
 
   // 实时收消息（实现见 components/chat-realtime.ts）
   useChatRealtime(conversationId, (incoming) => {
@@ -148,6 +152,8 @@ function ChatInner() {
       alert('发送失败：' + error.message)
       setContent(text)
     } else {
+      stopTyping()
+      stopTyping()
       await loadMessages(conversationId)
     }
     setSending(false)
@@ -180,6 +186,9 @@ function ChatInner() {
             <span className="text-sm text-[var(--accent-deep)] font-semibold">{friendName[0]}</span>
           </div>
           <h1 className="text-sm font-semibold text-[#2b2620]">{friendName}</h1>
+          {friendTyping && (
+            <span className="font-serif-cn text-[10.5px] text-[var(--accent-light)]">正在输入…</span>
+          )}
         </div>
       </header>
 
@@ -209,7 +218,10 @@ function ChatInner() {
             ref={inputRef}
             type="text"
             value={content}
-            onChange={(e) => setContent(e.target.value)}
+            onChange={(e) => {
+              setContent(e.target.value)
+              reportTyping()
+            }}
             placeholder="说点什么... 也可以发个表情"
             className="flex-1 px-4 py-2.5 rounded-full border border-[var(--accent-line)] bg-[var(--accent-soft)] text-sm text-[#2b2620] focus:outline-none focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent)]/10 transition placeholder:text-[var(--accent-muted)]"
             maxLength={500}
