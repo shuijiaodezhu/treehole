@@ -31,6 +31,7 @@ Supabase 的地址与 publishable key 直接写在 `app/lib/supabase.ts` 里
 | `supabase-security.sql` | 登录日志、注销申请、数据库层限流 | 设置页「登录设备」空着；注销提交失败；限流只剩客户端那层 |
 | `supabase-winter-mailbox.sql` | 冬日信箱的表与策略 | 点开信箱会说「还没开通」 |
 | `supabase-realtime.sql` | 把 `messages` 等表加入 Realtime 发布 | 聊天退化成 20 秒兜底轮询，不是「一发就到」 |
+| `supabase-conversations-last-message.sql` | 给 `conversations` 加 `last_message_at` + 触发器 | 好友列表排序退回「最近 400 条消息」的近似算法，好友多时可能排不准 |
 | `supabase-site-pages.sql` + `supabase-site-pages-fix.sql` | 站内页面（公约/隐私/协议…）可编辑 | 用的是代码里的内置初稿 |
 | `supabase-vault.sql` | 储物箱 | 传文件时会 403 |
 | `supabase-plans.sql` | 计划书 | — |

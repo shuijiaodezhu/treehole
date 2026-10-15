@@ -138,19 +138,49 @@ export function useUnreadMessages(userId: string | null): UnreadMessages {
 
     const run = async () => {
       try {
-        const [convRes, friendRes] = await Promise.all([
-          supabase
+        /*
+         * 会话列表：优先读 last_message_at（数据库维护的「最后一条消息时间」，
+         * 有了它排序就不受消息条数限制）。
+         *
+         * 但那个字段是**后加的**，所以先试着带它查一次；报「字段不存在」就退回旧写法。
+         * 也就是说：没跑 supabase-conversations-last-message.sql 也能正常用，
+         * 只是排序退回「最近 400 条消息」那种近似算法。
+         */
+        type ConvRow = {
+          id: string
+          user1_id: string
+          user2_id: string
+          last_message_at?: string | null
+        }
+        let convRows: ConvRow[] = []
+        let convError: { message: string } | null = null
+        let hasLastMessageColumn = true
+
+        const withColumn = await supabase
+          .from('conversations')
+          .select('id, user1_id, user2_id, last_message_at')
+          .or(`user1_id.eq.${userId},user2_id.eq.${userId}`)
+
+        if (withColumn.error && /last_message_at/i.test(withColumn.error.message)) {
+          hasLastMessageColumn = false
+          const withoutColumn = await supabase
             .from('conversations')
             .select('id, user1_id, user2_id')
-            .or(`user1_id.eq.${userId},user2_id.eq.${userId}`),
-          supabase
-            .from('friendships')
-            .select('requester_id, addressee_id')
-            .or(`requester_id.eq.${userId},addressee_id.eq.${userId}`)
-            .eq('status', 'accepted'),
-        ])
+            .or(`user1_id.eq.${userId},user2_id.eq.${userId}`)
+          convRows = (withoutColumn.data ?? []) as ConvRow[]
+          convError = withoutColumn.error
+        } else {
+          convRows = (withColumn.data ?? []) as ConvRow[]
+          convError = withColumn.error
+        }
 
-        if (convRes.error) throw convRes.error
+        const friendRes = await supabase
+          .from('friendships')
+          .select('requester_id, addressee_id')
+          .or(`requester_id.eq.${userId},addressee_id.eq.${userId}`)
+          .eq('status', 'accepted')
+
+        if (convError) throw convError
         if (cancelled) return
 
         // 只保留「对方是我好友」的会话：
@@ -160,14 +190,16 @@ export function useUnreadMessages(userId: string | null): UnreadMessages {
             f.requester_id === userId ? f.addressee_id : f.requester_id,
           ),
         )
-        const convs = ((convRes.data ?? []) as { id: string; user1_id: string; user2_id: string }[]).filter(
-          (c) => friendIds.has(c.user1_id === userId ? c.user2_id : c.user1_id),
+        const convs = convRows.filter((c) =>
+          friendIds.has(c.user1_id === userId ? c.user2_id : c.user1_id),
         )
 
         const convIds = convs.map((c) => c.id)
         const friendMap: Record<string, string> = {}
+        const dbLastAt: Record<string, string> = {}
         for (const conv of convs) {
           friendMap[conv.id] = conv.user1_id === userId ? conv.user2_id : conv.user1_id
+          if (conv.last_message_at) dbLastAt[conv.id] = conv.last_message_at
         }
         setFriendIdByConversation(friendMap)
 
@@ -191,14 +223,14 @@ export function useUnreadMessages(userId: string | null): UnreadMessages {
         if (cancelled) return
 
         const counts: Record<string, number> = {}
-        const lastAt: Record<string, string> = {}
+        const computedLastAt: Record<string, string> = {}
         for (const msg of (msgs ?? []) as {
           conversation_id: string
           sender_id: string
           created_at: string
         }[]) {
           // 最后一条：查询已按时间倒序，第一次见到就是最新的
-          if (!lastAt[msg.conversation_id]) lastAt[msg.conversation_id] = msg.created_at
+          if (!computedLastAt[msg.conversation_id]) computedLastAt[msg.conversation_id] = msg.created_at
 
           // 未读：只算别人发来的
           if (msg.sender_id === userId) continue
@@ -206,6 +238,22 @@ export function useUnreadMessages(userId: string | null): UnreadMessages {
           if (!isNewer(msg.created_at, seenAt)) continue
           counts[msg.conversation_id] = (counts[msg.conversation_id] ?? 0) + 1
         }
+
+        /*
+         * 排序时间：数据库那份（dbLastAt）为准，它不受 400 条窗口限制；
+         * 没有字段时（没跑那段 SQL）退回这趟算出来的近似值。
+         * 两个都有的会话取较新的那个，避免回填之后又有新消息时出现偏差。
+         */
+        const lastAt: Record<string, string> = { ...computedLastAt }
+        if (hasLastMessageColumn) {
+          for (const convId of convIds) {
+            const fromDb = dbLastAt[convId]
+            if (!fromDb) continue
+            const fromMsgs = computedLastAt[convId]
+            lastAt[convId] = !fromMsgs || fromDb > fromMsgs ? fromDb : fromMsgs
+          }
+        }
+
         setByConversation(counts)
         setLastAtByConversation(lastAt)
         setLoaded(true)
