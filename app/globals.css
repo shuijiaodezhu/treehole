@@ -213,7 +213,6 @@ body {
   .th-page-out,
   .th-envelope-in,
   .th-flap,
-  .th-letter,
   .th-overlay-out {
     animation: none !important;
   }
@@ -240,11 +239,6 @@ body {
   100% { transform: rotateX(-172deg); }
 }
 
-@keyframes th-letter-up {
-  0%   { transform: translateY(0); }
-  100% { transform: translateY(-62%); }
-}
-
 @keyframes th-overlay-out {
   to { opacity: 0; transform: scale(1.07); }
 }
@@ -253,13 +247,10 @@ body {
 .th-page-out { animation: th-page-out 0.34s ease-in both; }
 
 /* 信封：从左边斜着飞进来，落定时有一点回弹 */
-.th-envelope-in { animation: th-envelope-in 0.62s cubic-bezier(0.22, 0.9, 0.3, 1.08) 0.2s both; }
+.th-envelope-in { animation: th-envelope-in 0.6s cubic-bezier(0.22, 0.9, 0.3, 1.08) 0.18s both; }
 
 /* 信封盖绕顶边翻开 */
-.th-flap { transform-origin: top center; animation: th-flap-open 0.5s ease-in-out 0.9s both; }
-
-/* 信纸从信封里升起来 */
-.th-letter { animation: th-letter-up 0.62s cubic-bezier(0.22, 0.8, 0.3, 1) 1.06s both; }
+.th-flap { transform-origin: top center; animation: th-flap-open 0.46s ease-in-out 0.82s both; }
 
 /* 整幕淡出并轻微放大，随后进入主页 */
-.th-overlay-out { animation: th-overlay-out 0.4s ease-in 1.78s both; }
+.th-overlay-out { animation: th-overlay-out 0.38s ease-in 1.5s both; }
