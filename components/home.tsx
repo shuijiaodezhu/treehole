@@ -2,7 +2,16 @@
 
 import Link from 'next/link'
 import type { ReactElement } from 'react'
-import { IconArrow, IconFlame, IconMail, WeatherIcon } from './icons'
+import {
+  IconArrow,
+  IconBox,
+  IconFlame,
+  IconHome,
+  IconLeaf,
+  IconMail,
+  IconSparkle,
+  WeatherIcon,
+} from './icons'
 import { avatarFallback } from './utils'
 import { markModuleSeen } from './module-badges'
 import { weatherAdvice, type WeatherState } from './weather'
@@ -126,52 +135,49 @@ export function FriendRequestBanner({ requests }: { requests: FriendRequest[] })
 /* ==================== 功能导航卡片网格 ==================== */
 
 const SECTIONS: NavSection[] = [
-  { href: '/friends', title: '小屋', desc: '好友与私聊' },
-  { href: '/world', title: '院子', desc: '大家在想什么' },
-  { href: '/play', title: '聚会', desc: '活动、小工具、一起听歌' },
-  { href: '/me', title: '我的', desc: '资料、收藏、设置' },
+  { href: '/friends', title: '小屋', desc: '好友与私聊', Icon: IconHome },
+  { href: '/world', title: '院子', desc: '大家在想什么', Icon: IconLeaf },
+  { href: '/play', title: '聚会', desc: '活动、小工具、一起听歌', Icon: IconSparkle },
+  { href: '/me', title: '我的', desc: '资料、收藏、设置', Icon: IconBox },
 ]
 
 export function NavCardGrid({ badges }: { badges?: Partial<Record<string, { count?: number; dot?: boolean }>> }): ReactElement {
   /*
-   * 原来是四张彩色渐变卡 + 圆形图标 + 药丸标签 —— 那种"卡片网格"是最容易
-   * 显得像模板的东西。改成一行一行的清单：左边名字、中间一句说明、
-   * 右边角标与箭头。同一屏能看到的信息更多，也更像人排的版。
+   * 四条主入口要"一眼看得见"，所以卡片留着；但四张卡**长得一样**：
+   * 统一的纸色底 + 细边框 + 小圆角，没有每页一套的粉彩渐变；
+   * 图标 16px 单色并与标题并排（不套圆形芯片）；没有药丸标签、没有箭头。
+   * 整块都能点，所以箭头是多余的装饰。
    */
   return (
-    <ul className="divide-y divide-[var(--accent-line)] border-y border-[var(--accent-line)]">
+    <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
       {SECTIONS.map((section) => {
         const key = section.href.replace('/', '')
         const badge = badges?.[key]
+        const Icon = section.Icon
         return (
-          <li key={section.href}>
-            <Link
-              href={section.href}
-              onClick={() => markModuleSeen(key as Parameters<typeof markModuleSeen>[0])}
-              className="group flex items-center gap-4 py-3.5 transition hover:bg-[var(--accent-soft)]/50"
-            >
-              <span className="w-12 flex-shrink-0 text-sm font-medium text-[#2b2430]">
-                {section.title}
-              </span>
-              <span className="min-w-0 flex-1 truncate text-xs text-[var(--accent-muted)]">
-                {section.desc}
-              </span>
+          <Link
+            key={section.href}
+            href={section.href}
+            onClick={() => markModuleSeen(key as Parameters<typeof markModuleSeen>[0])}
+            className="group rounded-xl border border-[var(--accent-line)] bg-white px-4 py-4 transition hover:border-[var(--accent)] hover:bg-[var(--accent-soft)]/50"
+          >
+            <div className="flex items-center gap-2">
+              {Icon && <Icon className="h-4 w-4 flex-shrink-0 text-[var(--accent)]" />}
+              <span className="text-[15px] font-medium text-[#2b2430]">{section.title}</span>
 
               {badge?.count ? (
-                <span className="flex-shrink-0 text-[11px] tabular-nums text-[var(--accent)]">
+                <span className="ml-auto text-[11px] tabular-nums text-[var(--accent)]">
                   {badge.count > 99 ? '99+' : badge.count}
                 </span>
               ) : badge?.dot ? (
-                <span className="h-1.5 w-1.5 flex-shrink-0 rounded-full bg-[var(--accent)]" />
+                <span className="ml-auto h-1.5 w-1.5 rounded-full bg-[var(--accent)]" />
               ) : null}
+            </div>
 
-              <span className="flex-shrink-0 text-sm text-[var(--accent-light)] transition group-hover:translate-x-0.5 group-hover:text-[var(--accent)]">
-                →
-              </span>
-            </Link>
-          </li>
+            <p className="mt-1.5 truncate text-xs text-[var(--accent-muted)]">{section.desc}</p>
+          </Link>
         )
       })}
-    </ul>
+    </div>
   )
 }

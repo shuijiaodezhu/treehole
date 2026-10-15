@@ -276,21 +276,22 @@ export default function HomePage() {
           </div>
 
           {/* 今天的一句话：只留引用本身和出处 */}
+          <FriendRequestBanner requests={requests} />
+
+          {/* 四条主入口：整块可点，卡片够大，一眼看得见 */}
+          <div className="pt-6">
+            <NavCardGrid badges={badges} />
+          </div>
+
+          {/* 今天的一句话放下面：它是安静的角落，不该跟入口抢注意力 */}
           {quote && (
-            <div className="border-b border-[var(--accent-line)] py-6">
+            <div className="mt-8 border-t border-[var(--accent-line)] pt-6">
               <p className="font-serif-cn text-[15px] leading-[1.9] text-[#3a3229]">
                 「{quote}」
               </p>
               <p className="mt-2 text-[11px] text-[var(--accent-light)]">来自陌生人的问候</p>
             </div>
           )}
-
-          <FriendRequestBanner requests={requests} />
-
-          <nav className="pt-8">
-            <p className="mb-1 text-[11px] tracking-wide text-[var(--accent-light)]">去哪儿</p>
-            <NavCardGrid badges={badges} />
-          </nav>
         </div>
       </div>
 
