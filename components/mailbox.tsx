@@ -195,67 +195,6 @@ export function useMailbox(meId: string | null): Mailbox {
   }
 }
 
-/* ==================== 左侧那一栏（宽屏显示） ==================== */
-
-export function MailboxRail({ mailbox, onOpen }: { mailbox: Mailbox; onOpen: () => void }) {
-  return (
-    <button
-      type="button"
-      onClick={onOpen}
-      className="group relative w-full overflow-hidden rounded-3xl border border-[var(--accent-line)] bg-white/80 p-5 text-left shadow-[0_2px_12px_rgba(217,119,87,0.05)] backdrop-blur transition hover:-translate-y-0.5 hover:shadow-[0_10px_28px_rgba(217,119,87,0.12)]"
-    >
-      {/* 冬日的细雪：几点很淡的小圆 */}
-      <span className="pointer-events-none absolute right-4 top-3 h-1 w-1 rounded-full bg-[var(--accent-light)] opacity-70" />
-      <span className="pointer-events-none absolute right-8 top-7 h-1.5 w-1.5 rounded-full bg-[var(--accent-light)] opacity-50" />
-      <span className="pointer-events-none absolute right-5 top-12 h-1 w-1 rounded-full bg-[var(--accent-light)] opacity-40" />
-
-      <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[var(--accent-soft)]">
-        <svg
-          className="animate-float h-6 w-6 text-[var(--accent)]"
-          viewBox="0 0 32 32"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1.7"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          aria-hidden="true"
-        >
-          {/* 小信箱 */}
-          <path d="M6 14a4 4 0 0 1 4-4h12a4 4 0 0 1 4 4v12H6z" />
-          <path d="M6 22h6a2 2 0 0 1 4 0 2 2 0 0 0 4 0h6" />
-          <path d="M22 10V6.5A1.5 1.5 0 0 1 23.5 5h3A1.5 1.5 0 0 1 28 6.5V10" />
-          <path d="M2 18h4" />
-        </svg>
-      </span>
-
-      <span className="mt-3.5 block font-serif-cn text-sm font-semibold text-[#2b2620]">
-        冬日信箱
-      </span>
-      <span className="mt-1 block font-serif-cn text-[11px] leading-relaxed text-[var(--accent-muted)]">
-        有些话不好说给别人听，
-        <br />
-        写给站主就好。
-      </span>
-
-      <span className="mt-4 flex items-center gap-2">
-        {mailbox.unread > 0 ? (
-          <span className="rounded-full bg-[var(--accent)] px-2 py-0.5 text-[10px] text-white">
-            {mailbox.unread} 封回信
-          </span>
-        ) : (
-          <span className="font-serif-cn text-[10px] text-[var(--accent-muted)]">
-            {mailbox.messages.length > 0 ? '去看看' : '写第一封'}
-          </span>
-        )}
-        <Icon
-          name="arrow"
-          className="ml-auto h-3.5 w-3.5 text-[var(--accent-light)] transition group-hover:translate-x-0.5"
-        />
-      </span>
-    </button>
-  )
-}
-
 /* ==================== 窄屏时的入口按钮（放在页头） ==================== */
 
 export function MailboxTrigger({ mailbox, onOpen }: { mailbox: Mailbox; onOpen: () => void }) {
