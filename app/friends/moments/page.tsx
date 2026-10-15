@@ -27,6 +27,7 @@ import {
   useFriendList,
   type Visibility,
 } from '../../../components/visibility'
+import { useTableRealtime } from '../../../components/realtime-table'
 
 type Post = {
   id: string
@@ -66,6 +67,20 @@ export default function MomentsPage() {
 
   /* ---------- 举报朋友圈：可举报、可撤回 ---------- */
   const [reportedMoments, setReportedMoments] = useState<Set<string>>(new Set())
+
+  /*
+   * 实时：好友发了新动态，当场出现在这里。
+   * 不写 filter —— postgres_changes 会按 RLS 过滤，收得到的都是我能看的。
+   * 重载之后页面自己还会按可见性/分组再过一遍，所以不会露不该露的。
+   */
+  useTableRealtime(
+    'moments-page',
+    'friend_posts',
+    () => {
+      if (userId) void loadPosts(userId)
+    },
+    { enabled: Boolean(userId) },
+  )
 
   useEffect(() => {
     if (!userId) return

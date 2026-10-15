@@ -9,6 +9,7 @@ import { markMomentsSeen, useMomentsBadge, useUnreadMessages } from '../../compo
 import { markModuleSeen } from '../../components/module-badges'
 import { ChatMessages } from '../../components/chat-bubbles'
 import { useChatRealtime } from '../../components/chat-realtime'
+import { useTableRealtime } from '../../components/realtime-table'
 import { useTypingIndicator } from '../../components/chat-typing'
 import { AffinityScore, readAffinityHidden, useAffinity, useAffinityMap } from '../../components/affinity'
 import { StatusLabel, useStatusMap, useStatusText } from '../../components/status'
@@ -156,6 +157,9 @@ export default function FriendsPage() {
   const [conversationId, setConversationId] = useState<string | null>(null)
 
   const [moments, setMoments] = useState<Moment[]>([])
+  // 实时推送到了就 +1，让下面两个 effect 重跑一遍（比起直接在回调里调 loader，
+  // 这样不引用"后面才声明"的函数，编译器才不会放弃整个组件）
+  const [dataVersion, setDataVersion] = useState(0)
   const [momentContent, setMomentContent] = useState('')
   const [postingMoment, setPostingMoment] = useState(false)
 
@@ -264,6 +268,15 @@ export default function FriendsPage() {
     [sortedFriends, hidden],
   )
 
+  /*
+   * 实时：有人加你好友 / 好友发了新动态，当场出现在列表和朋友圈里。
+   * 不写 filter —— Supabase 的 postgres_changes 会按 RLS 过滤，
+   * 所以收到的只会是"我有权读"的行（我的好友关系、我能看的朋友圈）。
+   */
+  const bumpData = useCallback(() => setDataVersion((v) => v + 1), [])
+  useTableRealtime('friends-page:friendships', 'friendships', bumpData, { enabled: Boolean(meId) })
+  useTableRealtime('friends-page:friend-posts', 'friend_posts', bumpData, { enabled: Boolean(meId) })
+
   // 列表里要显示「状态 + 好感度」：一次批量取回，不给每个好友各发一个请求
   const friendStatusMap = useStatusMap(shownFriends.map((f) => f.friend_id))
   const { scores: affinityScores, refresh: refreshAffinity } = useAffinityMap(meId)
@@ -273,7 +286,7 @@ export default function FriendsPage() {
     // eslint-disable-next-line react-hooks/immutability
     loadAll()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [dataVersion])
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' })

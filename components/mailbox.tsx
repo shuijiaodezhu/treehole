@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import Link from 'next/link'
 import { createClient } from '../app/lib/supabase'
+import { useTableRealtime } from './realtime-table'
 import { Icon } from './icons'
 import { EmojiPicker, useEmojiInsert } from './emoji-picker'
 import { ADMIN_UUID } from './utils'
@@ -87,6 +88,18 @@ export function useMailbox(meId: string | null): Mailbox {
   const [error, setError] = useState('')
   const [errorKind, setErrorKind] = useState<MailboxErrorKind | null>(null)
   const [reloadKey, setReloadKey] = useState(0)
+
+  /*
+   * 实时：站主回信时，正开着的信箱当场多出一条。
+   * 只订自己这一条线（thread_user_id），别人的信收不到。
+   * （就算不开着信箱，也会有一条通知落到铃铛里，那才是主路。）
+   */
+  useTableRealtime(
+    `mailbox:${meId ?? 'none'}`,
+    'winter_letters',
+    () => setReloadKey((k) => k + 1),
+    { filter: meId ? `thread_user_id=eq.${meId}` : undefined, enabled: Boolean(meId) },
+  )
 
   // 首次挂载后再读本地记录，避免预渲染时访问 localStorage
   useEffect(() => {
