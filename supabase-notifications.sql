@@ -353,6 +353,32 @@ begin
 end $$;
 
 
+-- ============================================================
+-- 八、加入 Realtime 发布 —— 让通知「一发就到」
+--
+-- 不加入发布的话，前端订阅也收不到任何东西（Realtime 只推送发布里的表），
+-- 那就只能靠轮询，最坏要等几分钟。
+--
+-- 幂等：先查发布里有没有这张表，没有才加。
+-- ============================================================
+do $$
+begin
+  if to_regclass('public.notifications') is null then
+    raise notice '跳过：还没有 notifications 表';
+    return;
+  end if;
+
+  if not exists (
+    select 1 from pg_publication_tables
+    where pubname = 'supabase_realtime'
+      and schemaname = 'public'
+      and tablename = 'notifications'
+  ) then
+    alter publication supabase_realtime add table public.notifications;
+  end if;
+end $$;
+
+
 notify pgrst, 'reload schema';
 
 
@@ -366,6 +392,10 @@ notify pgrst, 'reload schema';
 -- 触发器（应有 8 个）
 -- select tgname, tgrelid::regclass from pg_trigger
 -- where tgname like 'notify_%' order by tgname;
+--
+-- Realtime 发布里有没有它（应有 1 行）
+-- select tablename from pg_publication_tables
+-- where pubname = 'supabase_realtime' and tablename = 'notifications';
 --
 -- 最近的通知
 -- select kind, title, created_at from public.notifications order by created_at desc limit 20;

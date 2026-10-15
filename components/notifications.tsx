@@ -11,9 +11,10 @@ import { Icon } from './icons'
  * 表在 supabase-notifications.sql，由数据库触发器写入（客户端**没有** insert 权限，
  * 所以伪造不了一条"系统通知"）。这里只负责读、标记已读、删除。
  *
- * 刷新方式：进页面/打开组件时拉一次，之后每 45 秒兜底轮询一次
- * （只在标签页可见时轮询）。没走 Realtime 是因为 supabase_realtime 发布里
- * 只加了聊天那几张表，加通知表要再跑一段 SQL —— 45 秒延迟对通知够用。
+ * 到达方式：**Realtime 订阅**（数据库那边要把 notifications 加进
+ * supabase_realtime 发布，见那份 SQL 的第八段）+ **5 分钟兜底轮询**。
+ * 订阅是为了"一发就到"，轮询是为了万一订阅没生效也不至于完全收不到 ——
+ * 和聊天那套（components/chat-realtime.ts）是同一个思路。
  */
 
 const supabase = createClient()
@@ -94,13 +95,57 @@ export function useNotifications(userId: string | null) {
       await load()
     })()
 
-    // 兜底轮询：只看可见的标签页，避免后台标签白跑
+    // 兜底轮询：实时订阅才是主路，这里只是保险。
+    // 放宽到 5 分钟，并且只看可见的标签页，避免后台标签白跑。
     const timer = window.setInterval(() => {
       if (document.visibilityState === 'visible') void load()
-    }, 45_000)
+    }, 300_000)
 
     return () => window.clearInterval(timer)
   }, [userId, load, reloadKey])
+
+  /*
+   * 实时订阅：别人一提到你、站主一回信，铃铛当场就变。
+   *
+   * 两点写法上的注意：
+   *   · 回调必须在 subscribe() **之前**注册（订阅之后再 .on 会报
+   *     "cannot add callbacks after subscribe()"，之前踩过一次）
+   *   · 收到 INSERT 时先按 id 去重，避免和兜底轮询回来的那条重复
+   */
+  useEffect(() => {
+    if (!userId) return
+
+    let cancelled = false
+    const channel = supabase
+      .channel(`notifications:${userId}`)
+      .on(
+        'postgres_changes',
+        { event: 'INSERT', schema: 'public', table: 'notifications', filter: `user_id=eq.${userId}` },
+        (payload) => {
+          if (cancelled) return
+          const row = payload.new as Notice
+          setItems((prev) => (prev.some((n) => n.id === row.id) ? prev : [row, ...prev].slice(0, 50)))
+          if (!row.read_at) setUnread((n) => n + 1)
+          setLoading(false)
+        },
+      )
+      .on(
+        'postgres_changes',
+        { event: 'UPDATE', schema: 'public', table: 'notifications', filter: `user_id=eq.${userId}` },
+        (payload) => {
+          if (cancelled) return
+          // 别的标签页标了已读，这里跟着变
+          const row = payload.new as Notice
+          setItems((prev) => prev.map((n) => (n.id === row.id ? { ...n, read_at: row.read_at } : n)))
+        },
+      )
+      .subscribe()
+
+    return () => {
+      cancelled = true
+      void supabase.removeChannel(channel)
+    }
+  }, [userId])
 
   const markAllRead = useCallback(async () => {
     if (!userId) return
