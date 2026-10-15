@@ -1,151 +1,939 @@
 'use client'
+/* eslint-disable @next/next/no-img-element -- 头像用原生 img 即可，尺寸固定 */
+/* eslint-disable react-hooks/set-state-in-effect -- 规则未识别 async 取数（init/loadPosts），此处是纯客户端页面 */
 
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { createClient } from '../lib/supabase'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import { readSeenAt, writeSeenAt } from '../../components/module-badges'
+import { useWorldRepliesBadge } from '../../components/unread'
+import { useFocusQuery } from '../../components/use-focus-query'
+import { useFavorites } from '../../components/favorites'
+import { useDeleteContent } from '../../components/delete-content'
+import { useBlocks } from '../../components/blocks'
 
+// 客户端提到模块级，保证引用稳定
+const supabase = createClient()
+
+type Category = { id: string; name: string; icon: string | null; parent_id: string | null; sort_order: number }
 type Post = {
+  id: string; author_id: string; is_anonymous: boolean; anonymous_id: string | null;
+  content: string; category_id: string | null; created_at: string;
+  author_name: string; author_avatar: string | null;
+  like_count: number; liked_by_me: boolean; comments: Comment[];
+}
+type Comment = {
+  id: string; post_id: string; author_id: string; content: string; created_at: string;
+  is_anonymous: boolean; anonymous_id: string | null; parent_id: string | null;
+  author_name: string; author_avatar: string | null; parent_name?: string | null;
+}
+
+/** 精确跳转（/world?post=<id>）时用到的行类型 */
+type FocusCommentRow = {
   id: string
-  content: string
-  is_anonymous: boolean
-  author_id: string | null
+  post_id: string
+  author_id: string
+  content: string | null
   created_at: string
-  profiles?: { username: string } | null
+  is_anonymous: boolean
+  anonymous_id: string | null
+  parent_id: string | null
+}
+
+type FocusProfileRow = {
+  id: string
+  username: string | null
+  nickname: string | null
+  avatar_url: string | null
+}
+
+function Icon({ name, className = '' }: { name: string; className?: string }) {
+  const c = { className, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: 1.8, strokeLinecap: 'round' as const, strokeLinejoin: 'round' as const }
+  switch (name) {
+    case 'back': return <svg {...c}><line x1="19" y1="12" x2="5" y2="12" /><polyline points="12 19 5 12 12 5" /></svg>
+    case 'user': return <svg {...c} strokeWidth={1.6}><circle cx="12" cy="8" r="4" /><path d="M4 21c0-4.418 3.582-8 8-8s8 3.582 8 8" /></svg>
+    case 'send': return <svg {...c}><line x1="22" y1="2" x2="11" y2="13" /><polygon points="22 2 15 22 11 13 2 9 22 2" /></svg>
+    case 'heart': return <svg {...c}><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" /></svg>
+    case 'heartfill': return <svg {...c} fill="currentColor"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" /></svg>
+    case 'comment': return <svg {...c}><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" /></svg>
+    case 'alert': return <svg {...c}><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" /><line x1="12" y1="9" x2="12" y2="13" /><line x1="12" y1="17" x2="12.01" y2="17" /></svg>
+    case 'pen': return <svg {...c}><path d="M12 20h9" /><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" /></svg>
+    case 'home': return <svg {...c}><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" /><polyline points="9 22 9 12 15 12 15 22" /></svg>
+    case 'sparkle': return <svg {...c}><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1" /><circle cx="12" cy="12" r="3" /></svg>
+    case 'box': return <svg {...c}><path d="M21 8v8a2 2 0 0 1-1 1.73l-7 4a2 2 0 0 1-2 0l-7-4A2 2 0 0 1 3 16V8a2 2 0 0 1 1-1.73l7-4a2 2 0 0 1 2 0l7 4A2 2 0 0 1 21 8z" /><polyline points="3.27 6.96 12 12.01 20.73 6.96" /><line x1="12" y1="22.08" x2="12" y2="12" /></svg>
+    case 'game': return <svg {...c}><line x1="6" y1="11" x2="10" y2="11" /><line x1="8" y1="9" x2="8" y2="13" /><line x1="15" y1="12" x2="15.01" y2="12" /><line x1="18" y1="10" x2="18.01" y2="10" /><path d="M17.32 5H6.68a4 4 0 0 0-3.978 3.59c-.006.052-.01.101-.017.152C2.604 9.416 2 14.456 2 16a3 3 0 0 0 3 3c1 0 1.5-.5 2-1l1.414-1.414A2 2 0 0 1 9.828 16h4.344a2 2 0 0 1 1.414.586L17 18c.5.5 1 1 2 1a3 3 0 0 0 3-3c0-1.545-.604-6.584-.685-7.258-.007-.05-.011-.1-.017-.151A4 4 0 0 0 17.32 5z" /></svg>
+    case 'music': return <svg {...c}><path d="M9 18V5l12-2v13" /><circle cx="6" cy="18" r="3" /><circle cx="18" cy="16" r="3" /></svg>
+    case 'food': return <svg {...c}><path d="M18 8h1a4 4 0 0 1 0 8h-1" /><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z" /><line x1="6" y1="1" x2="6" y2="4" /><line x1="10" y1="1" x2="10" y2="4" /><line x1="14" y1="1" x2="14" y2="4" /></svg>
+    case 'rain': return <svg {...c}><line x1="16" y1="13" x2="16" y2="21" /><line x1="8" y1="13" x2="8" y2="21" /><line x1="12" y1="15" x2="12" y2="23" /><path d="M20 16.58A5 5 0 0 0 18 7h-1.26A8 8 0 1 0 4 15.25" /></svg>
+    case 'suitcase': return <svg {...c}><rect x="2" y="7" width="20" height="14" rx="2" ry="2" /><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" /></svg>
+    case 'heartbubble': return <svg {...c}><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" /></svg>
+    case 'spiral': return <svg {...c}><circle cx="12" cy="12" r="9" /><circle cx="12" cy="12" r="6" /><circle cx="12" cy="12" r="3" /></svg>
+    case 'plus': return <svg {...c} strokeWidth={2}><line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" /></svg>
+    default: return null
+  }
+}
+
+const categoryIconMap: Record<string, string> = {
+  '游戏': 'game', '音乐': 'music', '吃喝': 'food', '压抑': 'rain',
+  '旅游': 'suitcase', '感情': 'heartbubble', '抽象': 'spiral',
+}
+
+function formatTime(dateStr: string) {
+  return new Date(dateStr).toLocaleString('zh-CN', { month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' })
+}
+
+function generateAnonymousId() {
+  return Math.floor(10000000 + Math.random() * 90000000).toString()
 }
 
 export default function WorldPage() {
+  const [categories, setCategories] = useState<Category[]>([])
   const [posts, setPosts] = useState<Post[]>([])
-  const [content, setContent] = useState('')
-  const [isAnonymous, setIsAnonymous] = useState(true)
   const [loading, setLoading] = useState(true)
+  const [meId, setMeId] = useState<string | null>(null)
+  const [currentCategory, setCurrentCategory] = useState<Category | null>(null)
+  const [expandedCategory, setExpandedCategory] = useState<string | null>(null)
+
+  const [showPostModal, setShowPostModal] = useState(false)
+  const [postContent, setPostContent] = useState('')
+  const [isAnonymous, setIsAnonymous] = useState(false)
   const [posting, setPosting] = useState(false)
-  const [userId, setUserId] = useState<string | null>(null)
+  const [postCategoryId, setPostCategoryId] = useState<string>('')
+
+  const [showDepressedWarning, setShowDepressedWarning] = useState(false)
+  const [depressedCategory, setDepressedCategory] = useState<Category | null>(null)
+
+  const [showNewCategoryModal, setShowNewCategoryModal] = useState(false)
+  const [newCategoryName, setNewCategoryName] = useState('')
+  const [newCategoryParent, setNewCategoryParent] = useState<Category | null>(null)
+  const [creatingCategory, setCreatingCategory] = useState(false)
+  const [createCategoryMessage, setCreateCategoryMessage] = useState('')
+
+  const [openCommentPost, setOpenCommentPost] = useState<string | null>(null)
+  const [commentInputs, setCommentInputs] = useState<{ [key: string]: string }>({})
+  const [commentAnonymous, setCommentAnonymous] = useState<{ [key: string]: boolean }>({})
+  const [postingComment, setPostingComment] = useState<string | null>(null)
+  const [replyingTo, setReplyingTo] = useState<Comment | null>(null)
+
   const router = useRouter()
-  const supabase = createClient()
 
-  useEffect(() => {
-    async function init() {
-      const { data: userData } = await supabase.auth.getUser()
-      if (!userData.user) {
-        router.push('/login')
-        return
+  // 先声明函数，再让 useEffect 调用（修复 "accessed before it is declared"）
+  const init = useCallback(async () => {
+    const { data: userData } = await supabase.auth.getUser()
+    if (!userData.user) { router.push('/login'); return }
+    setMeId(userData.user.id)
+    const { data: cats } = await supabase.from('categories').select('id, name, icon, parent_id, sort_order').eq('status', 'approved').order('sort_order', { ascending: true })
+    setCategories((cats || []) as Category[])
+    setLoading(false)
+  }, [router])
+
+  const loadPosts = useCallback(async (categoryId: string | null) => {
+    let query = supabase.from('world_posts').select('id, author_id, is_anonymous, anonymous_id, content, category_id, created_at').eq('status', 'published').eq('is_hidden', false).order('created_at', { ascending: false }).limit(50)
+    if (categoryId) query = query.eq('category_id', categoryId)
+    else query = query.is('category_id', null)
+
+    const { data: postsData } = await query
+    if (!postsData || postsData.length === 0) { setPosts([]); return }
+
+    const postIds = postsData.map((p) => p.id)
+    const authorIds = [...new Set(postsData.filter((p) => !p.is_anonymous).map((p) => p.author_id))]
+    const { data: likesData } = await supabase.from('world_likes').select('post_id, user_id').in('post_id', postIds)
+    const { data: commentsData } = await supabase.from('world_comments').select('id, post_id, author_id, content, created_at, is_anonymous, anonymous_id, parent_id').in('post_id', postIds).order('created_at', { ascending: true })
+
+    const commentAuthorIds = commentsData ? [...new Set(commentsData.filter((c) => !c.is_anonymous).map((c) => c.author_id))] : []
+    const allAuthorIds = [...new Set([...authorIds, ...commentAuthorIds])]
+    const { data: allProfilesData } = await supabase.from('profiles').select('id, username, nickname, avatar_url').in('id', allAuthorIds.length > 0 ? allAuthorIds : ['00000000-0000-0000-0000-000000000000'])
+
+    const list: Post[] = postsData.map((p) => {
+      const prof = allProfilesData?.find((x) => x.id === p.author_id)
+      const postLikes = likesData?.filter((l) => l.post_id === p.id) || []
+      const postComments: Comment[] = (commentsData || [])
+        .filter((c) => c.post_id === p.id)
+        .map((c) => {
+          const cp = allProfilesData?.find((x) => x.id === c.author_id)
+          let parentName: string | null = null
+          if (c.parent_id) {
+            const parentComment = commentsData?.find((x) => x.id === c.parent_id)
+            if (parentComment) {
+              if (parentComment.is_anonymous) {
+                parentName = `匿名用户${parentComment.anonymous_id || '00000000'}`
+              } else {
+                const pp = allProfilesData?.find((x) => x.id === parentComment.author_id)
+                parentName = pp?.nickname || pp?.username || '某人'
+              }
+            }
+          }
+          return {
+            id: c.id, post_id: c.post_id, author_id: c.author_id, content: c.content,
+            created_at: c.created_at, is_anonymous: c.is_anonymous, anonymous_id: c.anonymous_id,
+            parent_id: c.parent_id,
+            author_name: c.is_anonymous ? `匿名用户${c.anonymous_id || '00000000'}` : cp?.nickname || cp?.username || '某人',
+            author_avatar: c.is_anonymous ? null : cp?.avatar_url || null,
+            parent_name: parentName,
+          }
+        })
+
+      return {
+        id: p.id, author_id: p.author_id, is_anonymous: p.is_anonymous, anonymous_id: p.anonymous_id,
+        content: p.content, category_id: p.category_id, created_at: p.created_at,
+        author_name: p.is_anonymous ? `匿名用户${p.anonymous_id || '00000000'}` : prof?.nickname || prof?.username || '某人',
+        author_avatar: p.is_anonymous ? null : prof?.avatar_url || null,
+        like_count: postLikes.length,
+        liked_by_me: postLikes.some((l) => l.user_id === meId),
+        comments: postComments,
       }
-      setUserId(userData.user.id)
-      await loadPosts()
-      setLoading(false)
-    }
-    init()
-  }, [])
+    })
 
-  async function loadPosts() {
-    const { data, error } = await supabase
-      .from('world_posts')
-      .select('id, content, is_anonymous, author_id, created_at')
-      .eq('status', 'published')
-      .eq('is_hidden', false)
-      .order('created_at', { ascending: false })
-      .limit(50)
+    setPosts(list)
+  }, [meId])
 
-    if (!error && data) {
-      setPosts(data as any)
+  function handleCategoryClick(cat: Category) {
+    if (cat.name === '压抑' && !cat.parent_id) {
+      setDepressedCategory(cat)
+      setShowDepressedWarning(true)
+      return
     }
+    if (!cat.parent_id) {
+      setCurrentCategory(cat)
+      setExpandedCategory(cat.id)
+      return
+    }
+    setCurrentCategory(cat)
+  }
+
+  function selectDepressedSub(cat: Category) {
+    setCurrentCategory(cat)
+    setShowDepressedWarning(false)
+    setDepressedCategory(null)
   }
 
   async function handlePost(e: React.FormEvent) {
     e.preventDefault()
-    if (!content.trim() || !userId) return
-
+    if (!postContent.trim() || !meId) return
     setPosting(true)
+    const newAnonymousId = isAnonymous ? generateAnonymousId() : null
     const { error } = await supabase.from('world_posts').insert({
-      author_id: userId,
-      content: content.trim(),
-      is_anonymous: isAnonymous,
-      category: 'yard',
-      status: 'published',
+      author_id: meId, content: postContent.trim(), is_anonymous: isAnonymous,
+      anonymous_id: newAnonymousId, category_id: postCategoryId || null, status: 'published',
     })
-
-    if (error) {
-      alert('发帖失败：' + error.message)
-    } else {
-      setContent('')
-      await loadPosts()
+    if (error) { alert('发布失败：' + error.message) }
+    else {
+      setPostContent(''); setIsAnonymous(false); setShowPostModal(false)
+      await loadPosts(currentCategory?.id || null)
     }
     setPosting(false)
   }
 
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <p>加载中...</p>
-      </div>
-    )
+  async function handleCreateCategory(e: React.FormEvent) {
+    e.preventDefault()
+    if (!newCategoryName.trim() || !meId) return
+    setCreatingCategory(true)
+    setCreateCategoryMessage('')
+    const { error } = await supabase.from('categories').insert({
+      name: newCategoryName.trim(), parent_id: newCategoryParent?.id || null,
+      status: 'pending', created_by: meId,
+    })
+    if (error) { setCreateCategoryMessage('提交失败：' + error.message) }
+    else {
+      setCreateCategoryMessage('已提交，等待站主审核')
+      setNewCategoryName('')
+      setTimeout(() => { setShowNewCategoryModal(false); setNewCategoryParent(null); setCreateCategoryMessage('') }, 1500)
+    }
+    setCreatingCategory(false)
   }
 
+  async function handleLike(postId: string, liked: boolean) {
+    if (!meId) return
+    if (liked) { await supabase.from('world_likes').delete().eq('post_id', postId).eq('user_id', meId) }
+    else { await supabase.from('world_likes').insert({ post_id: postId, user_id: meId }) }
+    await loadPosts(currentCategory?.id || null)
+  }
+
+  /* ---------- 上次看到这里 ---------- */
+  const [seenAt, setSeenAt] = useState<string | null>(null)
+
+  // 有人回我（评论我的帖 / 回复我的评论）的未读数
+  const replies = useWorldRepliesBadge(meId)
+  const refreshReplies = replies.refresh
+
+  // 收藏
+  const favorites = useFavorites(meId)
+
+  // 删除自己发的帖子 / 评论（两步确认，避免误触）
+  const deleter = useDeleteContent(meId)
+
+  // 拉黑：被拉黑（含拉黑我的）的内容一律不显示
+  const blocks = useBlocks(meId)
+  const [confirmDeletePost, setConfirmDeletePost] = useState<string | null>(null)
+  const [confirmDeleteComment, setConfirmDeleteComment] = useState<string | null>(null)
+
+  async function handleDeletePost(postId: string, authorId: string) {
+    const result = await deleter.deletePost(postId, authorId)
+    setConfirmDeletePost(null)
+    if (!result.ok) alert('删除失败：' + (result.message ?? '未知错误'))
+  }
+
+  async function handleDeleteComment(commentId: string, authorId: string) {
+    const result = await deleter.deleteComment(commentId, authorId)
+    setConfirmDeleteComment(null)
+    if (!result.ok) alert('删除失败：' + (result.message ?? '未知错误'))
+  }
+
+  // 进页面就算看过：读上一次的时间戳（用来画「上次看到这里」），
+  // 然后立刻把它推进到现在，这样返回主页时提示点/角标就消失了。
+  useEffect(() => {
+    const id = window.requestAnimationFrame(() => {
+      setSeenAt(readSeenAt('world'))
+      writeSeenAt('world', new Date().toISOString())
+      setSeenAt(new Date().toISOString())
+      // 看过这一趟，回复角标一并归零
+      refreshReplies()
+    })
+    return () => window.cancelAnimationFrame(id)
+  }, [refreshReplies])
+
+  // 第一/最后一条新帖的位置：用来插「上次看到这里」的标记
+  const newPostIndex = useMemo(() => {
+    if (!seenAt || posts.length === 0) return -1
+    const seenTime = new Date(seenAt).getTime()
+    const idx = posts.findIndex((p) => new Date(p.created_at).getTime() > seenTime)
+    if (idx < 0) return -1
+    // 全是最新的帖子时不插线（整页都是新的）
+    return idx > 0 ? idx : -1
+  }, [posts, seenAt])
+
+  /* ---------- 从搜索页精确跳转：/world?post=<id> ---------- */
+  const focusPostId = useFocusQuery('post')
+
+  // 定位模式：只渲染这一条帖子
+  const visiblePosts = useMemo(
+    () =>
+      (focusPostId ? posts.filter((p) => p.id === focusPostId) : posts)
+        .filter((p) => deleter.postVisible(p))
+        .filter((p) => !blocks.hiddenIds.has(p.author_id)),
+    [posts, focusPostId, deleter, blocks.hiddenIds],
+  )
+
+  /** 已确认不存在（帖子被删或不可见）时才提示 */
+  const [focusMissing, setFocusMissing] = useState(false)
+
+  useEffect(() => {
+    if (!focusPostId) return
+    let cancelled = false
+
+    const run = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('world_posts')
+          .select('id, author_id, is_anonymous, anonymous_id, content, category_id, created_at')
+          .eq('id', focusPostId)
+          .eq('status', 'published')
+          .eq('is_hidden', false)
+          .maybeSingle()
+
+        if (error) throw error
+        if (cancelled) return
+
+        if (!data) {
+          setPosts([])
+          setFocusMissing(true)
+          return
+        }
+
+        const [likesRes, commentsRes] = await Promise.all([
+          supabase.from('world_likes').select('post_id, user_id').eq('post_id', data.id),
+          supabase
+            .from('world_comments')
+            .select('id, post_id, author_id, content, created_at, is_anonymous, anonymous_id, parent_id')
+            .eq('post_id', data.id)
+            .order('created_at', { ascending: true }),
+        ])
+
+        const likes = likesRes.data ?? []
+        const commentRows = (commentsRes.data ?? []) as unknown as FocusCommentRow[]
+
+        // 一次把「帖子作者 + 评论作者」的资料查出来
+        const authorIds = [
+          ...new Set([
+            ...(data.is_anonymous ? [] : [data.author_id]),
+            ...commentRows.filter((c) => !c.is_anonymous).map((c) => c.author_id),
+          ]),
+        ]
+
+        const profilesRes = authorIds.length
+          ? await supabase
+              .from('profiles')
+              .select('id, username, nickname, avatar_url')
+              .in('id', authorIds)
+          : { data: [] as FocusProfileRow[] }
+
+        if (cancelled) return
+
+        const allProfiles = (profilesRes.data ?? []) as unknown as FocusProfileRow[]
+        const profileOf = (uid: string) => allProfiles.find((x) => x.id === uid) ?? null
+        const nameOf = (uid: string) => {
+          const p = profileOf(uid)
+          return p?.nickname?.trim() || p?.username?.trim() || '某人'
+        }
+
+        const authorProfile = profileOf(data.author_id)
+        const comments: Comment[] = commentRows.map((c) => ({
+          id: c.id,
+          post_id: c.post_id,
+          author_id: c.author_id,
+          content: c.content ?? '',
+          created_at: c.created_at,
+          is_anonymous: c.is_anonymous,
+          anonymous_id: c.anonymous_id,
+          parent_id: c.parent_id,
+          author_name: c.is_anonymous ? `匿名用户${c.anonymous_id || '00000000'}` : nameOf(c.author_id),
+          author_avatar: c.is_anonymous ? null : profileOf(c.author_id)?.avatar_url ?? null,
+          parent_name: c.parent_id ? nameOf(commentRows.find((x) => x.id === c.parent_id)?.author_id ?? '') : null,
+        }))
+
+        setFocusMissing(false)
+        setPosts([
+          {
+            id: data.id,
+            author_id: data.author_id,
+            is_anonymous: data.is_anonymous,
+            anonymous_id: data.anonymous_id,
+            content: data.content,
+            category_id: data.category_id,
+            created_at: data.created_at,
+            author_name: data.is_anonymous
+              ? `匿名用户${data.anonymous_id || '00000000'}`
+              : authorProfile?.nickname?.trim() || authorProfile?.username?.trim() || '某人',
+            author_avatar: data.is_anonymous ? null : authorProfile?.avatar_url ?? null,
+            like_count: likes.length,
+            liked_by_me: likes.some((l) => l.user_id === meId),
+            comments,
+          },
+        ])
+        // 定位到的帖子默认展开评论
+        setOpenCommentPost(data.id)
+      } catch (err) {
+        console.error('定位帖子失败:', err)
+        if (!cancelled) setFocusMissing(true)
+      }
+    }
+
+    void run()
+    return () => {
+      cancelled = true
+    }
+  }, [focusPostId, meId])
+
+  async function handlePostComment(postId: string) {
+    const text = commentInputs[postId]?.trim()
+    if (!text || !meId) return
+    setPostingComment(postId)
+    const anon = commentAnonymous[postId] || false
+    const { error } = await supabase.from('world_comments').insert({
+      post_id: postId, author_id: meId, content: text,
+      is_anonymous: anon,
+      anonymous_id: anon ? generateAnonymousId() : null,
+      parent_id: replyingTo?.parent_id || replyingTo?.id || null,
+    })
+    if (error) { alert('评论失败：' + error.message) }
+    else {
+      setCommentInputs({ ...commentInputs, [postId]: '' })
+      setCommentAnonymous({ ...commentAnonymous, [postId]: false })
+      setReplyingTo(null)
+      await loadPosts(currentCategory?.id || null)
+    }
+    setPostingComment(null)
+  }
+
+  useEffect(() => { init() }, [init])
+
+  useEffect(() => {
+    if (meId) loadPosts(currentCategory?.id || null)
+  }, [currentCategory, meId, loadPosts])
+
+  const topCategories = categories.filter((c) => !c.parent_id)
+  const currentLocationName = currentCategory ? currentCategory.name : '大厅'
+  const selectedCategoryName = postCategoryId
+    ? categories.find((c) => c.id === postCategoryId)?.name || '大厅'
+    : '大厅'
+
+  if (loading) return <div className="min-h-screen flex items-center justify-center"><p>加载中...</p></div>
+
   return (
-    <div className="min-h-screen p-6">
-      <header className="max-w-2xl mx-auto mb-6">
-        <Link href="/" className="text-sm text-gray-500 hover:underline">
-          ← 返回
-        </Link>
-        <h1 className="text-3xl font-bold mt-2">院子</h1>
-        <p className="text-sm text-gray-500 mt-1">院子里，陌生人路过</p>
-      </header>
+    <div className="min-h-screen bg-[#eef5e8] relative overflow-hidden">
+      <div className="absolute -top-20 -right-20 w-96 h-96 bg-[#a8c89a] opacity-20 rounded-full blur-3xl pointer-events-none"></div>
+      <div className="absolute -bottom-20 -left-20 w-96 h-96 bg-[#7ea86a] opacity-[0.08] rounded-full blur-3xl pointer-events-none"></div>
 
-      <main className="max-w-2xl mx-auto">
-        {/* 发帖区 */}
-        <form onSubmit={handlePost} className="bg-white p-4 rounded-lg shadow mb-6">
-          <textarea
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
-            placeholder="写点什么，院子里的人都看得到..."
-            rows={3}
-            className="w-full p-2 border rounded resize-none focus:outline-none focus:ring-2 focus:ring-orange-300"
-            maxLength={500}
-          />
-          <div className="flex justify-between items-center mt-3">
-            <label className="flex items-center text-sm text-gray-600 cursor-pointer">
-              <input
-                type="checkbox"
-                checked={isAnonymous}
-                onChange={(e) => setIsAnonymous(e.target.checked)}
-                className="mr-2"
-              />
-              匿名发布
-            </label>
+      <div className="relative max-w-6xl mx-auto px-6 pt-24 pb-8">
+        <header className="mb-6">
+          <Link href="/" className="inline-flex items-center gap-1.5 text-sm text-[#7a8a6a] hover:text-[#5a8a4a] transition">
+            <Icon name="back" className="w-4 h-4" />返回
+          </Link>
+          <h1 className="text-3xl font-bold text-[#2b3a20] mt-4">院子</h1>
+          <p className="text-sm text-[#7a8a6a] mt-1">瞧瞧Ta们在干啥</p>
+        </header>
+
+        <div className="flex gap-5 min-h-[600px]">
+          <aside className="w-56 flex-shrink-0 flex flex-col gap-3">
             <button
-              type="submit"
-              disabled={posting || !content.trim()}
-              className="px-4 py-1.5 bg-orange-500 text-white rounded hover:bg-orange-600 disabled:bg-gray-300"
+              onClick={() => { setPostCategoryId(currentCategory?.id || ''); setShowPostModal(true) }}
+              className="w-full py-2.5 rounded-2xl bg-gradient-to-r from-[#a8c89a] to-[#7ea86a] text-white text-sm font-medium hover:shadow-[0_6px_20px_rgba(126,168,106,0.3)] transition-all flex flex-col items-center justify-center gap-0.5"
             >
-              {posting ? '发送中...' : '发送'}
+              <span className="flex items-center gap-2"><Icon name="pen" className="w-4 h-4" />发帖</span>
+              <span className="text-[10px] text-white/80 font-normal">发到「{currentLocationName}」</span>
             </button>
-          </div>
-        </form>
 
-        {/* 帖子列表 */}
-        <div className="space-y-4">
-          {posts.length === 0 ? (
-            <p className="text-center text-gray-400 py-10">院子里还空空的，写第一条吧。</p>
-          ) : (
-            posts.map((post) => (
-              <div key={post.id} className="bg-white p-4 rounded-lg shadow">
-                <div className="flex justify-between items-center mb-2">
-                  <span className="text-sm text-gray-500">
-                    {post.is_anonymous
-                      ? '匿名'
-                      : post.profiles?.username || '某人'}
-                  </span>
-                  <span className="text-xs text-gray-400">
-                    {new Date(post.created_at).toLocaleString('zh-CN')}
-                  </span>
-                </div>
-                <p className="text-gray-800 whitespace-pre-wrap">{post.content}</p>
+            <div className="rounded-2xl border border-[#d8e8c8] bg-white/80 backdrop-blur shadow-[0_2px_12px_rgba(126,168,106,0.04)] overflow-hidden">
+              <div className="px-4 py-3 border-b border-[#e0eed0]">
+                <p className="text-[10px] text-[#8a9a7a] tracking-wide">分区 · 看哪儿的帖子</p>
               </div>
-            ))
-          )}
+              <div className="p-2">
+                <button
+                  onClick={() => { setCurrentCategory(null); setExpandedCategory(null) }}
+                  className={`w-full text-left px-3 py-2 rounded-xl text-sm transition flex items-center gap-2 ${!currentCategory ? 'bg-[#e8f0e0] text-[#5a8a4a] font-medium' : 'text-[#4a5a3a] hover:bg-[#f0f7e8]'}`}
+                >
+                  <Icon name="home" className="w-4 h-4" />大厅
+                </button>
+
+                {topCategories.map((cat) => {
+                  const children = categories.filter((c) => c.parent_id === cat.id)
+                  const isActive = currentCategory?.id === cat.id || currentCategory?.parent_id === cat.id
+                  const isExpanded = expandedCategory === cat.id
+                  return (
+                    <div key={cat.id}>
+                      <button
+                        onClick={() => handleCategoryClick(cat)}
+                        className={`w-full text-left px-3 py-2 rounded-xl text-sm transition flex items-center justify-between ${isActive ? 'bg-[#e8f0e0] text-[#5a8a4a] font-medium' : 'text-[#4a5a3a] hover:bg-[#f0f7e8]'}`}
+                      >
+                        <span className="flex items-center gap-2">
+                          <Icon name={categoryIconMap[cat.name] || 'spiral'} className="w-4 h-4" />
+                          {cat.name}
+                        </span>
+                        <span className="text-[10px] text-[#8a9a7a]">{isExpanded ? '▾' : '▸'}</span>
+                      </button>
+
+                      {isExpanded && (
+                        <div className="ml-4 mt-1 space-y-0.5">
+                          {children.length === 0 && (<p className="px-3 py-1.5 text-[10px] text-[#9aa88a]">暂无子区</p>)}
+                          {children.map((sub) => (
+                            <button
+                              key={sub.id}
+                              onClick={() => setCurrentCategory(sub)}
+                              className={`w-full text-left px-3 py-1.5 rounded-lg text-xs transition ${currentCategory?.id === sub.id ? 'bg-[#e8f0e0] text-[#5a8a4a] font-medium' : 'text-[#6a7a5a] hover:bg-[#f0f7e8]'}`}
+                            >
+                              {sub.name}
+                            </button>
+                          ))}
+                          <button
+                            onClick={() => { setNewCategoryParent(cat); setShowNewCategoryModal(true) }}
+                            className="w-full text-left px-3 py-1.5 rounded-lg text-xs text-[#8a9a7a] hover:bg-[#f0f7e8] transition"
+                          >
+                            + 新建子区
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  )
+                })}
+
+                <button
+                  onClick={() => { setNewCategoryParent(null); setShowNewCategoryModal(true) }}
+                  className="w-full text-left px-3 py-2 rounded-xl text-sm text-[#8a9a7a] hover:bg-[#f0f7e8] transition flex items-center gap-2 mt-1"
+                >
+                  <Icon name="plus" className="w-4 h-4" />新建分区
+                </button>
+              </div>
+            </div>
+
+            <div className="rounded-2xl border border-[#d8e8c8] bg-white/80 backdrop-blur shadow-[0_2px_12px_rgba(126,168,106,0.04)] overflow-hidden">
+              <Link href="/friends" className="flex items-center gap-2 px-4 py-3 text-sm text-[#4a5a3a] hover:bg-[#f0f7e8] transition border-b border-[#e8f0e0]">
+                <Icon name="home" className="w-4 h-4 text-[#8a9a7a]" />小屋
+              </Link>
+              <Link href="/play" className="flex items-center gap-2 px-4 py-3 text-sm text-[#4a5a3a] hover:bg-[#f0f7e8] transition border-b border-[#e8f0e0]">
+                <Icon name="sparkle" className="w-4 h-4 text-[#8a9a7a]" />派对
+              </Link>
+              <Link href="/me" className="flex items-center gap-2 px-4 py-3 text-sm text-[#4a5a3a] hover:bg-[#f0f7e8] transition">
+                <Icon name="box" className="w-4 h-4 text-[#8a9a7a]" />我的
+              </Link>
+            </div>
+          </aside>
+
+          <main className="flex-1 min-w-0">
+            <div className="mb-3 flex items-center gap-2 text-xs text-[#8a9a7a]">
+              <span>正在看：</span><span className="text-[#5a8a4a] font-medium">{currentLocationName}</span>
+              {replies.count > 0 && (
+                <span className="ml-1 min-w-[16px] h-4 px-1 rounded-full bg-[#d97757] text-white text-[10px] leading-4 text-center font-medium">
+                  {replies.count > 99 ? '99+' : replies.count}
+                </span>
+              )}
+              {replies.count > 0 && <span>有人回了你</span>}
+            </div>
+
+            <div className="space-y-3">
+              {focusPostId && (
+                <div className="flex items-center justify-between rounded-2xl border border-[#cfe0bd] bg-[#f2f8ec] px-4 py-2.5">
+                  <span className="text-xs text-[#5a8a4a]">
+                    {focusMissing ? '这条帖子不见了（可能已被删除）' : '正在看搜索到的那一条'}
+                  </span>
+                  <Link href="/world" className="text-xs text-[#5a8a4a] hover:underline">
+                    ← 回到列表
+                  </Link>
+                </div>
+              )}
+
+              {visiblePosts.length === 0 ? (
+                <div className="rounded-2xl border border-[#d8e8c8] bg-white/60 backdrop-blur p-12 text-center">
+                  <p className="text-sm text-[#8a9a7a]">
+                    {focusMissing ? '没能找到这条帖子' : '这里还空空的'}
+                  </p>
+                  <p className="text-xs text-[#9aa88a] mt-2">
+                    {focusMissing ? '它可能被作者删除了，或被站主隐藏' : '点左边「发帖」，写第一条吧'}
+                  </p>
+                </div>
+              ) : (
+                visiblePosts.map((post, index) => (
+                  <div key={post.id} data-post-id={post.id}>
+                    {!focusPostId && index === newPostIndex && (
+                      <div className="relative mb-3 flex items-center gap-3 py-1">
+                        <span className="h-px flex-1 bg-[#cfe0bd]" />
+                        <span className="text-[10px] text-[#8a9a7a] tracking-wide">上次看到这里</span>
+                        <span className="h-px flex-1 bg-[#cfe0bd]" />
+                      </div>
+                    )}
+
+                    <div className="rounded-2xl border border-[#d8e8c8] bg-white/80 backdrop-blur p-5 shadow-[0_2px_12px_rgba(126,168,106,0.04)]">
+                    <div className="flex items-center gap-3 mb-3">
+                      {post.is_anonymous ? (
+                        <div className="w-10 h-10 rounded-2xl bg-[#e0e8d8] flex items-center justify-center flex-shrink-0">
+                          <Icon name="user" className="w-5 h-5 text-[#9aa88a]" />
+                        </div>
+                      ) : (
+                        <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-[#d8ecc8] to-[#c8e0b8] flex items-center justify-center overflow-hidden flex-shrink-0">
+                          {post.author_avatar ? <img src={post.author_avatar} alt="" className="w-full h-full object-cover" /> : <span className="text-sm text-[#5a8a4a] font-semibold">{post.author_name[0]}</span>}
+                        </div>
+                      )}
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-medium text-[#2b3a20] truncate">{post.author_name}</p>
+                        <p className="text-[10px] text-[#9aa88a] mt-0.5">{formatTime(post.created_at)}</p>
+                      </div>
+                    </div>
+                    <p className="text-sm text-[#3a4a2a] whitespace-pre-wrap break-words leading-relaxed pl-1">{post.content}</p>
+
+                    <div className="flex items-center gap-4 pl-1 pt-3 mt-3 border-t border-[#e0eed0]">
+                      <button
+                        onClick={() => handleLike(post.id, post.liked_by_me)}
+                        className={`flex items-center gap-1.5 text-xs transition ${post.liked_by_me ? 'text-[#7ea86a]' : 'text-[#8a9a7a] hover:text-[#7ea86a]'}`}
+                      >
+                        <Icon name={post.liked_by_me ? 'heartfill' : 'heart'} className="w-4 h-4" />
+                        <span>{post.like_count > 0 ? post.like_count : '赞'}</span>
+                      </button>
+                      <button
+                        onClick={() => { setOpenCommentPost(openCommentPost === post.id ? null : post.id); setReplyingTo(null) }}
+                        className={`flex items-center gap-1.5 text-xs transition ${openCommentPost === post.id ? 'text-[#7ea86a]' : 'text-[#8a9a7a] hover:text-[#7ea86a]'}`}
+                      >
+                        <Icon name="comment" className="w-4 h-4" />
+                        <span>{post.comments.length > 0 ? post.comments.length : '评论'}</span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() =>
+                          void favorites.toggle({
+                            kind: 'world_post',
+                            targetId: post.id,
+                            content: post.content,
+                            authorName: post.author_name,
+                          })
+                        }
+                        disabled={favorites.busyKey === `world_post:${post.id}`}
+                        title={favorites.isFavorited('world_post', post.id) ? '取消收藏' : '收藏'}
+                        className={`ml-auto flex items-center gap-1.5 text-xs transition disabled:opacity-50 ${
+                          favorites.isFavorited('world_post', post.id)
+                            ? 'text-[#d97757]'
+                            : 'text-[#8a9a7a] hover:text-[#d97757]'
+                        }`}
+                      >
+                        <Icon
+                          name={favorites.isFavorited('world_post', post.id) ? 'heartfill' : 'heart'}
+                          className="w-3.5 h-3.5"
+                        />
+                        {favorites.isFavorited('world_post', post.id) ? '已收藏' : '收藏'}
+                      </button>
+                      {/* 自己发的帖子可以删（两步确认，防误触） */}
+                      {deleter.canDelete(post.author_id) && (
+                        confirmDeletePost === post.id ? (
+                          <button
+                            type="button"
+                            disabled={deleter.busyId === post.id}
+                            onClick={() => void handleDeletePost(post.id, post.author_id)}
+                            className="flex items-center gap-1 text-xs text-red-500 hover:underline disabled:opacity-50"
+                          >
+                            <Icon name="trash" className="w-3.5 h-3.5" />
+                            {deleter.busyId === post.id ? '删除中…' : '确认删除'}
+                          </button>
+                        ) : (
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setConfirmDeletePost(post.id)
+                              window.setTimeout(
+                                () => setConfirmDeletePost((cur) => (cur === post.id ? null : cur)),
+                                4000,
+                              )
+                            }}
+                            className="flex items-center gap-1 text-xs text-[#8a9a7a] hover:text-red-500 transition"
+                          >
+                            <Icon name="trash" className="w-3.5 h-3.5" />
+                            删除
+                          </button>
+                        )
+                      )}
+                      <button className="flex items-center gap-1.5 text-xs text-[#8a9a7a] hover:text-red-500 transition">
+                        <Icon name="alert" className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
+
+                    {openCommentPost === post.id && (
+                      <div className="mt-4 pl-1">
+                        {post.comments.length > 0 && (
+                          <div className="space-y-3 mb-4">
+                            {post.comments
+                              .filter((c) => !c.parent_id)
+                              .filter((c) => deleter.commentVisible(c.id))
+                              .filter((c) => !blocks.hiddenIds.has(c.author_id))
+                              .map((parent) => {
+                              const replies = post.comments.filter(
+                                (c) =>
+                                  c.parent_id === parent.id &&
+                                  deleter.commentVisible(c.id) &&
+                                  !blocks.hiddenIds.has(c.author_id),
+                              )
+                              return (
+                                <div key={parent.id}>
+                                  <div className="flex gap-2">
+                                    {parent.is_anonymous ? (
+                                      <div className="w-6 h-6 rounded-full bg-[#e0e8d8] flex items-center justify-center flex-shrink-0 mt-0.5">
+                                        <Icon name="user" className="w-3 h-3 text-[#9aa88a]" />
+                                      </div>
+                                    ) : (
+                                      <div className="w-6 h-6 rounded-full bg-[#d8ecc8] flex items-center justify-center overflow-hidden flex-shrink-0 mt-0.5">
+                                        {parent.author_avatar ? <img src={parent.author_avatar} alt="" className="w-full h-full object-cover" /> : <span className="text-[10px] text-[#5a8a4a]">{parent.author_name[0]}</span>}
+                                      </div>
+                                    )}
+                                    <div className="flex-1 min-w-0 bg-[#f0f7e8] rounded-xl px-3 py-2">
+                                      <p className="text-[11px] font-medium text-[#5a8a4a]">{parent.author_name}</p>
+                                      <p className="text-xs text-[#3a4a2a] mt-0.5 whitespace-pre-wrap break-words">{parent.content}</p>
+                                      <div className="flex items-center justify-between mt-1 gap-2">
+                                        <div className="flex items-center gap-2">
+                                          <button onClick={() => setReplyingTo(parent)} className="text-[10px] text-[#8a9a7a] hover:text-[#7ea86a]">回复</button>
+                                          {deleter.canDelete(parent.author_id) && (
+                                            confirmDeleteComment === parent.id ? (
+                                              <button
+                                                disabled={deleter.busyId === parent.id}
+                                                onClick={() => void handleDeleteComment(parent.id, parent.author_id)}
+                                                className="text-[10px] text-red-500 hover:underline disabled:opacity-50"
+                                              >
+                                                {deleter.busyId === parent.id ? '删除中…' : '确认删除'}
+                                              </button>
+                                            ) : (
+                                              <button
+                                                onClick={() => {
+                                                  setConfirmDeleteComment(parent.id)
+                                                  window.setTimeout(
+                                                    () => setConfirmDeleteComment((cur) => (cur === parent.id ? null : cur)),
+                                                    4000,
+                                                  )
+                                                }}
+                                                className="text-[10px] text-[#8a9a7a] hover:text-red-500 transition"
+                                              >
+                                                删除
+                                              </button>
+                                            )
+                                          )}
+                                        </div>
+                                        <span className="text-[10px] text-[#9aa88a]">{formatTime(parent.created_at)}</span>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  {replies.length > 0 && (
+                                    <div className="ml-8 mt-2 space-y-1.5">
+                                      {replies.map((c) => (
+                                        <div key={c.id} className="flex gap-2">
+                                          {c.is_anonymous ? (
+                                            <div className="w-5 h-5 rounded-full bg-[#e0e8d8] flex items-center justify-center flex-shrink-0 mt-0.5">
+                                              <Icon name="user" className="w-2.5 h-2.5 text-[#9aa88a]" />
+                                            </div>
+                                          ) : (
+                                            <div className="w-5 h-5 rounded-full bg-[#d8ecc8] flex items-center justify-center overflow-hidden flex-shrink-0 mt-0.5">
+                                              {c.author_avatar ? <img src={c.author_avatar} alt="" className="w-full h-full object-cover" /> : <span className="text-[9px] text-[#5a8a4a]">{c.author_name[0]}</span>}
+                                            </div>
+                                          )}
+                                          <div className="flex-1 min-w-0 bg-[#f0f7e8] rounded-xl px-3 py-1.5">
+                                            <p className="text-[11px] text-[#3a4a2a] leading-relaxed">
+                                              <span className="font-medium text-[#5a8a4a]">{c.author_name}</span>
+                                              {c.parent_name && (<><span className="text-[#8a9a7a]"> 回复 </span><span className="font-medium text-[#5a8a4a]">{c.parent_name}</span></>)}
+                                              <span className="text-[#8a9a7a]">：</span>
+                                              <span className="ml-1">{c.content}</span>
+                                            </p>
+                                            <div className="flex items-center justify-between mt-1 gap-2">
+                                              <div className="flex items-center gap-2">
+                                                <button onClick={() => setReplyingTo(c)} className="text-[10px] text-[#8a9a7a] hover:text-[#7ea86a]">回复</button>
+                                                {deleter.canDelete(c.author_id) && (
+                                                  confirmDeleteComment === c.id ? (
+                                                    <button
+                                                      disabled={deleter.busyId === c.id}
+                                                      onClick={() => void handleDeleteComment(c.id, c.author_id)}
+                                                      className="text-[10px] text-red-500 hover:underline disabled:opacity-50"
+                                                    >
+                                                      {deleter.busyId === c.id ? '删除中…' : '确认删除'}
+                                                    </button>
+                                                  ) : (
+                                                    <button
+                                                      onClick={() => {
+                                                        setConfirmDeleteComment(c.id)
+                                                        window.setTimeout(
+                                                          () => setConfirmDeleteComment((cur) => (cur === c.id ? null : cur)),
+                                                          4000,
+                                                        )
+                                                      }}
+                                                      className="text-[10px] text-[#8a9a7a] hover:text-red-500 transition"
+                                                    >
+                                                      删除
+                                                    </button>
+                                                  )
+                                                )}
+                                              </div>
+                                              <span className="text-[10px] text-[#9aa88a]">{formatTime(c.created_at)}</span>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      ))}
+                                    </div>
+                                  )}
+                                </div>
+                              )
+                            })}
+                          </div>
+                        )}
+
+                        {replyingTo && (
+                          <div className="flex items-center justify-between mb-2 px-2">
+                            <p className="text-[10px] text-[#8a9a7a]">正在回复 <span className="text-[#5a8a4a] font-medium">{replyingTo.author_name}</span></p>
+                            <button onClick={() => setReplyingTo(null)} className="text-[10px] text-[#8a9a7a] hover:text-[#5a8a4a]">取消</button>
+                          </div>
+                        )}
+
+                        <div className="flex gap-2 items-center">
+                          <input
+                            type="text"
+                            value={commentInputs[post.id] || ''}
+                            onChange={(e) => setCommentInputs({ ...commentInputs, [post.id]: e.target.value })}
+                            onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handlePostComment(post.id) } }}
+                            placeholder={replyingTo ? `回复 ${replyingTo.author_name}...` : '写点什么...'}
+                            maxLength={200}
+                            className="flex-1 px-4 py-2 rounded-full border border-[#d8e8c8] bg-[#f8fcf4] text-xs focus:outline-none focus:border-[#7ea86a] focus:ring-2 focus:ring-[#7ea86a]/10 transition"
+                          />
+                          <label className="flex items-center gap-1 text-[10px] text-[#8a9a7a] cursor-pointer flex-shrink-0">
+                            <input type="checkbox" checked={commentAnonymous[post.id] || false} onChange={(e) => setCommentAnonymous({ ...commentAnonymous, [post.id]: e.target.checked })} className="accent-[#7ea86a]" />
+                            匿名
+                          </label>
+                          <button
+                            onClick={() => handlePostComment(post.id)}
+                            disabled={postingComment === post.id || !commentInputs[post.id]?.trim()}
+                            className="px-4 py-2 rounded-full bg-gradient-to-r from-[#a8c89a] to-[#7ea86a] text-white text-xs font-medium transition-all disabled:opacity-50 flex-shrink-0"
+                          >
+                            {postingComment === post.id ? '...' : '发送'}
+                          </button>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+                ))
+              )}
+            </div>
+          </main>
         </div>
-      </main>
+      </div>
+
+      {showPostModal && (
+        <div className="fixed inset-0 bg-black/30 backdrop-blur-sm z-50 flex items-center justify-center px-4" onClick={() => setShowPostModal(false)}>
+          <form onSubmit={handlePost} className="bg-white rounded-3xl w-full max-w-lg p-6 shadow-2xl" onClick={(e) => e.stopPropagation()}>
+            <h2 className="text-lg font-semibold text-[#2b3a20] mb-4">发帖</h2>
+            <div className="mb-4">
+              <label className="block text-xs text-[#6a7a5a] mb-1.5 tracking-wide">发到哪里</label>
+              <select value={postCategoryId} onChange={(e) => setPostCategoryId(e.target.value)} className="w-full px-4 py-2.5 rounded-xl border border-[#d8e8c8] bg-[#f8fcf4] text-sm focus:outline-none focus:border-[#7ea86a] focus:ring-2 focus:ring-[#7ea86a]/10 transition">
+                <option value="">🏠 大厅</option>
+                {topCategories.map((cat) => (
+                  <optgroup key={cat.id} label={cat.name}>
+                    <option value={cat.id}>{cat.name}（全部）</option>
+                    {categories.filter((c) => c.parent_id === cat.id).map((sub) => (
+                      <option key={sub.id} value={sub.id}>{cat.name} · {sub.name}</option>
+                    ))}
+                  </optgroup>
+                ))}
+              </select>
+              <p className="text-[10px] text-[#9aa88a] mt-1.5">这条会发到「<span className="text-[#5a8a4a]">{selectedCategoryName}</span>」</p>
+            </div>
+            <textarea value={postContent} onChange={(e) => setPostContent(e.target.value)} placeholder="写点什么..." rows={5} maxLength={500} autoFocus className="w-full px-4 py-3 rounded-xl border border-[#d8e8c8] bg-[#f8fcf4] text-sm resize-none focus:outline-none focus:border-[#7ea86a] focus:ring-2 focus:ring-[#7ea86a]/10 transition mb-4" />
+            <div className="flex items-center justify-between mb-5">
+              <label className="flex items-center gap-2 text-sm text-[#3a4a2a] cursor-pointer">
+                <input type="checkbox" checked={isAnonymous} onChange={(e) => setIsAnonymous(e.target.checked)} className="accent-[#7ea86a]" />
+                匿名发布
+              </label>
+              <span className="text-xs text-[#9aa88a]">{postContent.length}/500</span>
+            </div>
+            <div className="flex gap-2 justify-end">
+              <button type="button" onClick={() => setShowPostModal(false)} className="px-5 py-2 rounded-xl text-sm text-[#8a9a7a] hover:bg-[#f0f7e8] transition">取消</button>
+              <button type="submit" disabled={posting || !postContent.trim()} className="px-5 py-2 rounded-xl bg-gradient-to-r from-[#a8c89a] to-[#7ea86a] text-white text-sm font-medium hover:shadow-[0_6px_20px_rgba(126,168,106,0.3)] transition-all disabled:opacity-50 flex items-center gap-1.5">
+                <Icon name="send" className="w-3.5 h-3.5" />
+                {posting ? '发布中...' : '发送'}
+              </button>
+            </div>
+          </form>
+        </div>
+      )}
+
+      {showNewCategoryModal && (
+        <div className="fixed inset-0 bg-black/30 backdrop-blur-sm z-50 flex items-center justify-center px-4" onClick={() => setShowNewCategoryModal(false)}>
+          <form onSubmit={handleCreateCategory} className="bg-white rounded-3xl w-full max-w-md p-6 shadow-2xl" onClick={(e) => e.stopPropagation()}>
+            <h2 className="text-lg font-semibold text-[#2b3a20] mb-1">新建{newCategoryParent ? '子区' : '分区'}</h2>
+            <p className="text-xs text-[#8a9a7a] mb-4">{newCategoryParent ? `在「${newCategoryParent.name}」下新建` : '建好后需要站主审核，通过后才可见'}</p>
+            <input type="text" value={newCategoryName} onChange={(e) => setNewCategoryName(e.target.value)} placeholder="分区名字" maxLength={10} autoFocus className="w-full px-4 py-2.5 rounded-xl border border-[#d8e8c8] bg-[#f8fcf4] text-sm focus:outline-none focus:border-[#7ea86a] focus:ring-2 focus:ring-[#7ea86a]/10 transition mb-4" />
+            {createCategoryMessage && <p className={`text-xs mb-3 ${createCategoryMessage.includes('失败') ? 'text-red-500' : 'text-green-600'}`}>{createCategoryMessage}</p>}
+            <div className="flex gap-2 justify-end">
+              <button type="button" onClick={() => { setShowNewCategoryModal(false); setNewCategoryName(''); setNewCategoryParent(null); setCreateCategoryMessage('') }} className="px-5 py-2 rounded-xl text-sm text-[#8a9a7a] hover:bg-[#f0f7e8] transition">取消</button>
+              <button type="submit" disabled={creatingCategory || !newCategoryName.trim()} className="px-5 py-2 rounded-xl bg-gradient-to-r from-[#a8c89a] to-[#7ea86a] text-white text-sm font-medium hover:shadow-[0_6px_20px_rgba(126,168,106,0.3)] transition-all disabled:opacity-50">
+                {creatingCategory ? '提交中...' : '提交审核'}
+              </button>
+            </div>
+          </form>
+        </div>
+      )}
+
+      {showDepressedWarning && (
+        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center px-4" onClick={() => { setShowDepressedWarning(false); setDepressedCategory(null) }}>
+          <div className="bg-white rounded-3xl w-full max-w-md p-7 shadow-2xl" onClick={(e) => e.stopPropagation()}>
+            <div className="flex items-center gap-2 mb-4">
+              <Icon name="alert" className="w-5 h-5 text-[#7ea86a]" />
+              <h2 className="text-lg font-semibold text-[#2b3a20]">进区前，请先看一眼</h2>
+            </div>
+            <div className="space-y-3 text-sm text-[#3a4a2a] leading-relaxed mb-6">
+              <p>这里的内容可能引起不适，请确认你愿意接受，再继续。</p>
+              <p><span className="text-[#5a8a4a] font-medium">1.</span> 有些话会比较重，请照顾好自己。</p>
+              <p><span className="text-[#5a8a4a] font-medium">2.</span> 可以说，但请守住底线：不伤人，不挑事，不违法。</p>
+              <p><span className="text-[#5a8a4a] font-medium">3.</span> 匿名发帖时，注意你的口头禅、错别字、说话习惯——它们可能会暴露你。想真匿名，就少写细节。</p>
+            </div>
+            <p className="text-xs text-[#8a9a7a] mb-3 text-center">请选择：</p>
+            <div className="grid grid-cols-2 gap-3 mb-5">
+              {categories.filter((c) => c.parent_id === depressedCategory?.id).map((sub) => (
+                <button key={sub.id} onClick={() => selectDepressedSub(sub)} className="py-3 rounded-2xl border-2 border-[#d8e8c8] bg-[#f8fcf4] text-sm text-[#3a4a2a] hover:border-[#7ea86a] hover:bg-[#e8f0e0] transition">{sub.name}</button>
+              ))}
+            </div>
+            <button onClick={() => { setShowDepressedWarning(false); setDepressedCategory(null) }} className="w-full py-2 text-xs text-[#8a9a7a] hover:text-[#5a8a4a] transition">离开</button>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

@@ -1,0 +1,487 @@
+'use client'
+/* eslint-disable react-hooks/set-state-in-effect -- 规则未识别 async 取数（init/loadAll），此处是纯客户端页面 */
+
+import { useCallback, useEffect, useState } from 'react'
+import { createClient } from '../lib/supabase'
+import { useRouter } from 'next/navigation'
+import Link from 'next/link'
+
+// 客户端提到模块级，保证引用稳定
+const supabase = createClient()
+
+const ADMIN_UUID = 'b59a31c7-60f8-4b57-924a-b408cbfd910c'
+
+type Category = {
+  id: string
+  name: string
+  parent_id: string | null
+  status: string
+  created_by: string | null
+  created_at: string
+  creator_name?: string
+  parent_name?: string
+}
+
+type Report = {
+  id: string
+  target_type: string
+  target_id: string
+  reason: string | null
+  status: string
+  created_at: string
+  reporter_name?: string
+  target_content?: string
+}
+
+type ActivityReport = {
+  activity_id: string
+  title: string
+  content: string | null
+  author_name: string
+  report_count: number
+  reports: { id: string; reason: string | null; reporter_name: string; created_at: string }[]
+}
+
+function Icon({ name, className = '' }: { name: string; className?: string }) {
+  const c = { className, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: 1.8, strokeLinecap: 'round' as const, strokeLinejoin: 'round' as const }
+  switch (name) {
+    case 'back': return <svg {...c}><line x1="19" y1="12" x2="5" y2="12" /><polyline points="12 19 5 12 12 5" /></svg>
+    case 'check': return <svg {...c}><polyline points="20 6 9 17 4 12" /></svg>
+    case 'x': return <svg {...c}><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></svg>
+    case 'trash': return <svg {...c}><polyline points="3 6 5 6 21 6" /><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" /></svg>
+    case 'alert': return <svg {...c}><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" /><line x1="12" y1="9" x2="12" y2="13" /><line x1="12" y1="17" x2="12.01" y2="17" /></svg>
+    case 'shield': return <svg {...c}><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /></svg>
+    default: return null
+  }
+}
+
+function formatTime(dateStr: string) {
+  return new Date(dateStr).toLocaleString('zh-CN', { month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' })
+}
+
+export default function AdminPage() {
+  const [tab, setTab] = useState<'categories' | 'reports'>('categories')
+  const [categories, setCategories] = useState<Category[]>([])
+  const [reports, setReports] = useState<Report[]>([])
+  const [activityReports, setActivityReports] = useState<ActivityReport[]>([])
+  const [loading, setLoading] = useState(true)
+  const [authorized, setAuthorized] = useState(false)
+  const [expandedActivity, setExpandedActivity] = useState<string | null>(null)
+
+  const router = useRouter()
+
+  const loadAll = useCallback(async () => {
+    // 1. 待审核分区
+    const { data: catData } = await supabase
+      .from('categories')
+      .select('id, name, parent_id, status, created_by, created_at')
+      .eq('status', 'pending')
+      .order('created_at', { ascending: true })
+
+    if (catData && catData.length > 0) {
+      const userIds = [...new Set(catData.map((c) => c.created_by).filter(Boolean))]
+      const { data: profiles } = await supabase
+        .from('profiles')
+        .select('id, nickname, username')
+        .in('id', userIds.length > 0 ? userIds : ['00000000-0000-0000-0000-000000000000'])
+
+      const parentIds = [...new Set(catData.map((c) => c.parent_id).filter(Boolean))]
+      const { data: parents } = await supabase
+        .from('categories')
+        .select('id, name')
+        .in('id', parentIds.length > 0 ? parentIds : ['00000000-0000-0000-0000-000000000000'])
+
+      const list: Category[] = catData.map((c) => {
+        const p = profiles?.find((x) => x.id === c.created_by)
+        const parent = parents?.find((x) => x.id === c.parent_id)
+        return { ...c, creator_name: p?.nickname || p?.username || '某人', parent_name: parent?.name || null }
+      })
+      setCategories(list)
+    } else {
+      setCategories([])
+    }
+
+    // 2. 帖子举报（world_post）
+    const { data: repData } = await supabase
+      .from('reports')
+      .select('id, target_type, target_id, reason, status, created_at, reporter_id')
+      .eq('status', 'pending')
+      .eq('target_type', 'world_post')
+      .order('created_at', { ascending: false })
+
+    if (repData && repData.length > 0) {
+      const reporterIds = [...new Set(repData.map((r) => r.reporter_id).filter(Boolean))]
+      const { data: profiles } = await supabase
+        .from('profiles')
+        .select('id, nickname, username')
+        .in('id', reporterIds.length > 0 ? reporterIds : ['00000000-0000-0000-0000-000000000000'])
+
+      const postIds = repData.map((r) => r.target_id)
+      const { data: postData } = await supabase
+        .from('world_posts')
+        .select('id, content')
+        .in('id', postIds.length > 0 ? postIds : ['00000000-0000-0000-0000-000000000000'])
+
+      const list: Report[] = repData.map((r) => {
+        const p = profiles?.find((x) => x.id === r.reporter_id)
+        const post = postData?.find((x) => x.id === r.target_id)
+        return { ...r, reporter_name: p?.nickname || p?.username || '某人', target_content: post?.content || '（内容已删除）' }
+      })
+      setReports(list)
+    } else {
+      setReports([])
+    }
+
+    // 3. 聚会活动举报（play_activity）
+    const { data: playRepData } = await supabase
+      .from('reports')
+      .select('id, target_id, reason, status, created_at, reporter_id')
+      .eq('status', 'pending')
+      .eq('target_type', 'play_activity')
+      .order('created_at', { ascending: true })
+
+    if (playRepData && playRepData.length > 0) {
+      // 统计每个活动被举报几次
+      const countMap: { [key: string]: number } = {}
+      playRepData.forEach((r) => {
+        countMap[r.target_id] = (countMap[r.target_id] || 0) + 1
+      })
+
+      // 只保留 ≥ 3 次的
+      const targetIds = Object.entries(countMap)
+        .filter(([_count, count]) => count >= 3)
+        .map(([id]) => id)
+
+      if (targetIds.length > 0) {
+        // 查活动内容
+        const { data: actData } = await supabase
+          .from('play_activities')
+          .select('id, title, content, author_id')
+          .in('id', targetIds)
+
+        const authorIds = actData ? [...new Set(actData.map((a) => a.author_id))] : []
+        const { data: authorProfiles } = await supabase
+          .from('profiles')
+          .select('id, nickname, username')
+          .in('id', authorIds.length > 0 ? authorIds : ['00000000-0000-0000-0000-000000000000'])
+
+        const reporterIds = [...new Set(playRepData.map((r) => r.reporter_id).filter(Boolean))]
+        const { data: reporterProfiles } = await supabase
+          .from('profiles')
+          .select('id, nickname, username')
+          .in('id', reporterIds.length > 0 ? reporterIds : ['00000000-0000-0000-0000-000000000000'])
+
+        const list: ActivityReport[] = targetIds.map((aid) => {
+          const act = actData?.find((a) => a.id === aid)
+          const author = authorProfiles?.find((x) => x.id === act?.author_id)
+          const relatedReports = playRepData.filter((r) => r.target_id === aid)
+
+          return {
+            activity_id: aid,
+            title: act?.title || '（活动已删除）',
+            content: act?.content || null,
+            author_name: author?.nickname || author?.username || '某人',
+            report_count: countMap[aid],
+            reports: relatedReports.map((r) => {
+              const rp = reporterProfiles?.find((x) => x.id === r.reporter_id)
+              return {
+                id: r.id,
+                reason: r.reason,
+                reporter_name: rp?.nickname || rp?.username || '某人',
+                created_at: r.created_at,
+              }
+            }),
+          }
+        })
+
+        setActivityReports(list)
+      } else {
+        setActivityReports([])
+      }
+    } else {
+      setActivityReports([])
+    }
+  }, [])
+
+  const init = useCallback(async () => {
+    const { data: userData } = await supabase.auth.getUser()
+    if (!userData.user) { router.push('/login'); return }
+    if (userData.user.id !== ADMIN_UUID) {
+      setAuthorized(false)
+      setLoading(false)
+      return
+    }
+    setAuthorized(true)
+    await loadAll()
+    setLoading(false)
+  }, [router, loadAll])
+
+  useEffect(() => {
+    init()
+  }, [init])
+
+  async function handleCategoryApprove(id: string) {
+    const { error } = await supabase.from('categories').update({ status: 'approved' }).eq('id', id)
+    if (error) { alert('操作失败：' + error.message) }
+    else { setCategories(categories.filter((c) => c.id !== id)) }
+  }
+
+  async function handleCategoryReject(id: string) {
+    if (!confirm('确定要删除这个分区申请吗？')) return
+    const { error } = await supabase.from('categories').delete().eq('id', id)
+    if (error) { alert('操作失败：' + error.message) }
+    else { setCategories(categories.filter((c) => c.id !== id)) }
+  }
+
+  async function handleReportAction(reportId: string, action: 'dismiss' | 'delete_post') {
+    const report = reports.find((r) => r.id === reportId)
+    if (!report) return
+
+    if (action === 'dismiss') {
+      await supabase.from('reports').update({ status: 'dismissed' }).eq('id', reportId)
+      await supabase.from('world_posts').update({ is_hidden: false, report_count: 0 }).eq('id', report.target_id)
+      setReports(reports.filter((r) => r.id !== reportId))
+    } else if (action === 'delete_post') {
+      await supabase.from('world_posts').update({ status: 'removed' }).eq('id', report.target_id)
+      await supabase.from('reports').update({ status: 'resolved' }).eq('id', reportId)
+      setReports(reports.filter((r) => r.id !== reportId))
+    }
+  }
+
+  async function handleActivityReportDismiss(activityId: string) {
+    if (!confirm('确定要忽略这些举报吗？')) return
+    const { error } = await supabase
+      .from('reports')
+      .update({ status: 'dismissed' })
+      .eq('target_type', 'play_activity')
+      .eq('target_id', activityId)
+      .eq('status', 'pending')
+
+    if (error) { alert('操作失败：' + error.message) }
+    else { setActivityReports(activityReports.filter((a) => a.activity_id !== activityId)) }
+  }
+
+  async function handleActivityDelete(activityId: string) {
+    if (!confirm('确定要删除这个活动吗？')) return
+    const { error } = await supabase
+      .from('play_activities')
+      .update({ status: 'removed' })
+      .eq('id', activityId)
+
+    if (error) { alert('操作失败：' + error.message) }
+    else {
+      await supabase
+        .from('reports')
+        .update({ status: 'resolved' })
+        .eq('target_type', 'play_activity')
+        .eq('target_id', activityId)
+        .eq('status', 'pending')
+      setActivityReports(activityReports.filter((a) => a.activity_id !== activityId))
+    }
+  }
+
+  if (loading) return <div className="min-h-screen flex items-center justify-center"><p>加载中...</p></div>
+
+  if (!authorized) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-[#f2eef7]">
+        <div className="text-center">
+          <p className="text-lg font-semibold text-[#2b2430]">这里不是你能来的地方</p>
+          <Link href="/" className="text-sm text-[#8a7aaa] mt-4 inline-block hover:underline">← 回首页</Link>
+        </div>
+      </div>
+    )
+  }
+
+  const totalReports = reports.length + activityReports.length
+
+  return (
+    <div className="min-h-screen bg-[#f2eef7] relative overflow-hidden">
+      <div className="absolute -top-20 -right-20 w-96 h-96 bg-[#c8b8d8] opacity-20 rounded-full blur-3xl pointer-events-none"></div>
+
+      <div className="relative max-w-4xl mx-auto px-6 pt-24 pb-8">
+        <header className="mb-6">
+          <Link href="/me" className="inline-flex items-center gap-1.5 text-sm text-[#8a7a9a] hover:text-[#8a7aaa] transition">
+            <Icon name="back" className="w-4 h-4" />返回我的
+          </Link>
+          <div className="flex items-center gap-3 mt-4">
+            <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-[#b89ac8] to-[#a88ab8] flex items-center justify-center">
+              <Icon name="shield" className="w-5 h-5 text-white" />
+            </div>
+            <div>
+              <h1 className="text-2xl font-bold text-[#2b2430]">站主后台</h1>
+              <p className="text-xs text-[#8a7a9a] mt-0.5">审核分区 · 处理举报</p>
+            </div>
+          </div>
+        </header>
+
+        <div className="flex gap-6 mb-6 border-b border-[#e0d4e8]">
+          <button
+            onClick={() => setTab('categories')}
+            className={`pb-2.5 text-sm transition ${tab === 'categories' ? 'border-b-2 border-[#a88ab8] text-[#8a7aaa] font-medium' : 'text-[#8a7a9a] hover:text-[#2b2430]'}`}
+          >
+            分区审核 {categories.length > 0 && `(${categories.length})`}
+          </button>
+          <button
+            onClick={() => setTab('reports')}
+            className={`pb-2.5 text-sm transition ${tab === 'reports' ? 'border-b-2 border-[#a88ab8] text-[#8a7aaa] font-medium' : 'text-[#8a7a9a] hover:text-[#2b2430]'}`}
+          >
+            举报处理 {totalReports > 0 && `(${totalReports})`}
+          </button>
+        </div>
+
+        {tab === 'categories' && (
+          <div className="space-y-3">
+            {categories.length === 0 ? (
+              <div className="rounded-2xl border border-[#e0d4e8] bg-white/60 backdrop-blur p-12 text-center">
+                <p className="text-sm text-[#8a7a9a]">没有待审核的分区</p>
+              </div>
+            ) : (
+              categories.map((cat) => (
+                <div key={cat.id} className="rounded-2xl border border-[#e0d4e8] bg-white/80 backdrop-blur p-5 shadow-[0_2px_12px_rgba(168,138,184,0.06)]">
+                  <div className="flex items-center justify-between gap-4">
+                    <div className="flex-1 min-w-0">
+                      <p className="text-base font-semibold text-[#2b2430]">
+                        {cat.parent_name ? `${cat.parent_name} · ` : ''}{cat.name}
+                      </p>
+                      <p className="text-xs text-[#8a7a9a] mt-1">
+                        由 <span className="text-[#8a7aaa]">{cat.creator_name}</span> 申请
+                        <span className="ml-3">{formatTime(cat.created_at)}</span>
+                      </p>
+                    </div>
+
+                    <div className="flex gap-2 flex-shrink-0">
+                      <button onClick={() => handleCategoryApprove(cat.id)} className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-gradient-to-r from-[#b89ac8] to-[#a88ab8] text-white text-xs font-medium hover:shadow-[0_4px_16px_rgba(168,138,184,0.3)] transition">
+                        <Icon name="check" className="w-3.5 h-3.5" />通过
+                      </button>
+                      <button onClick={() => handleCategoryReject(cat.id)} className="flex items-center gap-1.5 px-4 py-2 rounded-xl border border-[#e0d4e8] text-[#8a7a9a] text-xs hover:bg-[#f8f2fc] transition">
+                        <Icon name="x" className="w-3.5 h-3.5" />拒绝
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+        )}
+
+        {tab === 'reports' && (
+          <div className="space-y-6">
+            {/* 帖子举报 */}
+            <div>
+              <h2 className="text-xs text-[#8a7a9a] tracking-wider mb-3 px-1">帖子举报 · {reports.length}</h2>
+              <div className="space-y-3">
+                {reports.length === 0 ? (
+                  <div className="rounded-2xl border border-[#e0d4e8] bg-white/60 backdrop-blur p-8 text-center">
+                    <p className="text-sm text-[#8a7a9a]">没有待处理的帖子举报</p>
+                  </div>
+                ) : (
+                  reports.map((report) => (
+                    <div key={report.id} className="rounded-2xl border border-[#e0d4e8] bg-white/80 backdrop-blur p-5 shadow-[0_2px_12px_rgba(168,138,184,0.06)]">
+                      <div className="flex items-start gap-3 mb-3">
+                        <Icon name="alert" className="w-4 h-4 text-[#a88ab8] flex-shrink-0 mt-1" />
+                        <div className="flex-1 min-w-0">
+                          <p className="text-xs text-[#8a7a9a]">
+                            由 <span className="text-[#8a7aaa]">{report.reporter_name}</span> 举报
+                            <span className="ml-3">{formatTime(report.created_at)}</span>
+                          </p>
+                          {report.reason && (<p className="text-sm text-[#4a3a5a] mt-2">理由：{report.reason}</p>)}
+                        </div>
+                      </div>
+
+                      <div className="rounded-xl bg-[#faf5ff] p-4 mb-4">
+                        <p className="text-[10px] text-[#8a7a9a] mb-1.5">被举报内容</p>
+                        <p className="text-sm text-[#4a3a5a] whitespace-pre-wrap break-words">{report.target_content}</p>
+                      </div>
+
+                      <div className="flex gap-2 justify-end">
+                        <button onClick={() => handleReportAction(report.id, 'dismiss')} className="flex items-center gap-1.5 px-4 py-2 rounded-xl border border-[#e0d4e8] text-[#8a7a9a] text-xs hover:bg-[#f8f2fc] transition">
+                          <Icon name="x" className="w-3.5 h-3.5" />忽略举报
+                        </button>
+                        <button onClick={() => { if (confirm('确定要删除这条内容吗？')) { handleReportAction(report.id, 'delete_post') } }} className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-red-500 text-white text-xs font-medium hover:bg-red-600 transition">
+                          <Icon name="trash" className="w-3.5 h-3.5" />删除内容
+                        </button>
+                      </div>
+                    </div>
+                  ))
+                )}
+              </div>
+            </div>
+
+            {/* 活动举报（≥3 次才显示） */}
+            <div>
+              <h2 className="text-xs text-[#8a7a9a] tracking-wider mb-3 px-1">
+                活动举报（≥3 次）· {activityReports.length}
+              </h2>
+              <div className="space-y-3">
+                {activityReports.length === 0 ? (
+                  <div className="rounded-2xl border border-[#e0d4e8] bg-white/60 backdrop-blur p-8 text-center">
+                    <p className="text-sm text-[#8a7a9a]">没有被举报 3 次以上的活动</p>
+                  </div>
+                ) : (
+                  activityReports.map((a) => (
+                    <div key={a.activity_id} className="rounded-2xl border border-[#e0d4e8] bg-white/80 backdrop-blur p-5 shadow-[0_2px_12px_rgba(168,138,184,0.06)]">
+                      <div className="flex items-start gap-3 mb-3">
+                        <Icon name="alert" className="w-4 h-4 text-[#a88ab8] flex-shrink-0 mt-1" />
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2 flex-wrap">
+                            <h3 className="text-base font-semibold text-[#2b2430]">{a.title}</h3>
+                            <span className="text-[10px] bg-[#f0e6f8] text-[#8a7aaa] px-2 py-0.5 rounded-full font-medium">
+                              被举报 {a.report_count} 次
+                            </span>
+                          </div>
+                          <p className="text-xs text-[#8a7a9a] mt-1">
+                            发起人：<span className="text-[#8a7aaa]">{a.author_name}</span>
+                          </p>
+                        </div>
+                      </div>
+
+                      {a.content && (
+                        <div className="rounded-xl bg-[#faf5ff] p-4 mb-3">
+                          <p className="text-[10px] text-[#8a7a9a] mb-1.5">活动内容</p>
+                          <p className="text-sm text-[#4a3a5a] whitespace-pre-wrap break-words">{a.content}</p>
+                        </div>
+                      )}
+
+                      <div className="mb-4">
+                        <button
+                          onClick={() => setExpandedActivity(expandedActivity === a.activity_id ? null : a.activity_id)}
+                          className="text-[11px] text-[#8a7aaa] hover:underline"
+                        >
+                          {expandedActivity === a.activity_id ? '收起' : '查看'}举报理由（{a.reports.length}）
+                        </button>
+
+                        {expandedActivity === a.activity_id && (
+                          <div className="mt-2 space-y-1.5 pl-2 border-l-2 border-[#e0d4e8]">
+                            {a.reports.map((r) => (
+                              <div key={r.id} className="text-xs">
+                                <span className="text-[#8a7aaa] font-medium">{r.reporter_name}</span>
+                                <span className="text-[#9a8aaa] ml-2">{formatTime(r.created_at)}</span>
+                                {r.reason && (
+                                  <p className="text-[#4a3a5a] mt-0.5 pl-2">「{r.reason}」</p>
+                                )}
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+
+                      <div className="flex gap-2 justify-end">
+                        <button onClick={() => handleActivityReportDismiss(a.activity_id)} className="flex items-center gap-1.5 px-4 py-2 rounded-xl border border-[#e0d4e8] text-[#8a7a9a] text-xs hover:bg-[#f8f2fc] transition">
+                          <Icon name="x" className="w-3.5 h-3.5" />忽略举报
+                        </button>
+                        <button onClick={() => handleActivityDelete(a.activity_id)} className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-red-500 text-white text-xs font-medium hover:bg-red-600 transition">
+                          <Icon name="trash" className="w-3.5 h-3.5" />删除活动
+                        </button>
+                      </div>
+                    </div>
+                  ))
+                )}
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}

@@ -12,6 +12,24 @@ type Message = {
   created_at: string
 }
 
+function IconArrow({ className = '' }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <line x1="19" y1="12" x2="5" y2="12" />
+      <polyline points="12 19 5 12 12 5" />
+    </svg>
+  )
+}
+
+function IconSend({ className = '' }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <line x1="22" y1="2" x2="11" y2="13" />
+      <polygon points="22 2 15 22 11 13 2 9 22 2" />
+    </svg>
+  )
+}
+
 function ChatInner() {
   const params = useParams()
   const friendId = params.id as string
@@ -126,32 +144,54 @@ function ChatInner() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col">
-      <header className="border-b bg-white p-4 sticky top-0 z-10">
-        <div className="max-w-2xl mx-auto flex items-center gap-3">
-          <Link href="/friends" className="text-sm text-gray-500 hover:underline">
-            ← 返回
+    <div className="min-h-screen bg-[#f7f2ea] relative">
+      {/* 背景光晕 */}
+      <div className="fixed -top-20 -right-20 w-96 h-96 bg-[#f0b078] opacity-15 rounded-full blur-3xl pointer-events-none"></div>
+      <div className="fixed -bottom-20 -left-20 w-96 h-96 bg-[#d97757] opacity-[0.08] rounded-full blur-3xl pointer-events-none"></div>
+
+      {/* 顶部 */}
+      <header className="fixed top-0 left-0 right-0 z-20 border-b border-[#e8dcc8] bg-white/95 backdrop-blur-lg shadow-[0_2px_12px_rgba(217,119,87,0.06)]">
+        <div className="max-w-xl mx-auto px-5 py-4 flex items-center gap-3">
+          <Link
+            href="/friends"
+            className="text-[#8a827a] hover:text-[#c96447] transition p-1.5 rounded-lg hover:bg-[#fef7f2]"
+          >
+            <IconArrow className="w-5 h-5" />
           </Link>
-          <h1 className="text-lg font-semibold">{friendName}</h1>
+          <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#fae0cc] to-[#f9d5ba] flex items-center justify-center flex-shrink-0">
+            <span className="text-sm text-[#c96447] font-semibold">{friendName[0]}</span>
+          </div>
+          <h1 className="text-sm font-semibold text-[#2b2620]">{friendName}</h1>
         </div>
       </header>
 
-      <main className="flex-1 overflow-y-auto p-4">
-        <div className="max-w-2xl mx-auto space-y-3">
+      {/* 消息列表 */}
+      <main className="relative z-10 px-5 pt-24 pb-32">
+        <div className="max-w-xl mx-auto space-y-3">
           {messages.length === 0 ? (
-            <p className="text-center text-gray-400 py-10">还没有消息，说点什么吧。</p>
+            <div className="flex flex-col items-center justify-center py-20 text-center">
+              <div className="w-16 h-16 rounded-full bg-[#fdf0e6] flex items-center justify-center mb-4">
+                <svg className="w-7 h-7 text-[#d97757]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                </svg>
+              </div>
+              <p className="text-sm text-[#a88868]">还没有消息</p>
+              <p className="text-xs text-[#b0a89e] mt-1.5">说点什么吧</p>
+            </div>
           ) : (
             messages.map((m) => {
               const isMine = m.sender_id === meId
               return (
                 <div key={m.id} className={`flex ${isMine ? 'justify-end' : 'justify-start'}`}>
                   <div
-                    className={`max-w-[70%] px-4 py-2 rounded-2xl ${
-                      isMine ? 'bg-orange-500 text-white' : 'bg-white text-gray-800 shadow'
+                    className={`max-w-[70%] px-4 py-2.5 rounded-2xl shadow-[0_2px_12px_rgba(217,119,87,0.06)] ${
+                      isMine
+                        ? 'bg-gradient-to-br from-[#e8a87c] to-[#d97757] text-white rounded-tr-md'
+                        : 'bg-white/95 backdrop-blur text-[#2b2620] rounded-tl-md'
                     }`}
                   >
-                    <p className="whitespace-pre-wrap break-words">{m.content}</p>
-                    <p className={`text-xs mt-1 ${isMine ? 'text-orange-100' : 'text-gray-400'}`}>
+                    <p className="text-sm whitespace-pre-wrap break-words leading-relaxed">{m.content}</p>
+                    <p className={`text-[10px] mt-1 ${isMine ? 'text-white/70' : 'text-[#b0a89e]'}`}>
                       {new Date(m.created_at).toLocaleTimeString('zh-CN', {
                         hour: '2-digit',
                         minute: '2-digit',
@@ -166,22 +206,23 @@ function ChatInner() {
         </div>
       </main>
 
-      <footer className="border-t bg-white p-4 sticky bottom-0">
-        <form onSubmit={handleSend} className="max-w-2xl mx-auto flex gap-2">
+      {/* 底部 */}
+      <footer className="fixed bottom-0 left-0 right-0 z-20 border-t border-[#e8dcc8] bg-white/95 backdrop-blur-lg shadow-[0_-2px_12px_rgba(217,119,87,0.06)]">
+        <form onSubmit={handleSend} className="max-w-xl mx-auto px-5 py-4 flex gap-2">
           <input
             type="text"
             value={content}
             onChange={(e) => setContent(e.target.value)}
             placeholder="说点什么..."
-            className="flex-1 p-2 border rounded-full px-4 focus:outline-none focus:ring-2 focus:ring-orange-300"
+            className="flex-1 px-4 py-2.5 rounded-full border border-[#ece6dd] bg-[#fefcf9] text-sm text-[#2b2620] focus:outline-none focus:border-[#d97757] focus:ring-2 focus:ring-[#d97757]/10 transition placeholder:text-[#c0b8ae]"
             maxLength={500}
           />
           <button
             type="submit"
             disabled={sending || !content.trim()}
-            className="px-4 py-2 bg-orange-500 text-white rounded-full hover:bg-orange-600 disabled:bg-gray-300"
+            className="w-11 h-11 rounded-full bg-gradient-to-r from-[#e8a87c] to-[#d97757] text-white flex items-center justify-center hover:shadow-[0_6px_20px_rgba(217,119,87,0.3)] transition-all disabled:opacity-50 disabled:cursor-not-allowed flex-shrink-0"
           >
-            发送
+            <IconSend className="w-4 h-4" />
           </button>
         </form>
       </footer>
@@ -191,7 +232,13 @@ function ChatInner() {
 
 export default function ChatPage() {
   return (
-    <Suspense fallback={<div className="min-h-screen flex items-center justify-center">加载中...</div>}>
+    <Suspense
+      fallback={
+        <div className="min-h-screen flex items-center justify-center">
+          <p>加载中...</p>
+        </div>
+      }
+    >
       <ChatInner />
     </Suspense>
   )
