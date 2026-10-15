@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { createClient } from '../../lib/supabase'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import { SkeletonCard } from '../../../components/skeleton'
 
 type Post = { id: string; content: string; is_anonymous: boolean; created_at: string; status: string; is_hidden: boolean }
 
@@ -53,7 +54,13 @@ export default function MyPostsPage() {
     else { setPosts(posts.filter((p) => p.id !== id)) }
   }
 
-  if (loading) return <div className="min-h-screen flex items-center justify-center"><p>加载中...</p></div>
+  if (loading) {
+    return (
+      <div className="mx-auto max-w-xl px-6 pt-24">
+        <SkeletonCard lines={3} />
+      </div>
+    )
+  }
 
   return (
     <div className="min-h-screen relative overflow-hidden">

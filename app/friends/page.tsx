@@ -29,6 +29,8 @@ import { PlansView } from '../../components/plans-view'
 import { ImageWall } from '../../components/image-wall'
 import { EmojiPicker, useEmojiInsert } from '../../components/emoji-picker'
 import { pageAccentVars } from '../../components/theme'
+import { SkeletonSplit } from '../../components/skeleton'
+import { EmptyState } from '../../components/empty-state'
 
 type Friend = {
   friendship_id: string
@@ -727,8 +729,10 @@ export default function FriendsPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center" style={pageAccentVars('friends')}>
-        <p>加载中...</p>
+      <div className="min-h-screen bg-[var(--accent-soft)] px-6 pt-24" style={pageAccentVars('friends')}>
+        <div className="mx-auto max-w-5xl">
+          <SkeletonSplit />
+        </div>
       </div>
     )
   }
@@ -910,9 +914,7 @@ export default function FriendsPage() {
                   </p>
                 </div>
                 {shownFriends.length === 0 ? (
-                  <div className="p-6 text-center">
-                    <p className="text-xs text-[var(--accent-muted)]">还没有好友</p>
-                  </div>
+                  <EmptyState art="friends" compact title="还没有好友" hint="在上面搜昵称，加一个试试" />
                 ) : (
                   <div>
                     {shownFriends.map((f) => {
@@ -993,9 +995,8 @@ export default function FriendsPage() {
                       <p className="text-sm text-[var(--accent-muted)]">选一个好友开始聊天</p>
                     </div>
                   ) : shownMessages.length === 0 ? (
-                    <div className="h-full flex flex-col items-center justify-center text-center">
-                      <p className="text-sm text-[var(--accent-muted)]">还没有消息</p>
-                      <p className="text-xs text-[var(--accent-muted)] mt-1">说点什么吧</p>
+                    <div className="h-full flex flex-col items-center justify-center">
+                      <EmptyState art="mail" title="还没有消息" hint="说点什么吧" />
                     </div>
                   ) : (
                     <div className="space-y-2.5">
@@ -1178,8 +1179,8 @@ export default function FriendsPage() {
 
             <div className="space-y-3">
               {visibleMoments.length === 0 ? (
-                <div className="rounded-2xl border border-[var(--accent-line)] bg-white/60 backdrop-blur p-10 text-center">
-                  <p className="text-sm text-[var(--accent-muted)]">还没有内容</p>
+                <div className="rounded-2xl border border-[var(--accent-line)] bg-white/60 backdrop-blur">
+                  <EmptyState art="heart" title="这里还很安静" hint="写下第一条，朋友就看得见了" />
                 </div>
               ) : (
                 visibleMoments.map((post) => (

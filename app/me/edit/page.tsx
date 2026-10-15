@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { uploadImage } from '../../../components/media'
 import { pageAccentVars } from '../../../components/theme'
+import { SkeletonCard } from '../../../components/skeleton'
 
 export default function EditProfilePage() {
   const [loading, setLoading] = useState(true)
@@ -80,7 +81,13 @@ export default function EditProfilePage() {
     setSaving(false)
   }
 
-  if (loading) return <div className="min-h-screen flex items-center justify-center"><p>加载中...</p></div>
+  if (loading) {
+    return (
+      <div className="mx-auto max-w-xl px-6 pt-24">
+        <SkeletonCard lines={3} />
+      </div>
+    )
+  }
 
   return (
     <div className="min-h-screen relative overflow-hidden" style={pageAccentVars('me')}>

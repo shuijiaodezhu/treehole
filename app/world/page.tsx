@@ -20,6 +20,8 @@ import { EmojiPicker, useEmojiInsert } from '../../components/emoji-picker'
 import { ImageWall } from '../../components/image-wall'
 import { useFriendList } from '../../components/visibility'
 import { pageAccentVars } from '../../components/theme'
+import { SkeletonList } from '../../components/skeleton'
+import { EmptyState } from '../../components/empty-state'
 
 // 客户端提到模块级，保证引用稳定
 const supabase = createClient()
@@ -575,7 +577,15 @@ export default function WorldPage() {
     ? categories.find((c) => c.id === postCategoryId)?.name || '大厅'
     : '大厅'
 
-  if (loading) return <div className="min-h-screen flex items-center justify-center"><p>加载中...</p></div>
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-[var(--accent-soft)]" style={pageAccentVars('world')}>
+        <div className="mx-auto max-w-6xl px-6 pt-24 pb-8">
+          <SkeletonList count={3} lines={3} />
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="min-h-screen bg-[var(--accent-soft)] relative overflow-hidden" style={pageAccentVars('world')}>
@@ -700,13 +710,12 @@ export default function WorldPage() {
               )}
 
               {visiblePosts.length === 0 ? (
-                <div className="rounded-2xl border border-[var(--accent-line)] bg-white/60 backdrop-blur p-12 text-center">
-                  <p className="text-sm text-[var(--accent-muted)]">
-                    {focusMissing ? '没能找到这条帖子' : '这里还空空的'}
-                  </p>
-                  <p className="text-xs text-[var(--accent-muted)] mt-2">
-                    {focusMissing ? '它可能被作者删除了，或被站主隐藏' : '点左边「发帖」，写第一条吧'}
-                  </p>
+                <div className="rounded-2xl border border-[var(--accent-line)] bg-white/60 backdrop-blur">
+                  <EmptyState
+                    art={focusMissing ? 'search' : 'leaf'}
+                    title={focusMissing ? '没能找到这条帖子' : '这里还空空的'}
+                    hint={focusMissing ? '它可能被作者删除了，或被站主隐藏' : '点左边「发帖」，写第一条吧'}
+                  />
                 </div>
               ) : (
                 visiblePosts.map((post, index) => (

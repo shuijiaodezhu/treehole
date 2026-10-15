@@ -14,6 +14,7 @@ import {
 } from '../../../components/theme'
 import { useBlocks } from '../../../components/blocks'
 import { useFriendGroups, useFriendList } from '../../../components/visibility'
+import { SkeletonText } from '../../../components/skeleton'
 
 // 单例放模块级，保证引用稳定
 const supabase = createClient()
@@ -390,9 +391,7 @@ export default function SettingsPage() {
               </p>
 
               {blocks.error && <p className="text-xs text-red-500 mb-2">{blocks.error}</p>}
-              {blocks.loading && blocks.blockedUsers.length === 0 && (
-                <p className="text-xs text-[var(--accent-light)]">加载中…</p>
-              )}
+              {blocks.loading && blocks.blockedUsers.length === 0 && <SkeletonText lines={2} />}
               {!blocks.loading && blocks.blockedUsers.length === 0 && !blocks.error && (
                 <p className="text-xs text-[var(--accent-light)]">还没有拉黑任何人</p>
               )}
@@ -462,9 +461,7 @@ export default function SettingsPage() {
             </form>
 
             {groupApi.error && <p className="text-xs text-red-500 mb-3">{groupApi.error}</p>}
-            {groupApi.loading && groupApi.groups.length === 0 && (
-              <p className="text-xs text-[var(--accent-light)]">加载中…</p>
-            )}
+            {groupApi.loading && groupApi.groups.length === 0 && <SkeletonText lines={2} />}
             {!groupApi.loading && groupApi.groups.length === 0 && !groupApi.error && (
               <p className="text-xs text-[var(--accent-light)]">还没有分组</p>
             )}

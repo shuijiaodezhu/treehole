@@ -12,6 +12,8 @@ import { useFavorites } from '../../components/favorites'
 import { useDeleteContent } from '../../components/delete-content'
 import { useBlocks } from '../../components/blocks'
 import { pageAccentVars } from '../../components/theme'
+import { SkeletonList } from '../../components/skeleton'
+import { EmptyState } from '../../components/empty-state'
 import { EmojiPicker, useEmojiInsert } from '../../components/emoji-picker'
 
 // 客户端提到模块级，保证引用稳定
@@ -463,7 +465,15 @@ export default function PlayPage() {
     }
   }
 
-  if (loading) return <div className="min-h-screen flex items-center justify-center"><p>加载中...</p></div>
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-[var(--accent-soft)]" style={pageAccentVars('play')}>
+        <div className="mx-auto max-w-6xl px-6 pt-24 pb-8">
+          <SkeletonList count={3} lines={2} />
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="min-h-screen bg-[var(--accent-soft)] relative overflow-hidden" style={pageAccentVars('play')}>
@@ -557,9 +567,8 @@ export default function PlayPage() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {activities.length === 0 ? (
-                <div className="md:col-span-2 rounded-2xl border border-[var(--accent-line)] bg-white/60 backdrop-blur p-12 text-center">
-                  <p className="text-sm text-[var(--accent-muted)]">还没有活动</p>
-                  <p className="text-xs text-[var(--accent-muted)] mt-2">点右上角「发活动」，攒个局吧</p>
+                <div className="md:col-span-2 rounded-2xl border border-[var(--accent-line)] bg-white/60 backdrop-blur">
+                  <EmptyState art="friends" title="还没有活动" hint="点右上角「发活动」，攒个局吧" />
                 </div>
               ) : (
                 activities

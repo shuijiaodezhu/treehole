@@ -17,9 +17,30 @@ const notoSerif = Noto_Serif_SC({
   variable: "--font-noto-serif",
 });
 
+/**
+ * 站点地址：用于分享卡片（og:image 必须是绝对地址）。
+ * 部署时在环境变量里设 NEXT_PUBLIC_SITE_URL=https://你的域名，
+ * 不设的话分享卡片会指向 localhost，微信/QQ 抓不到图。
+ */
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000'
+
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: "你的来信 · Dear You",
   description: "这里有一封，你的来信",
+  openGraph: {
+    type: "website",
+    locale: "zh_CN",
+    url: SITE_URL,
+    siteName: "你的来信",
+    title: "你的来信 · Dear You",
+    description: "这里有一封，你的来信",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "你的来信 · Dear You",
+    description: "这里有一封，你的来信",
+  },
 };
 
 export default function RootLayout({

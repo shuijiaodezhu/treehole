@@ -141,3 +141,75 @@ body {
   --accent-soft: var(--page-home-soft);
   --accent-line: var(--page-home-line);
 }
+
+/* ============================================================
+   动效与骨架屏
+   ============================================================ */
+
+@keyframes th-fade-up {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: none; }
+}
+
+@keyframes th-fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* 呼吸：首屏动画与加载中用 */
+@keyframes th-breathe {
+  0%, 100% { transform: scale(1); opacity: 0.85; }
+  50%      { transform: scale(1.08); opacity: 1; }
+}
+
+@keyframes th-float {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-5px); }
+}
+
+/* 骨架屏扫光 */
+@keyframes th-shimmer {
+  100% { transform: translateX(100%); }
+}
+
+.animate-fade-up { animation: th-fade-up 0.38s cubic-bezier(0.22, 0.61, 0.36, 1) both; }
+.animate-fade-in { animation: th-fade-in 0.4s ease-out both; }
+.animate-breathe { animation: th-breathe 2.6s ease-in-out infinite; }
+.animate-float   { animation: th-float 3.4s ease-in-out infinite; }
+
+/* 逐个淡入：给列表用 */
+.stagger > * { animation: th-fade-up 0.4s cubic-bezier(0.22, 0.61, 0.36, 1) both; }
+.stagger > *:nth-child(1) { animation-delay: 0.02s; }
+.stagger > *:nth-child(2) { animation-delay: 0.06s; }
+.stagger > *:nth-child(3) { animation-delay: 0.10s; }
+.stagger > *:nth-child(4) { animation-delay: 0.14s; }
+.stagger > *:nth-child(5) { animation-delay: 0.18s; }
+.stagger > *:nth-child(6) { animation-delay: 0.22s; }
+
+/* 骨架块 */
+.skeleton {
+  position: relative;
+  overflow: hidden;
+  border-radius: 10px;
+  background-color: rgba(43, 38, 32, 0.07);
+}
+.skeleton::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6), transparent);
+  animation: th-shimmer 1.5s ease-in-out infinite;
+}
+
+/* 尊重系统的「减少动态效果」 */
+@media (prefers-reduced-motion: reduce) {
+  .animate-fade-up,
+  .animate-fade-in,
+  .animate-breathe,
+  .animate-float,
+  .stagger > *,
+  .skeleton::after {
+    animation: none !important;
+  }
+}

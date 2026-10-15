@@ -11,6 +11,8 @@ import {
   type PlanItem,
   type PlanKind,
 } from './plans'
+import { SkeletonText } from './skeleton'
+import { EmptyState } from './empty-state'
 
 /**
  * 计划书：计划 / 目标 / 待办任务
@@ -202,11 +204,14 @@ export function PlansView({ userId }: { userId: string | null }) {
           {plans.error && <p className="mb-3 text-[11px] text-red-500">{plans.error}</p>}
 
           {plans.loading && plans.items.length === 0 ? (
-            <p className="py-12 text-center font-serif-cn text-xs text-[#c0b0a0]">翻页中…</p>
+            <SkeletonText lines={4} className="py-6" />
           ) : current.open.length === 0 ? (
-            <p className="py-10 text-center font-serif-cn text-sm text-[#c0b0a0]">
-              {kind === 'task' ? '暂时没有待办，享受一下空闲' : `还没有${KIND_LABEL[kind]}`}
-            </p>
+            <EmptyState
+              art="list"
+              compact
+              title={kind === 'task' ? '暂时没有待办，享受一下空闲' : `还没有${KIND_LABEL[kind]}`}
+              hint={KIND_HINT[kind]}
+            />
           ) : (
             <div className="space-y-2.5">
               {current.open.map((item) => (

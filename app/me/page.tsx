@@ -6,6 +6,7 @@ import { createClient } from '../lib/supabase'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { pageAccentVars } from '../../components/theme'
+import { SkeletonCard } from '../../components/skeleton'
 
 const ADMIN_UUID = 'b59a31c7-60f8-4b57-924a-b408cbfd910c'
 
@@ -106,7 +107,13 @@ export default function MePage() {
     router.push('/login')
   }
 
-  if (loading) return <div className="min-h-screen flex items-center justify-center"><p>加载中...</p></div>
+  if (loading) {
+    return (
+      <div className="mx-auto max-w-xl px-6 pt-24">
+        <SkeletonCard lines={3} />
+      </div>
+    )
+  }
 
   const displayName = profile?.nickname || profile?.username || '未命名'
 

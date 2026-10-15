@@ -13,6 +13,8 @@ import { HashtagList } from '../../../components/hashtags'
 import { ImageGrid, ImagePicker } from '../../../components/media'
 import { Icon } from '../../../components/icons'
 import { EmojiPicker, useEmojiInsert } from '../../../components/emoji-picker'
+import { SkeletonList } from '../../../components/skeleton'
+import { EmptyState } from '../../../components/empty-state'
 import {
   VISIBILITY_HINT,
   VISIBILITY_LABEL,
@@ -232,8 +234,10 @@ export default function MomentsPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <p>加载中...</p>
+      <div className="min-h-screen bg-[#fdf7f2] px-6 pt-24">
+        <div className="mx-auto max-w-2xl">
+          <SkeletonList count={2} lines={3} />
+        </div>
       </div>
     )
   }
@@ -397,8 +401,8 @@ export default function MomentsPage() {
           {/* 帖子列表 */}
           <div className="space-y-3">
             {posts.length === 0 ? (
-              <div className="rounded-2xl border border-[#f0e4d4] bg-white/60 backdrop-blur p-10 text-center">
-                <p className="text-sm text-[#8a827a]">还没有内容，写第一条吧。</p>
+              <div className="rounded-2xl border border-[#f0e4d4] bg-white/60 backdrop-blur">
+                <EmptyState art="heart" title="还没有内容" hint="写第一条吧。" />
               </div>
             ) : (
               posts

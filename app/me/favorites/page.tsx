@@ -5,6 +5,8 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { createClient } from '../../lib/supabase'
 import { Icon } from '../../../components/icons'
+import { SkeletonList } from '../../../components/skeleton'
+import { EmptyState } from '../../../components/empty-state'
 import { pageAccentVars } from '../../../components/theme'
 import {
   FAVORITE_KIND_LABEL,
@@ -153,18 +155,15 @@ export default function FavoritesPage() {
           <p className="py-12 text-center text-xs leading-relaxed text-[var(--accent-muted)]">{MEDIA_HINT[tab]}</p>
         )}
 
-        {loading && (
-          <p className="py-12 text-center text-xs text-[var(--accent-muted)]">加载中…</p>
-        )}
+        {loading && <SkeletonList count={2} lines={2} />}
 
         {!loading && !MEDIA_HINT[tab as FavoriteKind] && visible.length === 0 && !favorites.error && (
-          <div className="py-14 text-center">
-            <p className="text-sm text-[var(--accent-deep)]">
-              {tab === 'all' ? '口袋里还空着' : `还没有收藏的${FAVORITE_KIND_LABEL[tab as FavoriteKind]}`}
-            </p>
-            <p className="mt-2 text-xs text-[var(--accent-muted)]">
-              在院子里遇到心动的帖子，收进来就好。
-            </p>
+          <div>
+            <EmptyState
+              art="heart"
+              title={tab === 'all' ? '口袋里还空着' : `还没有收藏的${FAVORITE_KIND_LABEL[tab as FavoriteKind]}`}
+              hint="在院子里遇到心动的帖子，收进来就好。"
+            />
             <Link
               href="/world"
               className="mt-5 inline-flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-[var(--accent-light)] to-[var(--accent)] px-4 py-2 text-sm text-white hover:shadow-[0_6px_20px_rgba(168,138,184,0.3)] transition-all"

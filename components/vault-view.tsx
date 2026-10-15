@@ -11,6 +11,8 @@ import {
   useVault,
   type FileCategory,
 } from './vault'
+import { SkeletonList } from './skeleton'
+import { EmptyState } from './empty-state'
 
 /**
  * 储物箱界面（放在小屋的第三个页签）
@@ -133,13 +135,14 @@ export function VaultView({ userId }: { userId: string | null }) {
 
       {/* 文件列表 */}
       {vault.loading && vault.files.length === 0 ? (
-        <p className="py-14 text-center text-xs text-[var(--accent-muted)]">加载中…</p>
+        <SkeletonList count={2} lines={1} />
       ) : visible.length === 0 ? (
-        <div className="rounded-2xl border border-[var(--accent-line)] bg-white/60 p-12 text-center backdrop-blur">
-          <p className="text-sm text-[var(--accent-muted)]">
-            {vault.files.length === 0 ? '储物箱还是空的' : `没有${CATEGORY_LABEL[filter as FileCategory]}类文件`}
-          </p>
-          <p className="mt-2 text-xs text-[#c0b8ae]">点上面的「存入文件」，图片、文档、压缩包都可以放</p>
+        <div className="rounded-2xl border border-[var(--accent-line)] bg-white/60 backdrop-blur">
+          <EmptyState
+            art="box"
+            title={vault.files.length === 0 ? '储物箱还是空的' : `没有${CATEGORY_LABEL[filter as FileCategory]}类文件`}
+            hint="点上面的「存入文件」，图片、文档、压缩包都可以放"
+          />
         </div>
       ) : (
         <div className="space-y-2">

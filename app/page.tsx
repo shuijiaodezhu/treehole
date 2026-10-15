@@ -26,6 +26,7 @@ import { useWeather } from '../components/weather'
 import { useModuleBadges } from '../components/module-badges'
 import type { FriendRequest, FriendshipRow, LoginStreak } from '../components/types'
 import { pageAccentVars } from '../components/theme'
+import { SkeletonHome } from '../components/skeleton'
 
 // 客户端单例：放在模块级，保证引用稳定（useCallback / useEffect 不会每次渲染都重跑）
 const supabase = createClient()
@@ -181,8 +182,8 @@ export default function HomePage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center" style={pageAccentVars('home')}>
-        <p className="text-sm text-[var(--accent-muted)]">加载中...</p>
+      <div className="page-theme min-h-screen" style={pageAccentVars('home')}>
+        <SkeletonHome />
       </div>
     )
   }

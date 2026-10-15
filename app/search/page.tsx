@@ -8,6 +8,8 @@ import { Icon } from '../../components/icons'
 import { avatarFallback } from '../../components/utils'
 import { useBlocks } from '../../components/blocks'
 import { useFocusQuery } from '../../components/use-focus-query'
+import { SkeletonList } from '../../components/skeleton'
+import { EmptyState } from '../../components/empty-state'
 
 /** 客户端单例 */
 const supabase = createClient()
@@ -361,14 +363,10 @@ export default function SearchPage() {
             </p>
           )}
 
-          {loading && hasQuery && (
-            <p className="py-8 text-center text-xs text-[#b0a89e]">正在找…</p>
-          )}
+          {loading && hasQuery && <SkeletonList count={2} lines={2} />}
 
           {empty && !loading && (
-            <p className="py-12 text-center text-xs text-[#b0a89e]">
-              没找到和「{debounced}」有关的内容
-            </p>
+            <EmptyState art="search" title={`没找到和「${debounced}」有关的内容`} hint="换个词试试，或者少写几个字" />
           )}
 
           {/* 帖子结果 */}
