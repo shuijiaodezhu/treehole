@@ -5,6 +5,7 @@ import { createClient } from '../lib/supabase'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { LoginTransition } from '../../components/login-transition'
+import { markJustLoggedIn } from '../../components/login-handoff'
 
 export default function LoginPage() {
   const [email, setEmail] = useState('')
@@ -39,7 +40,11 @@ export default function LoginPage() {
       <div className="absolute -bottom-20 -right-20 w-96 h-96 bg-[#d97757] opacity-10 rounded-full blur-3xl pointer-events-none"></div>
 
       {/* 登录成功的过场：信封飞来、开盖、进主页 */}
-      {entering && <LoginTransition onDone={() => router.push('/')} />}
+      {entering && <LoginTransition onDone={() => {
+          // 打个一次性标记：目标页据此整页淡入、并跳过首屏加载动画
+          markJustLoggedIn()
+          router.push('/')
+        }} />}
 
       {/* 左侧装饰文字（大屏可见） */}
       <div className={`hidden lg:block absolute left-20 top-1/2 -translate-y-1/2 max-w-sm ${entering ? 'th-page-out' : ''}`}>

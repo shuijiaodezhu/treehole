@@ -213,7 +213,8 @@ body {
   .th-page-out,
   .th-envelope-in,
   .th-flap,
-  .th-overlay-out {
+  .th-overlay-out,
+  .th-page-in {
     animation: none !important;
   }
 }
@@ -243,6 +244,12 @@ body {
   to { opacity: 0; transform: scale(1.07); }
 }
 
+/* 登录后目标页整页淡入：一层纸色盖住，再化开 */
+@keyframes th-page-in {
+  from { opacity: 1; }
+  to   { opacity: 0; }
+}
+
 /* 两边的文字与登录框淡出 */
 .th-page-out { animation: th-page-out 0.34s ease-in both; }
 
@@ -254,3 +261,6 @@ body {
 
 /* 整幕淡出并轻微放大，随后进入主页 */
 .th-overlay-out { animation: th-overlay-out 0.38s ease-in 1.5s both; }
+
+/* 登录后目标页的整页淡入 */
+.th-page-in { animation: th-page-in 0.5s ease-out both; }
