@@ -148,7 +148,18 @@ export function AdminSitePages() {
         err && typeof err === 'object' && 'message' in err
           ? String((err as { message: unknown }).message)
           : String(err)
-      setMessage('保存失败：' + msg)
+      // RLS 报错最常见的原因是「策略没建」或「策略里的 uid 跟当前账号不一致」，
+      // 所以把当前登录 uid 一起显示出来，方便直接对照 SQL
+      if (/row-level security/i.test(msg)) {
+        const { data: userData } = await supabase.auth.getUser()
+        setMessage(
+          `保存失败：${msg}\n\n当前登录账号 uid：${userData.user?.id ?? '(未登录)'}\n` +
+            '请确认数据库里 site_pages 的写入策略已建好，且策略中的 uid 与上面这个一致。\n' +
+            '（跑一次 supabase-site-pages-fix.sql 即可）',
+        )
+      } else {
+        setMessage('保存失败：' + msg)
+      }
     } finally {
       setSaving(false)
     }
@@ -211,6 +222,12 @@ export function AdminSitePages() {
         </div>
         {message && <span className="text-[11px] text-[#7a5a9a]">{message}</span>}
       </div>
+
+      {message && message.includes('\n') && (
+        <p className="mb-4 whitespace-pre-line rounded-xl border border-red-100 bg-red-50 px-4 py-3 text-[11px] leading-relaxed text-red-600">
+          {message}
+        </p>
+      )}
 
       {error && (
         <p className="mb-4 rounded-xl border border-amber-100 bg-amber-50 px-4 py-3 text-xs text-amber-700">
