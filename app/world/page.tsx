@@ -15,7 +15,8 @@ import { useBlocks } from '../../components/blocks'
 import { useEditContent } from '../../components/edit-content'
 import { HashtagList } from '../../components/hashtags'
 import { MentionInput, renderMentions } from '../../components/mentions'
-import { ImageGrid, ImagePicker } from '../../components/media'
+import { ImagePicker } from '../../components/media'
+import { ImageWall } from '../../components/image-wall'
 import { useFriendList } from '../../components/visibility'
 
 // 客户端提到模块级，保证引用稳定
@@ -770,8 +771,14 @@ export default function WorldPage() {
                       </p>
                     )}
 
-                    {/* 图片墙 */}
-                    <ImageGrid urls={post.image_urls} className="mt-3 pl-1" />
+                    {/* 图片墙（每张可单独收藏） */}
+                    <ImageWall
+                      urls={post.image_urls}
+                      context={post.content}
+                      authorName={post.author_name}
+                      favorites={favorites}
+                      className="mt-3 pl-1"
+                    />
 
                     {/* 正文里的话题标签 */}
                     <HashtagList content={post.content} className="mt-2 pl-1" />

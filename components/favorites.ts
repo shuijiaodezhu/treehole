@@ -49,7 +49,14 @@ export function favoriteHref(kind: FavoriteKind, targetId: string): string {
   if (kind === 'world_post') return `/world?post=${targetId}`
   if (kind === 'play_activity') return `/play?activity=${targetId}`
   if (kind === 'moment') return `/friends/moments?post=${targetId}`
+  // 图片与视频：target_id 存的是文件 URL，直接打开
+  if (kind === 'image' || kind === 'video') return targetId
   return '/me/favorites'
+}
+
+/** 是不是「文件类」收藏（target_id 为 URL） */
+export function isMediaFavorite(kind: FavoriteKind): boolean {
+  return kind === 'image' || kind === 'video'
 }
 
 export function useFavorites(userId: string | null) {

@@ -7,7 +7,7 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { markMomentsSeen, useMomentsBadge, useUnreadMessages } from '../../components/unread'
 import { useBlocks } from '../../components/blocks'
-import { ImageGrid, ImagePicker } from '../../components/media'
+import { ImagePicker } from '../../components/media'
 import { HashtagList } from '../../components/hashtags'
 import { MentionInput, renderMentions } from '../../components/mentions'
 import { useEditContent } from '../../components/edit-content'
@@ -26,6 +26,7 @@ import {
 } from '../../components/visibility'
 import { VaultView } from '../../components/vault-view'
 import { PlansView } from '../../components/plans-view'
+import { ImageWall } from '../../components/image-wall'
 
 type Friend = {
   friendship_id: string
@@ -1236,8 +1237,14 @@ export default function FriendsPage() {
                       </p>
                     )}
 
-                    {/* 图片墙 */}
-                    <ImageGrid urls={post.image_urls} className="mt-1 mb-3 pl-1" />
+                    {/* 图片墙（每张可单独收藏） */}
+                    <ImageWall
+                      urls={post.image_urls}
+                      context={post.content}
+                      authorName={post.author_name}
+                      favorites={momentFavorites}
+                      className="mt-1 mb-3 pl-1"
+                    />
 
                     {/* 话题标签 */}
                     <HashtagList

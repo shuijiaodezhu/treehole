@@ -8,6 +8,7 @@ import { Icon } from '../../../components/icons'
 import {
   FAVORITE_KIND_LABEL,
   favoriteHref,
+  isMediaFavorite,
   useFavorites,
   type FavoriteKind,
 } from '../../../components/favorites'
@@ -19,10 +20,9 @@ type Tab = 'all' | FavoriteKind
 /** 页签顺序：全部 / 帖子 / 活动 / 朋友圈 / 视频 / 图片 */
 const TABS: Tab[] = ['all', 'world_post', 'play_activity', 'moment', 'video', 'image']
 
-/** 目前站内还没有视频/图片内容，这两个页签先给明确说明而不是空白 */
+/** 站内目前还没有视频内容，这个页签先给明确说明而不是空白 */
 const MEDIA_HINT: Partial<Record<FavoriteKind, string>> = {
   video: '站内目前还没有视频内容。等院子支持发视频后，收藏的视频会出现在这里。',
-  image: '站内目前还没有图片内容。等帖子/朋友圈支持配图后，收藏的图片会出现在这里。',
 }
 
 function formatTime(iso: string): string {
@@ -192,6 +192,19 @@ export default function FavoritesPage() {
                   </span>
                 </div>
 
+                {/* 图片收藏：直接把图显示出来（target_id 就是图片地址） */}
+                {isMediaFavorite(f.kind) && (
+                  <a
+                    href={f.target_id}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-1 mb-3 block overflow-hidden rounded-xl border border-[#ece4f4]"
+                  >
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={f.target_id} alt="" className="max-h-64 w-full object-cover" />
+                  </a>
+                )}
+
                 {f.title && (
                   <p className="text-sm font-medium text-[#2b2430] mb-1 break-words">{f.title}</p>
                 )}
@@ -203,12 +216,23 @@ export default function FavoritesPage() {
                 )}
 
                 <div className="mt-3 flex items-center gap-3">
-                  <Link
-                    href={favoriteHref(f.kind, f.target_id)}
-                    className="text-xs text-[#7a5a9a] hover:underline"
-                  >
-                    查看原内容 →
-                  </Link>
+                  {isMediaFavorite(f.kind) ? (
+                    <a
+                      href={f.target_id}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-xs text-[#7a5a9a] hover:underline"
+                    >
+                      打开原图 →
+                    </a>
+                  ) : (
+                    <Link
+                      href={favoriteHref(f.kind, f.target_id)}
+                      className="text-xs text-[#7a5a9a] hover:underline"
+                    >
+                      查看原内容 →
+                    </Link>
+                  )}
                   <button
                     type="button"
                     onClick={() =>
