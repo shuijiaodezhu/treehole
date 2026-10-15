@@ -15,6 +15,7 @@ import { pageAccentVars } from '../../components/theme'
 import { SkeletonList } from '../../components/skeleton'
 import { EmptyState } from '../../components/empty-state'
 import { EmojiPicker, useEmojiInsert } from '../../components/emoji-picker'
+import { MiniTools } from '../../components/mini-tools'
 
 // 客户端提到模块级，保证引用稳定
 const supabase = createClient()
@@ -690,28 +691,7 @@ export default function PlayPage() {
           </>
         )}
 
-        {tab === 'minigames' && (
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {[
-              { key: 'dice', name: '掷骰子', icon: 'dice', desc: '1-6 随机' },
-              { key: 'coin', name: '抛硬币', icon: 'coin', desc: '正反随机' },
-              { key: 'pick', name: '抽签', icon: 'target', desc: '从选项里抽' },
-              { key: 'random', name: '随机数', icon: 'sparkle', desc: '范围内随机' },
-            ].map((g) => (
-              <button
-                key={g.key}
-                onClick={() => alert('小程序还在开发中，敬请期待～')}
-                className="rounded-2xl border border-[var(--accent-line)] bg-white/90 backdrop-blur p-5 shadow-[0_2px_12px_rgba(90,122,154,0.06)] hover:shadow-[0_8px_24px_rgba(90,122,154,0.12)] hover:-translate-y-0.5 transition-all text-left"
-              >
-                <div className="w-10 h-10 rounded-xl bg-[var(--accent-soft)] flex items-center justify-center mb-3">
-                  <Icon name={g.icon} className="w-5 h-5 text-[var(--accent)]" />
-                </div>
-                <p className="text-sm font-semibold text-[var(--accent-ink)]">{g.name}</p>
-                <p className="text-[11px] text-[var(--accent-muted)] mt-1">{g.desc}</p>
-              </button>
-            ))}
-          </div>
-        )}
+        {tab === 'minigames' && <MiniTools />}
       </div>
 
       {detailActivity && (

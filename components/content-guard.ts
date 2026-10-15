@@ -76,7 +76,7 @@ export function filterHint(hits: string[]): string {
 
 /* ==================== ① 速率限制 ==================== */
 
-export type RateKind = 'message' | 'mailbox' | 'post' | 'comment'
+export type RateKind = 'message' | 'mailbox' | 'post' | 'comment' | 'music'
 
 type Rule = {
   /** 两次之间至少间隔多久 */
@@ -92,6 +92,8 @@ const RULES: Record<RateKind, Rule> = {
   mailbox: { minGapMs: 3_000, windowMs: 600_000, max: 10, label: '写信' },
   post: { minGapMs: 20_000, windowMs: 600_000, max: 8, label: '发布' },
   comment: { minGapMs: 3_000, windowMs: 300_000, max: 20, label: '评论' },
+  // 音频体积大，节奏卡得比文字紧：最少隔 10 秒，半小时最多 6 首
+  music: { minGapMs: 10_000, windowMs: 1_800_000, max: 6, label: '上传音频' },
 }
 
 const RATE_KEY = (kind: RateKind) => `treehole:rate:${kind}`
