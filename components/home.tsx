@@ -153,9 +153,10 @@ export function NavCardGrid({ badges }: { badges?: Partial<Record<string, { coun
           <motion.div
             key={block.href}
             className="h-full"
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, delay: i * 0.07, ease: [0.22, 1, 0.36, 1] }}
+            initial={{ opacity: 0, y: 18 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-60px' }}
+            transition={{ duration: 0.5, delay: i * 0.07, ease: [0.22, 1, 0.36, 1] }}
           >
             <TiltCard className="relative h-full">
             <Link

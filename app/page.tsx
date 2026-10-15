@@ -23,6 +23,7 @@ import { useWeather } from '../components/weather'
 import { useModuleBadges } from '../components/module-badges'
 import { NotificationBell } from '../components/notifications'
 import { WelcomeLetter } from '../components/welcome-letter'
+import { motion, useScroll, useTransform } from 'motion/react'
 import { Button } from '../components/ui/button'
 import {
   Dialog,
@@ -58,6 +59,14 @@ export default function HomePage() {
   // 时间相关内容全部放到 hydration 之后再取：Next 16 不允许在预渲染阶段读 Date.now()
   const [quote, setQuote] = useState('')
   const [dateText, setDateText] = useState('')
+
+  /* ---------- ③ 连续滚动（视差） ----------
+     往下滚：站名向上位移并淡出，滚动提示先消失。
+     这是"连续"那一档 —— 跟手、可逆、和滚动位置一一对应。 */
+  const { scrollY } = useScroll()
+  const heroY = useTransform(scrollY, [0, 460], [0, -84])
+  const heroOpacity = useTransform(scrollY, [0, 320], [1, 0.12])
+  const hintOpacity = useTransform(scrollY, [0, 110], [1, 0])
   const [streak, setStreak] = useState<LoginStreak>({ days: 1, sinceLast: 1 })
   const [requests, setRequests] = useState<FriendRequest[]>([])
   const [confirmLogout, setConfirmLogout] = useState(false)
@@ -209,14 +218,38 @@ export default function HomePage() {
       {/* 顶部 header */}
       <header className="relative w-full overflow-hidden border-b border-[#e0d3bd] bg-[#f4ebdd] text-[#3a2f26]">
 
-        <div className="max-w-5xl mx-auto px-8 py-10 flex justify-between items-center relative">
+        <div className="relative mx-auto flex min-h-[58svh] max-w-5xl flex-col justify-center gap-10 px-8 py-14 sm:flex-row sm:items-center sm:justify-between">
           <div>
 
+            <motion.div style={{ y: heroY, opacity: heroOpacity }}>
             <h1 className="font-brush text-[40px] leading-tight tracking-[0.04em] text-[#3f332a] sm:text-[52px]">你的来信</h1>
             <p className="mt-3 flex items-baseline gap-2 text-[#8a7a68]">
               <span className="font-art text-3xl text-[#a8563a]">Dear You</span>
               <span className="text-sm">· 这里有一封，你的来信</span>
             </p>
+
+              {/* 开场信息：日期、天气、陪你走过 —— 从下面内容区搬上来 */}
+              <p className="mt-6 text-[12px] leading-relaxed tracking-[0.08em] text-[#9c8f7d]">
+                {dateText} · {weather.city} {weather.condition} {weather.temp}° / {weather.tempMin}°
+                <span className="mx-2 opacity-40">|</span>
+                陪你走过 {streak.days} 天
+              </p>
+
+              {/* 滚动提示：往下滚就淡掉 */}
+              <motion.p
+                style={{ opacity: hintOpacity }}
+                className="mt-10 flex items-center gap-2 text-[12px] tracking-[0.08em] text-[#b3a692]"
+              >
+                <motion.span
+                  animate={{ y: [0, 4, 0] }}
+                  transition={{ duration: 1.8, repeat: Infinity, ease: 'easeInOut' }}
+                  aria-hidden="true"
+                >
+                  ↓
+                </motion.span>
+                往下看看
+              </motion.p>
+            </motion.div>
           </div>
 
           <div className="text-right">
@@ -266,16 +299,9 @@ export default function HomePage() {
         </div>
       )}
 
-      <div className="relative mx-auto flex w-full max-w-2xl flex-1 flex-col justify-center px-6 py-14 sm:px-8">
+      <div className="relative mx-auto w-full max-w-2xl px-6 pb-16 pt-16 sm:px-8 sm:pt-20">
 
         <div>
-          {/* 一行小字：日期、天气、陪你走过 */}
-          <p className="text-[12px] leading-relaxed tracking-[0.08em] text-[#9c8f7d]">
-            {dateText} · {weather.city} {weather.condition} {weather.temp}° / {weather.tempMin}°
-          </p>
-          <p className="mt-1.5 text-[12px] tracking-[0.08em] text-[#9c8f7d]">
-            陪你走过 {streak.days} 天
-          </p>
 
           <FriendRequestBanner requests={requests} />
 
@@ -284,12 +310,18 @@ export default function HomePage() {
           </nav>
 
           {quote && (
-            <div className="mt-14 border-l-2 border-[#ece3d4] pl-5">
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: false, margin: '-80px' }}
+              transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+              className="mt-14 border-l-2 border-[#ece3d4] pl-5"
+            >
               <p className="font-serif-cn text-[16px] leading-[2.1] text-[#3f332a]">「{quote}」</p>
               <p className="mt-3 text-[12px] tracking-[0.08em] text-[#9c8f7d]">
                 来自陌生人的问候 · <span className="text-[#a8563a]">睡觉的猪</span>
               </p>
-            </div>
+            </motion.div>
           )}
         </div>
       </div>
