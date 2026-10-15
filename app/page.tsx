@@ -39,6 +39,7 @@ import { pageAccentVars } from '../components/theme'
 import { SkeletonHome } from '../components/skeleton'
 import { MailboxDialog, MailboxTrigger, useMailbox } from '../components/mailbox'
 import { MailboxArt } from '../components/mailbox-art'
+import { Ornament, PaperPattern } from '../components/paper-pattern'
 
 // 客户端单例：放在模块级，保证引用稳定（useCallback / useEffect 不会每次渲染都重跑）
 const supabase = createClient()
@@ -219,7 +220,7 @@ export default function HomePage() {
       {/* 顶部 header */}
       <header className="relative w-full overflow-hidden border-b border-[#e0d3bd] bg-[#f4ebdd] text-[#3a2f26]">
 
-        <div className="relative mx-auto flex min-h-[58svh] max-w-5xl flex-col justify-center gap-10 px-8 py-14 sm:flex-row sm:items-center sm:justify-between">
+        <div className="relative mx-auto flex min-h-[62svh] w-full max-w-5xl flex-col justify-center gap-12 px-8 py-16 sm:flex-row sm:items-center sm:justify-between">
           <div>
 
             <motion.div style={{ y: heroY, opacity: heroOpacity }}>
@@ -253,14 +254,16 @@ export default function HomePage() {
             </motion.div>
           </div>
 
-          <div className="text-right">
+          {/* 顶栏：欢迎语与功能图标。桌面绝对定位到右上（不占主行），手机上排在最前 */}
+          <div className="order-first text-right sm:absolute sm:right-8 sm:top-10 sm:order-none">
             <p className="text-sm mb-2">
               <span className="font-medium text-[#8a6a4a]">欢迎回来，</span>
               <span className="text-[#8a7a68]">{email || '朋友'}</span>
             </p>
 
             <div className="flex items-center justify-end gap-3">
-              <span>
+              {/* sm 以上由右边的插画承担信箱入口，所以按钮只留给手机，避免两个入口 */}
+              <span className="sm:hidden">
                 <MailboxTrigger mailbox={mailbox} onOpen={() => setMailboxOpen(true)} />
               </span>
               <NotificationBell userId={userId} />
@@ -281,11 +284,10 @@ export default function HomePage() {
             </div>
           </div>
 
-            {/* 冬日信箱：放回 hero 里面（原来挂在版面外侧，会压歪比例）。
-                尺寸由外层容器控制，所以不会再"跑出去"。 */}
-            <div className="mt-8 hidden w-[150px] sm:block">
-              <MailboxArt onOpen={() => setMailboxOpen(true)} />
-            </div>
+          {/* 右栏：冬日信箱（主视觉）。放回 hero 内部，尺寸由容器控制 */}
+          <div className="hidden w-[170px] flex-shrink-0 sm:block">
+            <MailboxArt onOpen={() => setMailboxOpen(true)} />
+          </div>
         </div>
       </header>
 
@@ -306,18 +308,24 @@ export default function HomePage() {
         </div>
       )}
 
-      <div className="relative mx-auto w-full max-w-2xl px-6 pb-16 pt-16 sm:px-8 sm:pt-20">
+      <div className="relative mx-auto w-full max-w-2xl px-6 pb-20 pt-16 sm:px-8 sm:pt-24">
+        <PaperPattern />
 
         <div>
 
           <FriendRequestBanner requests={requests} />
 
-          <nav className="mt-14">
+          <Ornament />
+
+          <nav className="mt-10">
             <NavCardGrid badges={badges} />
           </nav>
 
           {quote && (
-            <motion.div
+            <>
+              <Ornament />
+
+              <motion.div
               initial={{ opacity: 0, y: 16 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: false, margin: '-80px' }}
@@ -328,7 +336,8 @@ export default function HomePage() {
               <p className="mt-3 text-[12px] tracking-[0.08em] text-[#9c8f7d]">
                 来自陌生人的问候 · <span className="text-[#a8563a]">睡觉的猪</span>
               </p>
-            </motion.div>
+              </motion.div>
+            </>
           )}
         </div>
       </div>

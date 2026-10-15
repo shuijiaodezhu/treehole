@@ -428,3 +428,17 @@ html.dsh-navigating .dsh-nav-mask {
 @media (prefers-reduced-motion: reduce) {
   .dsh-nav-mask { transition: none; }
 }
+
+
+/* ---------- 纸纹漂移（很慢：60s 一圈）----------
+   快到能被注意到就会分心；60s 一圈，看久了才发觉纸在动。 */
+@keyframes dsh-drift {
+  from { transform: translate3d(0, 0, 0); }
+  to   { transform: translate3d(-22px, -22px, 0); }
+}
+.dsh-pattern-drift {
+  animation: dsh-drift 60s linear infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .dsh-pattern-drift { animation: none; }
+}

@@ -231,6 +231,18 @@ export function NavCardGrid({ badges }: { badges?: Partial<Record<string, { coun
                 </p>
               </div>
 
+              {/* 右下角点阵角落纹：平时很淡，悬停淡入并扩开一点 */}
+              <span
+                aria-hidden="true"
+                className="pointer-events-none absolute bottom-0 right-0 h-16 w-20 rounded-tr-2xl opacity-40 transition-all duration-300 group-hover:scale-110 group-hover:opacity-90"
+                style={{
+                  backgroundImage: 'radial-gradient(rgba(168,86,58,0.22) 1px, transparent 1.2px)',
+                  backgroundSize: '9px 9px',
+                  maskImage: 'linear-gradient(315deg, #000 10%, transparent 72%)',
+                  WebkitMaskImage: 'linear-gradient(315deg, #000 10%, transparent 72%)',
+                }}
+              />
+
               <ChevronRight
                 className="h-4 w-4 flex-shrink-0 self-center text-[#cfc3b0] transition-transform duration-200 group-hover:translate-x-1 group-hover:text-[#a8563a]"
                 strokeWidth={1.8}
