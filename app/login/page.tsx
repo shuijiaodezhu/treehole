@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { loginNavigateDelay, startLoginTransition } from '../../components/login-transition'
 import { markJustLoggedIn } from '../../components/login-handoff'
+import { logLogin } from '../../components/login-log'
 
 export default function LoginPage() {
   const [email, setEmail] = useState('')
@@ -22,7 +23,7 @@ export default function LoginPage() {
     setLoading(true)
     setMessage('')
 
-    const { error } = await supabase.auth.signInWithPassword({ email, password })
+    const { data, error } = await supabase.auth.signInWithPassword({ email, password })
 
     if (error) {
       setMessage('登录失败：' + error.message)
@@ -33,6 +34,8 @@ export default function LoginPage() {
     // 先让登录页两边淡出、幕布合上，再把主页换到后面去加载
     setEntering(true)
     startLoginTransition()
+    // 记一条登录日志（设备管理那一节用的就是它）；写失败不打扰用户
+    if (data?.user?.id) void logLogin(data.user.id)
     window.setTimeout(() => {
       markJustLoggedIn()
       router.push('/')

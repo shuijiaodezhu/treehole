@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { createClient } from '../../lib/supabase'
+import { LoginDevicesSection } from '../../../components/login-log'
 import { Icon } from '../../../components/icons'
 import {
   PAGE_DESC,
@@ -213,6 +214,9 @@ export default function SettingsPage() {
         </header>
 
         <main className="space-y-4">
+          {/* ==================== 登录设备（看自己在哪些设备登录过） ==================== */}
+          <LoginDevicesSection userId={meId} />
+
           {/* ==================== 修改密码（两步点击） ==================== */}
           <section className="rounded-3xl border border-[var(--accent-line)] bg-white/80 backdrop-blur-lg p-6 shadow-[0_8px_40px_rgba(168,138,184,0.06)] relative overflow-hidden">
             <div className="absolute -top-8 -right-8 w-32 h-32 bg-[var(--accent-light)] opacity-[0.12] rounded-full blur-2xl pointer-events-none"></div>

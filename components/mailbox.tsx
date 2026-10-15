@@ -7,6 +7,7 @@ import { Icon } from './icons'
 import { EmojiPicker, useEmojiInsert } from './emoji-picker'
 import { ADMIN_UUID } from './utils'
 import { MailboxSetup } from './mailbox-setup'
+import { checkRate, filterHint, filterText, noteSent } from './content-guard'
 
 /**
  * 冬日信箱
@@ -138,9 +139,17 @@ export function useMailbox(meId: string | null): Mailbox {
 
   const send = useCallback(
     async (text: string) => {
-      const content = text.trim()
+      const raw = text.trim()
       if (!meId) return { ok: false, message: '请先登录' }
-      if (!content) return { ok: false, message: '写点什么呢' }
+      if (!raw) return { ok: false, message: '写点什么呢' }
+
+      // ① 限流：信比较郑重，间隔给得宽一些
+      const gate = checkRate('mailbox')
+      if (!gate.ok) return { ok: false, message: gate.message }
+
+      // ② 敏感词：替换成 *，并如实回报名中了哪些
+      const filtered = filterText(raw)
+      const content = filtered.text
 
       setSending(true)
       try {
@@ -151,8 +160,9 @@ export function useMailbox(meId: string | null): Mailbox {
           .single()
 
         if (sendError) throw sendError
+        noteSent('mailbox')
         setMessages((prev) => [...prev, data as MailboxMessage])
-        return { ok: true }
+        return { ok: true, message: filtered.hits.length > 0 ? filterHint(filtered.hits) : undefined }
       } catch (err) {
         console.error('寄信失败:', err)
         return { ok: false, message: describeMailboxError(err).message }
@@ -250,6 +260,7 @@ export function MailboxDialog({
 }) {
   const [draft, setDraft] = useState('')
   const [hint, setHint] = useState('')
+  const [hintTone, setHintTone] = useState<'error' | 'info'>('error')
   const listRef = useRef<HTMLDivElement>(null)
   const { ref: inputRef, insert: insertEmoji } = useEmojiInsert<HTMLTextAreaElement>(draft, setDraft)
 
@@ -279,8 +290,15 @@ export function MailboxDialog({
     setHint('')
     const result = await mailbox.send(draft)
     if (!result.ok) {
+      setHintTone('error')
       setHint(result.message ?? '没寄出去')
       return
+    }
+    // 敏感词被替换过就如实说一声，过几秒自己消失
+    if (result.message) {
+      setHintTone('info')
+      setHint(result.message)
+      window.setTimeout(() => setHint(''), 4000)
     }
     setDraft('')
     window.requestAnimationFrame(() => {
@@ -430,7 +448,13 @@ export function MailboxDialog({
         {/* 写信：站主不在前台写，他回信在后台 */}
         {!isOwner && (
           <div className="border-t border-[var(--accent-line)] px-4 py-3">
-            {hint && <p className="mb-2 text-[10px] text-red-500">{hint}</p>}
+            {hint && (
+              <p
+                className={'mb-2 text-[10px] ' + (hintTone === 'error' ? 'text-red-500' : 'text-[var(--accent-muted)]')}
+              >
+                {hint}
+              </p>
+            )}
             <div className="flex items-end gap-2">
               <textarea
                 ref={inputRef}

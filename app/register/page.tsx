@@ -36,13 +36,32 @@ export default function RegisterPage() {
     }
 
     setLoading(true)
-    const { error } = await supabase.auth.signUp({ email, password })
+    const { data, error } = await supabase.auth.signUp({ email, password })
 
     if (error) {
       setMessage('注册失败：' + error.message)
-    } else {
+      setLoading(false)
+      return
+    }
+
+    /*
+     * ③ 邮箱验证
+     *
+     * Supabase 里把「Confirm email」打开后，signUp 不会直接给会话 ——
+     * 用户得先点邮件里的链接。这时不能当成功跳走：他到了登录页也登不进去，
+     * 只会一脸茫然。所以按「有没有拿到会话」分成两条路。
+     *
+     * 怎么打开：Supabase → Authentication → Sign In / Providers → Email
+     *          → 勾上 Confirm email
+     *          （顺便确认 Redirect URLs 里填了你的站点地址）
+     */
+    if (data?.session) {
       setMessage('注册成功！正在跳转...')
       setTimeout(() => router.push('/login'), 1500)
+    } else {
+      setMessage(
+        `确认邮件已发到 ${email}。点开邮件里的链接完成验证，再回来登录。\n（收件箱里没有的话，翻一下垃圾邮件）`,
+      )
     }
     setLoading(false)
   }

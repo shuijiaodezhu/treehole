@@ -8,6 +8,7 @@ import Link from 'next/link'
 import { markMomentsSeen, useMomentsBadge, useUnreadMessages } from '../../components/unread'
 import { markModuleSeen } from '../../components/module-badges'
 import { ChatMessages } from '../../components/chat-bubbles'
+import { checkRate, filterHint, filterText, noteSent } from '../../components/content-guard'
 import { useBlocks } from '../../components/blocks'
 import { ImagePicker } from '../../components/media'
 import { HashtagList } from '../../components/hashtags'
@@ -390,8 +391,17 @@ export default function FriendsPage() {
     e.preventDefault()
     if (!content.trim() || !meId || !conversationId) return
 
+    // ① 限流：手快连点、刷屏先在这里挡住（数据库那层兜底，见 supabase-security.sql）
+    const gate = checkRate('message')
+    if (!gate.ok) {
+      alert(gate.message)
+      return
+    }
+
     setSending(true)
-    const text = content.trim()
+    // ② 敏感词：替换成 *，并如实告诉用户改了哪儿（不静默改话）
+    const filtered = filterText(content.trim())
+    const text = filtered.text
     setContent('')
 
     const { error } = await supabase.from('messages').insert({
@@ -404,6 +414,8 @@ export default function FriendsPage() {
       alert('发送失败：' + error.message)
       setContent(text)
     } else {
+      noteSent('message')
+      if (filtered.hits.length > 0) alert(filterHint(filtered.hits))
       await loadMessages(conversationId)
     }
     setSending(false)
