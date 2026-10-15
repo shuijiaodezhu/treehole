@@ -14,6 +14,8 @@ import { useDeleteContent } from '../../components/delete-content'
 import { useBlocks } from '../../components/blocks'
 import { useEditContent } from '../../components/edit-content'
 import { HashtagList } from '../../components/hashtags'
+import { MentionInput, renderMentions } from '../../components/mentions'
+import { useFriendList } from '../../components/visibility'
 
 // 客户端提到模块级，保证引用稳定
 const supabase = createClient()
@@ -270,6 +272,10 @@ export default function WorldPage() {
 
   /* ---------- 编辑自己发的帖子 / 评论 ---------- */
   const editor = useEditContent(meId)
+
+  /* ---------- @ 功能：评论里能叫人 ---------- */
+  const { friends: mentionFriends } = useFriendList(meId)
+  const mentionNames = mentionFriends.map((f) => f.name)
 
   async function handleSavePost(postId: string) {
     const text = editor.draft.trim()
@@ -917,7 +923,7 @@ export default function WorldPage() {
                                         </div>
                                       ) : (
                                         <p className="text-xs text-[#3a4a2a] mt-0.5 whitespace-pre-wrap break-words">
-                                          {parent.content}
+                                          {renderMentions(parent.content, mentionNames)}
                                           {editor.wasSaved('world_comment', parent.id) && (
                                             <span className="ml-1.5 text-[10px] text-[#7ea86a]">已保存</span>
                                           )}
@@ -982,7 +988,7 @@ export default function WorldPage() {
                                               {c.parent_name && (<><span className="text-[#8a9a7a]"> 回复 </span><span className="font-medium text-[#5a8a4a]">{c.parent_name}</span></>)}
                                               <span className="text-[#8a9a7a]">：</span>
                                               {editor.isEditing('world_comment', c.id) ? null : (
-                                                <span className="ml-1">{c.content}</span>
+                                                <span className="ml-1">{renderMentions(c.content, mentionNames)}</span>
                                               )}
                                             </p>
                                             {editor.isEditing('world_comment', c.id) && (
@@ -1068,14 +1074,14 @@ export default function WorldPage() {
                         )}
 
                         <div className="flex gap-2 items-center">
-                          <input
-                            type="text"
+                          <MentionInput
+                            meId={meId}
                             value={commentInputs[post.id] || ''}
-                            onChange={(e) => setCommentInputs({ ...commentInputs, [post.id]: e.target.value })}
-                            onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handlePostComment(post.id) } }}
-                            placeholder={replyingTo ? `回复 ${replyingTo.author_name}...` : '写点什么...'}
+                            onChange={(next) => setCommentInputs({ ...commentInputs, [post.id]: next })}
+                            onEnter={() => handlePostComment(post.id)}
+                            placeholder={replyingTo ? `回复 ${replyingTo.author_name}… 输入 @ 叫人` : '写点什么… 输入 @ 叫人'}
                             maxLength={200}
-                            className="flex-1 px-4 py-2 rounded-full border border-[#d8e8c8] bg-[#f8fcf4] text-xs focus:outline-none focus:border-[#7ea86a] focus:ring-2 focus:ring-[#7ea86a]/10 transition"
+                            className="w-full px-4 py-2 rounded-full border border-[#d8e8c8] bg-[#f8fcf4] text-xs focus:outline-none focus:border-[#7ea86a] focus:ring-2 focus:ring-[#7ea86a]/10 transition"
                           />
                           <label className="flex items-center gap-1 text-[10px] text-[#8a9a7a] cursor-pointer flex-shrink-0">
                             <input type="checkbox" checked={commentAnonymous[post.id] || false} onChange={(e) => setCommentAnonymous({ ...commentAnonymous, [post.id]: e.target.checked })} className="accent-[#7ea86a]" />
