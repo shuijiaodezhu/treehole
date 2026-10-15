@@ -57,9 +57,9 @@ export default function LoginPage() {
       {/* 背景装饰光晕 */}
 
       {/* 左侧装饰文字（大屏可见） */}
-      <div className={`hidden lg:block absolute left-20 top-1/2 -translate-y-1/2 max-w-sm ${entering ? 'th-page-out' : ''}`}>
-        <h1 className="-ml-1 font-brush text-[52px] leading-[1] tracking-[0.04em] text-[#2b2620] sm:text-[64px]">你的来信</h1>
-        <p className="mt-2 flex items-baseline gap-2 text-[#8a6a4a]">
+      <div className={`hidden lg:block absolute left-[25%] top-1/2 -translate-x-1/2 -translate-y-1/2 max-w-sm text-center ${entering ? 'th-page-out' : ''}`}>
+        <h1 className="font-brush text-[52px] leading-[1] tracking-[0.04em] text-[#2b2620] sm:text-[64px]">你的来信</h1>
+        <p className="mt-2 flex items-baseline justify-center gap-2 text-[#8a6a4a]">
           <span className="font-art text-3xl text-[#c96447]">Dear You</span>
         </p>
         <p className="mt-5 font-serif-cn text-sm leading-relaxed text-[#8a827a]">
@@ -69,7 +69,7 @@ export default function LoginPage() {
         </p>
 
         {/* 一点点装饰：短线 + 小信封 + 短线（中间那片空就留着） */}
-        <div className="mt-8 flex items-center gap-2.5">
+        <div className="mt-8 flex items-center justify-center gap-2.5">
           <span className="h-px w-6 bg-[#ecd6c4]" />
           <svg
             className="h-3.5 w-3.5 flex-shrink-0 text-[#e5bca3]"
@@ -90,7 +90,7 @@ export default function LoginPage() {
       <div className={`relative w-full max-w-sm ml-auto mr-auto lg:mr-32 ${entering ? 'th-page-out' : ''}`}>
         <div className="rounded-2xl border border-[#f0e4d4] bg-white p-8 shadow-sm">
           <div className="lg:hidden text-center mb-6">
-            <h1 className="-ml-0.5 font-brush text-3xl leading-[1] tracking-[0.04em] text-[#2b2620]">你的来信</h1>
+            <h1 className="font-brush text-3xl leading-[1] tracking-[0.04em] text-[#2b2620]">你的来信</h1>
             <p className="mt-1 font-art italic text-[#c96447]">Dear You</p>
           </div>
 
