@@ -221,17 +221,39 @@ export default function AdminPage() {
     init()
   }, [init])
 
+  /**
+   * 后台所有写操作的统一处理
+   *
+   * 重要：PostgREST 在 RLS 把行过滤掉时**不报错**（返回 204 / 空数组），
+   * 所以只看 error 会「界面以为成功了、数据库没动」——刷新后又冒出来。
+   * 因此每个写操作都带 select() 拿回真正被改动的行，0 行就明确报错，
+   * 并以数据库为准重新拉取列表（不做乐观本地删除）。
+   */
+  const NO_ROWS_HINT =
+    '数据库没有更新任何一行。\n\n常见原因：该表的 RLS 策略不允许这次操作（比如只允许作者本人改动）。\n页面已按数据库的真实状态刷新。'
+
   async function handleCategoryApprove(id: string) {
-    const { error } = await supabase.from('categories').update({ status: 'approved' }).eq('id', id)
-    if (error) { alert('操作失败：' + error.message) }
-    else { setCategories(categories.filter((c) => c.id !== id)) }
+    const { data, error } = await supabase
+      .from('categories')
+      .update({ status: 'approved' })
+      .eq('id', id)
+      .select('id')
+
+    if (error) alert('操作失败：' + error.message)
+    else if (!data || data.length === 0) alert('没能通过这条申请。\n\n' + NO_ROWS_HINT)
+
+    await loadAll()
   }
 
   async function handleCategoryReject(id: string) {
     if (!confirm('确定要删除这个分区申请吗？')) return
-    const { error } = await supabase.from('categories').delete().eq('id', id)
-    if (error) { alert('操作失败：' + error.message) }
-    else { setCategories(categories.filter((c) => c.id !== id)) }
+
+    const { data, error } = await supabase.from('categories').delete().eq('id', id).select('id')
+
+    if (error) alert('操作失败：' + error.message)
+    else if (!data || data.length === 0) alert('没能删掉这条申请。\n\n' + NO_ROWS_HINT)
+
+    await loadAll()
   }
 
   async function handleReportAction(reportId: string, action: 'dismiss' | 'delete_post') {
@@ -239,46 +261,77 @@ export default function AdminPage() {
     if (!report) return
 
     if (action === 'dismiss') {
-      await supabase.from('reports').update({ status: 'dismissed' }).eq('id', reportId)
+      const { data, error } = await supabase
+        .from('reports')
+        .update({ status: 'dismissed' })
+        .eq('id', reportId)
+        .select('id')
+      if (error) alert('操作失败：' + error.message)
+      else if (!data || data.length === 0) alert('没能忽略这条举报。\n\n' + NO_ROWS_HINT)
+
       await supabase.from('world_posts').update({ is_hidden: false, report_count: 0 }).eq('id', report.target_id)
-      setReports(reports.filter((r) => r.id !== reportId))
     } else if (action === 'delete_post') {
-      await supabase.from('world_posts').update({ status: 'removed' }).eq('id', report.target_id)
-      await supabase.from('reports').update({ status: 'resolved' }).eq('id', reportId)
-      setReports(reports.filter((r) => r.id !== reportId))
+      const postRes = await supabase
+        .from('world_posts')
+        .update({ status: 'removed' })
+        .eq('id', report.target_id)
+        .select('id')
+      if (postRes.error) alert('删除帖子失败：' + postRes.error.message)
+      else if (!postRes.data || postRes.data.length === 0) {
+        alert('没能删除这条帖子。\n\n' + NO_ROWS_HINT)
+      }
+
+      const reportRes = await supabase
+        .from('reports')
+        .update({ status: 'resolved' })
+        .eq('id', reportId)
+        .select('id')
+      if (reportRes.error) alert('更新举报状态失败：' + reportRes.error.message)
     }
+
+    await loadAll()
   }
 
   async function handleActivityReportDismiss(activityId: string) {
     if (!confirm('确定要忽略这些举报吗？')) return
-    const { error } = await supabase
+
+    const { data, error } = await supabase
       .from('reports')
       .update({ status: 'dismissed' })
       .eq('target_type', 'play_activity')
       .eq('target_id', activityId)
       .eq('status', 'pending')
+      .select('id')
 
-    if (error) { alert('操作失败：' + error.message) }
-    else { setActivityReports(activityReports.filter((a) => a.activity_id !== activityId)) }
+    if (error) alert('操作失败：' + error.message)
+    else if (!data || data.length === 0) alert('没能忽略这些举报。\n\n' + NO_ROWS_HINT)
+
+    await loadAll()
   }
 
   async function handleActivityDelete(activityId: string) {
     if (!confirm('确定要删除这个活动吗？')) return
-    const { error } = await supabase
+
+    const { data, error } = await supabase
       .from('play_activities')
       .update({ status: 'removed' })
       .eq('id', activityId)
+      .select('id')
 
-    if (error) { alert('操作失败：' + error.message) }
-    else {
-      await supabase
+    if (error) alert('操作失败：' + error.message)
+    else if (!data || data.length === 0) {
+      alert('没能删除这个活动。\n\n' + NO_ROWS_HINT)
+    } else {
+      const reportRes = await supabase
         .from('reports')
         .update({ status: 'resolved' })
         .eq('target_type', 'play_activity')
         .eq('target_id', activityId)
         .eq('status', 'pending')
-      setActivityReports(activityReports.filter((a) => a.activity_id !== activityId))
+      if (reportRes.error) alert('更新举报状态失败：' + reportRes.error.message)
     }
+
+    await loadAll()
   }
 
   if (loading) return <div className="min-h-screen flex items-center justify-center"><p>加载中...</p></div>
