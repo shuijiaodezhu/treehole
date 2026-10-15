@@ -40,7 +40,19 @@ export default function RegisterPage() {
 
     if (error) {
       // ① 这个邮箱已经注册过 —— 不是错误，是用户走错了门，指个路
-      if (/already registered|already been registered/i.test(error.message)) {
+      // 邮件发送频率限制：站主还没配自定义 SMTP 时最容易撞上这条
+    if (/email rate limit|rate limit exceeded|over_email_send_rate_limit/i.test(error.message)) {
+      setMessage(
+        '验证邮件发得太频繁了。\n\n' +
+          '这个站现在用的是免费自带的邮件服务，一小时只能发几封 —— 短时间反复注册就会撞上。\n' +
+          '可以这样：过一小时再试；或者直接找站主，让他在后台帮你把账号开好，' +
+          '你再用「忘记密码」自己设一个密码。',
+      )
+      setLoading(false)
+      return
+    }
+
+    if (/already registered|already been registered/i.test(error.message)) {
         setMessage('这个邮箱已经注册过了。直接登录就行；忘了密码的话，登录页有「忘记密码？」')
       } else {
         setMessage('注册失败：' + error.message)

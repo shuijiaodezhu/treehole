@@ -40,6 +40,15 @@ export default function ForgotPasswordPage() {
     const { error } = await supabase.auth.resetPasswordForEmail(email.trim(), { redirectTo })
 
     // 报错也多半只是网络或限流；只有真出错才提示，其余一律当成功
+    if (error && /email rate limit|rate limit exceeded|over_email_send_rate_limit/i.test(error.message)) {
+      setMessage(
+        '重置邮件发得太频繁了。这个站用的是免费自带的邮件服务，一小时只能发几封，' +
+          '过一小时再试就好；急着用的话直接找站主。',
+      )
+      setLoading(false)
+      return
+    }
+
     if (error && !/user not found/i.test(error.message)) {
       setMessage('发送失败：' + error.message)
       setLoading(false)
