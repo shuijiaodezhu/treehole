@@ -15,6 +15,7 @@ import { useBlocks } from '../../components/blocks'
 import { useEditContent } from '../../components/edit-content'
 import { HashtagList } from '../../components/hashtags'
 import { MentionInput, renderMentions } from '../../components/mentions'
+import { ImageGrid, ImagePicker } from '../../components/media'
 import { useFriendList } from '../../components/visibility'
 
 // 客户端提到模块级，保证引用稳定
@@ -26,6 +27,7 @@ type Post = {
   content: string; category_id: string | null; created_at: string;
   author_name: string; author_avatar: string | null;
   like_count: number; liked_by_me: boolean; comments: Comment[];
+  image_urls: string[] | null;
 }
 type Comment = {
   id: string; post_id: string; author_id: string; content: string; created_at: string;
@@ -104,6 +106,7 @@ export default function WorldPage() {
   const [isAnonymous, setIsAnonymous] = useState(false)
   const [posting, setPosting] = useState(false)
   const [postCategoryId, setPostCategoryId] = useState<string>('')
+  const [postImages, setPostImages] = useState<string[]>([])
 
   const [showDepressedWarning, setShowDepressedWarning] = useState(false)
   const [depressedCategory, setDepressedCategory] = useState<Category | null>(null)
@@ -133,7 +136,7 @@ export default function WorldPage() {
   }, [router])
 
   const loadPosts = useCallback(async (categoryId: string | null) => {
-    let query = supabase.from('world_posts').select('id, author_id, is_anonymous, anonymous_id, content, category_id, created_at').eq('status', 'published').eq('is_hidden', false).order('created_at', { ascending: false }).limit(50)
+    let query = supabase.from('world_posts').select('id, author_id, is_anonymous, anonymous_id, content, category_id, created_at, image_urls').eq('status', 'published').eq('is_hidden', false).order('created_at', { ascending: false }).limit(50)
     if (categoryId) query = query.eq('category_id', categoryId)
     else query = query.is('category_id', null)
 
@@ -186,6 +189,7 @@ export default function WorldPage() {
         like_count: postLikes.length,
         liked_by_me: postLikes.some((l) => l.user_id === meId),
         comments: postComments,
+        image_urls: ((p as { image_urls?: string[] | null }).image_urls ?? null),
       }
     })
 
@@ -220,10 +224,11 @@ export default function WorldPage() {
     const { error } = await supabase.from('world_posts').insert({
       author_id: meId, content: postContent.trim(), is_anonymous: isAnonymous,
       anonymous_id: newAnonymousId, category_id: postCategoryId || null, status: 'published',
+      image_urls: postImages.length > 0 ? postImages : null,
     })
     if (error) { alert('发布失败：' + error.message) }
     else {
-      setPostContent(''); setIsAnonymous(false); setShowPostModal(false)
+      setPostContent(''); setIsAnonymous(false); setShowPostModal(false); setPostImages([])
       await loadPosts(currentCategory?.id || null)
     }
     setPosting(false)
@@ -432,7 +437,7 @@ export default function WorldPage() {
       try {
         const { data, error } = await supabase
           .from('world_posts')
-          .select('id, author_id, is_anonymous, anonymous_id, content, category_id, created_at')
+          .select('id, author_id, is_anonymous, anonymous_id, content, category_id, created_at, image_urls')
           .eq('id', focusPostId)
           .eq('status', 'published')
           .eq('is_hidden', false)
@@ -515,6 +520,7 @@ export default function WorldPage() {
             like_count: likes.length,
             liked_by_me: likes.some((l) => l.user_id === meId),
             comments,
+            image_urls: data.image_urls ?? null,
           },
         ])
         // 定位到的帖子默认展开评论
@@ -763,6 +769,9 @@ export default function WorldPage() {
                         )}
                       </p>
                     )}
+
+                    {/* 图片墙 */}
+                    <ImageGrid urls={post.image_urls} className="mt-3 pl-1" />
 
                     {/* 正文里的话题标签 */}
                     <HashtagList content={post.content} className="mt-2 pl-1" />
@@ -1126,6 +1135,14 @@ export default function WorldPage() {
               <p className="text-[10px] text-[#9aa88a] mt-1.5">这条会发到「<span className="text-[#5a8a4a]">{selectedCategoryName}</span>」</p>
             </div>
             <textarea value={postContent} onChange={(e) => setPostContent(e.target.value)} placeholder="写点什么… 用 #话题# 加标签" rows={5} maxLength={500} autoFocus className="w-full px-4 py-3 rounded-xl border border-[#d8e8c8] bg-[#f8fcf4] text-sm resize-none focus:outline-none focus:border-[#7ea86a] focus:ring-2 focus:ring-[#7ea86a]/10 transition mb-4" />
+
+            {/* 图片：本地上传或粘贴链接 */}
+            <ImagePicker
+              userId={meId}
+              urls={postImages}
+              onChange={setPostImages}
+              disabled={posting}
+            />
             <div className="flex items-center justify-between mb-5">
               <label className="flex items-center gap-2 text-sm text-[#3a4a2a] cursor-pointer">
                 <input type="checkbox" checked={isAnonymous} onChange={(e) => setIsAnonymous(e.target.checked)} className="accent-[#7ea86a]" />

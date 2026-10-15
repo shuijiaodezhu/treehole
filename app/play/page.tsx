@@ -570,7 +570,16 @@ export default function PlayPage() {
                   return (
                     <div
                       key={act.id}
-                      className="relative rounded-2xl border border-[#d8e0e8] bg-white/90 backdrop-blur p-5 shadow-[0_2px_12px_rgba(90,122,154,0.06)] hover:shadow-[0_8px_24px_rgba(90,122,154,0.12)] hover:-translate-y-0.5 transition-all text-left flex flex-col"
+                      role="button"
+                      tabIndex={0}
+                      onClick={() => setDetailActivity(act)}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                          e.preventDefault()
+                          setDetailActivity(act)
+                        }
+                      }}
+                      className="relative cursor-pointer rounded-2xl border border-[#d8e0e8] bg-white/90 backdrop-blur p-5 shadow-[0_2px_12px_rgba(90,122,154,0.06)] hover:shadow-[0_8px_24px_rgba(90,122,154,0.12)] hover:-translate-y-0.5 transition-all text-left flex flex-col focus:outline-none focus:ring-2 focus:ring-[#5a7a9a]/30"
                     >
                       {/* 收藏（放在卡片右上角，与"打开详情"的点击区分开） */}
                       <button
@@ -593,11 +602,7 @@ export default function PlayPage() {
                         <Icon name={isFav ? 'heartfill' : 'heart'} className="w-4 h-4" />
                       </button>
 
-                      <button
-                        type="button"
-                        onClick={() => setDetailActivity(act)}
-                        className="text-left flex flex-col flex-1"
-                      >
+                      <div className="flex flex-col flex-1">
                       <div className="flex items-start gap-2 mb-3">
                         {act.type_icon && (
                           <div className="w-9 h-9 rounded-xl bg-[#e8eef4] flex items-center justify-center text-base flex-shrink-0">
@@ -663,7 +668,7 @@ export default function PlayPage() {
                           <span className="text-[11px] text-[#5a7a9a] font-medium">点击查看 →</span>
                         )}
                       </div>
-                      </button>
+                      </div>
                     </div>
                   )
                 })
