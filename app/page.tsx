@@ -212,7 +212,7 @@ export default function HomePage() {
         <div className="max-w-5xl mx-auto px-8 py-10 flex justify-between items-center relative">
           <div>
 
-            <h1 className="font-serif-cn text-4xl leading-none sm:text-5xl">你的来信</h1>
+            <h1 className="font-brush text-[40px] leading-tight tracking-[0.04em] text-[#3f332a] sm:text-[52px]">你的来信</h1>
             <p className="mt-3 flex items-baseline gap-2 text-[#8a7a68]">
               <span className="font-art text-3xl text-[#a8563a]">Dear You</span>
               <span className="text-sm">· 这里有一封，你的来信</span>

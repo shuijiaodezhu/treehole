@@ -5,6 +5,7 @@ import type { ReactElement } from 'react'
 import { IconArrow, IconFlame, IconMail, WeatherIcon } from './icons'
 import { avatarFallback } from './utils'
 import { markModuleSeen } from './module-badges'
+import { TiltCard } from './tilt-card'
 import { motion } from 'motion/react'
 import { ChevronRight, House, PartyPopper, Trees, UserRound } from 'lucide-react'
 import { cn } from '../lib/utils'
@@ -151,15 +152,17 @@ export function NavCardGrid({ badges }: { badges?: Partial<Record<string, { coun
         return (
           <motion.div
             key={block.href}
+            className="h-full"
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, delay: i * 0.07, ease: [0.22, 1, 0.36, 1] }}
           >
+            <TiltCard className="relative h-full">
             <Link
               href={block.href}
               onClick={() => markModuleSeen(key as Parameters<typeof markModuleSeen>[0])}
               className={cn(
-                'group flex min-h-[136px] items-center gap-5 rounded-2xl border border-[#e8dfd0] bg-white p-6',
+                'group relative flex min-h-[136px] items-center gap-5 overflow-hidden rounded-2xl border border-[#e8dfd0] bg-white p-6',
                 'transition-all duration-200 hover:-translate-y-1 hover:border-[#d9c3b2]',
                 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#a8563a]/30',
               )}
@@ -193,6 +196,7 @@ export function NavCardGrid({ badges }: { badges?: Partial<Record<string, { coun
                 strokeWidth={1.8}
               />
             </Link>
+            </TiltCard>
           </motion.div>
         )
       })}

@@ -112,6 +112,10 @@ input:focus, textarea:focus {
   letter-spacing: 0.02em;
   font-weight: 500;
 }
+.font-brush {
+  font-family: var(--font-brush), var(--font-noto-serif), "Songti SC", serif;
+}
+
 .font-serif-cn {
   font-family: var(--font-noto-serif), "Songti SC", serif;
   font-weight: 400;

@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Suspense } from "react";
-import { Cormorant_Garamond, Noto_Serif_SC } from "next/font/google";
+import { Cormorant_Garamond, Ma_Shan_Zheng, Noto_Serif_SC } from "next/font/google";
 import "./globals.css";
 import { OnlinePresence } from "../components/presence";
 import { ThemeProvider } from "../components/theme";
@@ -21,6 +21,17 @@ const notoSerif = Noto_Serif_SC({
   variable: "--font-noto-serif",
 });
 
+
+/*
+ * 毛笔楷书：只用在站名与少数标题上。
+ * 艺术字体最忌讳"到处都用" —— 只在标题出现，才有"题字"的分量。
+ */
+const maShanZheng = Ma_Shan_Zheng({
+  weight: "400",
+  subsets: ["latin"],
+  variable: "--font-brush",
+  display: "swap",
+});
 /**
  * 站点地址：用于分享卡片（og:image 必须是绝对地址）。
  * 部署时在环境变量里设 NEXT_PUBLIC_SITE_URL=https://你的域名，
@@ -68,7 +79,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="zh-CN" className={`${cormorant.variable} ${notoSerif.variable}`}>
+    <html lang="zh-CN" className={`${cormorant.variable} ${notoSerif.variable} ${maShanZheng.variable}`}>
       <body>
         {/* 页面配色（用户在设置里改，写进 profiles.theme） */}
         <ThemeProvider>
