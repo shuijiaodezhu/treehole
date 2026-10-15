@@ -8,6 +8,7 @@ import Link from 'next/link'
 import { AdminStats } from '../../components/admin-stats'
 import { AdminSitePages } from '../../components/admin-site-pages'
 import { AdminMailbox } from '../../components/admin-mailbox'
+import { DeletionRequestsSection } from '../../components/account-tools'
 
 // 客户端提到模块级，保证引用稳定
 const supabase = createClient()
@@ -373,6 +374,9 @@ export default function AdminPage() {
 
         {/* 规模与活跃统计 */}
         <AdminStats />
+
+        {/* 注销申请：放在页签之前，确保一定看得见（这种申请不该被漏掉） */}
+        <DeletionRequestsSection adminId={ADMIN_UUID} />
 
         <div className="flex gap-6 mb-6 border-b border-[#e0d4e8]">
           <button

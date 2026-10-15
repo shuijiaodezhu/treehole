@@ -1,0 +1,105 @@
+'use client'
+
+import { useState } from 'react'
+import Link from 'next/link'
+import { createClient } from '../lib/supabase'
+
+/**
+ * ② 忘记密码 —— 第一步：填邮箱，发重置信
+ *
+ * 走 Supabase 的 resetPasswordForEmail。邮件里的链接会带着一次性令牌
+ * 回到 /reset-password（由 redirectTo 指定），那一页负责设新密码。
+ *
+ * ⚠️ redirectTo 的地址必须出现在 Supabase 的白名单里：
+ *    Authentication → URL Configuration → Redirect URLs
+ *    本地开发加 http://localhost:3000/**，上线后加你的正式域名
+ *    没加的话，用户点邮件里的链接会跳到一个空白/报错页。
+ *
+ * 另外：不管邮箱存不存在，这里都提示「已发送」——
+ * 否则这个页面就变成了「查某个邮箱有没有注册过」的工具。
+ */
+
+const supabase = createClient()
+
+export default function ForgotPasswordPage() {
+  const [email, setEmail] = useState('')
+  const [loading, setLoading] = useState(false)
+  const [sent, setSent] = useState(false)
+  const [message, setMessage] = useState('')
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault()
+    if (!email.trim()) return
+
+    setLoading(true)
+    setMessage('')
+
+    const redirectTo =
+      typeof window === 'undefined' ? undefined : `${window.location.origin}/reset-password`
+
+    const { error } = await supabase.auth.resetPasswordForEmail(email.trim(), { redirectTo })
+
+    // 报错也多半只是网络或限流；只有真出错才提示，其余一律当成功
+    if (error && !/user not found/i.test(error.message)) {
+      setMessage('发送失败：' + error.message)
+      setLoading(false)
+      return
+    }
+
+    setSent(true)
+    setLoading(false)
+  }
+
+  return (
+    <div className="min-h-screen flex items-center justify-center px-4">
+      <div className="w-full max-w-sm rounded-3xl border border-[var(--accent-line)] bg-white/80 p-7 backdrop-blur shadow-[0_8px_40px_rgba(217,119,87,0.08)]">
+        <h1 className="font-serif-cn text-lg font-semibold text-[#2b2620]">找回密码</h1>
+        <p className="mt-1.5 font-serif-cn text-[11.5px] leading-relaxed text-[var(--accent-muted)]">
+          填注册用的邮箱，我们把重置链接寄过去。
+        </p>
+
+        {sent ? (
+          <div className="mt-6 rounded-2xl border border-[var(--accent-line)] bg-[var(--accent-soft)] px-4 py-4">
+            <p className="font-serif-cn text-[12px] leading-relaxed text-[#3a3229]">
+              重置链接已经发出去了（如果这个邮箱注册过的话）。
+            </p>
+            <p className="mt-2 font-serif-cn text-[11px] leading-relaxed text-[var(--accent-muted)]">
+              去收件箱点开链接，就能设新密码。
+              <br />
+              没收到的话，翻一下垃圾邮件，或者过一会儿再试一次。
+            </p>
+          </div>
+        ) : (
+          <form onSubmit={handleSubmit} className="mt-6 space-y-4">
+            <input
+              type="email"
+              required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="你的邮箱"
+              autoComplete="email"
+              className="w-full rounded-2xl border border-[var(--accent-line)] bg-[var(--accent-soft)] px-4 py-3 font-serif-cn text-[13px] text-[#2b2620] placeholder:text-[var(--accent-muted)] focus:border-[var(--accent)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/10"
+            />
+            {message && <p className="text-[11px] text-red-500">{message}</p>}
+            <button
+              type="submit"
+              disabled={loading || !email.trim()}
+              className="w-full rounded-2xl bg-gradient-to-r from-[var(--accent-light)] to-[var(--accent)] py-3 font-serif-cn text-[13px] text-white transition hover:shadow-[0_8px_24px_rgba(217,119,87,0.3)] disabled:opacity-50"
+            >
+              {loading ? '发送中…' : '寄出重置链接'}
+            </button>
+          </form>
+        )}
+
+        <div className="mt-6 flex items-center justify-between font-serif-cn text-[11.5px]">
+          <Link href="/login" className="text-[var(--accent-deep)] hover:underline">
+            回登录
+          </Link>
+          <Link href="/register" className="text-[var(--accent-muted)] hover:text-[var(--accent-deep)]">
+            还没有账号
+          </Link>
+        </div>
+      </div>
+    </div>
+  )
+}

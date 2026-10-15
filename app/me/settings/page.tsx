@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { createClient } from '../../lib/supabase'
 import { LoginDevicesSection } from '../../../components/login-log'
+import { DeleteAccountSection, ExportDataSection } from '../../../components/account-tools'
 import { Icon } from '../../../components/icons'
 import {
   PAGE_DESC,
@@ -40,6 +41,7 @@ function validatePassword(pw: string): string | null {
 
 export default function SettingsPage() {
   const [meId, setMeId] = useState<string | null>(null)
+  const [email, setEmail] = useState<string | null>(null)
 
   /* ---------- 修改密码：两步点击 ---------- */
   const [pwStep, setPwStep] = useState<'idle' | 'editing' | 'confirm'>('idle')
@@ -100,7 +102,10 @@ export default function SettingsPage() {
       try {
         const { data, error } = await supabase.auth.getUser()
         if (error) throw error
-        if (!cancelled) setMeId(data.user?.id ?? null)
+        if (!cancelled) {
+          setMeId(data.user?.id ?? null)
+          setEmail(data.user?.email ?? null)
+        }
       } catch (err) {
         console.error('设置页读取用户失败:', err)
       }
@@ -216,6 +221,12 @@ export default function SettingsPage() {
         <main className="space-y-4">
           {/* ==================== 登录设备（看自己在哪些设备登录过） ==================== */}
           <LoginDevicesSection userId={meId} />
+
+          {/* ==================== 导出我的数据 ==================== */}
+          <ExportDataSection userId={meId} email={email} />
+
+          {/* ==================== 注销账号 ==================== */}
+          <DeleteAccountSection userId={meId} />
 
           {/* ==================== 修改密码（两步点击） ==================== */}
           <section className="rounded-3xl border border-[var(--accent-line)] bg-white/80 backdrop-blur-lg p-6 shadow-[0_8px_40px_rgba(168,138,184,0.06)] relative overflow-hidden">

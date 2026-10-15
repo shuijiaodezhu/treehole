@@ -144,6 +144,10 @@ export default function LoginPage() {
           <div className="mt-6 text-center">
             <p className="text-xs text-[#8a827a]">
               还没有账号？
+              <Link href="/forgot-password" className="text-xs text-[var(--accent-muted)] hover:text-[var(--accent-deep)] transition">
+              忘记密码？
+            </Link>
+
               <Link href="/register" className="text-[#c96447] ml-1 hover:underline font-medium">
                 去注册
               </Link>

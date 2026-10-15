@@ -1,0 +1,131 @@
+'use client'
+
+import { useEffect, useState } from 'react'
+import Link from 'next/link'
+import { useRouter } from 'next/navigation'
+import { createClient } from '../lib/supabase'
+
+/**
+ * ② 忘记密码 —— 第二步：设新密码
+ *
+ * 用户点邮件里的链接会回到这里。Supabase 的 JS SDK 默认会处理地址里的
+ * 一次性令牌（detectSessionInUrl），所以进到这一页时**通常已经拿到会话**，
+ * 直接 updateUser 改密码就行。
+ *
+ * 但不是每次都顺：链接可能过期、可能被别的邮箱客户端提前点掉、
+ * 也可能浏览器把令牌吃掉了。所以这里**先看有没有会话**，
+ * 没有就明确说「链接失效了，重新申请一封」，而不是让用户对着一个
+ * 点了没反应的按钮发愣。
+ */
+
+const supabase = createClient()
+
+export default function ResetPasswordPage() {
+  const router = useRouter()
+  const [checking, setChecking] = useState(true)
+  const [hasSession, setHasSession] = useState(false)
+  const [password, setPassword] = useState('')
+  const [confirm, setConfirm] = useState('')
+  const [loading, setLoading] = useState(false)
+  const [message, setMessage] = useState('')
+  const [done, setDone] = useState(false)
+
+  useEffect(() => {
+    let cancelled = false
+    void (async () => {
+      const { data } = await supabase.auth.getSession()
+      if (cancelled) return
+      setHasSession(Boolean(data.session))
+      setChecking(false)
+    })()
+    return () => {
+      cancelled = true
+    }
+  }, [])
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault()
+    setMessage('')
+
+    if (password.length < 8 || !/[a-zA-Z]/.test(password) || !/\d/.test(password)) {
+      setMessage('密码至少 8 位，含字母和数字')
+      return
+    }
+    if (password !== confirm) {
+      setMessage('两次输入的不一样')
+      return
+    }
+
+    setLoading(true)
+    const { error } = await supabase.auth.updateUser({ password })
+    setLoading(false)
+
+    if (error) {
+      setMessage('没改成：' + error.message)
+      return
+    }
+    setDone(true)
+    window.setTimeout(() => router.push('/login'), 2200)
+  }
+
+  return (
+    <div className="min-h-screen flex items-center justify-center px-4">
+      <div className="w-full max-w-sm rounded-3xl border border-[var(--accent-line)] bg-white/80 p-7 backdrop-blur shadow-[0_8px_40px_rgba(217,119,87,0.08)]">
+        <h1 className="font-serif-cn text-lg font-semibold text-[#2b2620]">设置新密码</h1>
+
+        {checking ? (
+          <p className="mt-6 font-serif-cn text-[11.5px] text-[var(--accent-muted)]">正在确认链接…</p>
+        ) : done ? (
+          <div className="mt-6 rounded-2xl border border-[var(--accent-line)] bg-[var(--accent-soft)] px-4 py-4">
+            <p className="font-serif-cn text-[12px] leading-relaxed text-[#3a3229]">改好了。</p>
+            <p className="mt-1.5 font-serif-cn text-[11px] text-[var(--accent-muted)]">正在带你去登录…</p>
+          </div>
+        ) : !hasSession ? (
+          <div className="mt-6 rounded-2xl border border-[#f0d9d2] bg-[#fdf7f5] px-4 py-4">
+            <p className="font-serif-cn text-[12px] leading-relaxed text-[#7a4a3c]">
+              这个链接已经失效了。
+            </p>
+            <p className="mt-1.5 font-serif-cn text-[11px] leading-relaxed text-[var(--accent-muted)]">
+              重置链接只能用一次，而且有时间限制。重新申请一封就好。
+            </p>
+            <Link
+              href="/forgot-password"
+              className="mt-3 inline-block rounded-full bg-gradient-to-r from-[var(--accent-light)] to-[var(--accent)] px-4 py-2 font-serif-cn text-[11.5px] text-white"
+            >
+              重新申请
+            </Link>
+          </div>
+        ) : (
+          <form onSubmit={handleSubmit} className="mt-6 space-y-3">
+            <input
+              type="password"
+              required
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="新密码（至少 8 位，含字母和数字）"
+              autoComplete="new-password"
+              className="w-full rounded-2xl border border-[var(--accent-line)] bg-[var(--accent-soft)] px-4 py-3 font-serif-cn text-[13px] text-[#2b2620] placeholder:text-[var(--accent-muted)] focus:border-[var(--accent)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/10"
+            />
+            <input
+              type="password"
+              required
+              value={confirm}
+              onChange={(e) => setConfirm(e.target.value)}
+              placeholder="再输一次"
+              autoComplete="new-password"
+              className="w-full rounded-2xl border border-[var(--accent-line)] bg-[var(--accent-soft)] px-4 py-3 font-serif-cn text-[13px] text-[#2b2620] placeholder:text-[var(--accent-muted)] focus:border-[var(--accent)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/10"
+            />
+            {message && <p className="text-[11px] text-red-500">{message}</p>}
+            <button
+              type="submit"
+              disabled={loading || !password || !confirm}
+              className="w-full rounded-2xl bg-gradient-to-r from-[var(--accent-light)] to-[var(--accent)] py-3 font-serif-cn text-[13px] text-white transition hover:shadow-[0_8px_24px_rgba(217,119,87,0.3)] disabled:opacity-50"
+            >
+              {loading ? '保存中…' : '保存新密码'}
+            </button>
+          </form>
+        )}
+      </div>
+    </div>
+  )
+}

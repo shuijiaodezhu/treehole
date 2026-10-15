@@ -124,6 +124,52 @@ create trigger rate_limit_winter_letters
   for each row execute function public.enforce_rate_limit('sender_id', 3, 3600, 30);
 
 
+-- ============================================================
+-- ③ 账号注销申请
+--
+-- 真正「删掉 auth 用户」需要 service_role 权限，前端做不到、也不该拿到。
+-- 所以走申请：用户提交 → 落一行 → 站主在后台看到 → 去 Supabase 删人。
+-- ============================================================
+
+create table if not exists public.deletion_requests (
+  id          uuid primary key default gen_random_uuid(),
+  user_id     uuid not null,
+  reason      text,
+  status      text not null default 'pending',
+  handled_by  uuid,
+  handled_at  timestamptz,
+  created_at  timestamptz not null default now()
+);
+
+create index if not exists deletion_requests_status_idx
+  on public.deletion_requests (status, created_at);
+
+alter table public.deletion_requests enable row level security;
+
+-- 自己提的申请自己能看；站主能看全部
+drop policy if exists "deletion requests readable by self or owner" on public.deletion_requests;
+create policy "deletion requests readable by self or owner"
+  on public.deletion_requests for select
+  using (
+    user_id = auth.uid()
+    or auth.uid() = 'b59a31c7-60f8-4b57-924a-b408cbfd910c'::uuid
+  );
+
+-- 只能以自己名义提，且只能提一行 pending
+drop policy if exists "deletion requests insert by self" on public.deletion_requests;
+create policy "deletion requests insert by self"
+  on public.deletion_requests for insert
+  with check (user_id = auth.uid());
+
+-- 只有站主能改状态（标记已处理）
+drop policy if exists "deletion requests update by owner" on public.deletion_requests;
+create policy "deletion requests update by owner"
+  on public.deletion_requests for update
+  using (auth.uid() = 'b59a31c7-60f8-4b57-924a-b408cbfd910c'::uuid)
+  with check (auth.uid() = 'b59a31c7-60f8-4b57-924a-b408cbfd910c'::uuid);
+
+grant select, insert, update on public.deletion_requests to authenticated;
+
 notify pgrst, 'reload schema';
 
 

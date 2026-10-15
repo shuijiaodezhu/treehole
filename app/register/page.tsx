@@ -39,7 +39,12 @@ export default function RegisterPage() {
     const { data, error } = await supabase.auth.signUp({ email, password })
 
     if (error) {
-      setMessage('注册失败：' + error.message)
+      // ① 这个邮箱已经注册过 —— 不是错误，是用户走错了门，指个路
+      if (/already registered|already been registered/i.test(error.message)) {
+        setMessage('这个邮箱已经注册过了。直接登录就行；忘了密码的话，登录页有「忘记密码？」')
+      } else {
+        setMessage('注册失败：' + error.message)
+      }
       setLoading(false)
       return
     }
