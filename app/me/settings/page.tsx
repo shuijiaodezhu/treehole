@@ -231,6 +231,19 @@ export default function SettingsPage() {
 
               {pwStep === 'editing' && (
                 <form onSubmit={handlePasswordNext}>
+                  {/* 在这个时刻才出现：正好在想新密码 */}
+                  <div className="mb-4 flex gap-2.5 rounded-2xl border border-[#f0e6f8] bg-gradient-to-br from-[#fbf7ff] to-[#f5edfc] px-4 py-3">
+                    <span className="mt-0.5 select-none font-art text-2xl leading-none text-[#dccce6]">
+                      &ldquo;
+                    </span>
+                    <p className="font-serif-cn text-[11px] leading-loose text-[#7a6a8a]">
+                      试试用一个你记得住的名字。
+                      <br />
+                      忘不掉的那种。
+                      <span className="text-[#a893b8]">如果有一天忘了，也许还能想起 Ta。</span>
+                    </p>
+                  </div>
+
                   <input
                     type="password"
                     value={password}
@@ -295,21 +308,6 @@ export default function SettingsPage() {
               )}
             </div>
           </section>
-
-          {/* 关于密码：紧跟修改密码，别排到最后 */}
-          <div className="rounded-2xl border border-[#e0d4e8] bg-gradient-to-br from-[#f8f2fc] to-[#f0e6f8] p-5 relative overflow-hidden">
-            <div className="absolute -bottom-6 -left-6 w-20 h-20 bg-[#a88ab8] opacity-[0.07] rounded-full blur-2xl pointer-events-none"></div>
-            <div className="absolute top-2 right-4 text-[#d8c8e0] font-art text-5xl leading-none select-none pointer-events-none">
-              &ldquo;
-            </div>
-
-            <div className="relative">
-              <p className="text-[10px] text-[#b8a8c8] tracking-wider mb-3">关于密码</p>
-              <p className="text-sm text-[#5a4a6a] leading-loose font-serif-cn">试试用一个你记得住的名字。</p>
-              <p className="text-sm text-[#5a4a6a] leading-loose font-serif-cn mt-1">忘不掉的那种。</p>
-              <p className="text-sm text-[#5a4a6a] leading-loose font-serif-cn mt-1">如果有一天忘了，也许还能想起 Ta。</p>
-            </div>
-          </div>
 
           {/* ==================== 拉黑 / 屏蔽 ==================== */}
           <section className="rounded-3xl border border-[#e0d4e8] bg-white/80 backdrop-blur-lg p-6 shadow-[0_8px_40px_rgba(168,138,184,0.06)]">
