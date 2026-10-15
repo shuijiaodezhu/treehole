@@ -354,3 +354,77 @@ body {
 .dsh-content[data-state="open"] {
   animation: dsh-content-in 200ms cubic-bezier(0.22, 1, 0.36, 1);
 }
+
+
+/* ============================================================
+   进入动画三件套（全部"遮罩式"：全屏元素遮挡，最稳）
+   ============================================================ */
+
+/* ---------- 首次加载 splash ----------
+   显隐只看 <html data-first-load="1">，属性由 layout 的内联脚本
+   在首帧前写好，所以不会"先闪页面再盖上"。 */
+.dsh-splash {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background: #f4ebdd;
+}
+html[data-first-load="1"] .dsh-splash {
+  display: flex;
+  animation: dsh-splash-out 520ms cubic-bezier(0.4, 0, 0.2, 1) 780ms forwards;
+}
+.dsh-splash-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  animation: dsh-splash-in 620ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.dsh-splash-line {
+  transform-origin: left center;
+  animation: dsh-splash-line 700ms cubic-bezier(0.22, 1, 0.36, 1) 240ms both;
+}
+@keyframes dsh-splash-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes dsh-splash-line {
+  from { transform: scaleX(0); }
+  to   { transform: scaleX(1); }
+}
+@keyframes dsh-splash-out {
+  from { opacity: 1; visibility: visible; }
+  to   { opacity: 0; visibility: hidden; }
+}
+
+/* 系统开了"减少动态效果"：直接不显示 splash，也不做过渡 */
+@media (prefers-reduced-motion: reduce) {
+  html[data-first-load="1"] .dsh-splash {
+    display: none;
+    animation: none;
+  }
+}
+
+/* ---------- 页面跳转遮罩 ----------
+   平时透明且不吃点击；跳转时盖上，新页面就位后揭开。 */
+.dsh-nav-mask {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f4ebdd;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 160ms ease;
+}
+html.dsh-navigating .dsh-nav-mask {
+  opacity: 1;
+  pointer-events: auto;
+}
+@media (prefers-reduced-motion: reduce) {
+  .dsh-nav-mask { transition: none; }
+}

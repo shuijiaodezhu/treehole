@@ -5,6 +5,9 @@ import "./globals.css";
 import { OnlinePresence } from "../components/presence";
 import { ThemeProvider } from "../components/theme";
 import { PageDecor } from "../components/page-decor"
+import { SmoothScroll } from "../components/smooth-scroll"
+import { Splash } from "../components/splash"
+import { PageTransition } from "../components/page-transition"
 import { Toaster } from "../components/ui/sonner";
 import { LoginTransitionOverlay } from "../components/login-transition";
 
@@ -81,6 +84,17 @@ export default function RootLayout({
   return (
     <html lang="zh-CN" className={`${cormorant.variable} ${notoSerif.variable} ${maShanZheng.variable}`}>
       <body>
+      {/*
+        首次加载才放 splash：这里用内联脚本在**首帧之前**写 html 属性，
+        所以不会出现"先看到页面、再被盖住"的空窗。
+        sessionStorage：同一次浏览会话只打一次招呼，刷新不再拦。
+      */}
+      <script
+        dangerouslySetInnerHTML={{
+          __html: `try{if(!sessionStorage.getItem('dsh:entered')){document.documentElement.setAttribute('data-first-load','1');sessionStorage.setItem('dsh:entered','1')}}catch(e){}`,
+        }}
+      />
+
         {/* 页面配色（用户在设置里改，写进 profiles.theme） */}
         <ThemeProvider>
           {/* 进站即上报当日活跃 + 加入在线频道（后台统计用） */}
@@ -92,7 +106,12 @@ export default function RootLayout({
             <LoginTransitionOverlay />
           </Suspense>
           {children}
-          <Toaster />
+          <SmoothScroll />
+        <Splash />
+        <Suspense fallback={null}>
+          <PageTransition />
+        </Suspense>
+        <Toaster />
         </ThemeProvider>
       </body>
     </html>
