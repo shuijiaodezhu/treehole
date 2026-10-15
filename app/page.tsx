@@ -37,7 +37,6 @@ import type { FriendRequest, FriendshipRow, LoginStreak } from '../components/ty
 import { pageAccentVars } from '../components/theme'
 import { SkeletonHome } from '../components/skeleton'
 import { MailboxDialog, MailboxTrigger, useMailbox } from '../components/mailbox'
-import { MailboxArt } from '../components/mailbox-art'
 
 // 客户端单例：放在模块级，保证引用稳定（useCallback / useEffect 不会每次渲染都重跑）
 const supabase = createClient()
@@ -227,7 +226,7 @@ export default function HomePage() {
             </p>
 
             <div className="flex items-center justify-end gap-3">
-              <span className="2xl:hidden">
+              <span>
                 <MailboxTrigger mailbox={mailbox} onOpen={() => setMailboxOpen(true)} />
               </span>
               <NotificationBell userId={userId} />
@@ -267,11 +266,7 @@ export default function HomePage() {
         </div>
       )}
 
-      <div className="relative mx-auto w-full max-w-2xl flex-1 px-6 py-16 sm:px-8 sm:py-20">
-        {/* 2xl 以上才出现的信箱插图（相对内容容器定位，不参与布局） */}
-        <div className="absolute -left-[176px] top-[36px] hidden w-[168px] 2xl:block">
-          <MailboxArt onOpen={() => setMailboxOpen(true)} />
-        </div>
+      <div className="relative mx-auto flex w-full max-w-2xl flex-1 flex-col justify-center px-6 py-14 sm:px-8">
 
         <div>
           {/* 一行小字：日期、天气、陪你走过 */}
@@ -289,13 +284,10 @@ export default function HomePage() {
           </nav>
 
           {quote && (
-            <div className="mt-16">
+            <div className="mt-14 border-l-2 border-[#ece3d4] pl-5">
               <p className="font-serif-cn text-[16px] leading-[2.1] text-[#3f332a]">「{quote}」</p>
-              <p className="mt-4 text-right text-[12px] tracking-[0.08em] text-[#9c8f7d]">
-                来自陌生人的问候
-              </p>
-              <p className="mt-1 text-right font-serif-cn text-[11px] text-[#a8563a]">
-                —— 睡觉的猪
+              <p className="mt-3 text-[12px] tracking-[0.08em] text-[#9c8f7d]">
+                来自陌生人的问候 · <span className="text-[#a8563a]">睡觉的猪</span>
               </p>
             </div>
           )}

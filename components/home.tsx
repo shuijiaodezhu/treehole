@@ -138,9 +138,9 @@ const BLOCKS = [
 
 export function NavCardGrid({ badges }: { badges?: Partial<Record<string, { count?: number; dot?: boolean }>> }): ReactElement {
   /*
-   * 卡片要"舒展"而不是"紧凑"：高度给到 168px、内边距 24px、
-   * 图标放在 48px 的暖灰方块里、标题 20px 衬线、说明 13px。
-   * 信息量没变，但每块都站得开 —— 紧凑是廉价感的主要来源。
+   * 版面从上往下流：图标 → 标题 → 说明；箭头贴在右侧垂直居中。
+   * 上一版把文字顶到卡片底部（justify-between），结果中间空一大段、
+   * 上下两块各自为政 —— 那是"比例不对"的主要来源。
    */
   return (
     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5">
@@ -159,38 +159,39 @@ export function NavCardGrid({ badges }: { badges?: Partial<Record<string, { coun
               href={block.href}
               onClick={() => markModuleSeen(key as Parameters<typeof markModuleSeen>[0])}
               className={cn(
-                'group flex h-full min-h-[168px] flex-col justify-between rounded-2xl border border-[#e8dfd0] bg-white p-6',
+                'group flex min-h-[136px] items-center gap-5 rounded-2xl border border-[#e8dfd0] bg-white p-6',
                 'transition-all duration-200 hover:-translate-y-1 hover:border-[#d9c3b2]',
                 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#a8563a]/30',
               )}
             >
-              <div className="flex items-start justify-between gap-3">
-                <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-[#f5eee2] text-[#6b5949] transition-colors duration-200 group-hover:bg-[#a8563a]/10 group-hover:text-[#a8563a]">
-                  <Icon className="h-6 w-6" strokeWidth={1.5} />
-                </span>
-
-                {badge?.count ? (
-                  <span className="text-[12px] tabular-nums text-[#a8563a]">
-                    {badge.count > 99 ? '99+' : badge.count}
+              <div className="min-w-0 flex-1">
+                <div className="flex items-center gap-3">
+                  <span className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl bg-[#f5eee2] text-[#6b5949] transition-colors duration-200 group-hover:bg-[#a8563a]/10 group-hover:text-[#a8563a]">
+                    <Icon className="h-[22px] w-[22px]" strokeWidth={1.5} />
                   </span>
-                ) : badge?.dot ? (
-                  <span className="mt-1.5 h-1.5 w-1.5 rounded-full bg-[#a8563a]" />
-                ) : null}
-              </div>
 
-              <div>
-                <div className="flex items-center justify-between gap-3">
                   <span className="font-serif-cn text-[20px] leading-none text-[#3f332a]">
                     {block.title}
                   </span>
-                  <ChevronRight
-                    className="h-4 w-4 flex-shrink-0 text-[#cfc3b0] transition-transform duration-200 group-hover:translate-x-1 group-hover:text-[#a8563a]"
-                    strokeWidth={1.8}
-                  />
+
+                  {badge?.count ? (
+                    <span className="text-[12px] tabular-nums text-[#a8563a]">
+                      {badge.count > 99 ? '99+' : badge.count}
+                    </span>
+                  ) : badge?.dot ? (
+                    <span className="h-1.5 w-1.5 rounded-full bg-[#a8563a]" />
+                  ) : null}
                 </div>
 
-                <p className="mt-3 text-[13px] leading-relaxed text-[#8a7a68]">{block.desc}</p>
+                <p className="mt-3 pl-14 text-[13px] leading-relaxed text-[#8a7a68]">
+                  {block.desc}
+                </p>
               </div>
+
+              <ChevronRight
+                className="h-4 w-4 flex-shrink-0 self-center text-[#cfc3b0] transition-transform duration-200 group-hover:translate-x-1 group-hover:text-[#a8563a]"
+                strokeWidth={1.8}
+              />
             </Link>
           </motion.div>
         )
