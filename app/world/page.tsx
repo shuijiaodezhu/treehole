@@ -265,6 +265,76 @@ export default function WorldPage() {
 
   // 拉黑：被拉黑（含拉黑我的）的内容一律不显示
   const blocks = useBlocks(meId)
+
+  /* ---------- 举报帖子：可举报、可撤回 ---------- */
+  const [reportedPosts, setReportedPosts] = useState<Set<string>>(new Set())
+
+  useEffect(() => {
+    if (!meId) return
+    let cancelled = false
+    void (async () => {
+      try {
+        const { data, error } = await supabase
+          .from('reports')
+          .select('target_id')
+          .eq('reporter_id', meId)
+          .eq('target_type', 'world_post')
+          .eq('status', 'pending')
+        if (error) throw error
+        if (!cancelled) setReportedPosts(new Set((data ?? []).map((r) => r.target_id)))
+      } catch (err) {
+        console.error('查询我的帖子举报失败:', err)
+      }
+    })()
+    return () => {
+      cancelled = true
+    }
+  }, [meId])
+
+  async function handleReportPost(postId: string) {
+    if (!meId) return
+    const reason = window.prompt('举报这条帖子的原因？（会发给站主看）')
+    if (reason === null) return
+    const text = reason.trim() || '未填写原因'
+    try {
+      const { error } = await supabase.from('reports').insert({
+        reporter_id: meId,
+        target_type: 'world_post',
+        target_id: postId,
+        reason: text,
+        status: 'pending',
+      })
+      if (error) throw error
+      setReportedPosts((prev) => new Set(prev).add(postId))
+      alert('已收到，谢谢你的反馈。误报可以在同一条帖子上点「撤回举报」。')
+    } catch (err) {
+      const msg =
+        err && typeof err === 'object' && 'message' in err ? String((err as { message: unknown }).message) : String(err)
+      alert('举报失败：' + msg)
+    }
+  }
+
+  async function handleWithdrawPostReport(postId: string) {
+    if (!meId) return
+    try {
+      const { error } = await supabase
+        .from('reports')
+        .delete()
+        .eq('reporter_id', meId)
+        .eq('target_type', 'world_post')
+        .eq('target_id', postId)
+      if (error) throw error
+      setReportedPosts((prev) => {
+        const next = new Set(prev)
+        next.delete(postId)
+        return next
+      })
+    } catch (err) {
+      const msg =
+        err && typeof err === 'object' && 'message' in err ? String((err as { message: unknown }).message) : String(err)
+      alert('撤回失败：' + msg)
+    }
+  }
   const [confirmDeletePost, setConfirmDeletePost] = useState<string | null>(null)
   const [confirmDeleteComment, setConfirmDeleteComment] = useState<string | null>(null)
 
@@ -688,8 +758,22 @@ export default function WorldPage() {
                           </button>
                         )
                       )}
-                      <button className="flex items-center gap-1.5 text-xs text-[#8a9a7a] hover:text-red-500 transition">
+                      <button
+                        type="button"
+                        onClick={() =>
+                          reportedPosts.has(post.id)
+                            ? void handleWithdrawPostReport(post.id)
+                            : void handleReportPost(post.id)
+                        }
+                        title={reportedPosts.has(post.id) ? '撤回举报' : '举报'}
+                        className={`flex items-center gap-1 text-xs transition ${
+                          reportedPosts.has(post.id)
+                            ? 'text-[#c9a227] hover:text-[#a8861f]'
+                            : 'text-[#8a9a7a] hover:text-red-500'
+                        }`}
+                      >
                         <Icon name="alert" className="w-3.5 h-3.5" />
+                        {reportedPosts.has(post.id) ? '已举报' : '举报'}
                       </button>
                     </div>
 

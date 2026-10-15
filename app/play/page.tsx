@@ -382,21 +382,81 @@ export default function PlayPage() {
     setReporting(true)
     setReportMessage('')
 
-    const { error } = await supabase.from('reports').insert({
-      reporter_id: meId,
-      target_type: 'play_activity',
-      target_id: detailActivity.id,
-      reason: reportReason.trim(),
-      status: 'pending',
-    })
+    const { data, error } = await supabase
+      .from('reports')
+      .insert({
+        reporter_id: meId,
+        target_type: 'play_activity',
+        target_id: detailActivity.id,
+        reason: reportReason.trim(),
+        status: 'pending',
+      })
+      .select('id')
+      .single()
 
     if (error) { setReportMessage('举报失败：' + error.message) }
     else {
-      setReportMessage('已收到，谢谢你的反馈')
+      setMyReportId(data?.id ?? null)
+      setReportMessage('已收到，谢谢你的反馈。误报可以随时撤回。')
       setReportReason('')
-      setTimeout(() => { setShowReportModal(false); setReportMessage(''); setDetailActivity(null) }, 1200)
+      setTimeout(() => { setShowReportModal(false); setReportMessage('') }, 1400)
     }
     setReporting(false)
+  }
+
+  /* ---------- 我的举报：打开详情时查一次，可撤回 ---------- */
+  const [myReportId, setMyReportId] = useState<string | null>(null)
+  const [withdrawing, setWithdrawing] = useState(false)
+  const detailActivityId = detailActivity?.id ?? null
+
+  useEffect(() => {
+    if (!detailActivityId || !meId) {
+      setMyReportId(null)
+      return
+    }
+    let cancelled = false
+    void (async () => {
+      try {
+        const { data, error } = await supabase
+          .from('reports')
+          .select('id')
+          .eq('reporter_id', meId)
+          .eq('target_type', 'play_activity')
+          .eq('target_id', detailActivityId)
+          .eq('status', 'pending')
+          .maybeSingle()
+        if (error) throw error
+        if (!cancelled) setMyReportId(data?.id ?? null)
+      } catch (err) {
+        console.error('查询我的举报失败:', err)
+        if (!cancelled) setMyReportId(null)
+      }
+    })()
+    return () => {
+      cancelled = true
+    }
+  }, [detailActivityId, meId])
+
+  async function handleWithdrawReport() {
+    if (!myReportId || !meId) return
+    setWithdrawing(true)
+    try {
+      const { error } = await supabase
+        .from('reports')
+        .delete()
+        .eq('id', myReportId)
+        .eq('reporter_id', meId) // 双保险：只删自己那条
+      if (error) throw error
+      setMyReportId(null)
+      setReportMessage('已撤回举报')
+      setTimeout(() => setReportMessage(''), 1500)
+    } catch (err) {
+      const msg =
+        err && typeof err === 'object' && 'message' in err ? String((err as { message: unknown }).message) : String(err)
+      alert('撤回失败：' + msg)
+    } finally {
+      setWithdrawing(false)
+    }
   }
 
   if (loading) return <div className="min-h-screen flex items-center justify-center"><p>加载中...</p></div>
@@ -744,12 +804,25 @@ export default function PlayPage() {
                 </button>
               )}
 
-              <button
-                onClick={() => setShowReportModal(true)}
-                className="px-4 py-2.5 rounded-xl border border-[#d8e0e8] text-[#7a8a9a] text-sm hover:bg-[#eef2f5] transition flex items-center gap-1.5"
-              >
-                <Icon name="alert" className="w-3.5 h-3.5" />举报
-              </button>
+              {myReportId ? (
+                <button
+                  type="button"
+                  disabled={withdrawing}
+                  onClick={() => void handleWithdrawReport()}
+                  className="px-4 py-2.5 rounded-xl border border-[#d8e0e8] text-[#7a8a9a] text-sm hover:bg-[#eef2f5] transition flex items-center gap-1.5 disabled:opacity-50"
+                >
+                  <Icon name="x" className="w-3.5 h-3.5" />
+                  {withdrawing ? '撤回中…' : '撤回举报'}
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => setShowReportModal(true)}
+                  className="px-4 py-2.5 rounded-xl border border-[#d8e0e8] text-[#7a8a9a] text-sm hover:bg-[#eef2f5] transition flex items-center gap-1.5"
+                >
+                  <Icon name="alert" className="w-3.5 h-3.5" />举报
+                </button>
+              )}
             </div>
           </div>
         </div>
