@@ -131,12 +131,20 @@ order by b.name;
 
 -- ============================================================
 -- 【结果 7】对象存储的策略细节
+--
+-- ⚠️ 必须把 with_check 一起取出来：
+--    对 INSERT / UPDATE，起作用的是 with_check，using 恒为 NULL。
+--    只看 using 会误以为"上传没有限制"，其实只是没查那一列。
+--    上传策略最该确认的是：with_check 里有没有
+--    (storage.foldername(name))[1] = auth.uid() ——
+--    没有的话，任何登录用户都能往别人的目录里塞文件。
 -- ============================================================
 select
   policyname  as "策略名",
   cmd         as "操作",
   roles       as "适用角色",
-  qual        as "using_条件"
+  qual        as "using_条件",
+  with_check  as "with_check_条件"
 from pg_policies
 where schemaname = 'storage' and tablename = 'objects'
 order by cmd, policyname;
