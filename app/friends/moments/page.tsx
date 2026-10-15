@@ -10,6 +10,7 @@ import { useDeleteContent } from '../../../components/delete-content'
 import { useBlocks } from '../../../components/blocks'
 import { useEditContent } from '../../../components/edit-content'
 import { HashtagList } from '../../../components/hashtags'
+import { ImageGrid, ImagePicker } from '../../../components/media'
 import { Icon } from '../../../components/icons'
 import {
   VISIBILITY_HINT,
@@ -32,6 +33,7 @@ type Post = {
   author_name: string
   author_avatar: string | null
   visibility: string
+  image_urls: string[] | null
 }
 
 export default function MomentsPage() {
@@ -62,6 +64,7 @@ export default function MomentsPage() {
   const [selectedGroups, setSelectedGroups] = useState<string[]>([])
   const [showPicker, setShowPicker] = useState(false)
   const [audienceMap, setAudienceMap] = useState<Map<string, Set<string>>>(new Map())
+  const [imageUrls, setImageUrls] = useState<string[]>([])
 
   const { friends } = useFriendList(userId)
   const { groups } = useFriendGroups(userId)
@@ -127,7 +130,7 @@ export default function MomentsPage() {
 
     const { data: postsData } = await supabase
       .from('friend_posts')
-      .select('id, author_id, content, created_at, visibility')
+      .select('id, author_id, content, created_at, visibility, image_urls')
       .in('author_id', allowedIds)
       .order('created_at', { ascending: false })
       .limit(50)
@@ -159,6 +162,7 @@ export default function MomentsPage() {
         author_name: prof?.nickname || prof?.username || '某人',
         author_avatar: prof?.avatar_url || null,
         visibility: p.visibility ?? 'public',
+        image_urls: (p.image_urls as string[] | null) ?? null,
       }
     })
 
@@ -190,6 +194,7 @@ export default function MomentsPage() {
           author_id: userId,
           content: content.trim(),
           visibility,
+          image_urls: imageUrls.length > 0 ? imageUrls : null,
         })
         .select('id')
         .single()
@@ -208,6 +213,7 @@ export default function MomentsPage() {
       setSelectedFriends([])
       setSelectedGroups([])
       setShowPicker(false)
+      setImageUrls([])
       await loadPosts(userId)
     } catch (err) {
       const msg =
@@ -273,6 +279,14 @@ export default function MomentsPage() {
                 className="w-full px-4 py-3 rounded-xl border border-[#ece6dd] bg-[#fefcf9] text-sm text-[#2b2620] resize-none focus:outline-none focus:border-[#d97757] focus:ring-2 focus:ring-[#d97757]/10 transition placeholder:text-[#c0b8ae]"
                 maxLength={500}
               />
+              {/* 图片：本地上传或粘贴链接 */}
+              <ImagePicker
+                userId={userId}
+                urls={imageUrls}
+                onChange={setImageUrls}
+                disabled={posting}
+              />
+
               {/* 谁可以看 */}
               <div className="mt-3">
                 <div className="flex flex-wrap gap-2">
@@ -470,6 +484,9 @@ export default function MomentsPage() {
                     className="mt-2 pl-1"
                     chipClassName="rounded-full bg-[#fbeee4] px-2 py-0.5 text-[11px] text-[#c96447] hover:bg-[#f7e2d3] transition"
                   />
+
+                  {/* 图片墙 */}
+                  <ImageGrid urls={post.image_urls} className="mt-3 pl-1" />
 
                   {/* 收藏 / 删除自己发的 */}
                   <div className="mt-3 pt-3 border-t border-[#f2ece4] flex items-center justify-end gap-4">
