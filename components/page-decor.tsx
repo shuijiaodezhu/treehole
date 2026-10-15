@@ -32,7 +32,7 @@ function pageKeyFor(pathname: string): PageKey {
 }
 
 /** 每个页面角落的小图案（线稿，32×32） */
-function Motif({ page, className = '' }: { page: PageKey; className?: string }) {
+function Motif({ page, className = '' }: { page: PageKey; className?: string }): React.ReactElement | null {
   const base = {
     className,
     viewBox: '0 0 32 32',
@@ -77,13 +77,10 @@ function Motif({ page, className = '' }: { page: PageKey; className?: string }) 
         </svg>
       )
     case 'home':
-    default: // 首页：一封信
-      return (
-        <svg {...base}>
-          <rect x="4" y="9" width="24" height="16" rx="2.4" />
-          <path d="M5.2 10.4 16 18.4l10.8-8" />
-        </svg>
-      )
+    default:
+      // 首页不放角落图案：那一块有 hero 的大字与卡片，再加一个记号反而杂。
+      // （原来这里画的是"一封信"，一直钉在左下角，滚到哪都看得见。）
+      return null
   }
 }
 
@@ -117,8 +114,10 @@ export function PageDecor() {
       <span className="absolute left-4 top-1/2 h-32 w-px -translate-y-1/2 border-l border-dashed border-[var(--accent-line)]" />
       <span className="absolute right-4 top-1/2 h-32 w-px -translate-y-1/2 border-l border-dashed border-[var(--accent-line)]" />
 
-      {/* 左下：当前页面的图案 */}
-      <Motif page={page} className="absolute bottom-9 left-10 h-10 w-10 text-[var(--accent-light)]" />
+      {/* 左下：当前页面的图案（首页没有） */}
+      {page !== 'home' && (
+        <Motif page={page} className="absolute bottom-9 left-10 h-10 w-10 text-[var(--accent-light)]" />
+      )}
 
       {/* 右下：三颗小点 */}
       <Dots className="absolute bottom-9 right-10 h-9 w-9 text-[var(--accent-light)]" />
