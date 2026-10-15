@@ -238,17 +238,6 @@ export default function HomePage() {
         </div>
       </header>
 
-      {/*
-        左侧留白里的冬日信箱。
-        用绝对定位挂在页面左侧，**不参与 flex 布局**，所以中间的内容一点都不会偏移；
-        位置压在内容中段偏下（left-48 / top-470），上不贴页头、下不碰页脚，
-        像挂在留白里的一幅画；
-        只有够宽（2xl = 1536px 以上）留白放得下时才出现。
-      */}
-      <div className="absolute left-12 top-[470px] hidden w-[168px] 2xl:block">
-        <MailboxArt onOpen={() => setMailboxOpen(true)} />
-      </div>
-
       {/* 错误提示条 + 重试 */}
       {(authError || requestError) && (
         <div className="max-w-5xl mx-auto px-8 pt-6">
@@ -266,7 +255,19 @@ export default function HomePage() {
         </div>
       )}
 
-      <div className="max-w-5xl mx-auto px-8 py-10 flex gap-8 items-stretch">
+      <div className="relative max-w-5xl mx-auto px-8 py-10 flex gap-8 items-stretch">
+        {/*
+          左侧留白里的冬日信箱。
+          相对**内容容器**定位（不是视口），所以窗口宽窄变化时，
+          它和左侧那一栏始终是同一个间距，不会挤到卡片上；
+          用绝对定位所以**不参与 flex 布局**，中间内容一点都不会偏移。
+          竖直方向对齐左侧第三张卡「今天的一句话」（容器内 top-285）。
+          只有够宽（2xl = 1536px 以上）留白放得下时才出现。
+        */}
+        <div className="absolute -left-[176px] top-[285px] hidden w-[168px] 2xl:block">
+          <MailboxArt onOpen={() => setMailboxOpen(true)} />
+        </div>
+
         {/* 左侧面板 */}
         <aside className="w-64 flex-shrink-0 flex flex-col gap-4">
           <WeatherCard weather={weather} dateText={dateText} />
