@@ -138,14 +138,12 @@ const BLOCKS = [
 
 export function NavCardGrid({ badges }: { badges?: Partial<Record<string, { count?: number; dot?: boolean }>> }): ReactElement {
   /*
-   * 换成产品级的做法：
-   *   · 图标放在一个**中性色方块**里（不是彩色圆形芯片，那是模板感）
-   *   · 卡片是 shadcn 那种 1px 描边 + 悬停加深边框，不用阴影堆
-   *   · 进入时逐块错开淡入上浮（motion），悬停整块上浮 2px
-   *   · 右侧一个 chevron，悬停时右移 —— 这是最标准的"可进入"暗示
+   * 卡片要"舒展"而不是"紧凑"：高度给到 168px、内边距 24px、
+   * 图标放在 48px 的暖灰方块里、标题 20px 衬线、说明 13px。
+   * 信息量没变，但每块都站得开 —— 紧凑是廉价感的主要来源。
    */
   return (
-    <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5">
       {BLOCKS.map((block, i) => {
         const key = block.href.replace('/', '')
         const badge = badges?.[key]
@@ -153,41 +151,46 @@ export function NavCardGrid({ badges }: { badges?: Partial<Record<string, { coun
         return (
           <motion.div
             key={block.href}
-            initial={{ opacity: 0, y: 8 }}
+            initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.35, delay: i * 0.06, ease: [0.22, 1, 0.36, 1] }}
+            transition={{ duration: 0.4, delay: i * 0.07, ease: [0.22, 1, 0.36, 1] }}
           >
             <Link
               href={block.href}
               onClick={() => markModuleSeen(key as Parameters<typeof markModuleSeen>[0])}
               className={cn(
-                'group flex h-full items-center gap-4 rounded-xl border border-[#e0d3bd] bg-white/70 px-4 py-4',
-                'transition-all duration-200 hover:-translate-y-0.5 hover:border-[#a8563a] hover:bg-white',
+                'group flex h-full min-h-[168px] flex-col justify-between rounded-2xl border border-[#e8dfd0] bg-white p-6',
+                'transition-all duration-200 hover:-translate-y-1 hover:border-[#d9c3b2]',
                 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#a8563a]/30',
               )}
             >
-              <span className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-lg bg-[#f1e9dc] text-[#6b5949] transition-colors group-hover:bg-[#a8563a]/10 group-hover:text-[#a8563a]">
-                <Icon className="h-5 w-5" strokeWidth={1.6} />
-              </span>
-
-              <span className="min-w-0 flex-1">
-                <span className="flex items-baseline gap-2">
-                  <span className="font-serif-cn text-[17px] text-[#3f332a]">{block.title}</span>
-                  {badge?.count ? (
-                    <span className="text-[11px] tabular-nums text-[#a8563a]">
-                      {badge.count > 99 ? '99+' : badge.count}
-                    </span>
-                  ) : badge?.dot ? (
-                    <span className="h-1.5 w-1.5 rounded-full bg-[#a8563a]" />
-                  ) : null}
+              <div className="flex items-start justify-between gap-3">
+                <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-[#f5eee2] text-[#6b5949] transition-colors duration-200 group-hover:bg-[#a8563a]/10 group-hover:text-[#a8563a]">
+                  <Icon className="h-6 w-6" strokeWidth={1.5} />
                 </span>
-                <span className="mt-1 block truncate text-[13px] text-[#8a7a68]">{block.desc}</span>
-              </span>
 
-              <ChevronRight
-                className="h-4 w-4 flex-shrink-0 text-[#c9bda9] transition-transform duration-200 group-hover:translate-x-0.5 group-hover:text-[#a8563a]"
-                strokeWidth={1.8}
-              />
+                {badge?.count ? (
+                  <span className="text-[12px] tabular-nums text-[#a8563a]">
+                    {badge.count > 99 ? '99+' : badge.count}
+                  </span>
+                ) : badge?.dot ? (
+                  <span className="mt-1.5 h-1.5 w-1.5 rounded-full bg-[#a8563a]" />
+                ) : null}
+              </div>
+
+              <div>
+                <div className="flex items-center justify-between gap-3">
+                  <span className="font-serif-cn text-[20px] leading-none text-[#3f332a]">
+                    {block.title}
+                  </span>
+                  <ChevronRight
+                    className="h-4 w-4 flex-shrink-0 text-[#cfc3b0] transition-transform duration-200 group-hover:translate-x-1 group-hover:text-[#a8563a]"
+                    strokeWidth={1.8}
+                  />
+                </div>
+
+                <p className="mt-3 text-[13px] leading-relaxed text-[#8a7a68]">{block.desc}</p>
+              </div>
             </Link>
           </motion.div>
         )

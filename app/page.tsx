@@ -267,31 +267,31 @@ export default function HomePage() {
         </div>
       )}
 
-      <div className="relative max-w-5xl mx-auto px-8 py-10">
+      <div className="relative mx-auto w-full max-w-2xl flex-1 px-6 py-16 sm:px-8 sm:py-20">
         {/* 2xl 以上才出现的信箱插图（相对内容容器定位，不参与布局） */}
         <div className="absolute -left-[176px] top-[36px] hidden w-[168px] 2xl:block">
           <MailboxArt onOpen={() => setMailboxOpen(true)} />
         </div>
 
-        <div className="mx-auto max-w-md">
+        <div>
           {/* 一行小字：日期、天气、陪你走过 */}
-          <p className="text-[11px] leading-relaxed tracking-[0.08em] text-[#9c8f7d]">
+          <p className="text-[12px] leading-relaxed tracking-[0.08em] text-[#9c8f7d]">
             {dateText} · {weather.city} {weather.condition} {weather.temp}° / {weather.tempMin}°
           </p>
-          <p className="mt-1 text-[11px] tracking-[0.08em] text-[#9c8f7d]">
+          <p className="mt-1.5 text-[12px] tracking-[0.08em] text-[#9c8f7d]">
             陪你走过 {streak.days} 天
           </p>
 
           <FriendRequestBanner requests={requests} />
 
-          <nav className="mt-10">
+          <nav className="mt-14">
             <NavCardGrid badges={badges} />
           </nav>
 
           {quote && (
-            <div className="mt-12">
-              <p className="font-serif-cn text-[15px] leading-[2] text-[#3f332a]">「{quote}」</p>
-              <p className="mt-3 text-right text-[11px] tracking-[0.08em] text-[#9c8f7d]">
+            <div className="mt-16">
+              <p className="font-serif-cn text-[16px] leading-[2.1] text-[#3f332a]">「{quote}」</p>
+              <p className="mt-4 text-right text-[12px] tracking-[0.08em] text-[#9c8f7d]">
                 来自陌生人的问候
               </p>
               <p className="mt-1 text-right font-serif-cn text-[11px] text-[#a8563a]">
@@ -303,8 +303,8 @@ export default function HomePage() {
       </div>
 
       {/* 页脚：条款与说明入口 */}
-      <footer className="mx-auto max-w-5xl px-8 pb-10">
-        <div className="flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-[var(--accent-line)] pt-5">
+      <footer className="mx-auto w-full max-w-2xl px-6 pb-12 sm:px-8">
+        <div className="flex flex-wrap items-center gap-x-5 gap-y-3 border-t border-[#ece3d4] pt-6 text-[12px]">
           {[
             { slug: 'community', label: '社区公约' },
             { slug: 'reporting', label: '举报与申诉' },
