@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from 'react'
 import { createClient } from '../app/lib/supabase'
-import { readSeenAt, writeSeenAt } from './module-badges'
+import { markModuleSeen, readSeenAt, writeSeenAt } from './module-badges'
 
 /**
  * 页内未读：好友私信 / 朋友圈 / 院子的"有人回我"
@@ -143,6 +143,17 @@ export function useUnreadMessages(userId: string | null): UnreadMessages {
         delete next[conversationId]
         return next
       })
+
+      /*
+       * 顺手把「小屋整体已看」的时间也推到现在。
+       *
+       * 主页那张「小屋」卡片用的是 treehole:seen:friends 这个时间戳（进小屋时写的），
+       * 和上面按会话记的已读是**两套**。不推的话会出现：
+       *   进小屋 → 聊天里读到新消息 → 回主页，那条已经读过的消息又被算成未读
+       *   → 角标重新冒出来，得再进一次小屋才消。
+       * markModuleSeen 会同时广播事件，主页那边（如果还挂着）也会立刻重算。
+       */
+      markModuleSeen('friends')
       void friendId
     },
     [userId],
