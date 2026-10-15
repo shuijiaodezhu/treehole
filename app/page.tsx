@@ -9,7 +9,7 @@ import {
   FriendRequestBanner,
   NavCardGrid,
 } from '../components/home'
-import { IconMail, IconRefresh, IconSearch } from '../components/icons'
+import { IconRefresh, IconSearch } from '../components/icons'
 import {
   QUOTE_SLOT_MS,
   calcLoginStreak,
@@ -23,6 +23,16 @@ import { useWeather } from '../components/weather'
 import { useModuleBadges } from '../components/module-badges'
 import { NotificationBell } from '../components/notifications'
 import { WelcomeLetter } from '../components/welcome-letter'
+import { Button } from '../components/ui/button'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '../components/ui/dialog'
+import { toast } from 'sonner'
 import type { FriendRequest, FriendshipRow, LoginStreak } from '../components/types'
 import { pageAccentVars } from '../components/theme'
 import { SkeletonHome } from '../components/skeleton'
@@ -167,6 +177,8 @@ export default function HomePage() {
 
   /* ---------- 退出登录（二次确认） ---------- */
   async function handleLogout() {
+    // 统一走 toast 反馈（之前各处的成功/失败都是页面里插一行字）
+
     setConfirmLogout(false)
     try {
       await supabase.auth.signOut()
@@ -175,6 +187,7 @@ export default function HomePage() {
       console.error('退出登录失败:', err)
       if (mountedRef.current) setAuthError('退出登录失败，请重试')
     }
+    toast.success('已退出登录')
   }
 
   function handleRetry() {
@@ -319,42 +332,21 @@ export default function HomePage() {
       {/* 冬日信箱：读信 / 写信 */}
       <MailboxDialog mailbox={mailbox} open={mailboxOpen} onClose={() => setMailboxOpen(false)} />
 
-      {/* 退出登录二次确认 */}
-      {confirmLogout && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm px-4"
-          onClick={() => setConfirmLogout(false)}
-        >
-          <div
-            className="w-full max-w-xs rounded-2xl bg-white p-6 shadow-2xl text-center"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="mx-auto mb-3 w-11 h-11 rounded-full bg-[var(--accent-soft)] flex items-center justify-center">
-              <IconMail className="w-5 h-5 text-[var(--accent)]" />
-            </div>
-            <h2 className="text-base font-semibold text-[#2b2620]">要走了吗？</h2>
-            <p className="mt-1 text-xs text-[var(--accent-muted)] leading-relaxed">
-              退出后需要重新登录才能看到你的来信。
-            </p>
-            <div className="mt-5 flex gap-2">
-              <button
-                type="button"
-                onClick={() => setConfirmLogout(false)}
-                className="flex-1 rounded-xl border border-[var(--accent-line)] px-4 py-2 text-sm text-[#6a6058] hover:bg-[var(--accent-soft)] transition"
-              >
-                再待会儿
-              </button>
-              <button
-                type="button"
-                onClick={handleLogout}
-                className="flex-1 rounded-xl bg-[var(--accent)] px-4 py-2 text-sm font-medium text-white hover:shadow-sm transition-all"
-              >
-                退出登录
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* 退出登录二次确认：换成 Radix Dialog —— 焦点陷阱、Esc 关闭、滚动锁都交给它 */}
+      <Dialog open={confirmLogout} onOpenChange={setConfirmLogout}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>要走了吗？</DialogTitle>
+            <DialogDescription>退出后需要重新登录才能看到你的来信。</DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setConfirmLogout(false)}>
+              再待会儿
+            </Button>
+            <Button onClick={handleLogout}>退出登录</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       {/* 第一次登录、信封动画放完之后，浮出这封信（只出现一次） */}
       <WelcomeLetter userId={userId} />

@@ -4,7 +4,8 @@ import { Cormorant_Garamond, Noto_Serif_SC } from "next/font/google";
 import "./globals.css";
 import { OnlinePresence } from "../components/presence";
 import { ThemeProvider } from "../components/theme";
-import { PageDecor } from "../components/page-decor";
+import { PageDecor } from "../components/page-decor"
+import { Toaster } from "../components/ui/sonner";
 import { LoginTransitionOverlay } from "../components/login-transition";
 
 const cormorant = Cormorant_Garamond({
@@ -80,6 +81,7 @@ export default function RootLayout({
             <LoginTransitionOverlay />
           </Suspense>
           {children}
+          <Toaster />
         </ThemeProvider>
       </body>
     </html>
