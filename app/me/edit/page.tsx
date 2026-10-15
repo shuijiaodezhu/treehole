@@ -45,7 +45,8 @@ export default function EditProfilePage() {
       const { data: userData } = await supabase.auth.getUser()
       if (!userData.user) { router.push('/login'); return }
       setUserId(userData.user.id)
-      const { data } = await supabase.from('profiles').select('nickname, signature, location, birthday, avatar_url, cover_url').eq('id', userData.user.id).single()
+      // 用 * 而不是逐个列名：万一 cover_url 这类新列还没迁移，也不会整条查询失败
+      const { data } = await supabase.from('profiles').select('*').eq('id', userData.user.id).single()
       if (data) {
         setNickname(data.nickname || '')
         setSignature(data.signature || '')

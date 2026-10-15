@@ -15,8 +15,9 @@ alter table public.user_favorites
 --   target_id = 图片的完整 URL
 --   content   = 收藏时那条动态的正文（作为上下文，可空）
 --   title     = 空
-alter table public.user_favorites
-  add column if not exists source_url text;   -- 可选：图片来源页面（帖子/动态）的地址
+--
+-- 说明：曾经还想加一个 source_url（来源页面地址），但前端没用到，已去掉，
+-- 避免留下没人读的列。
 
 notify pgrst, 'reload schema';
 
