@@ -38,6 +38,7 @@ import type { FriendRequest, FriendshipRow, LoginStreak } from '../components/ty
 import { pageAccentVars } from '../components/theme'
 import { SkeletonHome } from '../components/skeleton'
 import { MailboxDialog, MailboxTrigger, useMailbox } from '../components/mailbox'
+import { MailboxArt } from '../components/mailbox-art'
 
 // 客户端单例：放在模块级，保证引用稳定（useCallback / useEffect 不会每次渲染都重跑）
 const supabase = createClient()
@@ -279,6 +280,12 @@ export default function HomePage() {
               </button>
             </div>
           </div>
+
+            {/* 冬日信箱：放回 hero 里面（原来挂在版面外侧，会压歪比例）。
+                尺寸由外层容器控制，所以不会再"跑出去"。 */}
+            <div className="mt-8 hidden w-[150px] sm:block">
+              <MailboxArt onOpen={() => setMailboxOpen(true)} />
+            </div>
         </div>
       </header>
 

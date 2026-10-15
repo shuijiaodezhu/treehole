@@ -129,11 +129,44 @@ export function FriendRequestBanner({ requests }: { requests: FriendRequest[] })
 
 /* ==================== 功能导航卡片网格 ==================== */
 
+/*
+ * 四个模块各给一个**暖色系里的不同调子**（火漆红 / 蜜金 / 陶红 / 可可）：
+ * 四块卡原来一模一样，看着单调；但也不能做成彩虹 ——
+ * 所以都在暖家谱里取，只有浓淡与冷暖的差别。
+ */
 const BLOCKS = [
-  { href: '/friends', title: '小屋', desc: '好友与私聊，慢慢说', Icon: House },
-  { href: '/world', title: '院子', desc: '大家在想什么', Icon: Trees },
-  { href: '/play', title: '聚会', desc: '活动、小工具、一起听歌', Icon: PartyPopper },
-  { href: '/me', title: '我的', desc: '资料、收藏、设置', Icon: UserRound },
+  {
+    href: '/friends',
+    title: '小屋',
+    desc: '好友与私聊，慢慢说',
+    Icon: House,
+    tint: 'bg-[#f7e8e0]',
+    ink: 'text-[#a8563a]',
+  },
+  {
+    href: '/world',
+    title: '院子',
+    desc: '大家在想什么',
+    Icon: Trees,
+    tint: 'bg-[#f8efe0]',
+    ink: 'text-[#c08a3e]',
+  },
+  {
+    href: '/play',
+    title: '聚会',
+    desc: '活动、小工具、一起听歌',
+    Icon: PartyPopper,
+    tint: 'bg-[#fbeae3]',
+    ink: 'text-[#c96a4e]',
+  },
+  {
+    href: '/me',
+    title: '我的',
+    desc: '资料、收藏、设置',
+    Icon: UserRound,
+    tint: 'bg-[#f1e9df]',
+    ink: 'text-[#8a6a4a]',
+  },
 ]
 
 
@@ -170,7 +203,13 @@ export function NavCardGrid({ badges }: { badges?: Partial<Record<string, { coun
             >
               <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-3">
-                  <span className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl bg-[#f5eee2] text-[#6b5949] transition-colors duration-200 group-hover:bg-[#a8563a]/10 group-hover:text-[#a8563a]">
+                  <span
+                    className={cn(
+                      'flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl transition-transform duration-200 group-hover:scale-[1.06]',
+                      block.tint,
+                      block.ink,
+                    )}
+                  >
                     <Icon className="h-[22px] w-[22px]" strokeWidth={1.5} />
                   </span>
 
