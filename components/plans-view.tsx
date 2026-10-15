@@ -26,7 +26,7 @@ const KIND_ICON: Record<PlanKind, IconName> = {
 }
 
 const ACCENT: Record<PlanKind, { bar: string; chip: string; text: string }> = {
-  plan: { bar: 'bg-[#d97757]', chip: 'bg-[#fbeee4]', text: 'text-[#c96447]' },
+  plan: { bar: 'bg-[var(--accent)]', chip: 'bg-[var(--accent-soft)]', text: 'text-[var(--accent-deep)]' },
   goal: { bar: 'bg-[#a88ab8]', chip: 'bg-[#f3edf9]', text: 'text-[#7a5a9a]' },
   task: { bar: 'bg-[#7ea86a]', chip: 'bg-[#eef6e8]', text: 'text-[#5a8a4a]' },
 }
@@ -95,28 +95,28 @@ export function PlansView({ userId }: { userId: string | null }) {
           <div className="mb-6 flex items-end justify-between gap-4">
             <div>
               <h2 className="font-serif-cn text-2xl font-semibold tracking-wide text-[#2b2620]">计划书</h2>
-              <p className="mt-1 font-serif-cn text-xs text-[#a88868]">
+              <p className="mt-1 font-serif-cn text-xs text-[var(--accent-muted)]">
                 写下来，梦想就有了形状 · {todayText}
               </p>
             </div>
             <div className="hidden text-right sm:block">
               <p className="font-serif-cn text-[11px] text-[#c0a890]">今天要做的</p>
-              <p className="text-2xl font-bold text-[#d97757]">{plans.stats.openTasks}</p>
+              <p className="text-2xl font-bold text-[var(--accent)]">{plans.stats.openTasks}</p>
             </div>
           </div>
 
           {/* 概览 */}
           <div className="mb-6 grid grid-cols-3 gap-3">
             <div className="rounded-2xl border border-[#f2e4d6] bg-white/70 px-3 py-2.5">
-              <p className="text-[10px] text-[#b0a89e]">待完成</p>
-              <p className="mt-0.5 text-lg font-semibold text-[#c96447]">{plans.stats.openTasks}</p>
+              <p className="text-[10px] text-[var(--accent-muted)]">待完成</p>
+              <p className="mt-0.5 text-lg font-semibold text-[var(--accent-deep)]">{plans.stats.openTasks}</p>
             </div>
             <div className="rounded-2xl border border-[#f2e4d6] bg-white/70 px-3 py-2.5">
-              <p className="text-[10px] text-[#b0a89e]">已完成</p>
+              <p className="text-[10px] text-[var(--accent-muted)]">已完成</p>
               <p className="mt-0.5 text-lg font-semibold text-[#5a8a4a]">{plans.stats.doneTasks}</p>
             </div>
             <div className="rounded-2xl border border-[#f2e4d6] bg-white/70 px-3 py-2.5">
-              <p className="text-[10px] text-[#b0a89e]">目标进度</p>
+              <p className="text-[10px] text-[var(--accent-muted)]">目标进度</p>
               <p className="mt-0.5 text-lg font-semibold text-[#7a5a9a]">{plans.stats.goalProgress}%</p>
             </div>
           </div>
@@ -134,7 +134,7 @@ export function PlansView({ userId }: { userId: string | null }) {
                   className={`flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs transition ${
                     active
                       ? `${ACCENT[k].chip} ${ACCENT[k].text} font-medium ring-1 ring-inset ring-current/20`
-                      : 'text-[#8a827a] hover:bg-[#faf3ec]'
+                      : 'text-[var(--accent-muted)] hover:bg-[#faf3ec]'
                   }`}
                 >
                   <Icon name={KIND_ICON[k]} className="h-3.5 w-3.5" />
@@ -158,20 +158,20 @@ export function PlansView({ userId }: { userId: string | null }) {
                   kind === 'task' ? '要做什么…' : kind === 'goal' ? '想达成什么…' : '在计划什么…'
                 }
                 maxLength={80}
-                className="min-w-0 flex-1 border-b border-dashed border-[#e0c8b4] bg-transparent px-1 py-2 font-serif-cn text-sm text-[#2b2620] placeholder:text-[#c8b8a8] focus:border-[#d97757] focus:outline-none transition"
+                className="min-w-0 flex-1 border-b border-dashed border-[#e0c8b4] bg-transparent px-1 py-2 font-serif-cn text-sm text-[#2b2620] placeholder:text-[#c8b8a8] focus:border-[var(--accent)] focus:outline-none transition"
               />
               <button
                 type="button"
                 onClick={() => setShowExtra((v) => !v)}
                 title="添加备注与日期"
-                className="rounded-full border border-[#e8d8c8] px-2.5 py-1.5 text-[11px] text-[#a88868] transition hover:border-[#d97757] hover:text-[#c96447]"
+                className="rounded-full border border-[#e8d8c8] px-2.5 py-1.5 text-[11px] text-[var(--accent-muted)] transition hover:border-[var(--accent)] hover:text-[var(--accent-deep)]"
               >
                 {showExtra ? '收起' : '备注/日期'}
               </button>
               <button
                 type="submit"
                 disabled={plans.busy || !title.trim()}
-                className="flex items-center gap-1 rounded-full bg-gradient-to-r from-[#e8a87c] to-[#d97757] px-4 py-1.5 text-xs font-medium text-white transition hover:shadow-[0_4px_14px_rgba(217,119,87,0.3)] disabled:opacity-50"
+                className="flex items-center gap-1 rounded-full bg-gradient-to-r from-[var(--accent-light)] to-[var(--accent)] px-4 py-1.5 text-xs font-medium text-white transition hover:shadow-[0_4px_14px_rgba(217,119,87,0.3)] disabled:opacity-50"
               >
                 <Icon name="plus" className="h-3.5 w-3.5" />
                 记下来
@@ -186,19 +186,19 @@ export function PlansView({ userId }: { userId: string | null }) {
                   onChange={(e) => setNote(e.target.value)}
                   placeholder="补充一句（可留空）"
                   maxLength={200}
-                  className="min-w-0 flex-1 rounded-xl border border-[#eee0d2] bg-white/70 px-3 py-1.5 text-xs text-[#4a423c] focus:border-[#d97757] focus:outline-none transition"
+                  className="min-w-0 flex-1 rounded-xl border border-[#eee0d2] bg-white/70 px-3 py-1.5 text-xs text-[#4a423c] focus:border-[var(--accent)] focus:outline-none transition"
                 />
                 <input
                   type="date"
                   value={due}
                   onChange={(e) => setDue(e.target.value)}
-                  className="rounded-xl border border-[#eee0d2] bg-white/70 px-3 py-1.5 text-xs text-[#4a423c] focus:border-[#d97757] focus:outline-none transition"
+                  className="rounded-xl border border-[#eee0d2] bg-white/70 px-3 py-1.5 text-xs text-[#4a423c] focus:border-[var(--accent)] focus:outline-none transition"
                 />
               </div>
             )}
           </form>
 
-          {message && <p className="mb-3 text-[11px] text-[#c96447]">{message}</p>}
+          {message && <p className="mb-3 text-[11px] text-[var(--accent-deep)]">{message}</p>}
           {plans.error && <p className="mb-3 text-[11px] text-red-500">{plans.error}</p>}
 
           {plans.loading && plans.items.length === 0 ? (
@@ -234,7 +234,7 @@ export function PlansView({ userId }: { userId: string | null }) {
               <button
                 type="button"
                 onClick={() => setShowDone((v) => !v)}
-                className="flex items-center gap-1.5 text-[11px] text-[#b0a89e] transition hover:text-[#8a7a6a]"
+                className="flex items-center gap-1.5 text-[11px] text-[var(--accent-muted)] transition hover:text-[#8a7a6a]"
               >
                 <Icon name={showDone ? 'check' : 'arrow'} className="h-3 w-3" />
                 已完成 {current.done.length} 条
@@ -346,7 +346,7 @@ function PlanRow({
                   due.tone === 'overdue'
                     ? 'bg-red-50 text-red-500'
                     : due.tone === 'soon'
-                      ? 'bg-[#fbeee4] text-[#c96447]'
+                      ? 'bg-[var(--accent-soft)] text-[var(--accent-deep)]'
                       : 'bg-[#f6f2ec] text-[#a89888]'
                 }`}
               >
@@ -388,7 +388,7 @@ function PlanRow({
               onClick={onToggle}
               disabled={busy}
               className={`rounded-full px-2 py-0.5 text-[10px] transition disabled:opacity-50 ${
-                item.done ? 'bg-[#eef6e8] text-[#5a8a4a]' : 'text-[#b0a89e] hover:text-[#7a5a9a]'
+                item.done ? 'bg-[#eef6e8] text-[#5a8a4a]' : 'text-[var(--accent-muted)] hover:text-[#7a5a9a]'
               }`}
             >
               {item.done ? '已达成' : '达成'}

@@ -55,7 +55,7 @@ export function ImageWall({
               <button
                 type="button"
                 onClick={() => setPreview(url)}
-                className="block w-full overflow-hidden rounded-xl border border-[#f0e4d4] focus:outline-none focus:ring-2 focus:ring-[#d97757]/30"
+                className="block w-full overflow-hidden rounded-xl border border-[var(--accent-line)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/30"
                 aria-label="查看大图"
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -80,7 +80,7 @@ export function ImageWall({
                 title={saved ? '取消收藏这张图' : '收藏这张图'}
                 className={`absolute right-1.5 top-1.5 flex h-7 w-7 items-center justify-center rounded-full backdrop-blur transition disabled:opacity-50 ${
                   saved
-                    ? 'bg-white/90 text-[#d97757]'
+                    ? 'bg-white/90 text-[var(--accent)]'
                     : 'bg-black/35 text-white opacity-0 group-hover:opacity-100 focus:opacity-100'
                 }`}
               >
@@ -107,7 +107,7 @@ export function ImageWall({
               }}
               className={`flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs transition disabled:opacity-50 ${
                 favorites.isFavorited('image', preview)
-                  ? 'bg-[#d97757] text-white'
+                  ? 'bg-[var(--accent)] text-white'
                   : 'bg-white/15 text-white hover:bg-white/25'
               }`}
             >

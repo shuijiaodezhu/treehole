@@ -25,6 +25,7 @@ import {
 import { useWeather } from '../components/weather'
 import { useModuleBadges } from '../components/module-badges'
 import type { FriendRequest, FriendshipRow, LoginStreak } from '../components/types'
+import { pageAccentVars } from '../components/theme'
 
 // 客户端单例：放在模块级，保证引用稳定（useCallback / useEffect 不会每次渲染都重跑）
 const supabase = createClient()
@@ -180,8 +181,8 @@ export default function HomePage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <p className="text-sm text-[#a88868]">加载中...</p>
+      <div className="min-h-screen flex items-center justify-center" style={pageAccentVars('home')}>
+        <p className="text-sm text-[var(--accent-muted)]">加载中...</p>
       </div>
     )
   }
@@ -189,37 +190,37 @@ export default function HomePage() {
   return (
     <div className="min-h-screen">
       {/* 顶部 header */}
-      <header className="w-full bg-gradient-to-br from-[#fdf0e6] via-[#fae4d4] to-[#f5d5bc] border-b border-[#e8c8b5] relative overflow-hidden shadow-[0_2px_16px_rgba(217,119,87,0.06)]">
-        <div className="absolute -top-10 -right-10 w-48 h-48 bg-[#d97757] opacity-10 rounded-full blur-3xl pointer-events-none"></div>
-        <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-[#d97757] opacity-[0.07] rounded-full blur-3xl pointer-events-none"></div>
+      <header className="w-full bg-gradient-to-br from-[var(--accent-soft)] via-[#fae4d4] to-[var(--accent-line)] border-b border-[var(--accent-line)] relative overflow-hidden shadow-[0_2px_16px_rgba(217,119,87,0.06)]">
+        <div className="absolute -top-10 -right-10 w-48 h-48 bg-[var(--accent)] opacity-10 rounded-full blur-3xl pointer-events-none"></div>
+        <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-[var(--accent)] opacity-[0.07] rounded-full blur-3xl pointer-events-none"></div>
 
         <div className="max-w-5xl mx-auto px-8 py-10 flex justify-between items-center relative">
           <div>
             <h1 className="text-3xl font-bold text-[#2b2620]">你的来信</h1>
-            <p className="mt-2 text-[#8a6a4a] flex items-baseline gap-2">
-              <span className="font-art text-2xl text-[#c96447]">Dear You</span>
+            <p className="mt-2 text-[var(--accent-muted)] flex items-baseline gap-2">
+              <span className="font-art text-2xl text-[var(--accent-deep)]">Dear You</span>
               <span className="text-sm">· 这里有一封，你的来信</span>
             </p>
           </div>
 
           <div className="text-right">
             <p className="text-sm mb-2">
-              <span className="text-[#c96447] font-medium">欢迎回来，</span>
-              <span className="text-[#8a827a]">{email || '朋友'}</span>
+              <span className="text-[var(--accent-deep)] font-medium">欢迎回来，</span>
+              <span className="text-[var(--accent-muted)]">{email || '朋友'}</span>
             </p>
 
             <div className="flex items-center justify-end gap-3">
               <Link
                 href="/search"
                 aria-label="搜索"
-                className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-[#ecd6c4] bg-white/60 text-[#b09070] hover:bg-white/90 hover:text-[#c96447] transition"
+                className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-[var(--accent-line)] bg-white/60 text-[var(--accent-muted)] hover:bg-white/90 hover:text-[var(--accent-deep)] transition"
               >
                 <IconSearch className="w-[18px] h-[18px]" />
               </Link>
               <button
                 type="button"
                 onClick={() => setConfirmLogout(true)}
-                className="text-sm text-[#c96447] hover:underline font-medium"
+                className="text-sm text-[var(--accent-deep)] hover:underline font-medium"
               >
                 退出登录
               </button>
@@ -270,25 +271,25 @@ export default function HomePage() {
             className="w-full max-w-xs rounded-3xl bg-white p-6 shadow-2xl text-center"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="mx-auto mb-3 w-11 h-11 rounded-full bg-[#fdf0e6] flex items-center justify-center">
-              <IconMail className="w-5 h-5 text-[#d97757]" />
+            <div className="mx-auto mb-3 w-11 h-11 rounded-full bg-[var(--accent-soft)] flex items-center justify-center">
+              <IconMail className="w-5 h-5 text-[var(--accent)]" />
             </div>
             <h2 className="text-base font-semibold text-[#2b2620]">要走了吗？</h2>
-            <p className="mt-1 text-xs text-[#a88868] leading-relaxed">
+            <p className="mt-1 text-xs text-[var(--accent-muted)] leading-relaxed">
               退出后需要重新登录才能看到你的来信。
             </p>
             <div className="mt-5 flex gap-2">
               <button
                 type="button"
                 onClick={() => setConfirmLogout(false)}
-                className="flex-1 rounded-xl border border-[#ece6dd] px-4 py-2 text-sm text-[#6a6058] hover:bg-[#fdf7f2] transition"
+                className="flex-1 rounded-xl border border-[var(--accent-line)] px-4 py-2 text-sm text-[#6a6058] hover:bg-[var(--accent-soft)] transition"
               >
                 再待会儿
               </button>
               <button
                 type="button"
                 onClick={handleLogout}
-                className="flex-1 rounded-xl bg-gradient-to-r from-[#e08a63] to-[#d97757] px-4 py-2 text-sm font-medium text-white hover:shadow-[0_6px_20px_rgba(217,119,87,0.3)] transition-all"
+                className="flex-1 rounded-xl bg-gradient-to-r from-[var(--accent-light)] to-[var(--accent)] px-4 py-2 text-sm font-medium text-white hover:shadow-[0_6px_20px_rgba(217,119,87,0.3)] transition-all"
               >
                 退出登录
               </button>

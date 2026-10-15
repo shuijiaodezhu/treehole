@@ -73,7 +73,7 @@ export function EmojiPicker({
         title="插入表情"
         aria-expanded={open}
         className={`flex h-8 w-8 items-center justify-center rounded-full transition ${
-          open ? 'bg-[#fbeee4] text-[#c96447]' : 'text-[#a88868] hover:bg-[#fbeee4] hover:text-[#c96447]'
+          open ? 'bg-[var(--accent-soft)] text-[var(--accent-deep)]' : 'text-[var(--accent-muted)] hover:bg-[var(--accent-soft)] hover:text-[var(--accent-deep)]'
         }`}
       >
         <span className="text-base leading-none">😊</span>
@@ -81,7 +81,7 @@ export function EmojiPicker({
 
       {open && (
         <div
-          className={`absolute bottom-full z-40 mb-2 w-64 overflow-hidden rounded-2xl border border-[#f0e4d4] bg-white shadow-xl ${
+          className={`absolute bottom-full z-40 mb-2 w-64 overflow-hidden rounded-2xl border border-[var(--accent-line)] bg-white shadow-xl ${
             align === 'right' ? 'right-0' : 'left-0'
           }`}
         >
@@ -92,7 +92,7 @@ export function EmojiPicker({
                 type="button"
                 onClick={() => setGroup(i)}
                 className={`rounded-lg px-2 py-1 text-[10px] transition ${
-                  i === group ? 'bg-[#fbeee4] text-[#c96447] font-medium' : 'text-[#a88868] hover:bg-[#fdf7f2]'
+                  i === group ? 'bg-[var(--accent-soft)] text-[var(--accent-deep)] font-medium' : 'text-[var(--accent-muted)] hover:bg-[var(--accent-soft)]'
                 }`}
               >
                 {g.name}
@@ -106,7 +106,7 @@ export function EmojiPicker({
                 key={emoji}
                 type="button"
                 onClick={() => onPick(emoji)}
-                className="flex h-7 w-7 items-center justify-center rounded-lg text-base transition hover:bg-[#fdf3ec]"
+                className="flex h-7 w-7 items-center justify-center rounded-lg text-base transition hover:bg-[var(--accent-soft)]"
               >
                 {emoji}
               </button>

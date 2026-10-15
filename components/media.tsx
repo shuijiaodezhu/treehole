@@ -76,7 +76,7 @@ export function ImageGrid({
           <img
             src={url}
             alt=""
-            className={`w-full rounded-xl border border-[#f0e4d4] object-cover ${
+            className={`w-full rounded-xl border border-[var(--accent-line)] object-cover ${
               single ? 'max-h-80' : 'h-24'
             }`}
           />
@@ -160,7 +160,7 @@ export function ImagePicker({
     <div className="mt-3">
       <div className="flex flex-wrap items-center gap-2">
         <label
-          className={`cursor-pointer rounded-xl border border-[#ece6dd] bg-white px-3 py-1.5 text-xs text-[#8a827a] transition hover:border-[#e0a184] ${
+          className={`cursor-pointer rounded-xl border border-[var(--accent-line)] bg-white px-3 py-1.5 text-xs text-[var(--accent-muted)] transition hover:border-[var(--accent-light)] ${
             disabled || uploading ? 'opacity-50 pointer-events-none' : ''
           }`}
         >
@@ -194,13 +194,13 @@ export function ImagePicker({
               }
             }}
             placeholder="也可以粘贴图片链接"
-            className="min-w-0 flex-1 rounded-xl border border-[#ece6dd] bg-[#fefcf9] px-3 py-1.5 text-xs text-[#2b2620] focus:outline-none focus:border-[#d97757] transition"
+            className="min-w-0 flex-1 rounded-xl border border-[var(--accent-line)] bg-[var(--accent-soft)] px-3 py-1.5 text-xs text-[#2b2620] focus:outline-none focus:border-[var(--accent)] transition"
           />
           <button
             type="button"
             onClick={addLink}
             disabled={disabled || !linkInput.trim()}
-            className="rounded-xl border border-[#ece6dd] bg-white px-2.5 py-1.5 text-xs text-[#8a827a] transition hover:border-[#e0a184] disabled:opacity-50"
+            className="rounded-xl border border-[var(--accent-line)] bg-white px-2.5 py-1.5 text-xs text-[var(--accent-muted)] transition hover:border-[var(--accent-light)] disabled:opacity-50"
           >
             添加
           </button>

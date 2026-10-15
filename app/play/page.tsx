@@ -11,6 +11,7 @@ import { useFocusQuery } from '../../components/use-focus-query'
 import { useFavorites } from '../../components/favorites'
 import { useDeleteContent } from '../../components/delete-content'
 import { useBlocks } from '../../components/blocks'
+import { pageAccentVars } from '../../components/theme'
 
 // 客户端提到模块级，保证引用稳定
 const supabase = createClient()
@@ -462,37 +463,37 @@ export default function PlayPage() {
   if (loading) return <div className="min-h-screen flex items-center justify-center"><p>加载中...</p></div>
 
   return (
-    <div className="min-h-screen bg-[#eef2f5] relative overflow-hidden">
-      <div className="absolute -top-20 -right-20 w-96 h-96 bg-[#8aa6bc] opacity-20 rounded-full blur-3xl pointer-events-none"></div>
-      <div className="absolute -bottom-20 -left-20 w-96 h-96 bg-[#5a7a9a] opacity-[0.08] rounded-full blur-3xl pointer-events-none"></div>
+    <div className="min-h-screen bg-[var(--accent-soft)] relative overflow-hidden" style={pageAccentVars('play')}>
+      <div className="absolute -top-20 -right-20 w-96 h-96 bg-[var(--accent-light)] opacity-20 rounded-full blur-3xl pointer-events-none"></div>
+      <div className="absolute -bottom-20 -left-20 w-96 h-96 bg-[var(--accent)] opacity-[0.08] rounded-full blur-3xl pointer-events-none"></div>
 
       <div className="relative max-w-6xl mx-auto px-6 pt-24 pb-8">
         <header className="mb-6">
-          <Link href="/" className="inline-flex items-center gap-1.5 text-sm text-[#7a8a9a] hover:text-[#4a6a8a] transition">
+          <Link href="/" className="inline-flex items-center gap-1.5 text-sm text-[var(--accent-muted)] hover:text-[var(--accent-ink)] transition">
             <Icon name="back" className="w-4 h-4" />返回
           </Link>
-          <h1 className="text-3xl font-bold text-[#2b3a4a] mt-4">聚会</h1>
-          <p className="text-sm text-[#7a8a9a] mt-1">找搭子，一起玩</p>
+          <h1 className="text-3xl font-bold text-[var(--accent-ink)] mt-4">聚会</h1>
+          <p className="text-sm text-[var(--accent-muted)] mt-1">找搭子，一起玩</p>
 
           {focusActivityId && focusMissing && (
-            <div className="mt-4 flex items-center justify-between rounded-2xl border border-[#d8e0e8] bg-[#f4f7fa] px-4 py-2.5">
-              <span className="text-xs text-[#5a7a9a]">这条活动不见了（可能已被删除或下架）</span>
-              <Link href="/play" className="text-xs text-[#5a7a9a] hover:underline">
+            <div className="mt-4 flex items-center justify-between rounded-2xl border border-[var(--accent-line)] bg-[var(--accent-soft)] px-4 py-2.5">
+              <span className="text-xs text-[var(--accent)]">这条活动不见了（可能已被删除或下架）</span>
+              <Link href="/play" className="text-xs text-[var(--accent)] hover:underline">
                 ← 回到列表
               </Link>
             </div>
           )}
 
-          <div className="flex gap-6 mt-5 border-b border-[#d8e0e8]">
+          <div className="flex gap-6 mt-5 border-b border-[var(--accent-line)]">
             <button
               onClick={() => setTab('activities')}
-              className={`pb-2.5 text-sm transition ${tab === 'activities' ? 'border-b-2 border-[#5a7a9a] text-[#5a7a9a] font-medium' : 'text-[#7a8a9a] hover:text-[#2b3a4a]'}`}
+              className={`pb-2.5 text-sm transition ${tab === 'activities' ? 'border-b-2 border-[var(--accent)] text-[var(--accent)] font-medium' : 'text-[var(--accent-muted)] hover:text-[var(--accent-ink)]'}`}
             >
               活动
             </button>
             <button
               onClick={() => setTab('minigames')}
-              className={`pb-2.5 text-sm transition ${tab === 'minigames' ? 'border-b-2 border-[#5a7a9a] text-[#5a7a9a] font-medium' : 'text-[#7a8a9a] hover:text-[#2b3a4a]'}`}
+              className={`pb-2.5 text-sm transition ${tab === 'minigames' ? 'border-b-2 border-[var(--accent)] text-[var(--accent)] font-medium' : 'text-[var(--accent-muted)] hover:text-[var(--accent-ink)]'}`}
             >
               小程序
             </button>
@@ -505,7 +506,7 @@ export default function PlayPage() {
               <div className="flex gap-2 flex-wrap">
                 <button
                   onClick={() => setCurrentType(null)}
-                  className={`px-4 py-1.5 rounded-full text-xs transition ${!currentType ? 'bg-[#5a7a9a] text-white' : 'bg-white text-[#5a6a7a] hover:bg-[#e8eef4] border border-[#d8e0e8]'}`}
+                  className={`px-4 py-1.5 rounded-full text-xs transition ${!currentType ? 'bg-[var(--accent)] text-white' : 'bg-white text-[var(--accent-muted)] hover:bg-[var(--accent-soft)] border border-[var(--accent-line)]'}`}
                 >
                   全部
                 </button>
@@ -516,7 +517,7 @@ export default function PlayPage() {
                     <div key={t.id} className="relative group">
                       <button
                         onClick={() => setCurrentType(t)}
-                        className={`px-4 py-1.5 rounded-full text-xs transition flex items-center gap-1.5 ${canDelete ? 'pr-7' : ''} ${currentType?.id === t.id ? 'bg-[#5a7a9a] text-white' : 'bg-white text-[#5a6a7a] hover:bg-[#e8eef4] border border-[#d8e0e8]'}`}
+                        className={`px-4 py-1.5 rounded-full text-xs transition flex items-center gap-1.5 ${canDelete ? 'pr-7' : ''} ${currentType?.id === t.id ? 'bg-[var(--accent)] text-white' : 'bg-white text-[var(--accent-muted)] hover:bg-[var(--accent-soft)] border border-[var(--accent-line)]'}`}
                       >
                         {t.icon && <span>{t.icon}</span>}
                         {t.name}
@@ -525,7 +526,7 @@ export default function PlayPage() {
                       {canDelete && (
                         <button
                           onClick={(e) => handleDeleteType(t.id, e)}
-                          className={`absolute right-1.5 top-1/2 -translate-y-1/2 w-4 h-4 rounded-full flex items-center justify-center text-[10px] opacity-0 group-hover:opacity-100 transition ${currentType?.id === t.id ? 'text-white/70 hover:text-white hover:bg-white/20' : 'text-[#9aa8b4] hover:text-red-500 hover:bg-red-50'}`}
+                          className={`absolute right-1.5 top-1/2 -translate-y-1/2 w-4 h-4 rounded-full flex items-center justify-center text-[10px] opacity-0 group-hover:opacity-100 transition ${currentType?.id === t.id ? 'text-white/70 hover:text-white hover:bg-white/20' : 'text-[var(--accent-muted)] hover:text-red-500 hover:bg-red-50'}`}
                           title="删除"
                         >
                           ×
@@ -537,7 +538,7 @@ export default function PlayPage() {
 
                 <button
                   onClick={() => setShowNewTypeModal(true)}
-                  className="px-4 py-1.5 rounded-full text-xs text-[#7a8a9a] hover:bg-[#e8eef4] transition border border-dashed border-[#c8d4e0] flex items-center gap-1"
+                  className="px-4 py-1.5 rounded-full text-xs text-[var(--accent-muted)] hover:bg-[var(--accent-soft)] transition border border-dashed border-[var(--accent-line)] flex items-center gap-1"
                 >
                   <Icon name="plus" className="w-3 h-3" />新建类型
                 </button>
@@ -545,7 +546,7 @@ export default function PlayPage() {
 
               <button
                 onClick={() => setShowPostModal(true)}
-                className="px-5 py-2 rounded-full bg-gradient-to-r from-[#6a8aaa] to-[#5a7a9a] text-white text-sm font-medium hover:shadow-[0_6px_20px_rgba(90,122,154,0.3)] transition-all flex items-center gap-1.5 flex-shrink-0"
+                className="px-5 py-2 rounded-full bg-gradient-to-r from-[var(--accent-light)] to-[var(--accent)] text-white text-sm font-medium hover:shadow-[0_6px_20px_rgba(90,122,154,0.3)] transition-all flex items-center gap-1.5 flex-shrink-0"
               >
                 <Icon name="plus" className="w-4 h-4" />发活动
               </button>
@@ -553,9 +554,9 @@ export default function PlayPage() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {activities.length === 0 ? (
-                <div className="md:col-span-2 rounded-2xl border border-[#d8e0e8] bg-white/60 backdrop-blur p-12 text-center">
-                  <p className="text-sm text-[#7a8a9a]">还没有活动</p>
-                  <p className="text-xs text-[#9aa8b4] mt-2">点右上角「发活动」，攒个局吧</p>
+                <div className="md:col-span-2 rounded-2xl border border-[var(--accent-line)] bg-white/60 backdrop-blur p-12 text-center">
+                  <p className="text-sm text-[var(--accent-muted)]">还没有活动</p>
+                  <p className="text-xs text-[var(--accent-muted)] mt-2">点右上角「发活动」，攒个局吧</p>
                 </div>
               ) : (
                 activities
@@ -579,7 +580,7 @@ export default function PlayPage() {
                           setDetailActivity(act)
                         }
                       }}
-                      className="relative cursor-pointer rounded-2xl border border-[#d8e0e8] bg-white/90 backdrop-blur p-5 shadow-[0_2px_12px_rgba(90,122,154,0.06)] hover:shadow-[0_8px_24px_rgba(90,122,154,0.12)] hover:-translate-y-0.5 transition-all text-left flex flex-col focus:outline-none focus:ring-2 focus:ring-[#5a7a9a]/30"
+                      className="relative cursor-pointer rounded-2xl border border-[var(--accent-line)] bg-white/90 backdrop-blur p-5 shadow-[0_2px_12px_rgba(90,122,154,0.06)] hover:shadow-[0_8px_24px_rgba(90,122,154,0.12)] hover:-translate-y-0.5 transition-all text-left flex flex-col focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/30"
                     >
                       {/* 收藏（放在卡片右上角，与"打开详情"的点击区分开） */}
                       <button
@@ -596,7 +597,7 @@ export default function PlayPage() {
                           })
                         }
                         className={`absolute top-3 right-3 z-10 rounded-full p-1 transition disabled:opacity-50 ${
-                          isFav ? 'text-[#d97757]' : 'text-[#9aa8b4] hover:text-[#d97757]'
+                          isFav ? 'text-[#d97757]' : 'text-[var(--accent-muted)] hover:text-[#d97757]'
                         }`}
                       >
                         <Icon name={isFav ? 'heartfill' : 'heart'} className="w-4 h-4" />
@@ -605,31 +606,31 @@ export default function PlayPage() {
                       <div className="flex flex-col flex-1">
                       <div className="flex items-start gap-2 mb-3">
                         {act.type_icon && (
-                          <div className="w-9 h-9 rounded-xl bg-[#e8eef4] flex items-center justify-center text-base flex-shrink-0">
+                          <div className="w-9 h-9 rounded-xl bg-[var(--accent-soft)] flex items-center justify-center text-base flex-shrink-0">
                             {act.type_icon}
                           </div>
                         )}
                         <div className="flex-1 min-w-0">
-                          {act.type_name && <p className="text-[10px] text-[#7a8a9a] tracking-wide">{act.type_name}</p>}
-                          <h3 className="text-base font-semibold text-[#2b3a4a] mt-0.5 break-words">{act.title}</h3>
+                          {act.type_name && <p className="text-[10px] text-[var(--accent-muted)] tracking-wide">{act.type_name}</p>}
+                          <h3 className="text-base font-semibold text-[var(--accent-ink)] mt-0.5 break-words">{act.title}</h3>
                         </div>
                       </div>
 
                       {act.content && (
-                        <p className="text-sm text-[#4a5a6a] whitespace-pre-wrap break-words leading-relaxed mb-3 line-clamp-2">
+                        <p className="text-sm text-[var(--accent-ink)] whitespace-pre-wrap break-words leading-relaxed mb-3 line-clamp-2">
                           {act.content}
                         </p>
                       )}
 
-                      <div className="flex flex-wrap gap-3 text-[11px] text-[#7a8a9a] mb-3">
+                      <div className="flex flex-wrap gap-3 text-[11px] text-[var(--accent-muted)] mb-3">
                         {act.activity_time && (
                           <span className="flex items-center gap-1"><Icon name="clock" className="w-3 h-3" />{formatTime(act.activity_time)}</span>
                         )}
                         <span className="flex items-center gap-1"><Icon name="users" className="w-3 h-3" />{act.signups.length}/{act.max_people} 人</span>
                       </div>
 
-                      <div className="mt-auto pt-3 border-t border-[#e8eef4] flex items-center justify-between gap-3">
-                        <span className="text-[10px] text-[#7a8a9a] truncate">{act.author_name} 发起</span>
+                      <div className="mt-auto pt-3 border-t border-[var(--accent-soft)] flex items-center justify-between gap-3">
+                        <span className="text-[10px] text-[var(--accent-muted)] truncate">{act.author_name} 发起</span>
                         {isMine ? (
                           confirmDeleteActivity === act.id ? (
                             <button
@@ -654,18 +655,18 @@ export default function PlayPage() {
                                   4000,
                                 )
                               }}
-                              className="flex items-center gap-1 text-[11px] text-[#7a8a9a] hover:text-red-500 transition"
+                              className="flex items-center gap-1 text-[11px] text-[var(--accent-muted)] hover:text-red-500 transition"
                             >
                               <Icon name="trash" className="w-3 h-3" />
                               删除
                             </button>
                           )
                         ) : alreadySigned ? (
-                          <span className="text-[11px] text-[#5a7a9a] font-medium">已参加</span>
+                          <span className="text-[11px] text-[var(--accent)] font-medium">已参加</span>
                         ) : isFull ? (
-                          <span className="text-[11px] text-[#9aa8b4]">已满</span>
+                          <span className="text-[11px] text-[var(--accent-muted)]">已满</span>
                         ) : (
-                          <span className="text-[11px] text-[#5a7a9a] font-medium">点击查看 →</span>
+                          <span className="text-[11px] text-[var(--accent)] font-medium">点击查看 →</span>
                         )}
                       </div>
                       </div>
@@ -688,13 +689,13 @@ export default function PlayPage() {
               <button
                 key={g.key}
                 onClick={() => alert('小程序还在开发中，敬请期待～')}
-                className="rounded-2xl border border-[#d8e0e8] bg-white/90 backdrop-blur p-5 shadow-[0_2px_12px_rgba(90,122,154,0.06)] hover:shadow-[0_8px_24px_rgba(90,122,154,0.12)] hover:-translate-y-0.5 transition-all text-left"
+                className="rounded-2xl border border-[var(--accent-line)] bg-white/90 backdrop-blur p-5 shadow-[0_2px_12px_rgba(90,122,154,0.06)] hover:shadow-[0_8px_24px_rgba(90,122,154,0.12)] hover:-translate-y-0.5 transition-all text-left"
               >
-                <div className="w-10 h-10 rounded-xl bg-[#e8eef4] flex items-center justify-center mb-3">
-                  <Icon name={g.icon} className="w-5 h-5 text-[#5a7a9a]" />
+                <div className="w-10 h-10 rounded-xl bg-[var(--accent-soft)] flex items-center justify-center mb-3">
+                  <Icon name={g.icon} className="w-5 h-5 text-[var(--accent)]" />
                 </div>
-                <p className="text-sm font-semibold text-[#2b3a4a]">{g.name}</p>
-                <p className="text-[11px] text-[#7a8a9a] mt-1">{g.desc}</p>
+                <p className="text-sm font-semibold text-[var(--accent-ink)]">{g.name}</p>
+                <p className="text-[11px] text-[var(--accent-muted)] mt-1">{g.desc}</p>
               </button>
             ))}
           </div>
@@ -706,25 +707,25 @@ export default function PlayPage() {
             <div className="flex items-start justify-between gap-3 mb-4">
               <div className="flex items-start gap-3 flex-1 min-w-0">
                 {detailActivity.type_icon && (
-                  <div className="w-10 h-10 rounded-xl bg-[#e8eef4] flex items-center justify-center text-lg flex-shrink-0">
+                  <div className="w-10 h-10 rounded-xl bg-[var(--accent-soft)] flex items-center justify-center text-lg flex-shrink-0">
                     {detailActivity.type_icon}
                   </div>
                 )}
                 <div className="flex-1 min-w-0">
-                  {detailActivity.type_name && <p className="text-[10px] text-[#7a8a9a] tracking-wide">{detailActivity.type_name}</p>}
-                  <h2 className="text-lg font-semibold text-[#2b3a4a] mt-0.5 break-words">{detailActivity.title}</h2>
+                  {detailActivity.type_name && <p className="text-[10px] text-[var(--accent-muted)] tracking-wide">{detailActivity.type_name}</p>}
+                  <h2 className="text-lg font-semibold text-[var(--accent-ink)] mt-0.5 break-words">{detailActivity.title}</h2>
                 </div>
               </div>
-              <button onClick={() => setDetailActivity(null)} className="text-[#7a8a9a] hover:text-[#2b3a4a] p-1">
+              <button onClick={() => setDetailActivity(null)} className="text-[var(--accent-muted)] hover:text-[var(--accent-ink)] p-1">
                 <Icon name="x" className="w-5 h-5" />
               </button>
             </div>
 
             {detailActivity.content && (
-              <p className="text-sm text-[#4a5a6a] whitespace-pre-wrap break-words leading-relaxed mb-4">{detailActivity.content}</p>
+              <p className="text-sm text-[var(--accent-ink)] whitespace-pre-wrap break-words leading-relaxed mb-4">{detailActivity.content}</p>
             )}
 
-            <div className="flex flex-wrap gap-3 text-xs text-[#7a8a9a] mb-5">
+            <div className="flex flex-wrap gap-3 text-xs text-[var(--accent-muted)] mb-5">
               {detailActivity.activity_time && (
                 <span className="flex items-center gap-1"><Icon name="clock" className="w-3.5 h-3.5" />{formatTime(detailActivity.activity_time)}</span>
               )}
@@ -732,29 +733,29 @@ export default function PlayPage() {
             </div>
 
             <div className="mb-5">
-              <p className="text-xs text-[#7a8a9a] mb-2">发起人</p>
+              <p className="text-xs text-[var(--accent-muted)] mb-2">发起人</p>
               <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-full bg-[#e8eef4] flex items-center justify-center overflow-hidden flex-shrink-0">
-                  {detailActivity.author_avatar ? <img src={detailActivity.author_avatar} alt="" className="w-full h-full object-cover" /> : <span className="text-xs text-[#5a7a9a]">{detailActivity.author_name[0]}</span>}
+                <div className="w-8 h-8 rounded-full bg-[var(--accent-soft)] flex items-center justify-center overflow-hidden flex-shrink-0">
+                  {detailActivity.author_avatar ? <img src={detailActivity.author_avatar} alt="" className="w-full h-full object-cover" /> : <span className="text-xs text-[var(--accent)]">{detailActivity.author_name[0]}</span>}
                 </div>
-                <span className="text-sm text-[#2b3a4a]">{detailActivity.author_name}</span>
+                <span className="text-sm text-[var(--accent-ink)]">{detailActivity.author_name}</span>
               </div>
             </div>
 
             <div className="mb-5">
-              <p className="text-xs text-[#7a8a9a] mb-2">已报名（{detailActivity.signups.length}/{detailActivity.max_people}）</p>
+              <p className="text-xs text-[var(--accent-muted)] mb-2">已报名（{detailActivity.signups.length}/{detailActivity.max_people}）</p>
               {detailActivity.signups.length === 0 ? (
-                <p className="text-xs text-[#9aa8b4]">还没有人报名</p>
+                <p className="text-xs text-[var(--accent-muted)]">还没有人报名</p>
               ) : (
                 <div className="space-y-2">
                   {detailActivity.signups.map((s) => (
                     <div key={s.user_id} className="flex items-center gap-2">
-                      <div className="w-6 h-6 rounded-full bg-[#e8eef4] flex items-center justify-center overflow-hidden flex-shrink-0">
-                        {s.user_avatar ? <img src={s.user_avatar} alt="" className="w-full h-full object-cover" /> : <span className="text-[10px] text-[#5a7a9a]">{s.user_name[0]}</span>}
+                      <div className="w-6 h-6 rounded-full bg-[var(--accent-soft)] flex items-center justify-center overflow-hidden flex-shrink-0">
+                        {s.user_avatar ? <img src={s.user_avatar} alt="" className="w-full h-full object-cover" /> : <span className="text-[10px] text-[var(--accent)]">{s.user_name[0]}</span>}
                       </div>
-                      <span className="text-xs text-[#4a5a6a]">
+                      <span className="text-xs text-[var(--accent-ink)]">
                         {s.user_name}
-                        {s.user_id === detailActivity.author_id && <span className="text-[10px] text-[#7a8a9a] ml-1">（发起人）</span>}
+                        {s.user_id === detailActivity.author_id && <span className="text-[10px] text-[var(--accent-muted)] ml-1">（发起人）</span>}
                       </span>
                     </div>
                   ))}
@@ -793,17 +794,17 @@ export default function PlayPage() {
                 <button
                   onClick={() => handleSignup(detailActivity)}
                   disabled={signingUp === detailActivity.id}
-                  className="flex-1 py-2.5 rounded-xl border border-[#5a7a9a] text-[#5a7a9a] text-sm font-medium hover:bg-[#e8eef4] transition"
+                  className="flex-1 py-2.5 rounded-xl border border-[var(--accent)] text-[var(--accent)] text-sm font-medium hover:bg-[var(--accent-soft)] transition"
                 >
                   {signingUp === detailActivity.id ? '...' : '取消报名'}
                 </button>
               ) : detailActivity.signups.length >= detailActivity.max_people ? (
-                <div className="flex-1 text-center py-2.5 rounded-xl bg-[#e8eef4] text-xs text-[#9aa8b4]">已满</div>
+                <div className="flex-1 text-center py-2.5 rounded-xl bg-[var(--accent-soft)] text-xs text-[var(--accent-muted)]">已满</div>
               ) : (
                 <button
                   onClick={() => handleSignup(detailActivity)}
                   disabled={signingUp === detailActivity.id}
-                  className="flex-1 py-2.5 rounded-xl bg-gradient-to-r from-[#6a8aaa] to-[#5a7a9a] text-white text-sm font-medium hover:shadow-[0_4px_16px_rgba(90,122,154,0.3)] transition"
+                  className="flex-1 py-2.5 rounded-xl bg-gradient-to-r from-[var(--accent-light)] to-[var(--accent)] text-white text-sm font-medium hover:shadow-[0_4px_16px_rgba(90,122,154,0.3)] transition"
                 >
                   {signingUp === detailActivity.id ? '...' : '我要参加'}
                 </button>
@@ -814,7 +815,7 @@ export default function PlayPage() {
                   type="button"
                   disabled={withdrawing}
                   onClick={() => void handleWithdrawReport()}
-                  className="px-4 py-2.5 rounded-xl border border-[#d8e0e8] text-[#7a8a9a] text-sm hover:bg-[#eef2f5] transition flex items-center gap-1.5 disabled:opacity-50"
+                  className="px-4 py-2.5 rounded-xl border border-[var(--accent-line)] text-[var(--accent-muted)] text-sm hover:bg-[var(--accent-soft)] transition flex items-center gap-1.5 disabled:opacity-50"
                 >
                   <Icon name="x" className="w-3.5 h-3.5" />
                   {withdrawing ? '撤回中…' : '撤回举报'}
@@ -823,7 +824,7 @@ export default function PlayPage() {
                 <button
                   type="button"
                   onClick={() => setShowReportModal(true)}
-                  className="px-4 py-2.5 rounded-xl border border-[#d8e0e8] text-[#7a8a9a] text-sm hover:bg-[#eef2f5] transition flex items-center gap-1.5"
+                  className="px-4 py-2.5 rounded-xl border border-[var(--accent-line)] text-[var(--accent-muted)] text-sm hover:bg-[var(--accent-soft)] transition flex items-center gap-1.5"
                 >
                   <Icon name="alert" className="w-3.5 h-3.5" />举报
                 </button>
@@ -836,8 +837,8 @@ export default function PlayPage() {
       {showReportModal && detailActivity && (
         <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-[60] flex items-center justify-center px-4" onClick={() => setShowReportModal(false)}>
           <form onSubmit={handleReport} className="bg-white rounded-3xl w-full max-w-md p-6 shadow-2xl" onClick={(e) => e.stopPropagation()}>
-            <h2 className="text-lg font-semibold text-[#2b3a4a] mb-1">举报这个活动</h2>
-            <p className="text-xs text-[#7a8a9a] mb-4">告诉我们原因，站主会看</p>
+            <h2 className="text-lg font-semibold text-[var(--accent-ink)] mb-1">举报这个活动</h2>
+            <p className="text-xs text-[var(--accent-muted)] mb-4">告诉我们原因，站主会看</p>
 
             <textarea
               value={reportReason}
@@ -846,7 +847,7 @@ export default function PlayPage() {
               rows={3}
               maxLength={200}
               autoFocus
-              className="w-full px-4 py-3 rounded-xl border border-[#d8e0e8] bg-[#f7fafc] text-sm resize-none focus:outline-none focus:border-[#5a7a9a] focus:ring-2 focus:ring-[#5a7a9a]/10 transition mb-4"
+              className="w-full px-4 py-3 rounded-xl border border-[var(--accent-line)] bg-[var(--accent-soft)] text-sm resize-none focus:outline-none focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent)]/10 transition mb-4"
             />
 
             {reportMessage && (
@@ -854,8 +855,8 @@ export default function PlayPage() {
             )}
 
             <div className="flex gap-2 justify-end">
-              <button type="button" onClick={() => { setShowReportModal(false); setReportReason(''); setReportMessage('') }} className="px-5 py-2 rounded-xl text-sm text-[#7a8a9a] hover:bg-[#eef2f5] transition">取消</button>
-              <button type="submit" disabled={reporting || !reportReason.trim()} className="px-5 py-2 rounded-xl bg-gradient-to-r from-[#6a8aaa] to-[#5a7a9a] text-white text-sm font-medium hover:shadow-[0_6px_20px_rgba(90,122,154,0.3)] transition-all disabled:opacity-50">
+              <button type="button" onClick={() => { setShowReportModal(false); setReportReason(''); setReportMessage('') }} className="px-5 py-2 rounded-xl text-sm text-[var(--accent-muted)] hover:bg-[var(--accent-soft)] transition">取消</button>
+              <button type="submit" disabled={reporting || !reportReason.trim()} className="px-5 py-2 rounded-xl bg-gradient-to-r from-[var(--accent-light)] to-[var(--accent)] text-white text-sm font-medium hover:shadow-[0_6px_20px_rgba(90,122,154,0.3)] transition-all disabled:opacity-50">
                 {reporting ? '提交中...' : '提交'}
               </button>
             </div>
@@ -866,10 +867,10 @@ export default function PlayPage() {
       {showPostModal && (
         <div className="fixed inset-0 bg-black/30 backdrop-blur-sm z-50 flex items-center justify-center px-4" onClick={() => setShowPostModal(false)}>
           <form onSubmit={handlePost} className="bg-white rounded-3xl w-full max-w-lg p-6 shadow-2xl" onClick={(e) => e.stopPropagation()}>
-            <h2 className="text-lg font-semibold text-[#2b3a4a] mb-4">发活动</h2>
+            <h2 className="text-lg font-semibold text-[var(--accent-ink)] mb-4">发活动</h2>
 
             <div className="mb-3">
-              <label className="block text-xs text-[#5a6a7a] mb-1.5 tracking-wide">活动标题</label>
+              <label className="block text-xs text-[var(--accent-muted)] mb-1.5 tracking-wide">活动标题</label>
               <input
                 type="text"
                 value={newTitle}
@@ -877,44 +878,44 @@ export default function PlayPage() {
                 placeholder="比如：今晚打 CS"
                 maxLength={30}
                 autoFocus
-                className="w-full px-4 py-2.5 rounded-xl border border-[#d8e0e8] bg-[#f7fafc] text-sm focus:outline-none focus:border-[#5a7a9a] focus:ring-2 focus:ring-[#5a7a9a]/10 transition"
+                className="w-full px-4 py-2.5 rounded-xl border border-[var(--accent-line)] bg-[var(--accent-soft)] text-sm focus:outline-none focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent)]/10 transition"
               />
             </div>
 
             <div className="mb-3">
-              <label className="block text-xs text-[#5a6a7a] mb-1.5 tracking-wide">描述</label>
+              <label className="block text-xs text-[var(--accent-muted)] mb-1.5 tracking-wide">描述</label>
               <textarea
                 value={newContent}
                 onChange={(e) => setNewContent(e.target.value)}
                 placeholder="说清楚要做什么，缺几个人"
                 rows={3}
                 maxLength={200}
-                className="w-full px-4 py-2.5 rounded-xl border border-[#d8e0e8] bg-[#f7fafc] text-sm resize-none focus:outline-none focus:border-[#5a7a9a] focus:ring-2 focus:ring-[#5a7a9a]/10 transition"
+                className="w-full px-4 py-2.5 rounded-xl border border-[var(--accent-line)] bg-[var(--accent-soft)] text-sm resize-none focus:outline-none focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent)]/10 transition"
               />
             </div>
 
             <div className="grid grid-cols-2 gap-3 mb-3">
               <div>
-                <label className="block text-xs text-[#5a6a7a] mb-1.5 tracking-wide">时间</label>
-                <input type="datetime-local" value={newTime} onChange={(e) => setNewTime(e.target.value)} className="w-full px-4 py-2.5 rounded-xl border border-[#d8e0e8] bg-[#f7fafc] text-sm focus:outline-none focus:border-[#5a7a9a] focus:ring-2 focus:ring-[#5a7a9a]/10 transition" />
+                <label className="block text-xs text-[var(--accent-muted)] mb-1.5 tracking-wide">时间</label>
+                <input type="datetime-local" value={newTime} onChange={(e) => setNewTime(e.target.value)} className="w-full px-4 py-2.5 rounded-xl border border-[var(--accent-line)] bg-[var(--accent-soft)] text-sm focus:outline-none focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent)]/10 transition" />
               </div>
               <div>
-                <label className="block text-xs text-[#5a6a7a] mb-1.5 tracking-wide">人数上限</label>
-                <input type="number" value={newMaxPeople} onChange={(e) => setNewMaxPeople(parseInt(e.target.value) || 5)} min={2} max={50} className="w-full px-4 py-2.5 rounded-xl border border-[#d8e0e8] bg-[#f7fafc] text-sm focus:outline-none focus:border-[#5a7a9a] focus:ring-2 focus:ring-[#5a7a9a]/10 transition" />
+                <label className="block text-xs text-[var(--accent-muted)] mb-1.5 tracking-wide">人数上限</label>
+                <input type="number" value={newMaxPeople} onChange={(e) => setNewMaxPeople(parseInt(e.target.value) || 5)} min={2} max={50} className="w-full px-4 py-2.5 rounded-xl border border-[var(--accent-line)] bg-[var(--accent-soft)] text-sm focus:outline-none focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent)]/10 transition" />
               </div>
             </div>
 
             <div className="mb-5">
-              <label className="block text-xs text-[#5a6a7a] mb-1.5 tracking-wide">类型（可不选）</label>
-              <select value={newTypeId} onChange={(e) => setNewTypeId(e.target.value)} className="w-full px-4 py-2.5 rounded-xl border border-[#d8e0e8] bg-[#f7fafc] text-sm focus:outline-none focus:border-[#5a7a9a] focus:ring-2 focus:ring-[#5a7a9a]/10 transition">
+              <label className="block text-xs text-[var(--accent-muted)] mb-1.5 tracking-wide">类型（可不选）</label>
+              <select value={newTypeId} onChange={(e) => setNewTypeId(e.target.value)} className="w-full px-4 py-2.5 rounded-xl border border-[var(--accent-line)] bg-[var(--accent-soft)] text-sm focus:outline-none focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent)]/10 transition">
                 <option value="">无</option>
                 {types.map((t) => (<option key={t.id} value={t.id}>{t.icon} {t.name}</option>))}
               </select>
             </div>
 
             <div className="flex gap-2 justify-end">
-              <button type="button" onClick={() => setShowPostModal(false)} className="px-5 py-2 rounded-xl text-sm text-[#7a8a9a] hover:bg-[#eef2f5] transition">取消</button>
-              <button type="submit" disabled={posting || !newTitle.trim()} className="px-5 py-2 rounded-xl bg-gradient-to-r from-[#6a8aaa] to-[#5a7a9a] text-white text-sm font-medium hover:shadow-[0_6px_20px_rgba(90,122,154,0.3)] transition-all disabled:opacity-50">
+              <button type="button" onClick={() => setShowPostModal(false)} className="px-5 py-2 rounded-xl text-sm text-[var(--accent-muted)] hover:bg-[var(--accent-soft)] transition">取消</button>
+              <button type="submit" disabled={posting || !newTitle.trim()} className="px-5 py-2 rounded-xl bg-gradient-to-r from-[var(--accent-light)] to-[var(--accent)] text-white text-sm font-medium hover:shadow-[0_6px_20px_rgba(90,122,154,0.3)] transition-all disabled:opacity-50">
                 {posting ? '发布中...' : '发布'}
               </button>
             </div>
@@ -925,8 +926,8 @@ export default function PlayPage() {
       {showNewTypeModal && (
         <div className="fixed inset-0 bg-black/30 backdrop-blur-sm z-50 flex items-center justify-center px-4" onClick={() => setShowNewTypeModal(false)}>
           <form onSubmit={handleCreateType} className="bg-white rounded-3xl w-full max-w-md p-6 shadow-2xl" onClick={(e) => e.stopPropagation()}>
-            <h2 className="text-lg font-semibold text-[#2b3a4a] mb-1">新建类型</h2>
-            <p className="text-xs text-[#7a8a9a] mb-4">建好后直接生效</p>
+            <h2 className="text-lg font-semibold text-[var(--accent-ink)] mb-1">新建类型</h2>
+            <p className="text-xs text-[var(--accent-muted)] mb-4">建好后直接生效</p>
 
             <input
               type="text"
@@ -935,7 +936,7 @@ export default function PlayPage() {
               placeholder="类型名字"
               maxLength={10}
               autoFocus
-              className="w-full px-4 py-2.5 rounded-xl border border-[#d8e0e8] bg-[#f7fafc] text-sm focus:outline-none focus:border-[#5a7a9a] focus:ring-2 focus:ring-[#5a7a9a]/10 transition mb-4"
+              className="w-full px-4 py-2.5 rounded-xl border border-[var(--accent-line)] bg-[var(--accent-soft)] text-sm focus:outline-none focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent)]/10 transition mb-4"
             />
 
             {createTypeMessage && (
@@ -943,8 +944,8 @@ export default function PlayPage() {
             )}
 
             <div className="flex gap-2 justify-end">
-              <button type="button" onClick={() => { setShowNewTypeModal(false); setNewTypeName(''); setCreateTypeMessage('') }} className="px-5 py-2 rounded-xl text-sm text-[#7a8a9a] hover:bg-[#eef2f5] transition">取消</button>
-              <button type="submit" disabled={creatingType || !newTypeName.trim()} className="px-5 py-2 rounded-xl bg-gradient-to-r from-[#6a8aaa] to-[#5a7a9a] text-white text-sm font-medium hover:shadow-[0_6px_20px_rgba(90,122,154,0.3)] transition-all disabled:opacity-50">
+              <button type="button" onClick={() => { setShowNewTypeModal(false); setNewTypeName(''); setCreateTypeMessage('') }} className="px-5 py-2 rounded-xl text-sm text-[var(--accent-muted)] hover:bg-[var(--accent-soft)] transition">取消</button>
+              <button type="submit" disabled={creatingType || !newTypeName.trim()} className="px-5 py-2 rounded-xl bg-gradient-to-r from-[var(--accent-light)] to-[var(--accent)] text-white text-sm font-medium hover:shadow-[0_6px_20px_rgba(90,122,154,0.3)] transition-all disabled:opacity-50">
                 {creatingType ? '提交中...' : '添加'}
               </button>
             </div>

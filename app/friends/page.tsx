@@ -28,6 +28,7 @@ import { VaultView } from '../../components/vault-view'
 import { PlansView } from '../../components/plans-view'
 import { ImageWall } from '../../components/image-wall'
 import { EmojiPicker } from '../../components/emoji-picker'
+import { pageAccentVars } from '../../components/theme'
 
 type Friend = {
   friendship_id: string
@@ -720,41 +721,41 @@ export default function FriendsPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center" style={pageAccentVars('friends')}>
         <p>加载中...</p>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-[#f7f2ea] relative overflow-hidden">
-      <div className="absolute -top-20 -right-20 w-96 h-96 bg-[#f0b078] opacity-15 rounded-full blur-3xl pointer-events-none"></div>
-      <div className="absolute -bottom-20 -left-20 w-96 h-96 bg-[#d97757] opacity-[0.08] rounded-full blur-3xl pointer-events-none"></div>
+    <div className="min-h-screen bg-[var(--accent-soft)] relative overflow-hidden">
+      <div className="absolute -top-20 -right-20 w-96 h-96 bg-[var(--accent-light)] opacity-15 rounded-full blur-3xl pointer-events-none"></div>
+      <div className="absolute -bottom-20 -left-20 w-96 h-96 bg-[var(--accent)] opacity-[0.08] rounded-full blur-3xl pointer-events-none"></div>
 
       {/* pt-24：顶部空间更大，返回键不会被浏览器顶栏挡住 */}
       <div className="relative max-w-6xl mx-auto px-6 pt-24 pb-8">
         <header className="mb-6">
           <Link
             href="/"
-            className="inline-flex items-center gap-1.5 text-sm text-[#8a827a] hover:text-[#c96447] transition"
+            className="inline-flex items-center gap-1.5 text-sm text-[var(--accent-muted)] hover:text-[var(--accent-deep)] transition"
           >
             ← 返回
           </Link>
           <h1 className="text-3xl font-bold text-[#2b2620] mt-4">小屋</h1>
-          <p className="text-sm text-[#8a827a] mt-1">小屋里，慢慢说</p>
+          <p className="text-sm text-[var(--accent-muted)] mt-1">小屋里，慢慢说</p>
 
-          <div className="flex gap-6 mt-5 border-b border-[#ece6dd]">
+          <div className="flex gap-6 mt-5 border-b border-[var(--accent-line)]">
             <button
               onClick={() => setMode('friends')}
               className={`pb-2.5 text-sm transition flex items-center gap-1.5 ${
                 mode === 'friends'
-                  ? 'border-b-2 border-[#d97757] text-[#d97757] font-medium'
-                  : 'text-[#8a827a] hover:text-[#2b2620]'
+                  ? 'border-b-2 border-[var(--accent)] text-[var(--accent)] font-medium'
+                  : 'text-[var(--accent-muted)] hover:text-[#2b2620]'
               }`}
             >
               好友
               {unread.total > 0 && (
-                <span className="min-w-[16px] h-4 px-1 rounded-full bg-[#d97757] text-white text-[10px] leading-4 text-center font-medium">
+                <span className="min-w-[16px] h-4 px-1 rounded-full bg-[var(--accent)] text-white text-[10px] leading-4 text-center font-medium">
                   {unread.total > 99 ? '99+' : unread.total}
                 </span>
               )}
@@ -763,16 +764,16 @@ export default function FriendsPage() {
               onClick={() => setMode('moments')}
               className={`pb-2.5 text-sm transition flex items-center gap-1.5 ${
                 mode === 'moments'
-                  ? 'border-b-2 border-[#d97757] text-[#d97757] font-medium'
-                  : 'text-[#8a827a] hover:text-[#2b2620]'
+                  ? 'border-b-2 border-[var(--accent)] text-[var(--accent)] font-medium'
+                  : 'text-[var(--accent-muted)] hover:text-[#2b2620]'
               }`}
             >
               朋友圈
               {/* 半明显的点：有朋友发了新动态 */}
               {momentsHasNew && (
                 <span className="relative flex h-2 w-2">
-                  <span className="absolute inline-flex h-full w-full rounded-full bg-[#d97757] opacity-60 animate-ping" />
-                  <span className="relative inline-flex h-2 w-2 rounded-full bg-[#d97757]" />
+                  <span className="absolute inline-flex h-full w-full rounded-full bg-[var(--accent)] opacity-60 animate-ping" />
+                  <span className="relative inline-flex h-2 w-2 rounded-full bg-[var(--accent)]" />
                 </span>
               )}
             </button>
@@ -780,8 +781,8 @@ export default function FriendsPage() {
               onClick={() => setMode('vault')}
               className={`pb-2.5 text-sm transition flex items-center gap-1.5 ${
                 mode === 'vault'
-                  ? 'border-b-2 border-[#d97757] text-[#d97757] font-medium'
-                  : 'text-[#8a827a] hover:text-[#2b2620]'
+                  ? 'border-b-2 border-[var(--accent)] text-[var(--accent)] font-medium'
+                  : 'text-[var(--accent-muted)] hover:text-[#2b2620]'
               }`}
             >
               储物箱
@@ -790,8 +791,8 @@ export default function FriendsPage() {
               onClick={() => setMode('plans')}
               className={`pb-2.5 text-sm transition flex items-center gap-1.5 ${
                 mode === 'plans'
-                  ? 'border-b-2 border-[#d97757] text-[#d97757] font-medium'
-                  : 'text-[#8a827a] hover:text-[#2b2620]'
+                  ? 'border-b-2 border-[var(--accent)] text-[var(--accent)] font-medium'
+                  : 'text-[var(--accent-muted)] hover:text-[#2b2620]'
               }`}
             >
               计划书
@@ -803,14 +804,14 @@ export default function FriendsPage() {
           <div className="flex gap-5 h-[calc(100vh-320px)] min-h-[500px]">            <aside className={`w-72 flex-shrink-0 flex-col gap-3 ${showChatOnMobile ? 'hidden md:flex' : 'flex'}`}>
               <button
                 onClick={() => setShowAdd(!showAdd)}
-                className="w-full py-2.5 rounded-2xl bg-gradient-to-r from-[#e8a87c] to-[#d97757] text-white text-sm font-medium hover:shadow-[0_6px_20px_rgba(217,119,87,0.3)] transition-all flex items-center justify-center gap-2 flex-shrink-0"
+                className="w-full py-2.5 rounded-2xl bg-gradient-to-r from-[var(--accent-light)] to-[var(--accent)] text-white text-sm font-medium hover:shadow-[0_6px_20px_rgba(217,119,87,0.3)] transition-all flex items-center justify-center gap-2 flex-shrink-0"
               >
                 <IconPlus className="w-4 h-4" />
                 {showAdd ? '收起' : '加好友'}
               </button>
 
               {showAdd && (
-                <div className="rounded-2xl border border-[#f0e4d4] bg-white/80 backdrop-blur p-4 shadow-[0_2px_12px_rgba(217,119,87,0.04)] flex-shrink-0">
+                <div className="rounded-2xl border border-[var(--accent-line)] bg-white/80 backdrop-blur p-4 shadow-[0_2px_12px_rgba(217,119,87,0.04)] flex-shrink-0">
                   <div className="flex gap-2">
                     <input
                       type="text"
@@ -818,12 +819,12 @@ export default function FriendsPage() {
                       onChange={(e) => setSearchInput(e.target.value)}
                       onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
                       placeholder="用户名或昵称"
-                      className="flex-1 px-3 py-2 rounded-xl border border-[#ece6dd] bg-[#fefcf9] text-xs focus:outline-none focus:border-[#d97757] focus:ring-2 focus:ring-[#d97757]/10 transition"
+                      className="flex-1 px-3 py-2 rounded-xl border border-[var(--accent-line)] bg-[var(--accent-soft)] text-xs focus:outline-none focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent)]/10 transition"
                     />
                     <button
                       onClick={handleSearch}
                       disabled={searching}
-                      className="px-3 py-2 rounded-xl bg-[#d97757] text-white text-xs hover:bg-[#c96447] transition disabled:opacity-60"
+                      className="px-3 py-2 rounded-xl bg-[var(--accent)] text-white text-xs hover:bg-[var(--accent-deep)] transition disabled:opacity-60"
                     >
                       {searching ? '...' : '搜'}
                     </button>
@@ -834,13 +835,13 @@ export default function FriendsPage() {
                   )}
 
                   {searchResult && (
-                    <div className="mt-3 flex items-center justify-between p-2 rounded-xl bg-[#fefaf5]">
+                    <div className="mt-3 flex items-center justify-between p-2 rounded-xl bg-[var(--accent-soft)]">
                       <div className="flex items-center gap-2 min-w-0">
-                        <div className="w-7 h-7 rounded-full bg-[#fae0cc] flex items-center justify-center overflow-hidden flex-shrink-0">
+                        <div className="w-7 h-7 rounded-full bg-[var(--accent-light)] flex items-center justify-center overflow-hidden flex-shrink-0">
                           {searchResult.avatar_url ? (
                             <img src={searchResult.avatar_url} alt="" className="w-full h-full object-cover" />
                           ) : (
-                            <span className="text-[10px] text-[#c96447]">
+                            <span className="text-[10px] text-[var(--accent-deep)]">
                               {(searchResult.nickname || searchResult.username)[0]}
                             </span>
                           )}
@@ -851,7 +852,7 @@ export default function FriendsPage() {
                       </div>
                       <button
                         onClick={() => handleAddFriend(searchResult.id)}
-                        className="px-2.5 py-1 rounded-full bg-[#d97757] text-white text-[10px] hover:bg-[#c96447] transition flex-shrink-0"
+                        className="px-2.5 py-1 rounded-full bg-[var(--accent)] text-white text-[10px] hover:bg-[var(--accent-deep)] transition flex-shrink-0"
                       >
                         加
                       </button>
@@ -861,18 +862,18 @@ export default function FriendsPage() {
               )}
 
               {shownRequests.length > 0 && (
-                <div className="rounded-2xl border border-[#f0e4d4] bg-gradient-to-br from-[#fff8ef] to-[#fbeee4] p-3 flex-shrink-0">
-                  <p className="text-[10px] text-[#c96447] font-medium mb-2 tracking-wide">
+                <div className="rounded-2xl border border-[var(--accent-line)] bg-gradient-to-br from-[var(--accent-soft)] to-[var(--accent-soft)] p-3 flex-shrink-0">
+                  <p className="text-[10px] text-[var(--accent-deep)] font-medium mb-2 tracking-wide">
                     新的招呼 · {shownRequests.length}
                   </p>
                   <div className="space-y-2">
                     {shownRequests.map((r) => (
                       <div key={r.friendship_id} className="flex items-center gap-2">
-                        <div className="w-7 h-7 rounded-full bg-[#fae0cc] flex items-center justify-center overflow-hidden flex-shrink-0">
+                        <div className="w-7 h-7 rounded-full bg-[var(--accent-light)] flex items-center justify-center overflow-hidden flex-shrink-0">
                           {r.avatar_url ? (
                             <img src={r.avatar_url} alt="" className="w-full h-full object-cover" />
                           ) : (
-                            <span className="text-[10px] text-[#c96447]">
+                            <span className="text-[10px] text-[var(--accent-deep)]">
                               {(r.nickname || r.username)[0]}
                             </span>
                           )}
@@ -880,13 +881,13 @@ export default function FriendsPage() {
                         <p className="text-xs flex-1 truncate">{r.nickname || r.username}</p>
                         <button
                           onClick={() => handleAccept(r.friendship_id)}
-                          className="text-[10px] px-2 py-0.5 rounded-full bg-[#d97757] text-white"
+                          className="text-[10px] px-2 py-0.5 rounded-full bg-[var(--accent)] text-white"
                         >
                           同意
                         </button>
                         <button
                           onClick={() => handleReject(r.friendship_id)}
-                          className="text-[10px] px-2 py-0.5 rounded-full bg-white text-[#a88868] border border-[#ece6dd]"
+                          className="text-[10px] px-2 py-0.5 rounded-full bg-white text-[var(--accent-muted)] border border-[var(--accent-line)]"
                         >
                           拒
                         </button>
@@ -896,15 +897,15 @@ export default function FriendsPage() {
                 </div>
               )}
 
-              <div className="rounded-2xl border border-[#ece6dd] bg-white/80 backdrop-blur shadow-[0_2px_12px_rgba(217,119,87,0.04)] overflow-hidden flex-1 overflow-y-auto">
-                <div className="px-4 py-3 border-b border-[#f0e4d4]">
-                  <p className="text-[10px] text-[#a88868] tracking-wide">
+              <div className="rounded-2xl border border-[var(--accent-line)] bg-white/80 backdrop-blur shadow-[0_2px_12px_rgba(217,119,87,0.04)] overflow-hidden flex-1 overflow-y-auto">
+                <div className="px-4 py-3 border-b border-[var(--accent-line)]">
+                  <p className="text-[10px] text-[var(--accent-muted)] tracking-wide">
                     我的好友 · {shownFriends.length}
                   </p>
                 </div>
                 {shownFriends.length === 0 ? (
                   <div className="p-6 text-center">
-                    <p className="text-xs text-[#a88868]">还没有好友</p>
+                    <p className="text-xs text-[var(--accent-muted)]">还没有好友</p>
                   </div>
                 ) : (
                   <div>
@@ -915,15 +916,15 @@ export default function FriendsPage() {
                         <div key={f.friendship_id} className="relative">
                           <button
                             onClick={() => openFriend(f)}
-                            className={`w-full text-left px-4 py-3 flex items-center gap-3 hover:bg-[#fef7f2] transition border-b border-[#f7f2ea] last:border-b-0 ${
-                              currentFriend?.friend_id === f.friend_id ? 'bg-[#fef7f2]' : ''
+                            className={`w-full text-left px-4 py-3 flex items-center gap-3 hover:bg-[var(--accent-soft)] transition border-b border-[var(--accent-soft)] last:border-b-0 ${
+                              currentFriend?.friend_id === f.friend_id ? 'bg-[var(--accent-soft)]' : ''
                             }`}
                           >
-                            <div className="w-9 h-9 rounded-full bg-gradient-to-br from-[#fae0cc] to-[#f9d5ba] flex items-center justify-center overflow-hidden flex-shrink-0">
+                            <div className="w-9 h-9 rounded-full bg-gradient-to-br from-[var(--accent-light)] to-[var(--accent-light)] flex items-center justify-center overflow-hidden flex-shrink-0">
                               {f.avatar_url ? (
                                 <img src={f.avatar_url} alt="" className="w-full h-full object-cover" />
                               ) : (
-                                <span className="text-xs text-[#c96447] font-semibold">
+                                <span className="text-xs text-[var(--accent-deep)] font-semibold">
                                   {(f.nickname || f.username)[0]}
                                 </span>
                               )}
@@ -933,14 +934,14 @@ export default function FriendsPage() {
                                 {f.nickname || f.username}
                               </p>
                               {f.signature && (
-                                <p className="text-[10px] text-[#a88868] truncate">{f.signature}</p>
+                                <p className="text-[10px] text-[var(--accent-muted)] truncate">{f.signature}</p>
                               )}
                             </div>
                           </button>
 
                           {/* 这个好友的未读私信条数：右下角 */}
                           {unreadCount > 0 && (
-                            <span className="pointer-events-none absolute bottom-2 right-3 min-w-[16px] h-4 px-1 rounded-full bg-[#d97757] text-white text-[10px] leading-4 text-center font-medium">
+                            <span className="pointer-events-none absolute bottom-2 right-3 min-w-[16px] h-4 px-1 rounded-full bg-[var(--accent)] text-white text-[10px] leading-4 text-center font-medium">
                               {unreadCount > 99 ? '99+' : unreadCount}
                             </span>
                           )}
@@ -953,18 +954,18 @@ export default function FriendsPage() {
             </aside>
 
             <main className={`flex-1 flex-col min-w-0 ${showChatOnMobile ? 'flex' : 'hidden md:flex'}`}>
-              <div className="rounded-2xl border border-[#ece6dd] bg-white/80 backdrop-blur shadow-[0_2px_12px_rgba(217,119,87,0.04)] overflow-hidden flex-1 flex flex-col">
-                <div className="px-5 py-3 border-b border-[#f0e4d4] flex items-center gap-3 flex-shrink-0">
+              <div className="rounded-2xl border border-[var(--accent-line)] bg-white/80 backdrop-blur shadow-[0_2px_12px_rgba(217,119,87,0.04)] overflow-hidden flex-1 flex flex-col">
+                <div className="px-5 py-3 border-b border-[var(--accent-line)] flex items-center gap-3 flex-shrink-0">
                   {currentFriend && (
                     <>
                       <button
                         onClick={() => setShowChatOnMobile(false)}
-                        className="md:hidden text-[#8a827a] hover:text-[#c96447] mr-1"
+                        className="md:hidden text-[var(--accent-muted)] hover:text-[var(--accent-deep)] mr-1"
                       >
                         ←
                       </button>
-                      <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#fae0cc] to-[#f9d5ba] flex items-center justify-center flex-shrink-0">
-                        <span className="text-sm text-[#c96447] font-semibold">
+                      <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[var(--accent-light)] to-[var(--accent-light)] flex items-center justify-center flex-shrink-0">
+                        <span className="text-sm text-[var(--accent-deep)] font-semibold">
                           {friendName[0]}
                         </span>
                       </div>
@@ -978,17 +979,17 @@ export default function FriendsPage() {
                 <div className="flex-1 overflow-y-auto px-5 py-4">
                   {!currentFriend ? (
                     <div className="h-full flex flex-col items-center justify-center text-center">
-                      <div className="w-14 h-14 rounded-full bg-[#fdf0e6] flex items-center justify-center mb-3">
-                        <svg className="w-6 h-6 text-[#d97757]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6">
+                      <div className="w-14 h-14 rounded-full bg-[var(--accent-soft)] flex items-center justify-center mb-3">
+                        <svg className="w-6 h-6 text-[var(--accent)]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6">
                           <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
                         </svg>
                       </div>
-                      <p className="text-sm text-[#a88868]">选一个好友开始聊天</p>
+                      <p className="text-sm text-[var(--accent-muted)]">选一个好友开始聊天</p>
                     </div>
                   ) : shownMessages.length === 0 ? (
                     <div className="h-full flex flex-col items-center justify-center text-center">
-                      <p className="text-sm text-[#a88868]">还没有消息</p>
-                      <p className="text-xs text-[#b0a89e] mt-1">说点什么吧</p>
+                      <p className="text-sm text-[var(--accent-muted)]">还没有消息</p>
+                      <p className="text-xs text-[var(--accent-muted)] mt-1">说点什么吧</p>
                     </div>
                   ) : (
                     <div className="space-y-2.5">
@@ -1002,8 +1003,8 @@ export default function FriendsPage() {
                             <div
                               className={`max-w-[70%] px-4 py-2.5 shadow-[0_4px_16px_rgba(217,119,87,0.08)] ${
                                 isMine
-                                  ? 'bg-gradient-to-br from-[#e8a87c] to-[#d97757] text-white rounded-[18px] rounded-tr-[4px]'
-                                  : 'bg-white text-[#2b2620] rounded-[18px] rounded-tl-[4px] border border-[#f0e4d4]'
+                                  ? 'bg-gradient-to-br from-[var(--accent-light)] to-[var(--accent)] text-white rounded-[18px] rounded-tr-[4px]'
+                                  : 'bg-white text-[#2b2620] rounded-[18px] rounded-tl-[4px] border border-[var(--accent-line)]'
                               }`}
                             >
                               <p className="text-sm whitespace-pre-wrap break-words leading-relaxed">
@@ -1011,7 +1012,7 @@ export default function FriendsPage() {
                               </p>
                               <p
                                 className={`text-[10px] mt-1 ${
-                                  isMine ? 'text-white/60' : 'text-[#b0a89e]'
+                                  isMine ? 'text-white/60' : 'text-[var(--accent-muted)]'
                                 }`}
                               >
                                 {new Date(m.created_at).toLocaleTimeString('zh-CN', {
@@ -1031,21 +1032,21 @@ export default function FriendsPage() {
                 {currentFriend && (
                   <form
                     onSubmit={handleSend}
-                    className="border-t border-[#f0e4d4] px-5 py-3 flex gap-2 flex-shrink-0"
+                    className="border-t border-[var(--accent-line)] px-5 py-3 flex gap-2 flex-shrink-0"
                   >
                     <input
                       type="text"
                       value={content}
                       onChange={(e) => setContent(e.target.value)}
                       placeholder="说点什么... 也可以发个表情"
-                      className="flex-1 px-4 py-2.5 rounded-full border border-[#ece6dd] bg-[#fefcf9] text-sm focus:outline-none focus:border-[#d97757] focus:ring-2 focus:ring-[#d97757]/10 transition"
+                      className="flex-1 px-4 py-2.5 rounded-full border border-[var(--accent-line)] bg-[var(--accent-soft)] text-sm focus:outline-none focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent)]/10 transition"
                       maxLength={500}
                     />
                     <EmojiPicker onPick={(emoji) => setContent((cur) => cur + emoji)} align="right" />
                     <button
                       type="submit"
                       disabled={sending || !content.trim()}
-                      className="w-11 h-11 rounded-full bg-gradient-to-r from-[#e8a87c] to-[#d97757] text-white flex items-center justify-center hover:shadow-[0_6px_20px_rgba(217,119,87,0.3)] transition-all disabled:opacity-50 flex-shrink-0"
+                      className="w-11 h-11 rounded-full bg-gradient-to-r from-[var(--accent-light)] to-[var(--accent)] text-white flex items-center justify-center hover:shadow-[0_6px_20px_rgba(217,119,87,0.3)] transition-all disabled:opacity-50 flex-shrink-0"
                     >
                       <IconSend className="w-4 h-4" />
                     </button>
@@ -1058,14 +1059,14 @@ export default function FriendsPage() {
           <div className="max-w-2xl mx-auto">
             <form
               onSubmit={handlePostMoment}
-              className="rounded-2xl border border-[#f0e4d4] bg-white/80 backdrop-blur p-5 mb-5 shadow-[0_2px_12px_rgba(217,119,87,0.04)]"
+              className="rounded-2xl border border-[var(--accent-line)] bg-white/80 backdrop-blur p-5 mb-5 shadow-[0_2px_12px_rgba(217,119,87,0.04)]"
             >
               <textarea
                 value={momentContent}
                 onChange={(e) => setMomentContent(e.target.value)}
                 placeholder="今天有什么想说的？用 #话题# 加标签"
                 rows={3}
-                className="w-full px-4 py-3 rounded-xl border border-[#ece6dd] bg-[#fefcf9] text-sm resize-none focus:outline-none focus:border-[#d97757] focus:ring-2 focus:ring-[#d97757]/10 transition"
+                className="w-full px-4 py-3 rounded-xl border border-[var(--accent-line)] bg-[var(--accent-soft)] text-sm resize-none focus:outline-none focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent)]/10 transition"
                 maxLength={500}
               />
 
@@ -1090,8 +1091,8 @@ export default function FriendsPage() {
                       }}
                       className={`rounded-full px-3 py-1 text-[11px] transition ${
                         visibility === v
-                          ? 'bg-[#d97757] text-white'
-                          : 'border border-[#ece6dd] bg-white text-[#8a827a] hover:border-[#e0a184]'
+                          ? 'bg-[var(--accent)] text-white'
+                          : 'border border-[var(--accent-line)] bg-white text-[var(--accent-muted)] hover:border-[var(--accent-light)]'
                       }`}
                     >
                       {VISIBILITY_LABEL[v]}
@@ -1099,12 +1100,12 @@ export default function FriendsPage() {
                   ))}
                 </div>
 
-                <p className="mt-2 text-[10px] text-[#b0a89e]">{VISIBILITY_HINT[visibility]}</p>
+                <p className="mt-2 text-[10px] text-[var(--accent-muted)]">{VISIBILITY_HINT[visibility]}</p>
 
                 {showPicker && visibility === 'friends' && (
-                  <div className="mt-2 max-h-40 overflow-y-auto rounded-xl border border-[#ece6dd] bg-[#fefcf9] p-3">
+                  <div className="mt-2 max-h-40 overflow-y-auto rounded-xl border border-[var(--accent-line)] bg-[var(--accent-soft)] p-3">
                     {visFriends.length === 0 ? (
-                      <p className="text-[11px] text-[#b0a89e]">还没有好友</p>
+                      <p className="text-[11px] text-[var(--accent-muted)]">还没有好友</p>
                     ) : (
                       visFriends.map((f) => (
                         <label key={f.id} className="flex cursor-pointer items-center gap-2 py-1 text-xs text-[#4a423c]">
@@ -1116,7 +1117,7 @@ export default function FriendsPage() {
                                 e.target.checked ? [...prev, f.id] : prev.filter((id) => id !== f.id),
                               )
                             }
-                            className="accent-[#d97757]"
+                            className="accent-[var(--accent)]"
                           />
                           <span className="truncate">{f.name}</span>
                         </label>
@@ -1126,11 +1127,11 @@ export default function FriendsPage() {
                 )}
 
                 {showPicker && visibility === 'groups' && (
-                  <div className="mt-2 rounded-xl border border-[#ece6dd] bg-[#fefcf9] p-3">
+                  <div className="mt-2 rounded-xl border border-[var(--accent-line)] bg-[var(--accent-soft)] p-3">
                     {visGroups.length === 0 ? (
-                      <p className="text-[11px] leading-relaxed text-[#b0a89e]">
+                      <p className="text-[11px] leading-relaxed text-[var(--accent-muted)]">
                         还没有分组。去{' '}
-                        <Link href="/me/settings" className="text-[#c96447] underline">
+                        <Link href="/me/settings" className="text-[var(--accent-deep)] underline">
                           设置
                         </Link>{' '}
                         里建一个。
@@ -1146,10 +1147,10 @@ export default function FriendsPage() {
                                 e.target.checked ? [...prev, g.id] : prev.filter((id) => id !== g.id),
                               )
                             }
-                            className="accent-[#d97757]"
+                            className="accent-[var(--accent)]"
                           />
                           <span className="truncate">{g.name}</span>
-                          <span className="text-[10px] text-[#b0a89e]">{g.memberIds.length} 人</span>
+                          <span className="text-[10px] text-[var(--accent-muted)]">{g.memberIds.length} 人</span>
                         </label>
                       ))
                     )}
@@ -1160,7 +1161,7 @@ export default function FriendsPage() {
                 <button
                   type="submit"
                   disabled={postingMoment || (!momentContent.trim() && momentImages.length === 0)}
-                  className="px-6 py-2 rounded-xl bg-gradient-to-r from-[#e8a87c] to-[#d97757] text-white text-sm font-medium hover:shadow-[0_6px_20px_rgba(217,119,87,0.3)] transition-all disabled:opacity-50"
+                  className="px-6 py-2 rounded-xl bg-gradient-to-r from-[var(--accent-light)] to-[var(--accent)] text-white text-sm font-medium hover:shadow-[0_6px_20px_rgba(217,119,87,0.3)] transition-all disabled:opacity-50"
                 >
                   {postingMoment ? '发布中...' : '发布'}
                 </button>
@@ -1169,28 +1170,28 @@ export default function FriendsPage() {
 
             <div className="space-y-3">
               {visibleMoments.length === 0 ? (
-                <div className="rounded-2xl border border-[#f0e4d4] bg-white/60 backdrop-blur p-10 text-center">
-                  <p className="text-sm text-[#a88868]">还没有内容</p>
+                <div className="rounded-2xl border border-[var(--accent-line)] bg-white/60 backdrop-blur p-10 text-center">
+                  <p className="text-sm text-[var(--accent-muted)]">还没有内容</p>
                 </div>
               ) : (
                 visibleMoments.map((post) => (
                   <div
                     key={post.id}
-                    className="rounded-2xl border border-[#ece6dd] bg-white/80 backdrop-blur p-5 shadow-[0_2px_12px_rgba(217,119,87,0.04)]"
+                    className="rounded-2xl border border-[var(--accent-line)] bg-white/80 backdrop-blur p-5 shadow-[0_2px_12px_rgba(217,119,87,0.04)]"
                   >
                     <div className="flex items-center gap-3 mb-3">
-                      <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-[#fae0cc] to-[#f9d5ba] flex items-center justify-center overflow-hidden flex-shrink-0">
+                      <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-[var(--accent-light)] to-[var(--accent-light)] flex items-center justify-center overflow-hidden flex-shrink-0">
                         {post.author_avatar ? (
                           <img src={post.author_avatar} alt="" className="w-full h-full object-cover" />
                         ) : (
-                          <span className="text-sm text-[#c96447] font-semibold">
+                          <span className="text-sm text-[var(--accent-deep)] font-semibold">
                             {post.author_name[0]}
                           </span>
                         )}
                       </div>
                       <div className="flex-1 min-w-0">
                         <p className="text-sm font-medium text-[#2b2620]">{post.author_name}</p>
-                        <p className="text-[10px] text-[#b0a89e] mt-0.5">
+                        <p className="text-[10px] text-[var(--accent-muted)] mt-0.5">
                           {new Date(post.created_at).toLocaleString('zh-CN', {
                             year: 'numeric',
                             month: '2-digit',
@@ -1210,21 +1211,21 @@ export default function FriendsPage() {
                           rows={3}
                           maxLength={momentEditor.maxLength.moment}
                           autoFocus
-                          className="w-full rounded-xl border border-[#e8d0be] bg-[#fefcf9] px-3 py-2 text-sm text-[#4a423c] resize-none focus:outline-none focus:border-[#d97757] focus:ring-2 focus:ring-[#d97757]/10 transition"
+                          className="w-full rounded-xl border border-[var(--accent-line)] bg-[var(--accent-soft)] px-3 py-2 text-sm text-[#4a423c] resize-none focus:outline-none focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent)]/10 transition"
                         />
                         <div className="mt-2 flex items-center gap-3">
                           <button
                             type="button"
                             disabled={momentEditor.isBusy('moment', post.id)}
                             onClick={() => void handleSaveMoment(post.id)}
-                            className="rounded-lg bg-[#d97757] px-3 py-1 text-xs text-white hover:bg-[#c96447] transition disabled:opacity-50"
+                            className="rounded-lg bg-[var(--accent)] px-3 py-1 text-xs text-white hover:bg-[var(--accent-deep)] transition disabled:opacity-50"
                           >
                             {momentEditor.isBusy('moment', post.id) ? '保存中…' : '保存'}
                           </button>
                           <button
                             type="button"
                             onClick={() => momentEditor.cancel()}
-                            className="rounded-lg border border-[#ece6dd] px-3 py-1 text-xs text-[#8a827a] transition"
+                            className="rounded-lg border border-[var(--accent-line)] px-3 py-1 text-xs text-[var(--accent-muted)] transition"
                           >
                             取消
                           </button>
@@ -1252,14 +1253,14 @@ export default function FriendsPage() {
                     <HashtagList
                       content={post.content}
                       className="mb-3 pl-1"
-                      chipClassName="rounded-full bg-[#fbeee4] px-2 py-0.5 text-[11px] text-[#c96447] hover:bg-[#f7e2d3] transition"
+                      chipClassName="rounded-full bg-[var(--accent-soft)] px-2 py-0.5 text-[11px] text-[var(--accent-deep)] hover:bg-[var(--accent-soft)] transition"
                     />
 
-                    <div className="flex items-center gap-4 pl-1 pt-3 border-t border-[#f0e4d4]">
+                    <div className="flex items-center gap-4 pl-1 pt-3 border-t border-[var(--accent-line)]">
                       <button
                         onClick={() => handleLike(post.id, post.liked_by_me)}
                         className={`flex items-center gap-1.5 text-xs transition ${
-                          post.liked_by_me ? 'text-[#d97757]' : 'text-[#a88868] hover:text-[#d97757]'
+                          post.liked_by_me ? 'text-[var(--accent)]' : 'text-[var(--accent-muted)] hover:text-[var(--accent)]'
                         }`}
                       >
                         <IconHeart className="w-4 h-4" filled={post.liked_by_me} />
@@ -1271,7 +1272,7 @@ export default function FriendsPage() {
                           setReplyingTo(null)
                         }}
                         className={`flex items-center gap-1.5 text-xs transition ${
-                          openCommentId === post.id ? 'text-[#d97757]' : 'text-[#a88868] hover:text-[#d97757]'
+                          openCommentId === post.id ? 'text-[var(--accent)]' : 'text-[var(--accent-muted)] hover:text-[var(--accent)]'
                         }`}
                       >
                         <IconComment className="w-4 h-4" />
@@ -1280,7 +1281,7 @@ export default function FriendsPage() {
 
                       {/* 自己的动态：可见范围标签 + 编辑 + 删除 */}
                       {post.author_id === meId && post.visibility !== 'public' && (
-                        <span className="rounded-full bg-[#fbeee4] px-2 py-0.5 text-[10px] text-[#c96447]">
+                        <span className="rounded-full bg-[var(--accent-soft)] px-2 py-0.5 text-[10px] text-[var(--accent-deep)]">
                           {VISIBILITY_SHORT[(post.visibility ?? 'public') as Visibility]}
                         </span>
                       )}
@@ -1289,7 +1290,7 @@ export default function FriendsPage() {
                         <button
                           type="button"
                           onClick={() => momentEditor.start('moment', post.id, post.content)}
-                          className="ml-auto flex items-center gap-1 text-xs text-[#a88868] hover:text-[#c96447] transition"
+                          className="ml-auto flex items-center gap-1 text-xs text-[var(--accent-muted)] hover:text-[var(--accent-deep)] transition"
                         >
                           编辑
                         </button>
@@ -1298,7 +1299,7 @@ export default function FriendsPage() {
                         <button
                           type="button"
                           onClick={() => void handleDeleteMoment(post.id, post.author_id)}
-                          className={`${momentEditor.canEdit(post.author_id) ? '' : 'ml-auto'} text-xs text-[#a88868] hover:text-red-500 transition`}
+                          className={`${momentEditor.canEdit(post.author_id) ? '' : 'ml-auto'} text-xs text-[var(--accent-muted)] hover:text-red-500 transition`}
                         >
                           删除
                         </button>
@@ -1316,8 +1317,8 @@ export default function FriendsPage() {
                         }
                         className={`flex items-center gap-1 text-xs transition disabled:opacity-50 ${
                           momentFavorites.isFavorited('moment', post.id)
-                            ? 'text-[#d97757]'
-                            : 'text-[#a88868] hover:text-[#d97757]'
+                            ? 'text-[var(--accent)]'
+                            : 'text-[var(--accent-muted)] hover:text-[var(--accent)]'
                         }`}
                       >
                         {momentFavorites.isFavorited('moment', post.id) ? '已收藏' : '收藏'}
@@ -1335,7 +1336,7 @@ export default function FriendsPage() {
                             return (
                               <div key={parent.id}>
                                 <div className="flex gap-2">
-                                  <div className="w-6 h-6 rounded-full bg-[#fae0cc] flex items-center justify-center overflow-hidden flex-shrink-0 mt-0.5">
+                                  <div className="w-6 h-6 rounded-full bg-[var(--accent-light)] flex items-center justify-center overflow-hidden flex-shrink-0 mt-0.5">
                                     {parent.author_avatar ? (
                                       <img
                                         src={parent.author_avatar}
@@ -1343,13 +1344,13 @@ export default function FriendsPage() {
                                         className="w-full h-full object-cover"
                                       />
                                     ) : (
-                                      <span className="text-[10px] text-[#c96447]">
+                                      <span className="text-[10px] text-[var(--accent-deep)]">
                                         {parent.author_name[0]}
                                       </span>
                                     )}
                                   </div>
-                                  <div className="flex-1 min-w-0 bg-[#fefaf5] rounded-xl px-3 py-2">
-                                    <p className="text-[11px] font-medium text-[#c96447]">
+                                  <div className="flex-1 min-w-0 bg-[var(--accent-soft)] rounded-xl px-3 py-2">
+                                    <p className="text-[11px] font-medium text-[var(--accent-deep)]">
                                       {parent.author_name}
                                     </p>
                                     <p className="text-xs text-[#4a423c] mt-0.5 whitespace-pre-wrap break-words">
@@ -1361,11 +1362,11 @@ export default function FriendsPage() {
                                           setReplyingTo(parent)
                                           setOpenCommentId(post.id)
                                         }}
-                                        className="text-[10px] text-[#a88868] hover:text-[#d97757]"
+                                        className="text-[10px] text-[var(--accent-muted)] hover:text-[var(--accent)]"
                                       >
                                         回复
                                       </button>
-                                      <span className="text-[10px] text-[#b0a89e]">
+                                      <span className="text-[10px] text-[var(--accent-muted)]">
                                         {formatTime(parent.created_at)}
                                       </span>
                                     </div>
@@ -1376,7 +1377,7 @@ export default function FriendsPage() {
                                   <div className="ml-8 mt-2 space-y-1.5">
                                     {replies.map((c) => (
                                       <div key={c.id} className="flex gap-2">
-                                        <div className="w-5 h-5 rounded-full bg-[#fae0cc] flex items-center justify-center overflow-hidden flex-shrink-0 mt-0.5">
+                                        <div className="w-5 h-5 rounded-full bg-[var(--accent-light)] flex items-center justify-center overflow-hidden flex-shrink-0 mt-0.5">
                                           {c.author_avatar ? (
                                             <img
                                               src={c.author_avatar}
@@ -1384,25 +1385,25 @@ export default function FriendsPage() {
                                               className="w-full h-full object-cover"
                                             />
                                           ) : (
-                                            <span className="text-[9px] text-[#c96447]">
+                                            <span className="text-[9px] text-[var(--accent-deep)]">
                                               {c.author_name[0]}
                                             </span>
                                           )}
                                         </div>
-                                        <div className="flex-1 min-w-0 bg-[#fefaf5] rounded-xl px-3 py-1.5">
+                                        <div className="flex-1 min-w-0 bg-[var(--accent-soft)] rounded-xl px-3 py-1.5">
                                           <p className="text-[11px] text-[#4a423c] leading-relaxed">
-                                            <span className="font-medium text-[#c96447]">
+                                            <span className="font-medium text-[var(--accent-deep)]">
                                               {c.author_name}
                                             </span>
                                             {c.parent_name && (
                                               <>
-                                                <span className="text-[#a88868]"> 回复 </span>
-                                                <span className="font-medium text-[#c96447]">
+                                                <span className="text-[var(--accent-muted)]"> 回复 </span>
+                                                <span className="font-medium text-[var(--accent-deep)]">
                                                   {c.parent_name}
                                                 </span>
                                               </>
                                             )}
-                                            <span className="text-[#a88868]">：</span>
+                                            <span className="text-[var(--accent-muted)]">：</span>
                                             <span className="ml-1">{renderMentions(c.content, mentionNames)}</span>
                                           </p>
                                           <div className="flex items-center justify-between mt-1">
@@ -1411,11 +1412,11 @@ export default function FriendsPage() {
                                                 setReplyingTo(c)
                                                 setOpenCommentId(post.id)
                                               }}
-                                              className="text-[10px] text-[#a88868] hover:text-[#d97757]"
+                                              className="text-[10px] text-[var(--accent-muted)] hover:text-[var(--accent)]"
                                             >
                                               回复
                                             </button>
-                                            <span className="text-[10px] text-[#b0a89e]">
+                                            <span className="text-[10px] text-[var(--accent-muted)]">
                                               {formatTime(c.created_at)}
                                             </span>
                                           </div>
@@ -1434,15 +1435,15 @@ export default function FriendsPage() {
                       <div className="mt-3">
                         {replyingTo && (
                           <div className="flex items-center justify-between mb-2 px-2">
-                            <p className="text-[10px] text-[#a88868]">
+                            <p className="text-[10px] text-[var(--accent-muted)]">
                               正在回复{' '}
-                              <span className="text-[#c96447] font-medium">
+                              <span className="text-[var(--accent-deep)] font-medium">
                                 {replyingTo.author_name}
                               </span>
                             </p>
                             <button
                               onClick={() => setReplyingTo(null)}
-                              className="text-[10px] text-[#a88868] hover:text-[#c96447]"
+                              className="text-[10px] text-[var(--accent-muted)] hover:text-[var(--accent-deep)]"
                             >
                               取消
                             </button>
@@ -1459,14 +1460,14 @@ export default function FriendsPage() {
                             }
                             maxLength={200}
                             withEmoji
-                            className="w-full px-4 py-2 rounded-full border border-[#ece6dd] bg-[#fefcf9] text-xs focus:outline-none focus:border-[#d97757] focus:ring-2 focus:ring-[#d97757]/10 transition"
+                            className="w-full px-4 py-2 rounded-full border border-[var(--accent-line)] bg-[var(--accent-soft)] text-xs focus:outline-none focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent)]/10 transition"
                           />
                           <button
                             onClick={() => handlePostComment(post.id)}
                             disabled={
                               postingComment === post.id || !commentInputs[post.id]?.trim()
                             }
-                            className="px-4 py-2 rounded-full bg-gradient-to-r from-[#e8a87c] to-[#d97757] text-white text-xs font-medium transition-all disabled:opacity-50"
+                            className="px-4 py-2 rounded-full bg-gradient-to-r from-[var(--accent-light)] to-[var(--accent)] text-white text-xs font-medium transition-all disabled:opacity-50"
                           >
                             {postingComment === post.id ? '...' : '发送'}
                           </button>

@@ -74,3 +74,70 @@ input:focus, textarea:focus {
   font-weight: 400;
   letter-spacing: 0.04em;
 }
+
+/* ============================================================
+   页面配色：每个页面一个主色，深浅色阶预先算好写成静态值
+   （用户在 设置 → 页面配色 里改，见 components/theme.tsx）
+
+   为什么不在这里用 color-mix()：Tailwind/Lightning CSS 压缩时会把它
+   化简成第一个颜色，导致色阶全部塌缩成主色。所以默认值写死，
+   运行时由 JS 用同样的公式把用户所选颜色的色阶写到 :root 上。
+   ============================================================ */
+
+:root {
+  /* 首页 */
+  --page-home: #d97757;
+  --page-home-deep: #b16349;
+  --page-home-ink: #5b392c;
+  --page-home-light: #e9b09e;
+  --page-home-muted: #b48b7e;
+  --page-home-soft: #fcf5f3;
+  --page-home-line: #f7e1da;
+
+  /* 院子 */
+  --page-world: #7ea86a;
+  --page-world-deep: #6a8958;
+  --page-world-ink: #3e4932;
+  --page-world-light: #b4cda9;
+  --page-world-muted: #8ea086;
+  --page-world-soft: #f6f9f5;
+  --page-world-line: #e3ecde;
+
+  /* 聚会 */
+  --page-play: #5a7a9a;
+  --page-play-deep: #4e657d;
+  --page-play-ink: #333a42;
+  --page-play-light: #9fb2c4;
+  --page-play-muted: #7f8d9a;
+  --page-play-soft: #f3f6f8;
+  --page-play-line: #dbe2e9;
+
+  /* 小屋 */
+  --page-friends: #d97757;
+  --page-friends-deep: #b16349;
+  --page-friends-ink: #5b392c;
+  --page-friends-light: #e9b09e;
+  --page-friends-muted: #b48b7e;
+  --page-friends-soft: #fcf5f3;
+  --page-friends-line: #f7e1da;
+
+  /* 我的 */
+  --page-me: #a88ab8;
+  --page-me-deep: #8b7295;
+  --page-me-ink: #4c3f4b;
+  --page-me-light: #cdbbd6;
+  --page-me-muted: #a093a7;
+  --page-me-soft: #f9f7fa;
+  --page-me-line: #ece5ef;
+}
+
+/* 页面之外的兜底（比如挂在 body 上的元素） */
+body {
+  --accent: var(--page-home);
+  --accent-deep: var(--page-home-deep);
+  --accent-ink: var(--page-home-ink);
+  --accent-light: var(--page-home-light);
+  --accent-muted: var(--page-home-muted);
+  --accent-soft: var(--page-home-soft);
+  --accent-line: var(--page-home-line);
+}
