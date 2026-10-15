@@ -3,6 +3,7 @@ import { Cormorant_Garamond, Noto_Serif_SC } from "next/font/google";
 import "./globals.css";
 import { OnlinePresence } from "../components/presence";
 import { ThemeProvider } from "../components/theme";
+import { PageDecor } from "../components/page-decor";
 
 const cormorant = Cormorant_Garamond({
   subsets: ["latin"],
@@ -55,6 +56,8 @@ export default function RootLayout({
         <ThemeProvider>
           {/* 进站即上报当日活跃 + 加入在线频道（后台统计用） */}
           <OnlinePresence />
+          {/* 整站边缘的极淡装饰（信纸边 + 小信封 + 小邮戳） */}
+          <PageDecor />
           {children}
         </ThemeProvider>
       </body>
