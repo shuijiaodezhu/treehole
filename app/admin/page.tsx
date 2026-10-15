@@ -10,6 +10,8 @@ import { AdminSitePages } from '../../components/admin-site-pages'
 import { AdminMailbox } from '../../components/admin-mailbox'
 import { DeletionRequestsSection } from '../../components/account-tools'
 import { MomentReportsSection } from '../../components/admin-moment-reports'
+import { CommentReportsSection } from '../../components/admin-comment-reports'
+import { UserBanSection } from '../../components/admin-ban'
 
 // 客户端提到模块级，保证引用稳定
 const supabase = createClient()
@@ -382,6 +384,12 @@ export default function AdminPage() {
         {/* 朋友圈举报：入口（朋友圈页）+ 权限（supabase-admin-moments.sql）+ 这一块，
             三样齐了，《举报处理流程》里那句承诺才算数 */}
         <MomentReportsSection adminId={ADMIN_UUID} />
+
+        {/* 评论举报：入口 + 权限（supabase-admin-comments.sql）+ 处理台 */}
+        <CommentReportsSection adminId={ADMIN_UUID} />
+
+        {/* 停用账号：调 admin_set_ban（supabase-admin-ban.sql），真封禁，不用去后台手动 Ban */}
+        <UserBanSection adminId={ADMIN_UUID} />
 
         <div className="flex gap-6 mb-6 border-b border-[#e0d4e8]">
           <button

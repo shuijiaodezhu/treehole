@@ -24,6 +24,7 @@ import {
 } from '../components/utils'
 import { useWeather } from '../components/weather'
 import { useModuleBadges } from '../components/module-badges'
+import { NotificationBell } from '../components/notifications'
 import type { FriendRequest, FriendshipRow, LoginStreak } from '../components/types'
 import { pageAccentVars } from '../components/theme'
 import { SkeletonHome } from '../components/skeleton'
@@ -219,6 +220,7 @@ export default function HomePage() {
               <span className="2xl:hidden">
                 <MailboxTrigger mailbox={mailbox} onOpen={() => setMailboxOpen(true)} />
               </span>
+              <NotificationBell userId={userId} />
               <Link
                 href="/search"
                 aria-label="搜索"

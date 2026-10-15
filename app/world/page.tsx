@@ -316,6 +316,7 @@ export default function WorldPage() {
 
   /* ---------- 举报帖子：可举报、可撤回 ---------- */
   const [reportedPosts, setReportedPosts] = useState<Set<string>>(new Set())
+  const [reportedComments, setReportedComments] = useState<Set<string>>(new Set())
 
   useEffect(() => {
     if (!meId) return
@@ -324,14 +325,20 @@ export default function WorldPage() {
       try {
         const { data, error } = await supabase
           .from('reports')
-          .select('target_id')
+          .select('target_id, target_type')
           .eq('reporter_id', meId)
-          .eq('target_type', 'world_post')
+          .in('target_type', ['world_post', 'world_comment'])
           .eq('status', 'pending')
         if (error) throw error
-        if (!cancelled) setReportedPosts(new Set((data ?? []).map((r) => r.target_id)))
+        if (!cancelled) {
+          const rows = (data ?? []) as { target_id: string; target_type: string }[]
+          setReportedPosts(new Set(rows.filter((r) => r.target_type === 'world_post').map((r) => r.target_id)))
+          setReportedComments(
+            new Set(rows.filter((r) => r.target_type === 'world_comment').map((r) => r.target_id)),
+          )
+        }
       } catch (err) {
-        console.error('查询我的帖子举报失败:', err)
+        console.error('查询我的举报失败:', err)
       }
     })()
     return () => {
@@ -383,6 +390,45 @@ export default function WorldPage() {
       alert('撤回失败：' + msg)
     }
   }
+  async function handleReportComment(commentId: string) {
+    if (!meId) return
+    const reason = window.prompt('举报这条评论的原因？（会发给站主看）')
+    if (reason === null) return
+    const text = reason.trim() || '未填写原因'
+    const { error } = await supabase.from('reports').insert({
+      reporter_id: meId,
+      target_type: 'world_comment',
+      target_id: commentId,
+      reason: text,
+      status: 'pending',
+    })
+    if (error) {
+      alert('举报失败：' + error.message)
+      return
+    }
+    setReportedComments((prev) => new Set(prev).add(commentId))
+    alert('已收到，谢谢你的反馈。误报可以在同一条评论上点「撤回举报」。')
+  }
+
+  async function handleWithdrawCommentReport(commentId: string) {
+    if (!meId) return
+    const { error } = await supabase
+      .from('reports')
+      .delete()
+      .eq('reporter_id', meId)
+      .eq('target_type', 'world_comment')
+      .eq('target_id', commentId)
+    if (error) {
+      alert('撤回失败：' + error.message)
+      return
+    }
+    setReportedComments((prev) => {
+      const next = new Set(prev)
+      next.delete(commentId)
+      return next
+    })
+  }
+
   const [confirmDeletePost, setConfirmDeletePost] = useState<string | null>(null)
   const [confirmDeleteComment, setConfirmDeleteComment] = useState<string | null>(null)
 
@@ -1049,6 +1095,19 @@ export default function WorldPage() {
                                             <div className="flex items-center justify-between mt-1 gap-2">
                                               <div className="flex items-center gap-2">
                                                 <button onClick={() => setReplyingTo(c)} className="text-[10px] text-[var(--accent-muted)] hover:text-[var(--accent)]">回复</button>
+                              {c.author_id !== meId && (
+                                <button
+                                  onClick={() =>
+                                    reportedComments.has(c.id)
+                                      ? void handleWithdrawCommentReport(c.id)
+                                      : void handleReportComment(c.id)
+                                  }
+                                  className="text-[10px] text-[var(--accent-muted)] transition hover:text-[var(--accent-deep)]"
+                                  title={reportedComments.has(c.id) ? '撤回举报' : '举报'}
+                                >
+                                  {reportedComments.has(c.id) ? '已举报' : '举报'}
+                                </button>
+                              )}
                                                 {editor.canEdit(c.author_id) && !editor.isEditing('world_comment', c.id) && (
                                                   <button
                                                     onClick={() => editor.start('world_comment', c.id, c.content)}

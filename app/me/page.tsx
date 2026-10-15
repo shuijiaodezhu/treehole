@@ -48,6 +48,15 @@ function IconGear({ className = '' }: { className?: string }) {
   )
 }
 
+function IconBell({ className = '' }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9" />
+      <path d="M13.7 21a2 2 0 0 1-3.4 0" />
+    </svg>
+  )
+}
+
 function IconPin({ className = '' }: { className?: string }) {
   return (
     <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
@@ -203,6 +212,16 @@ export default function MePage() {
               <div className="flex items-center gap-3">
                 <div className="w-8 h-8 rounded-full bg-[var(--accent-soft)] flex items-center justify-center"><IconStar className="w-4 h-4 text-[var(--accent-deep)]" /></div>
                 <span className="text-sm text-[#2b2430]">我的收藏</span>
+              </div>
+              <IconArrow className="w-4 h-4 text-[var(--accent-light)] group-hover:translate-x-0.5 transition-transform" />
+            </Link>
+
+            <div className="border-t border-[var(--accent-line)]"></div>
+
+            <Link href="/me/notifications" className="flex items-center justify-between p-4 hover:bg-[var(--accent-soft)] transition group">
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded-full bg-[var(--accent-soft)] flex items-center justify-center"><IconBell className="w-4 h-4 text-[var(--accent-deep)]" /></div>
+                <span className="text-sm text-[#2b2430]">通知</span>
               </div>
               <IconArrow className="w-4 h-4 text-[var(--accent-light)] group-hover:translate-x-0.5 transition-transform" />
             </Link>
