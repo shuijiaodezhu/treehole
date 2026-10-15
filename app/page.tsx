@@ -278,8 +278,8 @@ export default function HomePage() {
           {/* 今天的一句话：只留引用本身和出处 */}
           <FriendRequestBanner requests={requests} />
 
-          {/* 四条主入口：整块可点，卡片够大，一眼看得见 */}
-          <div className="pt-6">
+          {/* 四条主入口：目录式，大字序号 + 衬线大字名字 */}
+          <div className="pt-7">
             <NavCardGrid badges={badges} />
           </div>
 
