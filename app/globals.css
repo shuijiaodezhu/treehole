@@ -498,3 +498,30 @@ html.dsh-navigating .dsh-nav-mask {
 @media (prefers-reduced-motion: reduce) {
   .dsh-fall { display: none; }
 }
+
+
+/* ============================================================
+   逐字落定 —— 首页「你的来信」的闪动
+   每个字从透明 + 下移 8px，按 70ms 依次落定，像一笔一笔写上去。
+   为什么不用字体交换那种：
+     那种取决于网速（快网一闪而过）；这一段是 CSS 动画，**每次都会发生**。
+   ============================================================ */
+@keyframes dsh-char-in {
+  from { opacity: 0; transform: translate3d(0, 8px, 0); }
+  to   { opacity: 1; transform: translate3d(0, 0, 0); }
+}
+.dsh-hero-title > span {
+  display: inline-block;
+  animation: dsh-char-in 560ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.dsh-hero-title > span:nth-child(1) { animation-delay: 0.04s; }
+.dsh-hero-title > span:nth-child(2) { animation-delay: 0.12s; }
+.dsh-hero-title > span:nth-child(3) { animation-delay: 0.20s; }
+.dsh-hero-title > span:nth-child(4) { animation-delay: 0.28s; }
+.dsh-hero-title > span:nth-child(5) { animation-delay: 0.36s; }
+.dsh-hero-title > span:nth-child(6) { animation-delay: 0.44s; }
+.dsh-hero-title > span:nth-child(n + 7) { animation-delay: 0.52s; }
+
+@media (prefers-reduced-motion: reduce) {
+  .dsh-hero-title > span { animation: none; }
+}

@@ -109,6 +109,20 @@ export default function HomePage() {
     },
   ] as const
 
+  /*
+   * 标题"写一遍"的计数器：每次 +1 就让 h1 重新挂载（key 变了），
+   * CSS 动画于是从头再放一遍。触发时机 = 那封信关掉（或判定不弹）之后。
+   */
+  const [writeKey, setWriteKey] = useState(0)
+
+  useEffect(() => {
+    function onDone() {
+      setWriteKey((k) => k + 1)
+    }
+    window.addEventListener('dsh:letter-done', onDone)
+    return () => window.removeEventListener('dsh:letter-done', onDone)
+  }, [])
+
   /* ---------- ③ 连续滚动（视差） ----------
      往下滚：站名向上位移并淡出，滚动提示先消失。
      这是"连续"那一档 —— 跟手、可逆、和滚动位置一一对应。 */
@@ -301,8 +315,13 @@ export default function HomePage() {
       <section className="hero">
         <div className="hero-content px-4 py-16 text-center sm:py-24">
           <motion.div style={{ y: heroY, opacity: heroOpacity }} className="max-w-2xl">
-            <h1 className="dsh-hero-title font-brush text-[56px] leading-[1.1] tracking-[0.04em] sm:text-[80px]">
-              你的来信
+            <h1
+              key={writeKey}
+              className="dsh-hero-title font-brush text-[56px] leading-[1.1] tracking-[0.04em] sm:text-[80px]"
+            >
+              {[...'你的来信'].map((ch, i) => (
+                <span key={i}>{ch}</span>
+              ))}
             </h1>
 
             <p className="mt-4 font-art text-2xl text-primary sm:text-3xl">Dear You</p>

@@ -101,7 +101,11 @@ export function WelcomeLetter({ userId }: { userId: string | null }) {
       // 隐私模式读不到：那就当没读过，出现一次
       read = ''
     }
-    if (read === letter.sig) return
+    if (read === letter.sig) {
+      // 这封信不用弹了：也通知首页，标题照样"写"一遍
+      if (typeof window !== 'undefined') window.dispatchEvent(new Event('dsh:letter-done'))
+      return
+    }
 
     /*
      * 它现在是一道**门**，所以不留 400ms 的余地：
@@ -145,6 +149,8 @@ export function WelcomeLetter({ userId }: { userId: string | null }) {
 
   const close = useCallback(() => {
     setOpen(false)
+    // 通知首页：信看完了，标题可以开始"写"了
+    if (typeof window !== 'undefined') window.dispatchEvent(new Event('dsh:letter-done'))
     if (!userId || !letter) return
     try {
       // 存指纹，不是存 '1'：下次内容变了就会不一样
