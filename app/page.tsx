@@ -195,26 +195,26 @@ export default function HomePage() {
   return (
     <div className="min-h-screen">
       {/* 顶部 header */}
-      <header className="relative w-full overflow-hidden bg-[#221d19] text-[#f5f0e8]">
+      <header className="relative w-full overflow-hidden bg-[#e6b877] text-[#3d2c22]">
 
         <div className="max-w-5xl mx-auto px-8 py-10 flex justify-between items-center relative">
           <div>
             <h1 className="font-serif-cn text-4xl leading-none sm:text-5xl">你的来信</h1>
-            <p className="mt-4 text-[11px] tracking-wide text-[rgba(245,240,232,0.5)]">
+            <p className="mt-4 text-[11px] tracking-wide text-[rgba(61,44,34,0.62)]">
               {dateText} · {weather.city} {weather.condition} {weather.temp}° / {weather.tempMin}°
               <span className="mx-2 opacity-40">|</span>
               陪你走过 {streak.days} 天
             </p>
-            <p className="mt-3 flex items-baseline gap-2 text-[rgba(245,240,232,0.62)]">
-              <span className="font-art text-3xl text-[#e2b9a2]">Dear You</span>
+            <p className="mt-3 flex items-baseline gap-2 text-[rgba(61,44,34,0.66)]">
+              <span className="font-art text-3xl text-[#8c4a2f]">Dear You</span>
               <span className="text-sm">· 这里有一封，你的来信</span>
             </p>
           </div>
 
           <div className="text-right">
             <p className="text-sm mb-2">
-              <span className="font-medium text-[#e2b9a2]">欢迎回来，</span>
-              <span className="text-[rgba(245,240,232,0.62)]">{email || '朋友'}</span>
+              <span className="font-medium text-[#8c4a2f]">欢迎回来，</span>
+              <span className="text-[rgba(61,44,34,0.62)]">{email || '朋友'}</span>
             </p>
 
             <div className="flex items-center justify-end gap-3">
@@ -225,14 +225,14 @@ export default function HomePage() {
               <Link
                 href="/search"
                 aria-label="搜索"
-                className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-[rgba(245,240,232,0.25)] text-[rgba(245,240,232,0.75)] transition hover:border-[#e2b9a2] hover:text-[#e2b9a2]"
+                className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-[rgba(61,44,34,0.25)] text-[rgba(61,44,34,0.72)] transition hover:border-[#8c4a2f] hover:text-[#8c4a2f]"
               >
                 <IconSearch className="w-[18px] h-[18px]" />
               </Link>
               <button
                 type="button"
                 onClick={() => setConfirmLogout(true)}
-                className="text-sm font-medium text-[rgba(245,240,232,0.75)] transition hover:text-[#e2b9a2]"
+                className="text-sm font-medium text-[rgba(61,44,34,0.72)] transition hover:text-[#8c4a2f]"
               >
                 退出登录
               </button>
@@ -276,7 +276,7 @@ export default function HomePage() {
           {/* 今天的一句话放下面：它是安静的角落，不该跟入口抢注意力 */}
           {quote && (
             <div className="mt-14 pb-4 text-center">
-              <p className="mx-auto max-w-xl font-serif-cn text-xl leading-[1.9] text-[#2b2620] sm:text-2xl">
+              <p className="mx-auto max-w-xl font-serif-cn text-xl leading-[1.9] text-[#4a352a] sm:text-2xl">
                 「{quote}」
               </p>
               <p className="mt-4 text-[11px] tracking-wide text-[var(--accent-light)]">
