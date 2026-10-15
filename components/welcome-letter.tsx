@@ -8,21 +8,26 @@ import { Icon } from './icons'
 import { subscribeLoginTransition } from './login-transition'
 
 /**
- * 致每一位来到这里的人（首次登录后浮出的一封信）
+ * 致每一位来到这里的人（登录后浮出的一封信）
  *
- * 时机：**信封过场放完之后**再出现。
- *   · 过场总时长 2.2 秒（见 components/login-transition.tsx 的时间线），
- *     所以这里订阅那个状态，等它结束再等 400ms 淡入 —— 不写死延时，
- *     开了「减少动态效果」时过场只有 150ms，这里也会跟着提前，不会干等。
- *   · 不是"刚登录完"进来的（比如刷新、或本来就在站里）：
- *     那就直接等 400ms 出现，不必空等两秒。
+ * 出现规则：**记住"读过哪一版"**。
+ *   · 浏览器里存的是这封信内容的指纹（不是简单的 1/0）
+ *   · 指纹和分析当前内容算出来的不一致 → 说明信改过了 → 再出现一次
+ *   · 一致 → 什么都不做
+ *   所以：平时只出现一次；你改过这封信，读过的人下次登录会看到新版。
+ *   （第一版存的是 '1'，和任何指纹都不相等，所以已经读过的人会再看一次新版 ——
+ *     这正好符合"内容改了才再出现"。）
  *
- * 只出现一次：按用户记在 localStorage（treehole:letter:seen:<uid>）里。
- * 放 localStorage 而不是数据库，是因为它只是个"读过了"的标记，
- * 不值得为它写一张表；代价是换设备会再看一次 —— 对一封信来说不算问题。
+ * 出现时机：**信封过场放完之后**。
+ *   · 订阅 login-transition 的状态，过场结束再等 400ms 淡入，
+ *     不写死延时——系统开了「减少动态效果」时过场只有 150ms，这里也跟着提前
+ *   · 不是刚登录进来的（刷新、或本来就在站里）→ 直接 400ms 后出现
+ *   · 另有 2.6s 兜底，万一没收到过场结束的通知也不会一直不出来
  *
- * 正文取自站内页面（slug = letter），所以站主可以在后台改它，
- * 改完这里跟着变；数据库里没有时用内置初稿。
+ * 正文本着"内容改了才再出现"的规则，所以**挂载时就取**（不等打开才取），
+ * 这样等过场那两秒里请求早回来了，不会因为网络慢而拖延弹窗。
+ * 正文取自站内页面（slug = letter），站主可以在后台改，改完指纹变了，
+ * 大家下次登录就会看到新版。
  */
 
 const SEEN_KEY = (uid: string) => `treehole:letter:seen:${uid}`
@@ -30,50 +35,41 @@ const FADE_MS = 400
 
 const supabase = createClient()
 
+/** 内容指纹：够用就行，不需要加密强度 */
+function fingerprint(title: string, body: string): string {
+  const text = title + '\u0000' + body
+  let h1 = 0x811c9dc5
+  let h2 = 0x01000193
+  for (let i = 0; i < text.length; i++) {
+    const c = text.charCodeAt(i)
+    h1 = Math.imul(h1 ^ c, 16777619) >>> 0
+    h2 = Math.imul(h2 + c, 2246822519) >>> 0
+  }
+  return `${h1.toString(36)}-${h2.toString(36)}-${text.length.toString(36)}`
+}
+
+type Letter = { title: string; body: string; sig: string }
+
 export function WelcomeLetter({ userId }: { userId: string | null }) {
   /*
-   * 正文的初始值就是内置初稿（所以不必在 effect 里同步 setState ——
-   * 那条会被 react-hooks/set-state-in-effect 拦）；
-   * effect 只负责去数据库取站主改过的那份，回来再覆盖。
+   * 初始值就用内置初稿（惰性初始化）—— 这样不必在 effect 里同步 setState，
+   * react-hooks/set-state-in-effect 不会拦，也少一次多余渲染。
+   * effect 只负责去数据库取站主改过的那份。
    */
-  const fallback = findDefaultPage('letter')
+  const [letter, setLetter] = useState<Letter | null>(() => {
+    const builtin = findDefaultPage('letter')
+    if (!builtin) return null
+    return {
+      title: builtin.title,
+      body: builtin.body,
+      sig: fingerprint(builtin.title, builtin.body),
+    }
+  })
   const [open, setOpen] = useState(false)
-  const [title, setTitle] = useState(fallback?.title ?? '致每一位来到这里的人')
-  const [body, setBody] = useState(fallback?.body ?? '')
 
-  /* ---------- 该不该出现 ---------- */
+  /* ---------- 挂载就取正文（数据库优先，没有就用内置初稿） ---------- */
   useEffect(() => {
-    if (!userId) return
-
-    let seen = false
-    try {
-      seen = window.localStorage.getItem(SEEN_KEY(userId)) === '1'
-    } catch {
-      // 隐私模式读不到：那就当没看过，反正也只有这一次
-      seen = false
-    }
-    if (seen) return
-
-    let timer: number | null = null
-    const schedule = (delay: number) => {
-      timer = window.setTimeout(() => setOpen(true), delay)
-    }
-
-    // 过场还在播 → 等它结束；否则直接排一个短延时
-    const unsubscribe = subscribeLoginTransition((active) => {
-      if (!active && timer === null) schedule(FADE_MS)
-    })
-    schedule(2600) // 兜底：万一没收到过场结束的通知，也在 2.6s 后出现
-
-    return () => {
-      unsubscribe()
-      if (timer) window.clearTimeout(timer)
-    }
-  }, [userId])
-
-  /* ---------- 取正文（数据库优先，没有就用内置初稿） ---------- */
-  useEffect(() => {
-    if (!open) return
+    const builtin = findDefaultPage('letter')
 
     let cancelled = false
     void (async () => {
@@ -85,34 +81,65 @@ export function WelcomeLetter({ userId }: { userId: string | null }) {
       if (cancelled || error) return
       const row = data as { title?: string; body?: string } | null
       if (row?.body) {
-        if (row.title) setTitle(row.title)
-        setBody(row.body)
+        const title = row.title || builtin?.title || '致每一位来到这里的人'
+        setLetter({ title, body: row.body, sig: fingerprint(title, row.body) })
       }
     })()
 
     return () => {
       cancelled = true
     }
-  }, [open])
+  }, [])
+
+  /* ---------- 该不该出现：比对指纹 ---------- */
+  useEffect(() => {
+    if (!userId || !letter) return
+
+    let read = ''
+    try {
+      read = window.localStorage.getItem(SEEN_KEY(userId)) ?? ''
+    } catch {
+      // 隐私模式读不到：那就当没读过，出现一次
+      read = ''
+    }
+    if (read === letter.sig) return
+
+    let timer: number | null = null
+    const schedule = (delay: number) => {
+      timer = window.setTimeout(() => setOpen(true), delay)
+    }
+
+    // 过场还在播 → 等它结束；否则直接排一个短延时
+    const unsubscribe = subscribeLoginTransition((active) => {
+      if (!active && timer === null) schedule(FADE_MS)
+    })
+    schedule(2600) // 兜底
+
+    return () => {
+      unsubscribe()
+      if (timer) window.clearTimeout(timer)
+    }
+  }, [userId, letter])
 
   const close = useCallback(() => {
     setOpen(false)
-    if (!userId) return
+    if (!userId || !letter) return
     try {
-      window.localStorage.setItem(SEEN_KEY(userId), '1')
+      // 存指纹，不是存 '1'：下次内容变了就会不一样
+      window.localStorage.setItem(SEEN_KEY(userId), letter.sig)
     } catch {
       /* 忽略 */
     }
-  }, [userId])
+  }, [userId, letter])
 
-  if (!open) return null
+  if (!open || !letter) return null
 
   return (
     <div
-      className="fixed inset-0 z-[60] flex items-center justify-center bg-black/35 px-4 py-8 backdrop-blur-sm animate-fade-in"
+      className="animate-fade-in fixed inset-0 z-[60] flex items-center justify-center bg-black/35 px-4 py-8 backdrop-blur-sm"
       role="dialog"
       aria-modal="true"
-      aria-label={title}
+      aria-label={letter.title}
     >
       <div className="flex max-h-full w-full max-w-lg flex-col overflow-hidden rounded-3xl border border-[var(--accent-line)] bg-[var(--paper)] shadow-[0_24px_60px_rgba(120,80,60,0.22)]">
         {/* 信头 */}
@@ -121,9 +148,9 @@ export function WelcomeLetter({ userId }: { userId: string | null }) {
             <Icon name="mail" className="h-4 w-4 text-[var(--accent-deep)]" />
           </span>
           <div className="min-w-0">
-            <h2 className="font-serif-cn text-sm font-semibold text-[#2b2430]">{title}</h2>
+            <h2 className="font-serif-cn text-sm font-semibold text-[#2b2430]">{letter.title}</h2>
             <p className="mt-0.5 text-[10.5px] text-[var(--accent-muted)]">
-              只有这一次会主动弹出来，之后它就安静地待在《致每一位来到这里的人》那一页里。
+              这封信不常出现，只在内容更新后露一次面。
             </p>
           </div>
         </div>
@@ -131,7 +158,7 @@ export function WelcomeLetter({ userId }: { userId: string | null }) {
         {/* 正文 */}
         <div className="min-h-0 flex-1 overflow-y-auto px-6 py-5">
           <p className="whitespace-pre-line font-serif-cn text-[12.5px] leading-[1.95] text-[#3a3229]">
-            {body}
+            {letter.body}
           </p>
         </div>
 
