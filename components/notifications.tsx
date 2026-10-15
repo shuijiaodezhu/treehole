@@ -62,6 +62,8 @@ export function useNotifications(userId: string | null) {
   const [unread, setUnread] = useState(0)
   const [loading, setLoading] = useState(true)
   const [missing, setMissing] = useState(false)
+  /** 原始报错：出问题时把数据库的真实说法露出来，比"还没开通"有用得多 */
+  const [errorText, setErrorText] = useState('')
   const [reloadKey, setReloadKey] = useState(0)
 
   const load = useCallback(async () => {
@@ -75,14 +77,20 @@ export function useNotifications(userId: string | null) {
       .limit(50)
 
     if (error) {
-      // 表还没建：安静地不显示（而不是每次进页面都弹错）
-      if (/does not exist|PGRST205|schema cache|404/i.test(error.message)) setMissing(true)
-      else console.error('读通知失败:', error)
+      // 表还没建（或字段对不上）：记下来，页面里会显示数据库的原话
+      if (/does not exist|PGRST205|schema cache|404/i.test(error.message)) {
+        setMissing(true)
+        setErrorText(error.message)
+      } else {
+        console.error('读通知失败:', error)
+        setErrorText(error.message)
+      }
       setLoading(false)
       return
     }
 
     setMissing(false)
+    setErrorText('')
     const list = (data ?? []) as Notice[]
     setItems(list)
     setUnread(list.filter((n) => !n.read_at).length)
@@ -177,6 +185,7 @@ export function useNotifications(userId: string | null) {
     unread,
     loading,
     missing,
+    errorText,
     markAllRead,
     markRead,
     clearAll,
@@ -217,14 +226,27 @@ export function NotificationBell({
 
 /** 通知列表（页面主体） */
 export function NotificationsList({ userId }: { userId: string | null }) {
-  const { items, unread, loading, missing, markAllRead, markRead, clearAll } = useNotifications(userId)
+  const { items, unread, loading, missing, errorText, markAllRead, markRead, clearAll } =
+    useNotifications(userId)
 
   if (missing) {
     return (
-      <p className="rounded-2xl border border-[var(--accent-line)] bg-white/80 px-4 py-3 text-[11px] leading-relaxed text-[var(--accent-muted)]">
-        通知还没开通：先在 Supabase 里执行 <code>supabase-notifications.sql</code>。
-        （没跑也不影响别的功能，只是收不到提醒）
-      </p>
+      <div className="rounded-2xl border border-[var(--accent-line)] bg-white/80 px-4 py-3 text-[11px] leading-relaxed text-[var(--accent-muted)]">
+        <p>
+          通知还没开通。需要在 Supabase 的 SQL Editor 里，执行{' '}
+          <code>supabase-notifications.sql</code> 这个文件的
+          <span className="font-medium text-[var(--accent-deep)]">内容</span>
+          （打开那个文件复制全文，不是把这行字打进去）。
+        </p>
+        <p className="mt-1.5 text-[10.5px] text-[var(--accent-light)]">
+          没跑也不影响别的功能，只是收不到提醒。
+        </p>
+        {errorText && (
+          <p className="mt-2.5 whitespace-pre-wrap rounded-xl bg-[var(--accent-soft)] px-3 py-2 text-[10.5px] text-[var(--accent-deep)]">
+            数据库的原话：{errorText}
+          </p>
+        )}
+      </div>
     )
   }
 
