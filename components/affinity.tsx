@@ -13,41 +13,12 @@ import { Icon } from './icons'
  *   · 增长来源：私信 +1/条（每天最多 +20）、给 TA 朋友圈点赞 +2（每天最多 +10）
  *   · **默认只有自己看得到**；想让对方看到，去设置里开（profiles.affinity_public）
  *
- * 段位用的是"熟人感"的说法，不用"等级 Lv.5"那种游戏腔——
- * 这个站整体是安静的语气，数字只是留个痕迹，不该变成竞技场。
+ * 只显示一个数字。**不做段位**（"老朋友""知己"之类）——
+ * 那样的名字太抽象，而且会把一个安静的数字变成攀比。
+ * 想知道这个数怎么来的，鼠标停在上面会有一句说明。
  */
 
 const supabase = createClient()
-
-export type AffinityTier = { at: number; name: string }
-
-/** 阈值从低到高；数字只是分界，名字才是给人看的 */
-export const AFFINITY_TIERS: AffinityTier[] = [
-  { at: 0, name: '陌生' },
-  { at: 10, name: '眼熟' },
-  { at: 30, name: '聊得来' },
-  { at: 80, name: '熟络' },
-  { at: 200, name: '老朋友' },
-  { at: 500, name: '知己' },
-  { at: 1000, name: '生死之交' },
-]
-
-export function tierOf(score: number): AffinityTier {
-  let current = AFFINITY_TIERS[0]
-  for (const t of AFFINITY_TIERS) {
-    if (score >= t.at) current = t
-    else break
-  }
-  return current
-}
-
-/** 距下一段还差多少；已经满级返回 null */
-export function nextTier(score: number): { name: string; need: number } | null {
-  for (const t of AFFINITY_TIERS) {
-    if (score < t.at) return { name: t.name, need: t.at - score }
-  }
-  return null
-}
 
 export type AffinityState = {
   /** 我对 TA 的好感度 */
@@ -222,7 +193,7 @@ export function AffinitySettingsSection({ userId }: { userId: string | null }) {
         <div className="min-w-0 flex-1">
           <h2 className="text-sm font-semibold text-[#2b2430]">好感度</h2>
           <p className="mt-0.5 text-[11px] leading-relaxed text-[var(--accent-muted)]">
-            你和每个朋友来往留下的痕迹：聊天、点赞都会加一点，**只增不减**，
+            你和每个朋友来往留下的痕迹：聊天、点赞都会加一点，只增不减，
             不催你天天说话。
           </p>
         </div>
@@ -245,7 +216,7 @@ export function AffinitySettingsSection({ userId }: { userId: string | null }) {
           <span className="min-w-0">
             <span className="block text-xs font-medium text-[#2b2430]">在聊天里显示好感度</span>
             <span className="mt-0.5 block text-[10.5px] leading-relaxed text-[var(--accent-muted)]">
-              只是你自己这台设备上的显示偏好。关掉之后，聊天抬头不再出现那个段位。
+              只是你自己这台设备上的显示偏好。关掉之后，聊天抬头不再出现那个数字。
             </span>
           </span>
         </label>
@@ -264,7 +235,7 @@ export function AffinitySettingsSection({ userId }: { userId: string | null }) {
               让朋友看到我对他的好感度
             </span>
             <span className="mt-0.5 block text-[10.5px] leading-relaxed text-[var(--accent-muted)]">
-              默认关闭：**只有你自己看得到**。开启后，对方在聊天抬头能看到你那一侧的分数；
+              默认关闭：只有你自己看得到。开启后，对方在聊天抬头能看到你那一侧的分数；
               其他人任何时候都看不到。
             </span>
           </span>
@@ -282,64 +253,27 @@ export function AffinitySettingsSection({ userId }: { userId: string | null }) {
   )
 }
 /**
- * 聊天抬头那一小行：段位 + 分数
+ * 聊天抬头右侧那个小数字
  *
- * 刻意做得不显眼：小字、低对比，不抢聊天的注意力。
- * 鼠标停上去才展开一句解释（增长方式与每日上限）。
+ * 就是一个图标加一个数字，没有底、没有框、不弹层：
+ * 鼠标停上去用浏览器原生的 title 说明它是怎么涨的（原生提示不会"悬空居中"）。
+ * 心形用图标组件而不是 ♥ 字符 —— 免得某些字体缺字形显示成方块。
  */
-export function AffinityChip({
-  affinity,
+export function AffinityScore({
+  amount,
   friendName,
 }: {
-  affinity: AffinityState
+  amount: number | null
   friendName: string
 }) {
-  const [tip, setTip] = useState(false)
-
-  if (affinity.missing || affinity.mine === null) return null
-
-  const tier = tierOf(affinity.mine)
-  const next = nextTier(affinity.mine)
-
+  if (amount === null || amount <= 0) return null
   return (
-    <span className="relative inline-flex items-center">
-      <button
-        type="button"
-        onMouseEnter={() => setTip(true)}
-        onMouseLeave={() => setTip(false)}
-        onFocus={() => setTip(true)}
-        onBlur={() => setTip(false)}
-        className="rounded-full bg-[var(--accent-soft)] px-2 py-0.5 font-serif-cn text-[10px] text-[var(--accent-deep)] transition hover:bg-[var(--accent-line)]"
-      >
-        {tier.name}
-        <span className="ml-1 text-[var(--accent-light)]">{affinity.mine}</span>
-      </button>
-
-      {tip && (
-        <span className="absolute left-0 top-full z-30 mt-1.5 w-56 rounded-xl border border-[var(--accent-line)] bg-white/95 px-3 py-2.5 text-left font-serif-cn text-[10.5px] leading-relaxed text-[var(--accent-muted)] shadow-[0_12px_32px_rgba(217,119,87,0.16)] backdrop-blur">
-          你和 {friendName} 的来往留下的痕迹。
-          <br />
-          聊一句 +1（每天最多 20），给他的朋友圈点个赞 +2（每天最多 10）。
-          <br />
-          <span className="text-[var(--accent-deep)]">不会减少，也不催你天天说话。</span>
-          {affinity.theirs !== null && (
-            <>
-              <br />
-              <span className="text-[var(--accent-light)]">
-                （他对你：{tierOf(affinity.theirs).name} {affinity.theirs}）
-              </span>
-            </>
-          )}
-          {next && (
-            <>
-              <br />
-              <span className="text-[var(--accent-light)]">
-                再 +{next.need} 到「{next.name}」
-              </span>
-            </>
-          )}
-        </span>
-      )}
+    <span
+      title={`你和 ${friendName} 来往留下的痕迹：聊一句 +1（每天最多 20），给他的朋友圈点个赞 +2（每天最多 10）。不会减少，也不催你天天说话。`}
+      className="ml-auto flex flex-shrink-0 cursor-default select-none items-center gap-1 font-serif-cn text-[10px] leading-none text-[var(--accent-light)]"
+    >
+      <Icon name="heart" className="h-3 w-3" />
+      {amount}
     </span>
   )
 }

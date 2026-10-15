@@ -10,7 +10,8 @@ import { markModuleSeen } from '../../components/module-badges'
 import { ChatMessages } from '../../components/chat-bubbles'
 import { useChatRealtime } from '../../components/chat-realtime'
 import { useTypingIndicator } from '../../components/chat-typing'
-import { AffinityChip, readAffinityHidden, useAffinity } from '../../components/affinity'
+import { AffinityScore, readAffinityHidden, useAffinity } from '../../components/affinity'
+import { StatusLabel, useStatusText } from '../../components/status'
 import { checkRate, filterHint, filterText, noteSent } from '../../components/content-guard'
 import { useBlocks } from '../../components/blocks'
 import { ImagePicker } from '../../components/media'
@@ -302,6 +303,8 @@ export default function FriendsPage() {
 
   // 好感度（互动值）：默认只有自己看得到
   const affinity = useAffinity(meId, currentFriend?.friend_id ?? null)
+  // 好友自己设的状态（没设就不显示）
+  const friendStatus = useStatusText(currentFriend?.friend_id ?? null)
   const [affinityHidden, setAffinityHidden] = useState(false)
   useEffect(() => {
     if (!meId) return
@@ -1087,13 +1090,14 @@ export default function FriendsPage() {
                       <h2 className="text-sm font-semibold text-[#2b2620] truncate">
                         {friendName}
                       </h2>
-                      {!affinityHidden && (
-                        <AffinityChip affinity={affinity} friendName={friendName} />
-                      )}
+                      {friendStatus && <StatusLabel text={friendStatus} />}
                       {friendTyping && (
-                        <span className="font-serif-cn text-[10.5px] text-[var(--accent-light)]">
+                        <span className="font-serif-cn text-[10px] leading-none text-[var(--accent-light)]">
                           正在输入…
                         </span>
+                      )}
+                      {!affinityHidden && (
+                        <AffinityScore amount={affinity.mine} friendName={friendName} />
                       )}
                     </>
                   )}

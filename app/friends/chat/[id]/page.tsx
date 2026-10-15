@@ -8,7 +8,8 @@ import { EmojiPicker, useEmojiInsert } from '../../../../components/emoji-picker
 import { ChatMessages } from '../../../../components/chat-bubbles'
 import { useChatRealtime } from '../../../../components/chat-realtime'
 import { useTypingIndicator } from '../../../../components/chat-typing'
-import { AffinityChip, readAffinityHidden, useAffinity } from '../../../../components/affinity'
+import { AffinityScore, readAffinityHidden, useAffinity } from '../../../../components/affinity'
+import { StatusLabel, useStatusText } from '../../../../components/status'
 import { pageAccentVars } from '../../../../components/theme'
 
 type Message = {
@@ -69,6 +70,8 @@ function ChatInner() {
 
   // 好感度（互动值）
   const affinity = useAffinity(meId, friendId)
+  // 好友自己设的状态（没设就不显示）
+  const friendStatus = useStatusText(friendId)
   const [affinityHidden, setAffinityHidden] = useState(false)
   useEffect(() => {
     if (!meId) return
@@ -196,10 +199,11 @@ function ChatInner() {
             <span className="text-sm text-[var(--accent-deep)] font-semibold">{friendName[0]}</span>
           </div>
           <h1 className="text-sm font-semibold text-[#2b2620]">{friendName}</h1>
-          {!affinityHidden && <AffinityChip affinity={affinity} friendName={friendName} />}
+          {friendStatus && <StatusLabel text={friendStatus} />}
           {friendTyping && (
-            <span className="font-serif-cn text-[10.5px] text-[var(--accent-light)]">正在输入…</span>
+            <span className="font-serif-cn text-[10px] leading-none text-[var(--accent-light)]">正在输入…</span>
           )}
+          {!affinityHidden && <AffinityScore amount={affinity.mine} friendName={friendName} />}
         </div>
       </header>
 
