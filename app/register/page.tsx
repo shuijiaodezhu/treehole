@@ -84,11 +84,11 @@ export default function RegisterPage() {
   }
 
   return (
-    <div className="min-h-screen relative overflow-hidden flex items-center justify-center px-4">
+    <div className="min-h-screen relative overflow-hidden flex items-center justify-center gap-20 px-4 lg:gap-32">
       {/* 背景装饰光晕 */}
 
       {/* 左侧装饰文字（大屏可见） */}
-      <div className="hidden lg:block absolute left-[25%] top-1/2 -translate-x-1/2 -translate-y-1/2 max-w-sm text-center">
+      <div className="hidden lg:block w-[266px] shrink-0 text-center">
         <h1 className="font-brush text-[52px] leading-[1] tracking-[0.04em] text-[#2b2620] sm:text-[64px]">你的来信</h1>
         <p className="mt-2 flex items-baseline justify-center gap-2 text-[#8a6a4a]">
           <span className="font-art text-3xl text-[#c96447]">Dear You</span>

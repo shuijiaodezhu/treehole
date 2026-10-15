@@ -536,3 +536,19 @@ html.dsh-navigating .dsh-nav-mask {
   .dsh-open .dsh-page-blur,
   .dsh-open .dsh-hero-title { animation: none; }
 }
+
+
+/* ---------- 盖掉浏览器自动填充的浅蓝底 ----------
+   Chrome 的 :-webkit-autofill 会用浅蓝刷满输入框，跟暖纸完全不搭，
+   而且它**不可被 background-color 覆盖**，只能用 inset box-shadow 盖住。 */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+textarea:-webkit-autofill,
+select:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0 1000px #fdf8f0 inset;
+  box-shadow: 0 0 0 1000px #fdf8f0 inset;
+  -webkit-text-fill-color: #3f332a;
+  caret-color: #3f332a;
+  transition: background-color 9999s ease-out 0s;
+}
