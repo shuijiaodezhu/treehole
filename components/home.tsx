@@ -134,35 +134,39 @@ const SECTIONS: NavSection[] = [
 
 const NUMERALS = ['一', '二', '三', '四']
 
+
 export function NavCardGrid({ badges }: { badges?: Partial<Record<string, { count?: number; dot?: boolean }>> }): ReactElement {
   /*
-   * 目录式：像一本书的目次，也像信纸上手写的条目。
-   *   · 大字序号 + 衬线大字名字 —— 一眼看得见（上一版减太狠的教训）
-   *   · 细分隔线，没有卡片底、没有图标、没有药丸、没有渐变、没有阴影
-   *   · 整行可点；悬停时序号变主色、名字微右移半像素，给一点手感
+   * 这一版解决的是"新用户一下子找不到能点的地方"：
+   *   · 名字用衬线大字（够显眼），但**每一行是一个白底带边框的块** ——
+   *     块 = 可以按的东西；纯文字行会被当成标题
+   *   · 右端一个 › 箭头，这是最不用解释的"点我"信号
+   *   · 悬停时边框变主色、底色变淡主色、箭头右移一格
+   *   · 没有图标、没有药丸标签、没有渐变、没有阴影
    */
   return (
-    <ul className="border-t border-[var(--accent-line)]">
+    <ul className="space-y-2.5">
       {SECTIONS.map((section, i) => {
         const key = section.href.replace('/', '')
         const badge = badges?.[key]
         return (
-          <li key={section.href} className="border-b border-[var(--accent-line)]">
+          <li key={section.href}>
             <Link
               href={section.href}
               onClick={() => markModuleSeen(key as Parameters<typeof markModuleSeen>[0])}
-              className="group flex items-baseline gap-4 py-4 sm:gap-6 sm:py-5"
+              className="group flex items-center gap-4 rounded-xl border border-[var(--accent-line)] bg-white px-4 py-4 transition hover:border-[var(--accent)] hover:bg-[var(--accent-soft)]/50 sm:px-5"
             >
-              <span className="w-6 flex-shrink-0 font-serif-cn text-sm text-[var(--accent-light)] transition group-hover:text-[var(--accent)]">
+              <span className="w-5 flex-shrink-0 font-serif-cn text-sm text-[var(--accent-light)] transition group-hover:text-[var(--accent)]">
                 {NUMERALS[i] ?? i + 1}
               </span>
 
-              <span className="w-20 flex-shrink-0 font-serif-cn text-lg text-[#2b2430] transition group-hover:translate-x-0.5 sm:text-xl">
-                {section.title}
-              </span>
-
-              <span className="min-w-0 flex-1 truncate text-xs text-[var(--accent-muted)]">
-                {section.desc}
+              <span className="flex min-w-0 flex-1 flex-col gap-0.5 sm:flex-row sm:items-baseline sm:gap-4">
+                <span className="font-serif-cn text-lg text-[#2b2430] sm:w-20 sm:flex-shrink-0 sm:text-xl">
+                  {section.title}
+                </span>
+                <span className="min-w-0 truncate text-xs text-[var(--accent-muted)]">
+                  {section.desc}
+                </span>
               </span>
 
               {badge?.count ? (
@@ -172,6 +176,11 @@ export function NavCardGrid({ badges }: { badges?: Partial<Record<string, { coun
               ) : badge?.dot ? (
                 <span className="h-1.5 w-1.5 flex-shrink-0 rounded-full bg-[var(--accent)]" />
               ) : null}
+
+              {/* 最不用解释的"点我"信号 */}
+              <span className="flex-shrink-0 text-lg leading-none text-[var(--accent-light)] transition group-hover:translate-x-0.5 group-hover:text-[var(--accent)]">
+                ›
+              </span>
             </Link>
           </li>
         )
