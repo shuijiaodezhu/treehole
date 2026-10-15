@@ -104,7 +104,10 @@ export default function MomentsPage() {
   }, [focusPostId, posts])
 
   useEffect(() => {
+    // 同 chat 页：init 定义在组件内，加进依赖会变成每次渲染都重取；
+    // 这里只在挂载时拉一次。
     init()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   async function init() {
@@ -422,6 +425,8 @@ export default function MomentsPage() {
                   <div className="flex items-center gap-3 mb-3">
                     <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-[#fae0cc] to-[#f9d5ba] flex items-center justify-center overflow-hidden flex-shrink-0 shadow-sm">
                       {post.author_avatar ? (
+                        // 头像尺寸固定、来自 Supabase 存储，不值得为它引 next/image 的远程域名配置
+                        // eslint-disable-next-line @next/next/no-img-element
                         <img src={post.author_avatar} alt="" className="w-full h-full object-cover" />
                       ) : (
                         <span className="text-sm text-[#c96447] font-semibold">

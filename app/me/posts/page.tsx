@@ -44,7 +44,11 @@ export default function MyPostsPage() {
       if (data) setPosts(data as Post[])
       setLoading(false)
     }
+    // supabase 是组件内 createClient() 出来的，每次渲染都是新对象；
+    // 把它和 router 一起写进依赖数组，effect 会每次渲染都重跑、无限重取。
+    // 这里只在挂载时加载一次。
     load()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   async function handleDelete(id: string) {

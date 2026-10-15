@@ -53,7 +53,11 @@ function ChatInner() {
   const bottomRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
+    // init 定义在组件内部，每次渲染都是新函数。把它写进依赖数组，
+    // 这个 effect 每次渲染都会重跑 —— 也就是每渲染一次就重新拉一遍消息。
+    // 这里本来就只想在「换了好友」时重新加载，所以刻意只依赖 friendId。
     init()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [friendId])
 
   useEffect(() => {
