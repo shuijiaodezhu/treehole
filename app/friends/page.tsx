@@ -1031,22 +1031,27 @@ export default function FriendsPage() {
                       const unreadCount = convId ? unread.byConversation[convId] ?? 0 : 0
                       return (
                         <div key={f.friendship_id} className="relative">
-                          <button
-                            onClick={() => openFriend(f)}
-                            className={`w-full text-left px-4 py-3 flex items-center gap-3 hover:bg-[var(--accent-soft)] transition border-b border-[var(--accent-soft)] last:border-b-0 ${
+                          <div
+                            className={`w-full px-4 py-3 flex items-center gap-3 hover:bg-[var(--accent-soft)] transition border-b border-[var(--accent-soft)] last:border-b-0 ${
                               currentFriend?.friend_id === f.friend_id ? 'bg-[var(--accent-soft)]' : ''
                             }`}
                           >
-                            <div className="w-9 h-9 rounded-full bg-gradient-to-br from-[var(--accent-light)] to-[var(--accent-light)] flex items-center justify-center overflow-hidden flex-shrink-0">
-                              {f.avatar_url ? (
-                                <img src={f.avatar_url} alt="" className="w-full h-full object-cover" />
-                              ) : (
-                                <span className="text-xs text-[var(--accent-deep)] font-semibold">
-                                  {(f.nickname || f.username)[0]}
-                                </span>
-                              )}
-                            </div>
-                            <div className="flex-1 min-w-0">
+                            {/* 点头像 → 他的展示页（点别处仍然进聊天，免得聊天入口被占掉） */}
+                            <Link href={`/u/${f.friend_id}`} className="flex-shrink-0">
+                              <div className="w-9 h-9 rounded-full bg-gradient-to-br from-[var(--accent-light)] to-[var(--accent-light)] flex items-center justify-center overflow-hidden">
+                                {f.avatar_url ? (
+                                  <img src={f.avatar_url} alt="" className="w-full h-full object-cover" />
+                                ) : (
+                                  <span className="text-xs text-[var(--accent-deep)] font-semibold">
+                                    {(f.nickname || f.username)[0]}
+                                  </span>
+                                )}
+                              </div>
+                            </Link>
+                            <button
+                              onClick={() => openFriend(f)}
+                              className="flex-1 min-w-0 text-left"
+                            >
                               {/* 昵称 + 状态 + 好感度：都在同一行，小字，不抢注意力 */}
                               <div className="flex min-w-0 items-center gap-1.5">
                                 {/* min-w-0 不能省：flex 子项默认不会压到内容宽度以下，
@@ -1069,8 +1074,8 @@ export default function FriendsPage() {
                               {f.signature && (
                                 <p className="text-[10px] text-[var(--accent-muted)] truncate">{f.signature}</p>
                               )}
-                            </div>
-                          </button>
+                            </button>
+                          </div>
 
                           {/* 这个好友的未读私信条数：右下角 */}
                           {unreadCount > 0 && (
@@ -1104,14 +1109,24 @@ export default function FriendsPage() {
                       >
                         ←
                       </button>
-                      <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[var(--accent-light)] to-[var(--accent-light)] flex items-center justify-center flex-shrink-0">
-                        <span className="text-sm text-[var(--accent-deep)] font-semibold">
-                          {friendName[0]}
-                        </span>
-                      </div>
-                      <h2 className="text-sm font-semibold text-[#2b2620] truncate">
-                        {friendName}
-                      </h2>
+                      {/* 点头像或名字 → 他的展示页 */}
+                      <Link
+                        href={`/u/${currentFriend.friend_id}`}
+                        className="flex min-w-0 flex-shrink-0 items-center gap-2 transition hover:opacity-80"
+                      >
+                        <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[var(--accent-light)] to-[var(--accent-light)] flex items-center justify-center overflow-hidden flex-shrink-0">
+                          {currentFriend.avatar_url ? (
+                            <img src={currentFriend.avatar_url} alt="" className="w-full h-full object-cover" />
+                          ) : (
+                            <span className="text-sm text-[var(--accent-deep)] font-semibold">
+                              {friendName[0]}
+                            </span>
+                          )}
+                        </div>
+                        <h2 className="min-w-0 truncate text-sm font-semibold text-[#2b2620]">
+                          {friendName}
+                        </h2>
+                      </Link>
                       {friendStatus && <StatusLabel text={friendStatus} />}
                       {friendTyping && (
                         <span className="font-serif-cn text-[10px] leading-none text-[var(--accent-light)]">

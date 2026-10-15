@@ -1,5 +1,7 @@
 'use client'
 
+/* eslint-disable @next/next/no-img-element -- 头像用原生 img 即可，尺寸固定 */
+
 import { useEffect, useState, useRef, Suspense } from 'react'
 import { createClient } from '../../../lib/supabase'
 import { useRouter, useParams } from 'next/navigation'
@@ -47,6 +49,7 @@ function ChatInner() {
   const [sending, setSending] = useState(false)
   const [meId, setMeId] = useState<string | null>(null)
   const [friendName, setFriendName] = useState('好友')
+  const [friendAvatar, setFriendAvatar] = useState<string | null>(null)
   const [conversationId, setConversationId] = useState<string | null>(null)
 
   /** 输入框的表情插入（插到光标处） */
@@ -100,11 +103,12 @@ function ChatInner() {
 
     const { data: friendProfile } = await supabase
       .from('profiles')
-      .select('username, nickname')
+      .select('username, nickname, avatar_url')
       .eq('id', friendId)
       .single()
     if (friendProfile) {
       setFriendName(friendProfile.nickname || friendProfile.username)
+      setFriendAvatar(friendProfile.avatar_url ?? null)
     }
 
     const [u1, u2] = [uid, friendId].sort()
@@ -195,10 +199,20 @@ function ChatInner() {
           >
             <IconArrow className="w-5 h-5" />
           </Link>
-          <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[var(--accent-line)] to-[var(--accent-line)] flex items-center justify-center flex-shrink-0">
-            <span className="text-sm text-[var(--accent-deep)] font-semibold">{friendName[0]}</span>
-          </div>
-          <h1 className="text-sm font-semibold text-[#2b2620]">{friendName}</h1>
+          {/* 点头像或名字 → 他的展示页 */}
+          <Link
+            href={`/u/${friendId}`}
+            className="flex min-w-0 flex-shrink-0 items-center gap-2.5 transition hover:opacity-80"
+          >
+            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[var(--accent-line)] to-[var(--accent-line)] flex items-center justify-center flex-shrink-0 overflow-hidden">
+              {friendAvatar ? (
+                <img src={friendAvatar} alt="" className="w-full h-full object-cover" />
+              ) : (
+                <span className="text-sm text-[var(--accent-deep)] font-semibold">{friendName[0]}</span>
+              )}
+            </div>
+            <h1 className="min-w-0 truncate text-sm font-semibold text-[#2b2620]">{friendName}</h1>
+          </Link>
           {friendStatus && <StatusLabel text={friendStatus} />}
           {friendTyping && (
             <span className="font-serif-cn text-[10px] leading-none text-[var(--accent-light)]">正在输入…</span>

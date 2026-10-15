@@ -8,6 +8,7 @@ import Link from 'next/link'
 import { pageAccentVars } from '../../components/theme'
 import { SkeletonCard } from '../../components/skeleton'
 import { StatusPicker } from '../../components/status'
+import { ShowcaseSettingsSection } from '../../components/profile-showcase'
 
 const ADMIN_UUID = 'b59a31c7-60f8-4b57-924a-b408cbfd910c'
 
@@ -171,6 +172,9 @@ export default function MePage() {
 
           {/* 状态：选一个现成的，或者自己写三个字。设好只在小屋聊天抬头显示 */}
           <StatusPicker userId={profile?.id ?? null} />
+
+          {/* 展示页：别人点你头像进来的地方 */}
+          <ShowcaseSettingsSection userId={profile?.id ?? null} />
 
           <div className="grid grid-cols-2 gap-4">
             <div className="rounded-2xl border border-[var(--accent-line)] bg-gradient-to-br from-[var(--accent-soft)] to-[var(--accent-soft)] p-5 text-center relative overflow-hidden">
