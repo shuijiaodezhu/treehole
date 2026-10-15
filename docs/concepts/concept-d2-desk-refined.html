@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>概念 D2 · 桌面（精修）</title>
+<style>
+  :root{--paper:#f1e7d8;--ink:#3a2f26;--muted:#8a7a68;--line:#ddd0b8;
+        --wax:#a8563a;--honey:#d99a4e;--cocoa:#5a4034}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{color:var(--ink);overflow-x:hidden;font-family:"Songti SC","Noto Serif SC",Georgia,serif;
+       background:
+         radial-gradient(120% 80% at 20% 0%, #f6eee1 0%, var(--paper) 55%, #e9dcc7 100%)}
+  a{color:inherit;text-decoration:none}
+  .brush{font-family:"Ma Shan Zheng","Songti SC",serif}
+</style>
+</head>
+<body>
+<div style="position:relative;min-height:100vh">
+
+  <!-- ═══ 主信纸：标题就是它的信头 ═══ -->
+  <div style="position:absolute;left:5vw;top:8vh;width:min(620px,78vw);
+              background:#fdf9f2;padding:44px 52px 58px;
+              transform:rotate(-2.2deg);
+              box-shadow:0 34px 80px -40px rgba(90,64,52,.55),0 1px 0 rgba(255,255,255,.9) inset">
+
+    <!-- 信头：站名 + 日期 -->
+    <h1 class="brush" style="font-size:min(6.4vw,46px);line-height:1.05;letter-spacing:.03em">
+      你的来信
+    </h1>
+    <p style="margin-top:10px;font-size:12.5px;letter-spacing:.16em;color:var(--muted)">
+      DEAR YOU · 十月十六日，夜里
+    </p>
+    <div style="margin-top:26px;height:1px;background:var(--line)"></div>
+
+    <p style="margin-top:30px;font-size:min(3.15vw,26px);line-height:1.95">
+      今天有星星吗。<br>
+      我在院子里抬头看了会儿，想起你上次说，<br>
+      冬天的星星比夏天锐利。
+    </p>
+
+    <!-- 蜡封：信纸自己的落款，压住纸角 -->
+    <div style="position:absolute;right:44px;bottom:-22px;width:60px;height:60px;border-radius:999px;
+                background:radial-gradient(circle at 34% 30%,#c2674a,var(--wax));
+                box-shadow:0 10px 22px -10px rgba(120,50,30,.6);
+                display:flex;align-items:center;justify-content:center">
+      <span class="brush" style="color:#fdf8f0;font-size:22px;line-height:1">来</span>
+    </div>
+  </div>
+
+  <!-- ═══ 明信片：上面是信箱插画 ═══ -->
+  <a href="#" style="position:absolute;right:6vw;top:13vh;width:min(340px,42vw);
+      background:#fff;padding:13px 13px 50px;transform:rotate(3.6deg);
+      box-shadow:0 30px 70px -34px rgba(90,64,52,.5)">
+    <!-- 插画区：暖色纸底 + 线条信箱 -->
+    <div style="background:#f7efe3;border-radius:3px;padding:18px 10px 10px">
+      <svg viewBox="0 0 200 150" style="width:100%;height:auto">
+        <g fill="none" stroke="#c4705a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <!-- 箱体 -->
+          <path d="M62 74h46a22 22 0 0 1 0 44H62z" fill="#fdf8f0"/>
+          <path d="M62 74a24 24 0 0 1 24-24h0a24 24 0 0 1 24 24" fill="#f2d3c6"/>
+          <!-- 立柱与地面 -->
+          <path d="M85 118v22"/>
+          <path d="M40 142q45-9 120-3"/>
+          <!-- 小旗 -->
+          <path d="M108 86l13 5-13 5z" fill="#c4705a" stroke="none"/>
+          <circle cx="102" cy="91" r="2.6" fill="#c4705a" stroke="none"/>
+          <!-- 露出的信角 -->
+          <path d="M74 96h26v14H74z" fill="#fff"/>
+          <path d="M74 96l13 8 13-8" stroke-width="1.6"/>
+          <!-- 一点雪 / 光点 -->
+          <circle cx="150" cy="46" r="3" fill="#e6a08a" stroke="none"/>
+          <circle cx="40" cy="60" r="2.4" fill="#e6a08a" stroke="none"/>
+          <circle cx="164" cy="96" r="2" fill="#e6a08a" stroke="none"/>
+        </g>
+      </svg>
+    </div>
+    <p style="position:absolute;left:16px;bottom:16px;font-size:15px">院子</p>
+    <p style="position:absolute;right:16px;bottom:17px;font-size:12.5px;color:var(--muted)">
+      今晚 3 个人在说梦
+    </p>
+  </a>
+
+  <!-- ═══ 信封：V 形封盖 + 邮票 ═══ -->
+  <a href="#" style="position:absolute;left:17vw;bottom:7vh;width:min(440px,60vw);
+      background:#f8eee2;border:1.5px solid #e3d4bd;padding:40px 34px 32px;
+      transform:rotate(5deg);box-shadow:0 30px 70px -36px rgba(90,64,52,.55)">
+    <svg viewBox="0 0 100 30" preserveAspectRatio="none"
+         style="position:absolute;left:0;right:0;top:0;width:100%;height:30px">
+      <path d="M0 0 L50 27 L100 0" fill="none" stroke="#e3d4bd" stroke-width="1.5"/>
+    </svg>
+
+    <!-- 邮票：虚线齿孔 -->
+    <div style="position:absolute;right:16px;top:14px;width:52px;height:62px;
+                background:#fff;border:1.4px dashed #d9c3ae;padding:5px">
+      <div style="height:34px;background:linear-gradient(150deg,#e9d3c1,#d9b79c)"></div>
+      <div style="margin-top:4px;font-size:8px;letter-spacing:.1em;color:var(--muted);text-align:center">80¢</div>
+    </div>
+
+    <p style="font-size:min(2.7vw,23px)">小屋</p>
+    <p style="margin-top:7px;font-size:13.5px;color:var(--muted);max-width:70%">
+      那几个人还在等你回话 · 未读 11 封
+    </p>
+  </a>
+
+  <!-- ═══ 票根：带齿孔的窄条 ═══ -->
+  <a href="#" style="position:absolute;right:19vw;bottom:19vh;width:min(260px,34vw);
+      background:#fbeae3;border:1.4px dashed #e0b9a4;padding:20px 22px;transform:rotate(-7deg)">
+    <p style="font-size:min(2.1vw,19px)">聚会</p>
+    <p style="margin-top:5px;font-size:12.5px;color:#9c7566">有人在放一首很旧的歌</p>
+  </a>
+
+  <!-- ═══ 本子：书脊 + 书签带 ═══ -->
+  <a href="#" style="position:absolute;right:8vw;bottom:8vh;width:min(190px,26vw);
+      background:#e9dcc7;border:1.5px solid #d6c3a6;border-radius:6px;
+      padding:22px 20px 22px 30px;transform:rotate(9deg);
+      box-shadow:0 24px 54px -30px rgba(90,64,52,.5)">
+    <div style="position:absolute;left:15px;top:0;bottom:0;width:1.5px;background:#d6c3a6"></div>
+    <div style="position:absolute;right:18px;top:-9px;width:11px;height:40px;background:var(--wax);border-radius:2px"></div>
+    <p style="font-size:min(1.9vw,18px)">我的</p>
+    <p style="margin-top:5px;font-size:12px;color:var(--muted)">收着 27 封信</p>
+  </a>
+
+</div>
+</body>
+</html>

@@ -18,15 +18,12 @@ import {
   pickProfile,
   resolveDisplayName,
 } from '../components/utils'
-import { useWeather } from '../components/weather'
+import { useWeather, weatherAdvice } from '../components/weather'
 import { markModuleSeen, useModuleBadges } from '../components/module-badges'
-import { TiltCard } from '../components/tilt-card'
 import { cn } from '../lib/utils'
 import { NotificationBell } from '../components/notifications'
 import { WelcomeLetter } from '../components/welcome-letter'
 import { isLoginTransitioning, subscribeLoginTransition } from '../components/login-transition'
-import { motion, useScroll, useTransform } from 'motion/react'
-import { ChevronRight, House, PartyPopper, Trees, UserRound } from 'lucide-react'
 import { Button } from '../components/ui/button'
 import {
   Dialog,
@@ -41,8 +38,6 @@ import type { FriendRequest, FriendshipRow, LoginStreak } from '../components/ty
 import { pageAccentVars } from '../components/theme'
 import { MailboxDialog, useMailbox } from '../components/mailbox'
 import { MailboxArt } from '../components/mailbox-art'
-import { WinterScene } from '../components/winter-scene'
-import { FallingBits } from '../components/paper-pattern'
 
 // 客户端单例：放在模块级，保证引用稳定（useCallback / useEffect 不会每次渲染都重跑）
 const supabase = createClient()
@@ -65,56 +60,6 @@ export default function HomePage() {
   const [quote, setQuote] = useState('')
   const [dateText, setDateText] = useState('')
 
-  /* 四个模块：daisyUI 卡片要用的定义（图标 + 文案 + 角标键） */
-  /*
-   * 每块一个**暖家谱里的不同调子**：火漆红 / 蜜金 / 陶红 / 可可。
-   * daisyUI 给的是统一的骨架，这里给每块一点自己的颜色 ——
-   * 四块分得开，又不至于变成彩虹。
-   */
-  const moduleCards = [
-    {
-      key: 'friends',
-      href: '/friends',
-      title: '小屋',
-      desc: '好友与私聊，慢慢说',
-      Icon: House,
-      tint: 'bg-[#f7e8e0]',
-      ink: 'text-[#a8563a]',
-    },
-    {
-      key: 'world',
-      href: '/world',
-      title: '院子',
-      desc: '大家在想什么',
-      Icon: Trees,
-      tint: 'bg-[#f8efe0]',
-      ink: 'text-[#c08a3e]',
-    },
-    {
-      key: 'play',
-      href: '/play',
-      title: '聚会',
-      desc: '活动、小工具、一起听歌',
-      Icon: PartyPopper,
-      tint: 'bg-[#fbeae3]',
-      ink: 'text-[#c96a4e]',
-    },
-    {
-      key: 'me',
-      href: '/me',
-      title: '我的',
-      desc: '资料、收藏、设置',
-      Icon: UserRound,
-      tint: 'bg-[#f1e9df]',
-      ink: 'text-[#8a6a4a]',
-    },
-  ] as const
-
-  /*
-   * 标题"写一遍"的计数器：每次 +1 就让 h1 重新挂载（key 变了），
-   * CSS 动画于是从头再放一遍。触发时机 = 那封信关掉（或判定不弹）之后。
-   */
-  const [writeKey, setWriteKey] = useState(0)
   /*
    * 出场动画的开关：挂上 .dsh-open 就播一次（整页朦胧 → 四个字一起弹 → 立刻清晰），
    * 1.4 秒后摘掉，所以不会反复播。
@@ -129,7 +74,6 @@ export default function HomePage() {
 
   useEffect(() => {
     function onDone() {
-      setWriteKey((k) => k + 1)
       setOpening(true)
       window.setTimeout(() => {
         setOpening(false)
@@ -154,7 +98,6 @@ export default function HomePage() {
     const bump = () => {
       if (done) return
       done = true
-      setWriteKey((k) => k + 1)
       setOpening(true)
       window.setTimeout(() => {
         setOpening(false)
@@ -173,13 +116,6 @@ export default function HomePage() {
     return () => window.clearTimeout(timer)
   }, [])
 
-  /* ---------- ③ 连续滚动（视差） ----------
-     往下滚：站名向上位移并淡出，滚动提示先消失。
-     这是"连续"那一档 —— 跟手、可逆、和滚动位置一一对应。 */
-  const { scrollY } = useScroll()
-  const heroY = useTransform(scrollY, [0, 460], [0, -84])
-  const heroOpacity = useTransform(scrollY, [0, 320], [1, 0.12])
-  const hintOpacity = useTransform(scrollY, [0, 110], [1, 0])
   const [streak, setStreak] = useState<LoginStreak>({ days: 1, sinceLast: 1 })
   const [requests, setRequests] = useState<FriendRequest[]>([])
   const [confirmLogout, setConfirmLogout] = useState(false)
@@ -345,179 +281,182 @@ export default function HomePage() {
       )}
       style={pageAccentVars('home')}
     >
-      {/* 顶栏：daisyUI navbar；站名用毛笔字 */}
-      <div className="navbar mx-auto w-full max-w-6xl px-4">
-        <div className="navbar-start">
-          <Link href="/" className="font-brush text-2xl tracking-[0.04em] sm:text-3xl">
-            你的来信
-          </Link>
-        </div>
-
-        <div className="navbar-end gap-1">
-          <span className="mr-2 hidden text-xs opacity-60 sm:inline">{email || '朋友'}</span>
-
-          <NotificationBell userId={userId} />
-
-          <Link href="/search" className="btn btn-ghost btn-circle btn-sm" aria-label="搜索">
-            <IconSearch className="h-[18px] w-[18px]" />
-          </Link>
-
-          <button type="button" className="btn btn-ghost btn-sm" onClick={() => setConfirmLogout(true)}>
-            退出登录
-          </button>
-        </div>
+      {/* ── 右上功能区（不能丢）── */}
+      <div className="mx-auto flex w-full max-w-6xl items-center justify-end gap-3 px-5 pt-5 text-[13px] text-[#8a7a68] sm:px-8">
+        <span className="hidden truncate sm:inline">{email || '朋友'}</span>
+        <NotificationBell userId={userId} />
+        <Link
+          href="/search"
+          aria-label="搜索"
+          className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-[#e0d3bd] transition hover:border-[#a8563a] hover:text-[#a8563a]"
+        >
+          <IconSearch className="h-[17px] w-[17px]" />
+        </Link>
+        <button
+          type="button"
+          onClick={() => setConfirmLogout(true)}
+          className="transition hover:text-[#a8563a]"
+        >
+          退出登录
+        </button>
       </div>
 
-      {/* hero：daisyUI hero + hero-content（居中主视觉） */}
-      <section className="hero">
-        <div className="hero-content px-4 py-16 text-center sm:py-24">
-          <motion.div style={{ y: heroY, opacity: heroOpacity }} className="max-w-2xl">
-            <h1
-              key={writeKey}
-              className="dsh-hero-title font-brush text-[56px] leading-[1.1] tracking-[0.04em] sm:text-[80px]"
-            >
-              {[...'你的来信'].map((ch, i) => (
-                <span key={i}>{ch}</span>
-              ))}
-            </h1>
-
-            <p className="mt-4 font-art text-2xl text-primary sm:text-3xl">Dear You</p>
-
-            <p className="mt-8 text-sm opacity-60">
-              {dateText} · {weather.city} {weather.condition} {weather.temp}° / {weather.tempMin}°
-              <span className="mx-2 opacity-40">|</span>
-              陪你走过 {streak.days} 天
-            </p>
-
-            <motion.a
-              href="#modules"
-              style={{ opacity: hintOpacity }}
-              className="btn btn-outline btn-sm mt-10 rounded-full"
-            >
-              ↓ 往下看看
-            </motion.a>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* 出错时给一条可重试的提示（原来是页面里插一行红字，现在用 daisyUI alert） */}
+      {/* ── 出错提示（保留重试）── */}
       {(authError || requestError) && (
-        <div className="mx-auto w-full max-w-6xl px-4 pt-4">
+        <div className="mx-auto w-full max-w-6xl px-5 pt-4 sm:px-8">
           <div className="alert alert-error">
             <span>{authError || requestError}</span>
-            <button type="button" className="btn btn-sm" onClick={handleRetry}>
-              重试
-            </button>
+            <button type="button" className="btn btn-sm" onClick={handleRetry}>重试</button>
           </div>
         </div>
       )}
 
-      {/* 四个模块：daisyUI card */}
-      <section id="modules" className="mx-auto w-full max-w-6xl px-4 py-12 sm:py-16">
-        <FriendRequestBanner requests={requests} />
+      {/* ── 桌面 ── */}
+      <main className="mx-auto w-full max-w-6xl px-5 py-10 sm:px-8 lg:py-14">
+        <div className="grid grid-cols-1 gap-8 lg:grid-cols-[minmax(0,1.35fr)_minmax(0,1fr)] lg:gap-10">
+          {/* ══ 左栏 ══ */}
+          <div className="flex flex-col gap-8">
+            {/* 信纸：标题＝信头 */}
+            <section className="-rotate-1 rounded-2xl border border-[#ece0cd] bg-[#fdf9f2] px-7 py-9 shadow-[0_28px_60px_-40px_rgba(90,64,52,0.5)] sm:px-10 sm:py-11">
+              <h1 className="dsh-hero-title font-brush text-[38px] leading-[1.05] tracking-[0.03em] sm:text-[44px]">
+                你的来信
+              </h1>
+              <p className="mt-2 text-[11.5px] tracking-[0.18em] text-[#a2937f]">
+                DEAR YOU · {dateText}
+              </p>
 
-        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
-          {moduleCards.map((card, i) => (
-            <motion.div
-              key={card.href}
-              initial={{ opacity: 0, y: 14 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: '-60px' }}
-              transition={{ duration: 0.45, delay: i * 0.06, ease: [0.22, 1, 0.36, 1] }}
-              className="h-full"
-            >
-              <TiltCard className="relative h-full">
-                <Link
-                  href={card.href}
-                  onClick={() => markModuleSeen(card.key as Parameters<typeof markModuleSeen>[0])}
-                  className="card card-border group h-full overflow-hidden bg-base-100 transition-all duration-200 [--radius-box:1rem] hover:-translate-y-0.5 hover:shadow-xl"
-                >
-                  <div className="card-body flex-row items-center gap-5 py-6">
-                    <span
-                      className={cn(
-                        'flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-2xl transition-transform duration-200 group-hover:scale-105',
-                        card.tint,
-                        card.ink,
-                      )}
-                    >
-                      <card.Icon className="h-[26px] w-[26px]" strokeWidth={1.6} />
-                    </span>
+              <div className="mt-6 h-px bg-[#ece0cd]" />
 
-                    <div className="min-w-0 flex-1">
-                      <div className="flex items-baseline gap-2">
-                        <h2 className="font-serif-cn text-[18px] leading-none">{card.title}</h2>
-                        {badges?.[card.key]?.count ? (
-                          <span className="badge badge-primary badge-sm">
-                            {badges[card.key]!.count! > 99 ? '99+' : badges[card.key]!.count}
-                          </span>
-                        ) : badges?.[card.key]?.dot ? (
-                          <span className="badge badge-primary badge-xs" />
-                        ) : null}
-                      </div>
-                      <p className="mt-2 truncate text-[13px] opacity-60">{card.desc}</p>
-                    </div>
+              {quote && (
+                <p className="mt-7 font-serif-cn text-[21px] leading-[1.95] text-[#3a2f26] sm:text-[24px]">
+                  「{quote}」
+                </p>
+              )}
 
-                    <ChevronRight
-                      className="h-5 w-5 flex-shrink-0 opacity-40 transition-transform duration-200 group-hover:translate-x-1 group-hover:opacity-80"
-                      strokeWidth={1.8}
-                    />
-                  </div>
-                </Link>
-              </TiltCard>
-            </motion.div>
-          ))}
-        </div>
-      </section>
+              {/* 天气 + 短建议 */}
+              <p className="mt-7 text-[13px] text-[#6f5d4c]">
+                {weather.city} · {weather.condition}{' '}
+                <span className="text-[#3a2f26]">{weather.temp}°</span>
+                <span className="text-[#a2937f]"> / {weather.tempMin}°</span>
+                <span className="ml-2.5 text-[#8a6a4a]">{weatherAdvice(weather)}</span>
+              </p>
 
-      <div className="mx-auto w-full max-w-6xl px-4">
-        <div className="divider" />
-      </div>
+              {/* 连续陪伴 */}
+              <p className="mt-2.5 text-[12px] tracking-[0.1em] text-[#a2937f]">
+                陪你走过 {streak.days} 天
+                {streak.sinceLast <= 1 ? ' · 今天是重逢的第一天' : ` · 距上次见面 ${streak.sinceLast} 天`}
+              </p>
 
-      {/* 引言 + 信箱 + 雪中分别 */}
-      <section className="mx-auto w-full max-w-6xl px-4 py-12 sm:py-16">
-        <div className="grid items-center gap-12 sm:grid-cols-2 sm:gap-16">
-          <div className="sm:mr-8 sm:justify-self-end">
-            {quote && (
-              <motion.blockquote
-                initial={{ opacity: 0, y: 16 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: false, margin: '-80px' }}
-                transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-                className="border-l-4 border-primary/40 pl-8 py-1"
-              >
-                <p className="font-serif-cn text-2xl leading-[1.8] sm:text-[28px]">「{quote}」</p>
-                <footer className="mt-4 text-[13px] tracking-[0.06em] opacity-65">
-                  来自陌生人的问候 · <span className="text-primary">睡觉的猪</span>
-                </footer>
-              </motion.blockquote>
-            )}
-
-            {/* 信箱：中心落在**引文的正下方**（引文有 pl-8 缩进，所以这里也加 pl-8
-                再用 flex 居中，中心才和引文对齐） */}
-            <div className="mt-6 flex justify-center pl-2">
-              <div className="relative w-[170px]">
-                <FallingBits className="-inset-x-8 -top-4 bottom-6" />
-                <MailboxArt onOpen={() => setMailboxOpen(true)} />
+              {/* 蜡封 */}
+              <div className="mt-8 flex justify-end">
+                <span className="flex h-12 w-12 items-center justify-center rounded-full bg-[radial-gradient(circle_at_34%_30%,#c2674a,#a8563a)] shadow-[0_10px_20px_-10px_rgba(120,50,30,0.55)]">
+                  <span className="font-brush text-[19px] leading-none text-[#fdf8f0]">来</span>
+                </span>
               </div>
-            </div>
+            </section>
+
+            {/* 好友申请（有才显示）*/}
+            <FriendRequestBanner requests={requests} />
+
+            {/* 信封：小屋 */}
+            <Link
+              href="/friends"
+              onClick={() => markModuleSeen('friends')}
+              className="group relative rotate-1 rounded-2xl border border-[#e3d4bd] bg-[#f8eee2] px-7 pb-6 pt-9 shadow-[0_24px_54px_-38px_rgba(90,64,52,0.55)] transition hover:-translate-y-0.5 sm:px-9"
+            >
+              {/* V 形封盖 */}
+              <svg viewBox="0 0 100 30" preserveAspectRatio="none" aria-hidden="true"
+                   className="absolute inset-x-0 top-0 h-7 w-full">
+                <path d="M0 0 L50 26 L100 0 Z" fill="rgba(226,211,189,0.5)" />
+                <path d="M0 0 L50 26 L100 0" fill="none" stroke="#dcc9ae" strokeWidth="1.2" />
+              </svg>
+
+              <span className="flex items-baseline gap-3">
+                <span className="font-brush text-[23px] leading-none">小屋</span>
+                {badges?.friends?.count ? (
+                  <span className="text-[12px] tabular-nums text-[#a8563a]">
+                    未读 {badges.friends.count}
+                  </span>
+                ) : badges?.friends?.dot ? (
+                  <span className="h-1.5 w-1.5 rounded-full bg-[#a8563a]" />
+                ) : null}
+              </span>
+              <p className="mt-2 text-[13px] text-[#8a7a68]">那几个人还在等你回话</p>
+            </Link>
+
+            {/* 便签：院子 */}
+            <Link
+              href="/world"
+              onClick={() => markModuleSeen('world')}
+              className="relative w-[220px] -rotate-2 rounded-lg border border-[#e4d6b8] bg-[#f7efdc] px-5 py-4 shadow-[0_16px_36px_-26px_rgba(90,64,52,0.5)] transition hover:-translate-y-0.5"
+            >
+              <span className="flex items-baseline gap-2.5">
+                <span className="font-brush text-[19px] leading-none">院子</span>
+                {badges?.world?.count ? (
+                  <span className="text-[11px] tabular-nums text-[#a8563a]">{badges.world.count}</span>
+                ) : badges?.world?.dot ? (
+                  <span className="h-1.5 w-1.5 rounded-full bg-[#a8563a]" />
+                ) : null}
+              </span>
+              <p className="mt-1.5 text-[12px] text-[#8a7a68]">今晚有人在这里说了梦</p>
+            </Link>
           </div>
 
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: false, margin: '-80px' }}
-            transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-            className="relative w-full max-w-[320px] sm:ml-8 sm:justify-self-start"
-          >
-            <FallingBits className="-inset-x-6 -top-6 bottom-2" />
-            <WinterScene className="w-full" />
-          </motion.div>
-        </div>
-      </section>
+          {/* ══ 右栏 ══ */}
+          <div className="flex flex-col gap-8">
+            {/* 照片：冬日信箱（本身就是入口）*/}
+            <section className="rotate-1 rounded-2xl border border-[#ece0cd] bg-white p-3 pb-9 shadow-[0_26px_58px_-40px_rgba(90,64,52,0.5)]">
+              <div className="rounded-lg bg-[#f8f0e4] px-2 pt-1">
+                <MailboxArt onOpen={() => setMailboxOpen(true)} />
+              </div>
+              <div className="mt-1 flex items-baseline justify-between px-1">
+                <span className="font-brush text-[18px] leading-none">冬日信箱</span>
+                <span className="text-[11.5px] text-[#a2937f]">点它写信</span>
+              </div>
+            </section>
 
-      {/* 页脚：daisyUI footer */}
-      <footer className="mx-auto mt-auto flex w-full max-w-6xl flex-wrap items-end gap-x-6 gap-y-3 px-4 pb-8 pt-6 text-xs opacity-75">
-        <nav className="flex flex-wrap gap-x-6 gap-y-2 border-t border-base-300 pt-4">
+            {/* 票根：聚会 */}
+            <Link
+              href="/play"
+              onClick={() => markModuleSeen('play')}
+              className="relative -rotate-2 self-start rounded-xl border border-[#e6c3ae] bg-[#fbeae3] px-6 py-5 shadow-[0_20px_44px_-30px_rgba(168,86,58,0.5)] transition hover:-translate-y-0.5"
+            >
+              <span className="text-[9px] tracking-[0.2em] text-[#a98a78]">NO. 0031 · ADMIT ONE</span>
+              <span className="mt-1.5 flex items-baseline gap-2.5">
+                <span className="font-brush text-[20px] leading-none">聚会</span>
+                {badges?.play?.count ? (
+                  <span className="text-[11px] tabular-nums text-[#a8563a]">{badges.play.count}</span>
+                ) : badges?.play?.dot ? (
+                  <span className="h-1.5 w-1.5 rounded-full bg-[#a8563a]" />
+                ) : null}
+              </span>
+              <p className="mt-1.5 text-[12px] text-[#9c7566]">有人在放一首很旧的歌</p>
+            </Link>
+
+            {/* 本子：我的 */}
+            <Link
+              href="/me"
+              className="relative self-start rounded-xl border border-[#d3bfa0] bg-[linear-gradient(155deg,#e7d8c0,#d8c6a8)] px-7 py-6 pl-9 shadow-[0_24px_52px_-34px_rgba(90,64,52,0.55)] transition hover:-translate-y-0.5"
+            >
+              <span className="absolute left-3.5 top-2 bottom-2 w-[2px] rounded bg-[#c3ab86]" />
+              <span className="absolute right-4 top-0 bottom-0 w-[2px] rounded bg-[#a87f56]/40" />
+              <span className="flex items-baseline gap-2.5">
+                <span className="font-brush text-[20px] leading-none text-[#4b3826]">我的</span>
+                {badges?.me?.count ? (
+                  <span className="text-[11px] tabular-nums text-[#a8563a]">{badges.me.count}</span>
+                ) : badges?.me?.dot ? (
+                  <span className="h-1.5 w-1.5 rounded-full bg-[#a8563a]" />
+                ) : null}
+              </span>
+              <p className="mt-1.5 text-[12px] text-[#6d5942]">资料、收藏、设置</p>
+            </Link>
+          </div>
+        </div>
+      </main>
+
+      {/* ── 页脚：隐私文件紧凑 + 两段断线 ── */}
+      <footer className="mx-auto mt-auto flex w-full max-w-6xl flex-wrap items-end gap-x-6 gap-y-3 px-5 pb-8 text-[11.5px] text-[#8a7a68] sm:px-8">
+        <nav className="flex flex-wrap gap-x-4 gap-y-2 border-t border-[#e3d4bd] pt-3.5">
           {[
             { slug: 'community', label: '社区公约' },
             { slug: 'reporting', label: '举报与申诉' },
@@ -525,20 +464,21 @@ export default function HomePage() {
             { slug: 'terms', label: '用户协议' },
             { slug: 'about', label: '关于' },
           ].map((item) => (
-            <Link key={item.slug} href={`/p/${item.slug}`} className="link link-hover">
+            <Link key={item.slug} href={`/p/${item.slug}`} className="transition hover:text-[#a8563a]">
               {item.label}
             </Link>
           ))}
         </nav>
-        <Link href="/p" className="link link-hover ml-auto border-t border-base-300 pt-4">
+        <Link
+          href="/p"
+          className="ml-auto border-t border-[#e3d4bd] pt-3.5 transition hover:text-[#a8563a]"
+        >
           全部条款 →
         </Link>
       </footer>
 
-      {/* 冬日信箱：读信 / 写信 */}
       <MailboxDialog mailbox={mailbox} open={mailboxOpen} onClose={() => setMailboxOpen(false)} />
 
-      {/* 退出登录二次确认 */}
       <Dialog open={confirmLogout} onOpenChange={setConfirmLogout}>
         <DialogContent>
           <DialogHeader>
