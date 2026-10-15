@@ -42,6 +42,46 @@ function isNewer(iso: string, seenAt: string | null): boolean {
   return new Date(iso).getTime() > seen
 }
 
+/* ==================== 未读缓存（进页面立刻显示的前提） ==================== */
+
+const UNREAD_CACHE_PREFIX = 'treehole:cache:unread:'
+
+/** 缓存多久算过期：一天。过期的就别拿来预热了，省得显示一个很旧数字 */
+const UNREAD_CACHE_TTL_MS = 24 * 60 * 60 * 1000
+
+type UnreadCache = {
+  counts: Record<string, number>
+  friends: Record<string, string>
+  at: number
+}
+
+function readUnreadCache(userId: string): { counts: Record<string, number>; friends: Record<string, string> } {
+  const empty = { counts: {}, friends: {} }
+  try {
+    const raw = window.localStorage.getItem(`${UNREAD_CACHE_PREFIX}${userId}`)
+    if (!raw) return empty
+    const parsed = JSON.parse(raw) as Partial<UnreadCache>
+    if (!parsed || typeof parsed.at !== 'number') return empty
+    if (Date.now() - parsed.at > UNREAD_CACHE_TTL_MS) return empty
+    return { counts: parsed.counts ?? {}, friends: parsed.friends ?? {} }
+  } catch {
+    return empty
+  }
+}
+
+function writeUnreadCache(
+  userId: string,
+  counts: Record<string, number>,
+  friends: Record<string, string>,
+): void {
+  try {
+    const payload: UnreadCache = { counts, friends, at: Date.now() }
+    window.localStorage.setItem(`${UNREAD_CACHE_PREFIX}${userId}`, JSON.stringify(payload))
+  } catch {
+    /* 隐私模式忽略 */
+  }
+}
+
 /* ==================== 好友私信未读 ==================== */
 
 export type UnreadMessages = {
@@ -60,6 +100,26 @@ export function useUnreadMessages(userId: string | null): UnreadMessages {
   const [byConversation, setByConversation] = useState<Record<string, number>>({})
   const [friendIdByConversation, setFriendIdByConversation] = useState<Record<string, string>>({})
   const [refreshKey, setRefreshKey] = useState(0)
+  /** 查询是否已经回来过一次 —— 没回来之前不许写缓存，否则会把上次的结果擦掉 */
+  const [loaded, setLoaded] = useState(false)
+
+  /*
+   * 预热：先用**上次算出来的结果**把角标铺上。
+   *
+   * 之前的观感是「首页明明有提示，点进小屋要等几秒才出现」——
+   * 因为未读要查三次才出来（会话 + 好友关系 + 消息）。
+   * 现在进页面立刻用缓存显示，查询回来后再校正（快了就是对的，慢了也不闪空）。
+   * 缓存只在浏览器本地，读不到就当没有，不影响正确性。
+   */
+  useEffect(() => {
+    if (!userId) return
+    const cached = readUnreadCache(userId)
+    // 读 localStorage 后同步铺上：这条只在客户端跑，且必须赶在查询回来之前，
+    // 才能做到「点进小屋立刻看到提示」。规则对同一 effect 只报一次，下面那条不用再豁免。
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setByConversation(cached.counts)
+    setFriendIdByConversation(cached.friends)
+  }, [userId])
 
   useEffect(() => {
     if (!userId) return
@@ -103,14 +163,18 @@ export function useUnreadMessages(userId: string | null): UnreadMessages {
 
         if (convIds.length === 0) {
           setByConversation({})
+          setLoaded(true)
           return
         }
 
+        // 加 order + limit：未读只看最近的，别把几年的私信全拉回来算
         const { data: msgs, error: msgError } = await supabase
           .from('messages')
           .select('id, conversation_id, sender_id, created_at')
           .in('conversation_id', convIds)
           .neq('sender_id', userId)
+          .order('created_at', { ascending: false })
+          .limit(300)
 
         if (msgError) throw msgError
         if (cancelled) return
@@ -122,6 +186,7 @@ export function useUnreadMessages(userId: string | null): UnreadMessages {
           counts[msg.conversation_id] = (counts[msg.conversation_id] ?? 0) + 1
         }
         setByConversation(counts)
+        setLoaded(true)
       } catch (err) {
         if (!cancelled) console.error('私信未读统计失败:', err)
       }
@@ -132,6 +197,12 @@ export function useUnreadMessages(userId: string | null): UnreadMessages {
       cancelled = true
     }
   }, [userId, refreshKey])
+
+  // 算完之后把结果存下来，供下次进页面预热（loaded 之前不写，免得擦掉上次的）
+  useEffect(() => {
+    if (!userId || !loaded) return
+    writeUnreadCache(userId, byConversation, friendIdByConversation)
+  }, [userId, loaded, byConversation, friendIdByConversation])
 
   const markConversationRead = useCallback(
     (conversationId: string, friendId: string) => {
