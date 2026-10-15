@@ -38,7 +38,6 @@ import {
 import { toast } from 'sonner'
 import type { FriendRequest, FriendshipRow, LoginStreak } from '../components/types'
 import { pageAccentVars } from '../components/theme'
-import { SkeletonHome } from '../components/skeleton'
 import { MailboxDialog, useMailbox } from '../components/mailbox'
 import { MailboxArt } from '../components/mailbox-art'
 import { WinterScene } from '../components/winter-scene'
@@ -256,9 +255,19 @@ export default function HomePage() {
   }
 
   if (loading) {
+    /*
+     * 加载态：**不再用灰块骨架屏**（占位卡一片灰，像模板）。
+     * 只留一行小字，安静地待在纸中间 —— 加载通常不到半秒，
+     * 比起一排假卡片，这样更不像"页面还在拼装"。
+     */
     return (
-      <div className="page-theme min-h-screen" style={pageAccentVars('home')}>
-        <SkeletonHome />
+      <div
+        className="flex min-h-screen items-center justify-center bg-base-100"
+        style={pageAccentVars('home')}
+      >
+        <p className="font-serif-cn text-sm tracking-[0.1em] text-base-content/35 animate-pulse">
+          正在展开这封信…
+        </p>
       </div>
     )
   }
