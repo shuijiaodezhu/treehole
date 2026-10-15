@@ -90,7 +90,7 @@ export function useNotifications(userId: string | null) {
   }, [userId])
 
   useEffect(() => {
-    if (!userId) return
+    if (!userId || missing) return
     void (async () => {
       await load()
     })()
@@ -102,7 +102,7 @@ export function useNotifications(userId: string | null) {
     }, 300_000)
 
     return () => window.clearInterval(timer)
-  }, [userId, load, reloadKey])
+  }, [userId, load, reloadKey, missing])
 
   /*
    * 实时订阅：别人一提到你、站主一回信，铃铛当场就变。
@@ -193,12 +193,16 @@ export function NotificationBell({
   className?: string
 }) {
   const { unread, missing } = useNotifications(userId)
-  if (missing) return null
 
+  /*
+   * 以前"表还没建就整个不显示" —— 结果用户只看到"这里什么都没有"，
+   * 分不清是自己没跑 SQL 还是功能坏了。改成**永远显示**：
+   * 没开通时点进去，通知页里会告诉他"先执行 supabase-notifications.sql"。
+   */
   return (
     <Link
       href="/me/notifications"
-      title="通知"
+      title={missing ? '通知（还没开通）' : '通知'}
       className={`relative inline-flex h-9 w-9 items-center justify-center rounded-full border border-[var(--accent-line)] bg-white/70 text-[var(--accent-muted)] transition hover:text-[var(--accent-deep)] ${className}`}
     >
       <Icon name="bell" className="h-4 w-4" />
