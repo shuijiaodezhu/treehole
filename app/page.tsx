@@ -24,6 +24,7 @@ import { TiltCard } from '../components/tilt-card'
 import { cn } from '../lib/utils'
 import { NotificationBell } from '../components/notifications'
 import { WelcomeLetter } from '../components/welcome-letter'
+import { isLoginTransitioning, subscribeLoginTransition } from '../components/login-transition'
 import { motion, useScroll, useTransform } from 'motion/react'
 import { ChevronRight, House, PartyPopper, Trees, UserRound } from 'lucide-react'
 import { Button } from '../components/ui/button'
@@ -121,6 +122,34 @@ export default function HomePage() {
     }
     window.addEventListener('dsh:letter-done', onDone)
     return () => window.removeEventListener('dsh:letter-done', onDone)
+  }, [])
+
+  /*
+   * 再挂一个时机：**登录过场结束时**也让标题写一遍。
+   * 为什么需要它：
+   *   那封信"判定不必弹"时虽然会派发 dsh:letter-done，
+   *   但那一刻信封动画还盖在屏幕上，标题在背后就写完了 —— 你看不见。
+   *   （如果信确实要弹，它关掉时还会再触发一次，两次都保留。）
+   * 注意用 setTimeout 而不是直接 setState：effect 里同步 setState 会被
+   * react-hooks/set-state-in-effect 拦下。
+   */
+  useEffect(() => {
+    let done = false
+    const bump = () => {
+      if (done) return
+      done = true
+      setWriteKey((k) => k + 1)
+    }
+
+    if (isLoginTransitioning()) {
+      const unsubscribe = subscribeLoginTransition((active) => {
+        if (!active) bump()
+      })
+      return unsubscribe
+    }
+
+    const timer = window.setTimeout(bump, 140)
+    return () => window.clearTimeout(timer)
   }, [])
 
   /* ---------- ③ 连续滚动（视差） ----------

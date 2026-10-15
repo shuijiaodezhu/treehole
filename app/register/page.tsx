@@ -89,11 +89,11 @@ export default function RegisterPage() {
 
       {/* 左侧装饰文字（大屏可见） */}
       <div className="hidden lg:block absolute left-20 top-1/2 -translate-y-1/2 max-w-sm">
-        <h1 className="text-5xl font-bold text-[#2b2620] leading-tight">你的来信</h1>
+        <h1 className="font-brush text-[52px] leading-tight tracking-[0.04em] text-[#2b2620] sm:text-[64px]">你的来信</h1>
         <p className="mt-4 text-[#8a6a4a] flex items-baseline gap-2">
           <span className="font-art text-3xl text-[#c96447]">Dear You</span>
         </p>
-        <p className="mt-6 text-[#8a827a] text-sm leading-relaxed">
+        <p className="mt-6 font-serif-cn text-sm leading-relaxed text-[#8a827a]">
           这里有一封，你的来信。
           <br />
           陌生人、朋友，和自己。
@@ -121,11 +121,11 @@ export default function RegisterPage() {
       <div className="relative w-full max-w-sm ml-auto mr-auto lg:mr-32">
         <div className="rounded-2xl border border-[#f0e4d4] bg-white p-8 shadow-sm">
           <div className="lg:hidden text-center mb-6">
-            <h1 className="text-2xl font-bold text-[#2b2620]">你的来信</h1>
+            <h1 className="font-brush text-3xl tracking-[0.04em] text-[#2b2620]">你的来信</h1>
             <p className="mt-1 font-art italic text-[#c96447]">Dear You</p>
           </div>
 
-          <h2 className="hidden lg:block text-lg font-semibold text-[#2b2620] mb-1">
+          <h2 className="font-serif-cn hidden lg:block text-lg font-semibold text-[#2b2620] mb-1">
             注册新账号
           </h2>
           <p className="hidden lg:block text-xs text-[#8a827a] mb-6">
