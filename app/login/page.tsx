@@ -58,7 +58,7 @@ export default function LoginPage() {
 
       {/* 左侧装饰文字（大屏可见） */}
       <div className={`hidden lg:block absolute left-20 top-1/2 -translate-y-1/2 max-w-sm ${entering ? 'th-page-out' : ''}`}>
-        <h1 className="text-5xl font-bold text-[#2b2620] leading-tight">你的来信</h1>
+        <h1 className="font-brush text-[44px] leading-[1.05] text-[#2b2620]">你的来信</h1>
         <p className="mt-4 text-[#8a6a4a] flex items-baseline gap-2">
           <span className="font-art text-3xl text-[#c96447]">Dear You</span>
         </p>
@@ -90,7 +90,7 @@ export default function LoginPage() {
       <div className={`relative w-full max-w-sm ml-auto mr-auto lg:mr-32 ${entering ? 'th-page-out' : ''}`}>
         <div className="rounded-2xl border border-[#f0e4d4] bg-white p-8 shadow-sm">
           <div className="lg:hidden text-center mb-6">
-            <h1 className="text-2xl font-bold text-[#2b2620]">你的来信</h1>
+            <h1 className="font-brush text-[26px] leading-[1.05] text-[#2b2620]">你的来信</h1>
             <p className="mt-1 font-art italic text-[#c96447]">Dear You</p>
           </div>
 

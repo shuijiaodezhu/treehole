@@ -120,12 +120,21 @@ export default function HomePage() {
    * 1.4 秒后摘掉，所以不会反复播。
    */
   const [opening, setOpening] = useState(false)
+  /*
+   * waiting：**首帧就是模糊的**（不是等动画开始才糊）。
+   * 一开始 true → 页面一出来就是朦胧的；动画播完（约 2.1s）后才撤掉，
+   * 所以不会出现"先清晰、再故意糊一下"那种丑。
+   */
+  const [waiting, setWaiting] = useState(true)
 
   useEffect(() => {
     function onDone() {
       setWriteKey((k) => k + 1)
       setOpening(true)
-      window.setTimeout(() => setOpening(false), 1400)
+      window.setTimeout(() => {
+        setOpening(false)
+        setWaiting(false)
+      }, 2200)
     }
     window.addEventListener('dsh:letter-done', onDone)
     return () => window.removeEventListener('dsh:letter-done', onDone)
@@ -147,7 +156,10 @@ export default function HomePage() {
       done = true
       setWriteKey((k) => k + 1)
       setOpening(true)
-      window.setTimeout(() => setOpening(false), 1400)
+      window.setTimeout(() => {
+        setOpening(false)
+        setWaiting(false)
+      }, 2200)
     }
 
     if (isLoginTransitioning()) {
@@ -327,7 +339,8 @@ export default function HomePage() {
   return (
     <div
       className={cn(
-        'dsh-page-blur flex min-h-screen flex-col bg-base-100 text-base-content',
+        'flex min-h-screen flex-col bg-base-100 text-base-content',
+        waiting && 'dsh-wait-blur',
         opening && 'dsh-open',
       )}
       style={pageAccentVars('home')}

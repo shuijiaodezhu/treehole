@@ -502,43 +502,7 @@ html.dsh-navigating .dsh-nav-mask {
 
 
 
-/* ============================================================
-   进主页的出场：朦胧 → 一起弹一下 → 立刻清晰（像拆信）
-   —— 上一版是"逐字落定"，不对；这一版是**整页先虚**、
-      四个字**一起**弹跳一下、弹完立刻清晰。
-   ============================================================ */
-
-/* 整页从朦胧到清晰：前 620ms 保持模糊（backwards 让延时期间就处于起始态），
-   等四个字弹完再开始变清晰 —— 也就是你说的"弹跳结束后立马清晰" */
-@keyframes dsh-unblur {
-  from { filter: blur(7px); opacity: 0.45; }
-  to   { filter: blur(0);   opacity: 1; }
-}
-
-/* 四个字一起弹一下：先上去一点、回弹压一下、落定 */
-@keyframes dsh-bounce {
-  0%   { transform: translate3d(0, 0, 0) scale(1); }
-  30%  { transform: translate3d(0, -12px, 0) scale(1.05); }
-  60%  { transform: translate3d(0, 3px, 0) scale(0.985); }
-  100% { transform: translate3d(0, 0, 0) scale(1); }
-}
-
-/* 只在"打开的那一下"生效：dsh-open 由首页在那封信关掉 / 登录过场结束时挂上，
-   1.4 秒后摘掉，所以不会反复播 */
-.dsh-open .dsh-page-blur {
-  animation: dsh-unblur 620ms ease-out 620ms both;
-}
-.dsh-open .dsh-hero-title {
-  animation: dsh-bounce 620ms cubic-bezier(0.34, 1.56, 0.64, 1) 120ms both;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .dsh-open .dsh-page-blur,
-  .dsh-open .dsh-hero-title { animation: none; }
-}
-
-
-/* ---------- 盖掉浏览器自动填充的浅蓝底 ----------
+-
    Chrome 的 :-webkit-autofill 会用浅蓝刷满输入框，跟暖纸完全不搭，
    而且它**不可被 background-color 覆盖**，只能用 inset box-shadow 盖住。 */
 input:-webkit-autofill,
@@ -551,4 +515,49 @@ select:-webkit-autofill {
   -webkit-text-fill-color: #3f332a;
   caret-color: #3f332a;
   transition: background-color 9999s ease-out 0s;
+}
+
+
+/* ============================================================
+   进主页的出场：**一开始就是模糊的** → 四个字慢慢弹一下 → 再清晰
+   （上一版反了：先清晰，等动画开始才糊一下再跳，看着很丑）
+   ============================================================ */
+
+/* 等待阶段：静态模糊。它从**首帧**就在，所以不会出现"先清晰再糊" */
+.dsh-wait-blur {
+  filter: blur(6px);
+  opacity: 0.5;
+}
+
+@keyframes dsh-unblur {
+  from { filter: blur(6px); opacity: 0.5; }
+  to   { filter: blur(0);   opacity: 1; }
+}
+
+/* 弹跳放慢、幅度收小：上一版 620ms + 12px/1.05 太快太夸张 */
+@keyframes dsh-bounce {
+  0%   { transform: translate3d(0, 0, 0) scale(1); }
+  32%  { transform: translate3d(0, -8px, 0) scale(1.03); }
+  62%  { transform: translate3d(0, 2px, 0) scale(0.99); }
+  100% { transform: translate3d(0, 0, 0) scale(1); }
+}
+
+/*
+ * 播放阶段（.dsh-open）：
+ *   标题：延时 200ms，1100ms 慢慢弹一下（动画会盖住静态模糊，所以延时期间仍是糊的）
+ *   整页：延时 1200ms（等弹跳落定），700ms 化开变清晰
+ */
+.dsh-open .dsh-hero-title {
+  animation: dsh-bounce 1100ms cubic-bezier(0.34, 1.4, 0.64, 1) 200ms both;
+}
+.dsh-open.dsh-wait-blur,
+.dsh-open .dsh-wait-blur {
+  animation: dsh-unblur 700ms ease-out 1200ms both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dsh-wait-blur { filter: none; opacity: 1; }
+  .dsh-open .dsh-hero-title,
+  .dsh-open.dsh-wait-blur,
+  .dsh-open .dsh-wait-blur { animation: none; }
 }
