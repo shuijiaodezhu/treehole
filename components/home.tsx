@@ -5,6 +5,9 @@ import type { ReactElement } from 'react'
 import { IconArrow, IconFlame, IconMail, WeatherIcon } from './icons'
 import { avatarFallback } from './utils'
 import { markModuleSeen } from './module-badges'
+import { motion } from 'motion/react'
+import { ChevronRight, House, PartyPopper, Trees, UserRound } from 'lucide-react'
+import { cn } from '../lib/utils'
 import { weatherAdvice, type WeatherState } from './weather'
 import type { FriendRequest, LoginStreak } from './types'
 
@@ -126,49 +129,69 @@ export function FriendRequestBanner({ requests }: { requests: FriendRequest[] })
 /* ==================== 功能导航卡片网格 ==================== */
 
 const BLOCKS = [
-  { href: '/friends', title: '小屋', desc: '好友与私聊，慢慢说', span: true },
-  { href: '/world', title: '院子', desc: '大家在想什么', span: false },
-  { href: '/play', title: '聚会', desc: '活动、小工具、一起听歌', span: false },
-  { href: '/me', title: '我的', desc: '资料、收藏、设置', span: false },
+  { href: '/friends', title: '小屋', desc: '好友与私聊，慢慢说', Icon: House },
+  { href: '/world', title: '院子', desc: '大家在想什么', Icon: Trees },
+  { href: '/play', title: '聚会', desc: '活动、小工具、一起听歌', Icon: PartyPopper },
+  { href: '/me', title: '我的', desc: '资料、收藏、设置', Icon: UserRound },
 ]
 
 
 export function NavCardGrid({ badges }: { badges?: Partial<Record<string, { count?: number; dot?: boolean }>> }): ReactElement {
   /*
-   * 极简风里的链接：名字衬线 18px + 一条**常驻**的细下划线。
-   * 下划线是最诚实的"能点"信号 —— 比箭头含蓄，比色块安静，
-   * 而且不用悬停就能看出来。整行都是热区，行高给足。
+   * 换成产品级的做法：
+   *   · 图标放在一个**中性色方块**里（不是彩色圆形芯片，那是模板感）
+   *   · 卡片是 shadcn 那种 1px 描边 + 悬停加深边框，不用阴影堆
+   *   · 进入时逐块错开淡入上浮（motion），悬停整块上浮 2px
+   *   · 右侧一个 chevron，悬停时右移 —— 这是最标准的"可进入"暗示
    */
   return (
-    <ul>
-      {BLOCKS.map((block) => {
+    <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+      {BLOCKS.map((block, i) => {
         const key = block.href.replace('/', '')
         const badge = badges?.[key]
+        const Icon = block.Icon
         return (
-          <li key={block.href} className="border-b border-[#ece3d4]">
+          <motion.div
+            key={block.href}
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.35, delay: i * 0.06, ease: [0.22, 1, 0.36, 1] }}
+          >
             <Link
               href={block.href}
               onClick={() => markModuleSeen(key as Parameters<typeof markModuleSeen>[0])}
-              className="group flex items-baseline gap-4 py-5"
+              className={cn(
+                'group flex h-full items-center gap-4 rounded-xl border border-[#e0d3bd] bg-white/70 px-4 py-4',
+                'transition-all duration-200 hover:-translate-y-0.5 hover:border-[#a8563a] hover:bg-white',
+                'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#a8563a]/30',
+              )}
             >
-              <span className="relative font-serif-cn text-lg text-[#3f332a] underline decoration-[#d8cbb6] decoration-1 underline-offset-[6px] transition group-hover:text-[#a8563a] group-hover:decoration-[#a8563a]">
-                {block.title}
-                {badge?.count ? (
-                  <span className="absolute -right-5 -top-1.5 text-[10px] tabular-nums text-[#a8563a]">
-                    {badge.count > 99 ? '99+' : badge.count}
-                  </span>
-                ) : null}
+              <span className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-lg bg-[#f1e9dc] text-[#6b5949] transition-colors group-hover:bg-[#a8563a]/10 group-hover:text-[#a8563a]">
+                <Icon className="h-5 w-5" strokeWidth={1.6} />
               </span>
 
-              <span className="min-w-0 flex-1 truncate text-xs text-[#8a7a68]">{block.desc}</span>
+              <span className="min-w-0 flex-1">
+                <span className="flex items-baseline gap-2">
+                  <span className="font-serif-cn text-[17px] text-[#3f332a]">{block.title}</span>
+                  {badge?.count ? (
+                    <span className="text-[11px] tabular-nums text-[#a8563a]">
+                      {badge.count > 99 ? '99+' : badge.count}
+                    </span>
+                  ) : badge?.dot ? (
+                    <span className="h-1.5 w-1.5 rounded-full bg-[#a8563a]" />
+                  ) : null}
+                </span>
+                <span className="mt-1 block truncate text-[13px] text-[#8a7a68]">{block.desc}</span>
+              </span>
 
-              {badge?.dot ? (
-                <span className="h-1.5 w-1.5 flex-shrink-0 rounded-full bg-[#a8563a]" />
-              ) : null}
+              <ChevronRight
+                className="h-4 w-4 flex-shrink-0 text-[#c9bda9] transition-transform duration-200 group-hover:translate-x-0.5 group-hover:text-[#a8563a]"
+                strokeWidth={1.8}
+              />
             </Link>
-          </li>
+          </motion.div>
         )
       })}
-    </ul>
+    </div>
   )
 }
