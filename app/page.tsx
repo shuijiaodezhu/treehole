@@ -398,10 +398,10 @@ export default function HomePage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: false, margin: '-80px' }}
                 transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-                className="border-l-4 border-primary/30 pl-6"
+                className="border-l-4 border-primary/40 pl-8 py-1"
               >
-                <p className="font-serif-cn text-xl leading-relaxed">「{quote}」</p>
-                <footer className="mt-3 text-xs opacity-60">
+                <p className="font-serif-cn text-2xl leading-[1.8] sm:text-[28px]">「{quote}」</p>
+                <footer className="mt-4 text-[13px] tracking-[0.06em] opacity-65">
                   来自陌生人的问候 · <span className="text-primary">睡觉的猪</span>
                 </footer>
               </motion.blockquote>
@@ -427,7 +427,7 @@ export default function HomePage() {
       </section>
 
       {/* 页脚：daisyUI footer */}
-      <footer className="footer mx-auto mt-auto w-full max-w-6xl items-center px-4 py-8 text-xs opacity-70">
+      <footer className="mx-auto mt-auto flex w-full max-w-6xl flex-wrap items-center gap-x-6 gap-y-3 px-4 py-8 text-xs opacity-75">
         <nav className="flex flex-wrap gap-x-6 gap-y-2">
           {[
             { slug: 'community', label: '社区公约' },
@@ -441,11 +441,9 @@ export default function HomePage() {
             </Link>
           ))}
         </nav>
-        <nav className="ml-auto">
-          <Link href="/p" className="link link-hover">
-            全部条款 →
-          </Link>
-        </nav>
+        <Link href="/p" className="link link-hover ml-auto">
+          全部条款 →
+        </Link>
       </footer>
 
       {/* 冬日信箱：读信 / 写信 */}
