@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { Cormorant_Garamond, Noto_Serif_SC } from "next/font/google";
 import "./globals.css";
 import { OnlinePresence } from "../components/presence";
@@ -56,8 +57,10 @@ export default function RootLayout({
         <ThemeProvider>
           {/* 进站即上报当日活跃 + 加入在线频道（后台统计用） */}
           <OnlinePresence />
-          {/* 整站边缘的极淡装饰（信纸边 + 小信封 + 小邮戳） */}
-          <PageDecor />
+          {/* 整站边缘的极淡装饰（颜色与图案跟着当前页面走） */}
+          <Suspense fallback={null}>
+            <PageDecor />
+          </Suspense>
           {children}
         </ThemeProvider>
       </body>
