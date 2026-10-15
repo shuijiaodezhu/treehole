@@ -5,7 +5,6 @@ import type { ReactElement } from 'react'
 import { IconArrow, IconFlame, IconMail, WeatherIcon } from './icons'
 import { avatarFallback } from './utils'
 import { markModuleSeen } from './module-badges'
-import { ModuleArt } from './module-art'
 import { weatherAdvice, type WeatherState } from './weather'
 import type { FriendRequest, LoginStreak } from './types'
 
@@ -136,40 +135,40 @@ const BLOCKS = [
 
 export function NavCardGrid({ badges }: { badges?: Partial<Record<string, { count?: number; dot?: boolean }>> }): ReactElement {
   /*
-   * 每块左边是手绘插画（小屋/院子/聚会/小人），右边是名字与说明。
-   * 插画走 currentColor，所以悬停时整张画的线条一起转成火漆红 ——
-   * 一点含蓄的反馈，不用整块变色。
+   * 极简风里的链接：名字衬线 18px + 一条**常驻**的细下划线。
+   * 下划线是最诚实的"能点"信号 —— 比箭头含蓄，比色块安静，
+   * 而且不用悬停就能看出来。整行都是热区，行高给足。
    */
   return (
-    <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4">
+    <ul>
       {BLOCKS.map((block) => {
         const key = block.href.replace('/', '')
         const badge = badges?.[key]
         return (
-          <Link
-            key={block.href}
-            href={block.href}
-            onClick={() => markModuleSeen(key as Parameters<typeof markModuleSeen>[0])}
-            className="group flex items-center gap-5 rounded-lg border border-[#e0d3bd] bg-white/60 px-5 py-5 text-[#3a2f26] transition hover:border-[#a8563a] hover:bg-white hover:text-[#a8563a]"
-          >
-            <ModuleArt kind={key} className="h-16 w-[86px] flex-shrink-0 sm:h-[72px] sm:w-[96px]" />
-
-            <div className="min-w-0 flex-1">
-              <div className="flex items-baseline gap-2">
-                <span className="font-serif-cn text-xl text-[#3a2f26]">{block.title}</span>
+          <li key={block.href} className="border-b border-[#ece3d4]">
+            <Link
+              href={block.href}
+              onClick={() => markModuleSeen(key as Parameters<typeof markModuleSeen>[0])}
+              className="group flex items-baseline gap-4 py-5"
+            >
+              <span className="relative font-serif-cn text-lg text-[#3f332a] underline decoration-[#d8cbb6] decoration-1 underline-offset-[6px] transition group-hover:text-[#a8563a] group-hover:decoration-[#a8563a]">
+                {block.title}
                 {badge?.count ? (
-                  <span className="text-[11px] tabular-nums text-[#a8563a]">
+                  <span className="absolute -right-5 -top-1.5 text-[10px] tabular-nums text-[#a8563a]">
                     {badge.count > 99 ? '99+' : badge.count}
                   </span>
-                ) : badge?.dot ? (
-                  <span className="h-1.5 w-1.5 rounded-full bg-[#a8563a]" />
                 ) : null}
-              </div>
-              <p className="mt-1.5 truncate text-xs text-[#8a7a68]">{block.desc}</p>
-            </div>
-          </Link>
+              </span>
+
+              <span className="min-w-0 flex-1 truncate text-xs text-[#8a7a68]">{block.desc}</span>
+
+              {badge?.dot ? (
+                <span className="h-1.5 w-1.5 flex-shrink-0 rounded-full bg-[#a8563a]" />
+              ) : null}
+            </Link>
+          </li>
         )
       })}
-    </div>
+    </ul>
   )
 }

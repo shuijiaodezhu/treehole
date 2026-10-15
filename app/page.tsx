@@ -7,6 +7,7 @@ import { createClient } from './lib/supabase'
 
 import {
   FriendRequestBanner,
+  NavCardGrid,
 } from '../components/home'
 import { IconMail, IconRefresh, IconSearch } from '../components/icons'
 import {
@@ -22,7 +23,6 @@ import { useWeather } from '../components/weather'
 import { useModuleBadges } from '../components/module-badges'
 import { NotificationBell } from '../components/notifications'
 import { WelcomeLetter } from '../components/welcome-letter'
-import { SiteScene } from '../components/site-scene'
 import type { FriendRequest, FriendshipRow, LoginStreak } from '../components/types'
 import { pageAccentVars } from '../components/theme'
 import { SkeletonHome } from '../components/skeleton'
@@ -199,20 +199,8 @@ export default function HomePage() {
 
         <div className="max-w-5xl mx-auto px-8 py-10 flex justify-between items-center relative">
           <div>
-            <div className="pointer-events-none absolute right-8 top-6 hidden h-20 w-20 -rotate-[9deg] items-center justify-center rounded-full border border-[rgba(168,86,58,0.28)] text-center sm:flex">
-              <span className="font-serif-cn text-[10px] leading-tight text-[rgba(168,86,58,0.5)]">
-                {dateText.replace(/\s*星期.*$/, '')}
-                <br />
-                来信
-              </span>
-            </div>
 
             <h1 className="font-serif-cn text-4xl leading-none sm:text-5xl">你的来信</h1>
-            <p className="mt-4 text-[11px] tracking-wide text-[#8a7a68]">
-              {dateText} · {weather.city} {weather.condition} {weather.temp}° / {weather.tempMin}°
-              <span className="mx-2 opacity-40">|</span>
-              陪你走过 {streak.days} 天
-            </p>
             <p className="mt-3 flex items-baseline gap-2 text-[#8a7a68]">
               <span className="font-art text-3xl text-[#a8563a]">Dear You</span>
               <span className="text-sm">· 这里有一封，你的来信</span>
@@ -272,25 +260,28 @@ export default function HomePage() {
           <MailboxArt onOpen={() => setMailboxOpen(true)} />
         </div>
 
-        <div className="mx-auto max-w-2xl">
-          {/* 今天的一句话：只留引用本身和出处 */}
+        <div className="mx-auto max-w-md">
+          {/* 一行小字：日期、天气、陪你走过 */}
+          <p className="text-[11px] leading-relaxed tracking-[0.08em] text-[#9c8f7d]">
+            {dateText} · {weather.city} {weather.condition} {weather.temp}° / {weather.tempMin}°
+          </p>
+          <p className="mt-1 text-[11px] tracking-[0.08em] text-[#9c8f7d]">
+            陪你走过 {streak.days} 天
+          </p>
+
           <FriendRequestBanner requests={requests} />
 
-          {/* 一幅画：小屋、院子、聚会、拿信的人都在里面，四处各可点 */}
-          <div className="pt-6">
-            <SiteScene badges={badges} />
-          </div>
+          <nav className="mt-10">
+            <NavCardGrid badges={badges} />
+          </nav>
 
-          {/* 今天的一句话放下面：它是安静的角落，不该跟入口抢注意力 */}
           {quote && (
-            <div className="mt-14 border-l-2 border-[#e0d3bd] pl-5 sm:mt-16">
-              <p className="max-w-xl font-serif-cn text-lg leading-[1.95] text-[#3a2f26] sm:text-xl">
-                「{quote}」
-              </p>
-              <p className="mt-3 text-right text-[11px] tracking-wide text-[#8a7a68]">
+            <div className="mt-12">
+              <p className="font-serif-cn text-[15px] leading-[2] text-[#3f332a]">「{quote}」</p>
+              <p className="mt-3 text-right text-[11px] tracking-[0.08em] text-[#9c8f7d]">
                 来自陌生人的问候
               </p>
-              <p className="mt-6 text-right font-serif-cn text-xs text-[#8a6a4a]">
+              <p className="mt-1 text-right font-serif-cn text-[11px] text-[#a8563a]">
                 —— 睡觉的猪
               </p>
             </div>
