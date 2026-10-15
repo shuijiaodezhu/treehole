@@ -192,7 +192,7 @@ export default function RegisterPage() {
             </button>
 
             {message && (
-              <p className={`text-xs text-center ${message.includes('成功') ? 'text-green-600' : 'text-red-500'}`}>
+              <p className={`text-xs text-center whitespace-pre-line leading-relaxed ${message.includes('成功') || message.includes('确认邮件') ? 'text-green-600' : 'text-red-500'}`}>
                 {message}
               </p>
             )}

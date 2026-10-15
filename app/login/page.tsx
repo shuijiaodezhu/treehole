@@ -26,7 +26,17 @@ export default function LoginPage() {
     const { data, error } = await supabase.auth.signInWithPassword({ email, password })
 
     if (error) {
-      setMessage('登录失败：' + error.message)
+      /*
+       * 打开 Confirm email 之后，没验证过就来登录会拿到英文报错
+       * 「Email not confirmed」——用户看不懂，也不知道下一步该干嘛。
+       * 这里换成人话，并直接告诉他去点邮件里的链接。
+       */
+      const raw = error.message ?? ''
+      if (/email not confirmed/i.test(raw)) {
+        setMessage('这个邮箱还没验证。去收件箱点一下确认链接，再回来登录（垃圾邮件里也翻一下）')
+      } else {
+        setMessage('登录失败：' + raw)
+      }
       setLoading(false)
       return
     }
