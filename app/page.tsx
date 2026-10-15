@@ -316,7 +316,7 @@ export default function HomePage() {
         <div className="flex flex-col gap-6 lg:gap-0">
 
           {/* 信纸：标题＝信头 */}
-          <section className="rounded-2xl border border-[#ece0cd] bg-[#fdf9f2] px-7 py-9 shadow-[0_28px_60px_-40px_rgba(90,64,52,0.5)] sm:px-10 sm:py-11 lg:-rotate-[1.2deg]">
+          <section className="rounded-2xl border border-[#ece0cd] bg-[#fdf9f2] px-7 py-9 shadow-[0_28px_60px_-40px_rgba(90,64,52,0.5)] sm:px-10 sm:py-11 lg:-rotate-[0.8deg]">
             <h1 className="dsh-hero-title font-brush text-[38px] leading-[1.05] tracking-[0.03em] sm:text-[46px]">
               你的来信
             </h1>
@@ -354,7 +354,7 @@ export default function HomePage() {
           </section>
 
           {/* 冬日信箱：小照片，靠右，压住信纸右下角 */}
-          <section className="rounded-2xl border border-[#ece0cd] bg-white p-3 pb-3 shadow-[0_26px_58px_-40px_rgba(90,64,52,0.5)] lg:-mt-14 lg:ml-auto lg:mr-10 lg:w-[44%] lg:rotate-[1.2deg]">
+          <section className="rounded-2xl border border-[#ece0cd] bg-white p-3 pb-3 shadow-[0_26px_58px_-40px_rgba(90,64,52,0.5)] lg:-mt-[72px] lg:ml-auto lg:mr-9 lg:w-[34%] lg:rotate-[3.4deg]">
             <div className="rounded-lg bg-[#f8f0e4] px-2 pt-1">
               <MailboxArt onOpen={() => setMailboxOpen(true)} />
             </div>
@@ -373,7 +373,7 @@ export default function HomePage() {
           <Link
             href="/friends"
             onClick={() => markModuleSeen('friends')}
-            className="group relative rounded-2xl border border-[#e3d4bd] bg-[#f8eee2] px-7 pb-8 pt-11 shadow-[0_24px_54px_-38px_rgba(90,64,52,0.55)] transition hover:-translate-y-0.5 sm:px-9 lg:-mt-10 lg:mr-auto lg:ml-10 lg:w-[80%] lg:rotate-[1.2deg]"
+            className="group relative rounded-2xl border border-[#e3d4bd] bg-[#f8eee2] px-7 pb-8 pt-11 shadow-[0_24px_54px_-38px_rgba(90,64,52,0.55)] transition hover:-translate-y-0.5 sm:px-9 lg:-mt-[58px] lg:mr-auto lg:ml-2.5 lg:w-[88%] lg:-rotate-[2.6deg]"
           >
             <svg viewBox="0 0 100 30" preserveAspectRatio="none" aria-hidden="true"
                  className="absolute inset-x-0 top-0 h-8 w-full">
@@ -398,7 +398,7 @@ export default function HomePage() {
           <Link
             href="/play"
             onClick={() => markModuleSeen('play')}
-            className="relative rounded-xl border border-[#e6c3ae] bg-[#fbeae3] px-6 py-5 shadow-[0_20px_44px_-30px_rgba(168,86,58,0.5)] transition hover:-translate-y-0.5 lg:-mt-10 lg:ml-auto lg:mr-10 lg:w-[62%] lg:-rotate-[1.2deg]"
+            className="relative rounded-xl border border-[#e6c3ae] bg-[#fbeae3] px-6 py-5 shadow-[0_20px_44px_-30px_rgba(168,86,58,0.5)] transition hover:-translate-y-0.5 lg:-mt-[66px] lg:ml-auto lg:mr-[30px] lg:w-[46%] lg:rotate-[5.5deg]"
           >
             <span className="text-[9px] tracking-[0.2em] text-[#a98a78]">NO. 0031 · ADMIT ONE</span>
             <span className="mt-1.5 flex items-baseline gap-2.5">
@@ -416,7 +416,7 @@ export default function HomePage() {
           <Link
             href="/world"
             onClick={() => markModuleSeen('world')}
-            className="relative rounded-lg border border-[#e4d6b8] bg-[#f7efdc] px-5 py-4 shadow-[0_16px_36px_-26px_rgba(90,64,52,0.5)] transition hover:-translate-y-0.5 lg:-mt-10 lg:mr-auto lg:ml-10 lg:w-[50%] lg:rotate-[1.2deg]"
+            className="relative rounded-lg border border-[#e4d6b8] bg-[#f7efdc] px-5 py-4 shadow-[0_16px_36px_-26px_rgba(90,64,52,0.5)] transition hover:-translate-y-0.5 lg:-mt-[74px] lg:mr-auto lg:ml-[22px] lg:w-[38%] lg:-rotate-[4.2deg]"
           >
             <span className="flex items-baseline gap-2.5">
               <span className="font-brush text-[20px] leading-none">院子</span>
@@ -432,7 +432,7 @@ export default function HomePage() {
           {/* 本子：我的 */}
           <Link
             href="/me"
-            className="relative rounded-xl border border-[#d3bfa0] bg-[linear-gradient(155deg,#e7d8c0,#d8c6a8)] px-7 py-6 pl-9 shadow-[0_24px_52px_-34px_rgba(90,64,52,0.55)] transition hover:-translate-y-0.5 lg:-mt-10 lg:ml-auto lg:mr-10 lg:w-[44%] lg:-rotate-[1.2deg]"
+            className="relative rounded-xl border border-[#d3bfa0] bg-[linear-gradient(155deg,#e7d8c0,#d8c6a8)] px-7 py-6 pl-9 shadow-[0_24px_52px_-34px_rgba(90,64,52,0.55)] transition hover:-translate-y-0.5 lg:-mt-[62px] lg:ml-auto lg:mr-3 lg:w-[34%] lg:rotate-[6.5deg]"
           >
             <span className="absolute left-3.5 top-2 bottom-2 w-[2px] rounded bg-[#c3ab86]" />
             <span className="absolute right-4 top-0 bottom-0 w-[2px] rounded bg-[#a87f56]/40" />
