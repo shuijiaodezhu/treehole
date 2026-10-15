@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import type { ReactNode } from 'react'
 import { useFriendList } from './visibility'
+import { EmojiPicker } from './emoji-picker'
 
 /**
  * @ 功能
@@ -60,6 +61,8 @@ export type MentionInputProps = {
   className?: string
   meId: string | null
   autoFocus?: boolean
+  /** 是否在右侧带一个表情按钮（评论里用） */
+  withEmoji?: boolean
 }
 
 export function MentionInput({
@@ -71,6 +74,7 @@ export function MentionInput({
   className = '',
   meId,
   autoFocus,
+  withEmoji = false,
 }: MentionInputProps) {
   const inputRef = useRef<HTMLInputElement>(null)
   const [open, setOpen] = useState(false)
@@ -172,7 +176,7 @@ export function MentionInput({
   }
 
   return (
-    <div className="relative flex-1 min-w-0">
+    <div className="relative flex flex-1 items-center gap-1 min-w-0">
       <input
         ref={inputRef}
         type="text"
@@ -185,6 +189,8 @@ export function MentionInput({
         autoFocus={autoFocus}
         className={className}
       />
+
+      {withEmoji && <EmojiPicker onPick={(emoji) => onChange(value + emoji)} align="right" />}
 
       {open && candidates.length > 0 && (
         <div className="absolute bottom-full left-0 z-30 mb-1 w-56 overflow-hidden rounded-xl border border-[#d8e8c8] bg-white shadow-lg">

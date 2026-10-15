@@ -1,9 +1,11 @@
 'use client'
+/* eslint-disable @next/next/no-img-element -- 头像/背景图预览用原生 img 即可 */
 
 import { useEffect, useState } from 'react'
 import { createClient } from '../../lib/supabase'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import { uploadImage } from '../../../components/media'
 
 export default function EditProfilePage() {
   const [loading, setLoading] = useState(true)
@@ -15,25 +17,47 @@ export default function EditProfilePage() {
   const [location, setLocation] = useState('')
   const [birthday, setBirthday] = useState('')
   const [avatarUrl, setAvatarUrl] = useState('')
+  const [coverUrl, setCoverUrl] = useState('')
+  const [uploadingCover, setUploadingCover] = useState(false)
   const router = useRouter()
   const supabase = createClient()
+
+  /** 上传一张背景图（复用 media 桶） */
+  async function handleCoverFile(files: FileList | null) {
+    const file = files?.[0]
+    if (!file || !userId) return
+    setMessage('')
+    setUploadingCover(true)
+    try {
+      const result = await uploadImage(file, userId)
+      if (result.error || !result.url) {
+        setMessage('上传失败：' + (result.error ?? '未知错误'))
+        return
+      }
+      setCoverUrl(result.url)
+    } finally {
+      setUploadingCover(false)
+    }
+  }
 
   useEffect(() => {
     async function load() {
       const { data: userData } = await supabase.auth.getUser()
       if (!userData.user) { router.push('/login'); return }
       setUserId(userData.user.id)
-      const { data } = await supabase.from('profiles').select('nickname, signature, location, birthday, avatar_url').eq('id', userData.user.id).single()
+      const { data } = await supabase.from('profiles').select('nickname, signature, location, birthday, avatar_url, cover_url').eq('id', userData.user.id).single()
       if (data) {
         setNickname(data.nickname || '')
         setSignature(data.signature || '')
         setLocation(data.location || '')
         setBirthday(data.birthday || '')
         setAvatarUrl(data.avatar_url || '')
+        setCoverUrl(data.cover_url || '')
       }
       setLoading(false)
     }
     load()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   async function handleSave(e: React.FormEvent) {
@@ -47,6 +71,7 @@ export default function EditProfilePage() {
       location: location.trim() || null,
       birthday: birthday || null,
       avatar_url: avatarUrl.trim() || null,
+      cover_url: coverUrl.trim() || null,
     }).eq('id', userId)
     if (error) { setMessage('保存失败：' + error.message) }
     else {
@@ -97,7 +122,69 @@ export default function EditProfilePage() {
             <div>
               <label className="block text-xs text-[#8a7a9a] mb-1.5 tracking-wide">头像图片链接</label>
               <input type="url" value={avatarUrl} onChange={(e) => setAvatarUrl(e.target.value)} placeholder="https://..." className="w-full px-4 py-2.5 rounded-xl border border-[#e0d4e8] bg-[#fcf8ff] text-sm text-[#2b2430] focus:outline-none focus:border-[#a88ab8] focus:ring-2 focus:ring-[#a88ab8]/10 transition" />
-              <p className="text-[10px] text-[#b8a8c8] mt-1.5">暂时先支持粘贴图片链接，以后会做成上传。</p>
+              <p className="text-[10px] text-[#b8a8c8] mt-1.5">可以粘贴链接，也可以直接上传。</p>
+              <label className="mt-2 inline-flex cursor-pointer items-center gap-1.5 rounded-xl border border-[#e0d4e8] bg-white px-3 py-1.5 text-xs text-[#7a5a9a] transition hover:bg-[#faf5ff]">
+                {uploadingCover ? '上传中…' : '＋ 上传头像'}
+                <input
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  disabled={uploadingCover}
+                  onChange={async (e) => {
+                    const file = e.target.files?.[0]
+                    e.target.value = ''
+                    if (!file || !userId) return
+                    setUploadingCover(true)
+                    const result = await uploadImage(file, userId)
+                    setUploadingCover(false)
+                    if (result.url) { setAvatarUrl(result.url); setMessage('') }
+                    else setMessage('上传失败：' + (result.error ?? '未知错误'))
+                  }}
+                />
+              </label>
+            </div>
+
+            {/* 主页背景图 */}
+            <div>
+              <label className="block text-xs text-[#8a7a9a] mb-1.5 tracking-wide">主页背景图</label>
+              <div className="flex gap-2">
+                <input
+                  type="url"
+                  value={coverUrl}
+                  onChange={(e) => setCoverUrl(e.target.value)}
+                  placeholder="图片链接，或点右侧上传"
+                  className="min-w-0 flex-1 px-4 py-2.5 rounded-xl border border-[#e0d4e8] bg-[#fcf8ff] text-sm text-[#2b2430] focus:outline-none focus:border-[#a88ab8] focus:ring-2 focus:ring-[#a88ab8]/10 transition"
+                />
+                <label className="flex flex-shrink-0 cursor-pointer items-center rounded-xl border border-[#e0d4e8] bg-white px-3 text-xs text-[#7a5a9a] transition hover:bg-[#faf5ff]">
+                  {uploadingCover ? '上传中…' : '上传'}
+                  <input
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    disabled={uploadingCover}
+                    onChange={(e) => {
+                      void handleCoverFile(e.target.files)
+                      e.target.value = ''
+                    }}
+                  />
+                </label>
+              </div>
+              <p className="text-[10px] text-[#b8a8c8] mt-1.5">会铺在「我的」页面顶部，建议横向图片。</p>
+
+              {coverUrl && (
+                <div className="mt-2 flex items-center gap-3">
+                  <div className="h-20 flex-1 overflow-hidden rounded-xl border border-[#e0d4e8] bg-[#f6f0fa]">
+                    <img src={coverUrl} alt="背景预览" className="h-full w-full object-cover" />
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setCoverUrl('')}
+                    className="flex-shrink-0 rounded-xl border border-[#e0d4e8] px-3 py-1.5 text-xs text-[#9a8aaa] transition hover:text-red-500"
+                  >
+                    移除
+                  </button>
+                </div>
+              )}
             </div>
 
             {avatarUrl && (

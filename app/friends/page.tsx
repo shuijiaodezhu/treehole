@@ -27,6 +27,7 @@ import {
 import { VaultView } from '../../components/vault-view'
 import { PlansView } from '../../components/plans-view'
 import { ImageWall } from '../../components/image-wall'
+import { EmojiPicker } from '../../components/emoji-picker'
 
 type Friend = {
   friendship_id: string
@@ -1036,10 +1037,11 @@ export default function FriendsPage() {
                       type="text"
                       value={content}
                       onChange={(e) => setContent(e.target.value)}
-                      placeholder="说点什么..."
+                      placeholder="说点什么... 也可以发个表情"
                       className="flex-1 px-4 py-2.5 rounded-full border border-[#ece6dd] bg-[#fefcf9] text-sm focus:outline-none focus:border-[#d97757] focus:ring-2 focus:ring-[#d97757]/10 transition"
                       maxLength={500}
                     />
+                    <EmojiPicker onPick={(emoji) => setContent((cur) => cur + emoji)} align="right" />
                     <button
                       type="submit"
                       disabled={sending || !content.trim()}
@@ -1456,6 +1458,7 @@ export default function FriendsPage() {
                               replyingTo ? `回复 ${replyingTo.author_name}… 输入 @ 叫人` : '写点什么… 输入 @ 叫人'
                             }
                             maxLength={200}
+                            withEmoji
                             className="w-full px-4 py-2 rounded-full border border-[#ece6dd] bg-[#fefcf9] text-xs focus:outline-none focus:border-[#d97757] focus:ring-2 focus:ring-[#d97757]/10 transition"
                           />
                           <button

@@ -1097,6 +1097,7 @@ export default function WorldPage() {
                             onEnter={() => handlePostComment(post.id)}
                             placeholder={replyingTo ? `回复 ${replyingTo.author_name}… 输入 @ 叫人` : '写点什么… 输入 @ 叫人'}
                             maxLength={200}
+                            withEmoji
                             className="w-full px-4 py-2 rounded-full border border-[#d8e8c8] bg-[#f8fcf4] text-xs focus:outline-none focus:border-[#7ea86a] focus:ring-2 focus:ring-[#7ea86a]/10 transition"
                           />
                           <label className="flex items-center gap-1 text-[10px] text-[#8a9a7a] cursor-pointer flex-shrink-0">
