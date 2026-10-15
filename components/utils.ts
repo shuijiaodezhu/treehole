@@ -1,3 +1,6 @@
+/** 站主 uid：后台权限判断与「冬日信箱」的收件人都是它 */
+export const ADMIN_UUID = 'b59a31c7-60f8-4b57-924a-b408cbfd910c'
+
 import type { ProfileLite, FriendshipRow, LoginStreak } from './types'
 
 /* ==================== 常量 ==================== */

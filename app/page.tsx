@@ -27,6 +27,7 @@ import { useModuleBadges } from '../components/module-badges'
 import type { FriendRequest, FriendshipRow, LoginStreak } from '../components/types'
 import { pageAccentVars } from '../components/theme'
 import { SkeletonHome } from '../components/skeleton'
+import { MailboxDialog, MailboxRail, MailboxTrigger, useMailbox } from '../components/mailbox'
 
 // 客户端单例：放在模块级，保证引用稳定（useCallback / useEffect 不会每次渲染都重跑）
 const supabase = createClient()
@@ -38,6 +39,9 @@ export default function HomePage() {
   const [email, setEmail] = useState('')
   const [userId, setUserId] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
+  /** 冬日信箱：写给站主的悄悄话 */
+  const mailbox = useMailbox(userId)
+  const [mailboxOpen, setMailboxOpen] = useState(false)
   const [authError, setAuthError] = useState('')
   const [requestError, setRequestError] = useState('')
   const [reloadKey, setReloadKey] = useState(0)
@@ -211,6 +215,9 @@ export default function HomePage() {
             </p>
 
             <div className="flex items-center justify-end gap-3">
+              <span className="xl:hidden">
+                <MailboxTrigger mailbox={mailbox} onOpen={() => setMailboxOpen(true)} />
+              </span>
               <Link
                 href="/search"
                 aria-label="搜索"
@@ -247,7 +254,12 @@ export default function HomePage() {
         </div>
       )}
 
-      <div className="max-w-5xl mx-auto px-8 py-10 flex gap-8 items-stretch">
+      <div className="max-w-5xl xl:max-w-7xl mx-auto px-8 py-10 flex gap-8 items-stretch">
+        {/* 宽屏时最左：冬日信箱 */}
+        <div className="hidden w-[200px] flex-shrink-0 xl:block">
+          <MailboxRail mailbox={mailbox} onOpen={() => setMailboxOpen(true)} />
+        </div>
+
         {/* 左侧面板 */}
         <aside className="w-64 flex-shrink-0 flex flex-col gap-4">
           <WeatherCard weather={weather} dateText={dateText} />
@@ -288,6 +300,9 @@ export default function HomePage() {
           </Link>
         </div>
       </footer>
+
+      {/* 冬日信箱：读信 / 写信 */}
+      <MailboxDialog mailbox={mailbox} open={mailboxOpen} onClose={() => setMailboxOpen(false)} />
 
       {/* 退出登录二次确认 */}
       {confirmLogout && (
