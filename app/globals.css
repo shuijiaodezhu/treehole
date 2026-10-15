@@ -27,6 +27,12 @@ body {
   overflow-x: hidden;
 }
 
+/* body 作为定位祖先：页面内的装饰层（虚线框等）用 absolute inset-0
+   就等于"整页"，框的上下边落在页面最外沿，滚到哪都不会横穿内容 */
+body {
+  position: relative;
+}
+
 /* iOS 上横屏时不要自动放大字号 */
 html {
   -webkit-text-size-adjust: 100%;
