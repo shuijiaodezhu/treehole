@@ -18,26 +18,25 @@ export default function EditProfilePage() {
   const [location, setLocation] = useState('')
   const [birthday, setBirthday] = useState('')
   const [avatarUrl, setAvatarUrl] = useState('')
-  const [coverUrl, setCoverUrl] = useState('')
-  const [uploadingCover, setUploadingCover] = useState(false)
+  const [uploadingAvatar, setUploadingAvatar] = useState(false)
   const router = useRouter()
   const supabase = createClient()
 
-  /** 上传一张背景图（复用 media 桶） */
-  async function handleCoverFile(files: FileList | null) {
+  /** 上传头像（复用 media 桶） */
+  async function handleAvatarFile(files: FileList | null) {
     const file = files?.[0]
     if (!file || !userId) return
     setMessage('')
-    setUploadingCover(true)
+    setUploadingAvatar(true)
     try {
       const result = await uploadImage(file, userId)
       if (result.error || !result.url) {
         setMessage('上传失败：' + (result.error ?? '未知错误'))
         return
       }
-      setCoverUrl(result.url)
+      setAvatarUrl(result.url)
     } finally {
-      setUploadingCover(false)
+      setUploadingAvatar(false)
     }
   }
 
@@ -46,7 +45,7 @@ export default function EditProfilePage() {
       const { data: userData } = await supabase.auth.getUser()
       if (!userData.user) { router.push('/login'); return }
       setUserId(userData.user.id)
-      // 用 * 而不是逐个列名：万一 cover_url 这类新列还没迁移，也不会整条查询失败
+      // 用 * 而不是逐个列名：少一列也不会让整条查询失败
       const { data } = await supabase.from('profiles').select('*').eq('id', userData.user.id).single()
       if (data) {
         setNickname(data.nickname || '')
@@ -54,7 +53,6 @@ export default function EditProfilePage() {
         setLocation(data.location || '')
         setBirthday(data.birthday || '')
         setAvatarUrl(data.avatar_url || '')
-        setCoverUrl(data.cover_url || '')
       }
       setLoading(false)
     }
@@ -73,7 +71,6 @@ export default function EditProfilePage() {
       location: location.trim() || null,
       birthday: birthday || null,
       avatar_url: avatarUrl.trim() || null,
-      cover_url: coverUrl.trim() || null,
     }).eq('id', userId)
     if (error) { setMessage('保存失败：' + error.message) }
     else {
@@ -126,67 +123,18 @@ export default function EditProfilePage() {
               <input type="url" value={avatarUrl} onChange={(e) => setAvatarUrl(e.target.value)} placeholder="https://..." className="w-full px-4 py-2.5 rounded-xl border border-[var(--accent-line)] bg-[var(--accent-soft)] text-sm text-[#2b2430] focus:outline-none focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent)]/10 transition" />
               <p className="text-[10px] text-[var(--accent-light)] mt-1.5">可以粘贴链接，也可以直接上传。</p>
               <label className="mt-2 inline-flex cursor-pointer items-center gap-1.5 rounded-xl border border-[var(--accent-line)] bg-white px-3 py-1.5 text-xs text-[var(--accent-deep)] transition hover:bg-[var(--accent-soft)]">
-                {uploadingCover ? '上传中…' : '＋ 上传头像'}
+                {uploadingAvatar ? '上传中…' : '＋ 上传头像'}
                 <input
                   type="file"
                   accept="image/*"
                   className="hidden"
-                  disabled={uploadingCover}
-                  onChange={async (e) => {
-                    const file = e.target.files?.[0]
+                  disabled={uploadingAvatar}
+                  onChange={(e) => {
+                    void handleAvatarFile(e.target.files)
                     e.target.value = ''
-                    if (!file || !userId) return
-                    setUploadingCover(true)
-                    const result = await uploadImage(file, userId)
-                    setUploadingCover(false)
-                    if (result.url) { setAvatarUrl(result.url); setMessage('') }
-                    else setMessage('上传失败：' + (result.error ?? '未知错误'))
                   }}
                 />
               </label>
-            </div>
-
-            {/* 主页背景图 */}
-            <div>
-              <label className="block text-xs text-[var(--accent-muted)] mb-1.5 tracking-wide">主页背景图</label>
-              <div className="flex gap-2">
-                <input
-                  type="url"
-                  value={coverUrl}
-                  onChange={(e) => setCoverUrl(e.target.value)}
-                  placeholder="图片链接，或点右侧上传"
-                  className="min-w-0 flex-1 px-4 py-2.5 rounded-xl border border-[var(--accent-line)] bg-[var(--accent-soft)] text-sm text-[#2b2430] focus:outline-none focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent)]/10 transition"
-                />
-                <label className="flex flex-shrink-0 cursor-pointer items-center rounded-xl border border-[var(--accent-line)] bg-white px-3 text-xs text-[var(--accent-deep)] transition hover:bg-[var(--accent-soft)]">
-                  {uploadingCover ? '上传中…' : '上传'}
-                  <input
-                    type="file"
-                    accept="image/*"
-                    className="hidden"
-                    disabled={uploadingCover}
-                    onChange={(e) => {
-                      void handleCoverFile(e.target.files)
-                      e.target.value = ''
-                    }}
-                  />
-                </label>
-              </div>
-              <p className="text-[10px] text-[var(--accent-light)] mt-1.5">会铺在「我的」页面顶部，建议横向图片。</p>
-
-              {coverUrl && (
-                <div className="mt-2 flex items-center gap-3">
-                  <div className="h-20 flex-1 overflow-hidden rounded-xl border border-[var(--accent-line)] bg-[var(--accent-soft)]">
-                    <img src={coverUrl} alt="背景预览" className="h-full w-full object-cover" />
-                  </div>
-                  <button
-                    type="button"
-                    onClick={() => setCoverUrl('')}
-                    className="flex-shrink-0 rounded-xl border border-[var(--accent-line)] px-3 py-1.5 text-xs text-[var(--accent-muted)] transition hover:text-red-500"
-                  >
-                    移除
-                  </button>
-                </div>
-              )}
             </div>
 
             {avatarUrl && (

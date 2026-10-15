@@ -67,7 +67,6 @@ type Profile = {
   username: string
   nickname: string | null
   avatar_url: string | null
-  cover_url: string | null
   bio: string | null
   signature: string | null
   location: string | null
@@ -126,25 +125,6 @@ export default function MePage() {
         <main className="space-y-4">
           <div className="rounded-3xl border border-[var(--accent-line)] bg-white/80 backdrop-blur-lg p-6 shadow-[0_8px_40px_rgba(168,138,184,0.06)] relative overflow-hidden">
             <div className="absolute -top-8 -right-8 w-32 h-32 bg-[var(--accent-light)] opacity-[0.15] rounded-full blur-2xl pointer-events-none"></div>
-
-            {/* 主页背景图（没设置就用渐变兜底） */}
-            <div className="relative -mx-6 -mt-6 mb-4 h-32 overflow-hidden">
-              {profile?.cover_url ? (
-                <>
-                  <img src={profile.cover_url} alt="" className="h-full w-full object-cover" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-white/80 via-transparent to-transparent" />
-                </>
-              ) : (
-                <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-[var(--accent-soft)] via-[var(--accent-soft)] to-[var(--accent-soft)]">
-                  <Link
-                    href="/me/edit"
-                    className="rounded-full bg-white/70 px-3 py-1 text-[11px] text-[var(--accent-deep)] backdrop-blur transition hover:bg-white"
-                  >
-                    ＋ 加一张背景图
-                  </Link>
-                </div>
-              )}
-            </div>
 
             <div className="relative flex items-start gap-4">
               <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[var(--accent-line)] to-[var(--accent-light)] flex items-center justify-center text-2xl overflow-hidden flex-shrink-0 shadow-sm">
