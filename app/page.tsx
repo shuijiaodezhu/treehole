@@ -400,7 +400,7 @@ export default function HomePage() {
       {/* 引言 + 信箱 + 雪中分别 */}
       <section className="mx-auto w-full max-w-6xl px-4 py-12 sm:py-16">
         <div className="grid items-center gap-12 sm:grid-cols-2 sm:gap-16">
-          <div className="sm:justify-self-end">
+          <div className="sm:mr-8 sm:justify-self-end">
             {quote && (
               <motion.blockquote
                 initial={{ opacity: 0, y: 16 }}
@@ -431,7 +431,7 @@ export default function HomePage() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: false, margin: '-80px' }}
             transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-            className="relative w-full max-w-[320px] sm:justify-self-start"
+            className="relative w-full max-w-[320px] sm:ml-8 sm:justify-self-start"
           >
             <FallingBits className="-inset-x-6 -top-6 bottom-2" />
             <WinterScene className="w-full" />
