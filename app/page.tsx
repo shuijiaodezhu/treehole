@@ -265,6 +265,24 @@ export default function HomePage() {
 
   return (
     <div className="flex min-h-screen flex-col bg-base-100 text-base-content" style={pageAccentVars('home')}>
+      {/*
+        左下角那只固定的信封：z-0 压在最底层，position: fixed 所以不随滚动移动，
+        pointer-events-none 所以不吃点击 —— 它只是个安静的角落记号。
+        手机上不显示（那里空间紧，会压到内容上）。
+      */}
+      <svg
+        aria-hidden="true"
+        viewBox="0 0 40 30"
+        className="pointer-events-none fixed bottom-6 left-6 z-0 hidden h-[30px] w-[40px] opacity-45 sm:block"
+        fill="none"
+        stroke="#c4705a"
+        strokeWidth="1.4"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <rect x="1.5" y="1.5" width="37" height="27" rx="5" fill="#fdf8f0" />
+        <path d="M3.5 5.5 20 18 36.5 5.5" />
+      </svg>
       {/* 顶栏：daisyUI navbar；站名用毛笔字 */}
       <div className="navbar mx-auto w-full max-w-6xl px-4">
         <div className="navbar-start">
@@ -427,7 +445,7 @@ export default function HomePage() {
       </section>
 
       {/* 页脚：daisyUI footer */}
-      <footer className="mx-auto mt-auto flex w-full max-w-6xl flex-wrap items-center gap-x-6 gap-y-3 px-4 py-8 text-xs opacity-75">
+      <footer className="mx-auto mt-auto flex w-full max-w-6xl flex-wrap items-center gap-x-6 gap-y-3 border-t border-base-300 px-4 pb-8 pt-6 text-xs opacity-75">
         <nav className="flex flex-wrap gap-x-6 gap-y-2">
           {[
             { slug: 'community', label: '社区公约' },
