@@ -16,9 +16,74 @@ const supabase = createClient()
 
 export const MEDIA_BUCKET = 'media'
 export const MAX_IMAGES = 9
-export const MAX_IMAGE_BYTES = 5 * 1024 * 1024 // 5MB
+/** 压缩**之后**的大小上限 */
+export const MAX_IMAGE_BYTES = 5 * 1024 * 1024
+/** 原图超过这个大小就不试了：浏览器解码超大图会卡死 */
+const MAX_SOURCE_BYTES = 25 * 1024 * 1024
 
 const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/gif']
+
+/* ==================== 上传前压缩 ==================== */
+
+/** 长边压到这个像素以内 */
+const MAX_EDGE = 1600
+/** 已经很小的图就不动了（避免无意义的重编码） */
+const SKIP_IF_SMALLER_THAN = 400 * 1024
+
+/**
+ * 上传前把图压小。
+ *
+ * 为什么必须做：手机直出的照片常有 2–4MB，而免费版对象存储只有 1GB ——
+ * 不压的话大约 300 张就满了；压到长边 1600px、质量 0.82，通常落在 200–400KB，
+ * 容量直接多一个数量级，浏览时的流量也省下来（带宽是另一个更容易撞到的额度）。
+ *
+ * 三个取舍：
+ *   · **GIF 不动** —— 重编码会丢动画
+ *   · 优先输出 **WebP**（同样质量更小，而且支持透明）；浏览器不支持时退回 JPEG
+ *   · 压完反而更大就用原图（小图重编码有时会变大）
+ */
+async function compressImage(file: File): Promise<{ blob: Blob; ext: string; type: string }> {
+  const fallback = {
+    blob: file as Blob,
+    ext: (file.name.split('.').pop() ?? 'jpg').toLowerCase().replace(/[^a-z0-9]/g, '') || 'jpg',
+    type: file.type,
+  }
+
+  if (typeof document === 'undefined') return fallback
+  if (file.type === 'image/gif') return fallback
+  if (file.size < SKIP_IF_SMALLER_THAN) return fallback
+
+  try {
+    const bitmap = await createImageBitmap(file)
+    const longest = Math.max(bitmap.width, bitmap.height)
+    const scale = longest > MAX_EDGE ? MAX_EDGE / longest : 1
+    const w = Math.max(1, Math.round(bitmap.width * scale))
+    const h = Math.max(1, Math.round(bitmap.height * scale))
+
+    const canvas = document.createElement('canvas')
+    canvas.width = w
+    canvas.height = h
+    const ctx = canvas.getContext('2d')
+    if (!ctx) {
+      bitmap.close?.()
+      return fallback
+    }
+    ctx.drawImage(bitmap, 0, 0, w, h)
+    bitmap.close?.()
+
+    // 试试 WebP：这个探测是标准做法，不支持时 toBlob 会给 PNG
+    const supportsWebp = canvas.toDataURL('image/webp').startsWith('data:image/webp')
+    const outType = supportsWebp ? 'image/webp' : 'image/jpeg'
+    const blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, outType, 0.82))
+
+    if (!blob || blob.size >= file.size) return fallback
+    return { blob, ext: supportsWebp ? 'webp' : 'jpg', type: outType }
+  } catch (err) {
+    // 压缩失败不该拦住上传，用原图继续
+    console.warn('图片压缩失败，改用原图:', err)
+    return fallback
+  }
+}
 
 export type UploadResult = { url?: string; error?: string }
 
@@ -27,16 +92,21 @@ export async function uploadImage(file: File, userId: string): Promise<UploadRes
   if (!ALLOWED_TYPES.includes(file.type)) {
     return { error: '只支持 JPG / PNG / WebP / GIF' }
   }
-  if (file.size > MAX_IMAGE_BYTES) {
-    return { error: `图片不能超过 ${Math.round(MAX_IMAGE_BYTES / 1024 / 1024)}MB` }
+  if (file.size > MAX_SOURCE_BYTES) {
+    return { error: `图片太大了（超过 ${Math.round(MAX_SOURCE_BYTES / 1024 / 1024)}MB）` }
   }
 
-  const ext = (file.name.split('.').pop() ?? 'jpg').toLowerCase().replace(/[^a-z0-9]/g, '') || 'jpg'
+  const { blob, ext, type } = await compressImage(file)
+  if (blob.size > MAX_IMAGE_BYTES) {
+    return { error: `压缩后还是超过 ${Math.round(MAX_IMAGE_BYTES / 1024 / 1024)}MB，换一张试试` }
+  }
+
   const path = `${userId}/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`
 
-  const { error } = await supabase.storage.from(MEDIA_BUCKET).upload(path, file, {
+  const { error } = await supabase.storage.from(MEDIA_BUCKET).upload(path, blob, {
     cacheControl: '3600',
     upsert: false,
+    contentType: type || 'image/jpeg',
   })
   if (error) {
     console.error('上传图片失败:', error)
