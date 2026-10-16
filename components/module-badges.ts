@@ -80,23 +80,41 @@ function isNewer(iso: string, seenAt: string | null): boolean {
 
 const WORLD_REPLIES_SEEN_PREFIX = 'treehole:seen:worldReplies:'
 
-/** 院子里「离开后有没有新帖」 */
-async function hasNewWorldPosts(): Promise<boolean> {
+/**
+ * 院子里「离开后有没有新帖」
+ *
+ * 这里修掉两个"点一直亮"的原因：
+ *  ① 本地**没有**"上次看到"的记录时（新浏览器 / 清过数据 / 换设备 / 无痕窗口），
+ *     isNewer() 一律返回 true → 点必然亮，且永远不会自己消失。
+ *     现在改成：第一次就以当前最新一条为准**记为已看**，从此刻开始算。
+ *  ② 查询没排除自己的帖子 → 自己刚发的帖也会点亮"有新帖"。
+ *     现在按 author_id 排除自己：只有「离开后**别人**发了新帖」才算新消息。
+ */
+async function hasNewWorldPosts(userId: string | null): Promise<boolean> {
   const seen = readSeenAt('world')
-  const { data, error } = await createClient()
+  const base = createClient()
     .from('world_posts')
     .select('created_at')
     .eq('status', 'published')
     .eq('is_hidden', false)
-    .order('created_at', { ascending: false })
-    .limit(1)
+  const filtered = userId ? base.neq('author_id', userId) : base
+  const { data, error } = await filtered.order('created_at', { ascending: false }).limit(1)
 
   if (error) throw error
   const latest = data?.[0]?.created_at
-  return Boolean(latest && isNewer(latest, seen))
+  if (!latest) return false
+  if (!seen) {
+    // 本地还没有记录：以当前最新为准记下，不点亮
+    writeSeenAt('world', latest)
+    return false
+  }
+  return isNewer(latest, seen)
 }
 
-/** 派对同理 */
+/**
+ * 派对同理（只有第 ① 条：本地没有记录时先记下当前最新，不点亮）。
+ * play_activities 不在仓库的 SQL 里，查不到作者列，所以这里不加作者过滤。
+ */
 async function hasNewActivities(): Promise<boolean> {
   const seen = readSeenAt('play')
   const { data, error } = await createClient()
@@ -108,7 +126,12 @@ async function hasNewActivities(): Promise<boolean> {
 
   if (error) throw error
   const latest = data?.[0]?.created_at
-  return Boolean(latest && isNewer(latest, seen))
+  if (!latest) return false
+  if (!seen) {
+    writeSeenAt('play', latest)
+    return false
+  }
+  return isNewer(latest, seen)
 }
 
 /* ==================== Hook ==================== */
@@ -124,14 +147,17 @@ export function useModuleBadges(userId: string | null): ModuleBadges {
   const refreshSeenBadges = useCallback(() => {
     void (async () => {
       try {
-        const [world, play] = await Promise.all([hasNewWorldPosts(), hasNewActivities()])
+        const [world, play] = await Promise.all([
+          hasNewWorldPosts(userId),
+          hasNewActivities(),
+        ])
         setWorldNew(world)
         setPlayNew(play)
       } catch (err) {
         console.error('模块提示刷新失败:', err)
       }
     })()
-  }, [])
+  }, [userId])
 
   /** 院子里"有人回我"的未读数（兼顾：新帖用点，回复用数字） */
   const refreshWorldReplies = useCallback(() => {
