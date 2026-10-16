@@ -2,6 +2,7 @@
 /* eslint-disable @next/next/no-img-element -- 头像/背景图用原生 img 即可，尺寸固定 */
 
 import { useEffect, useState } from 'react'
+import { BackLink } from '../../components/back-link'
 import { peek, save } from '../../components/local-store'
 import { createClient } from '../lib/supabase'
 import { useRouter } from 'next/navigation'
@@ -166,7 +167,7 @@ export default function MePage() {
 
       <div className="relative max-w-xl lg:max-w-3xl mx-auto px-6 py-10">
         <header className="mb-6">
-          <Link href="/" className="text-sm text-base-content/60 hover:text-primary transition">← 返回</Link>
+          <BackLink fallback="/" />
           <h1 className="text-3xl font-bold text-base-content mt-2">我的</h1>
           <p className="text-sm text-base-content/60 mt-1">我的口袋有糖，你吃吗？</p>
         </header>

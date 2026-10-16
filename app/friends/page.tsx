@@ -2,6 +2,7 @@
 /* eslint-disable @next/next/no-img-element -- 头像用原生 img 即可，尺寸固定 */
 
 import { useCallback, useEffect, useMemo, useState, useRef } from 'react'
+import { BackLink } from '../../components/back-link'
 import { createClient } from '../lib/supabase'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
@@ -896,12 +897,7 @@ export default function FriendsPage() {
       {/* pt-24：顶部空间更大，返回键不会被浏览器顶栏挡住 */}
       <div className="relative max-w-6xl mx-auto px-6 pt-24 pb-8">
         <header className="mb-6">
-          <Link
-            href="/"
-            className="inline-flex items-center gap-1.5 text-sm text-base-content/60 hover:text-primary transition"
-          >
-            ← 返回
-          </Link>
+          <BackLink fallback="/" />
           <h1 className="text-3xl font-bold text-base-content mt-4">小屋</h1>
           <p className="text-sm text-base-content/60 mt-1">小屋里，慢慢说</p>
 

@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { BackLink } from '../../../components/back-link'
 import { createClient } from '../../lib/supabase'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
@@ -332,9 +333,7 @@ export default function MomentsPage() {
 
       <div className="relative max-w-xl mx-auto px-6 py-10">
         <header className="mb-6">
-          <Link href="/friends" className="text-sm text-base-content/60 hover:text-primary transition">
-            ← 返回小屋
-          </Link>
+          <BackLink fallback="/friends" label="← 返回小屋" />
           <h1 className="text-3xl font-bold text-base-content mt-2">朋友圈</h1>
           <p className="text-sm text-base-content/60 mt-1">只有好友看得到</p>
 
