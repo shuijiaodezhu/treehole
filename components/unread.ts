@@ -512,6 +512,59 @@ export function useWorldRepliesBadge(userId: string | null): {
 
   const refresh = useCallback(() => setRefreshKey((k) => k + 1), [])
 
+  /*
+   * ⑤ 实时：别人一评论，角标立刻更新（不再等下次进页面）
+   *
+   * 为什么这么写（照 components/chat-realtime.ts 的成熟做法，避开几个坑）：
+   *   · 只订"**不是我自己发的**"评论（filter author_id=neq.${userId}）
+   *     不然自己发评论也会触发一遍，白刷新
+   *   · **防抖 3 秒**：短时间来好几条，只刷新一次 ✓ 不会疯狂请求
+   *   · **20 秒兜底轮询**：万一 Supabase 那边没把 world_comments 加进实时发布
+   *     （那个开关我在代码里验证不了），也还能收到，只是慢一点
+   *   · 切到后台不轮询（省流量）
+   *   · 组件卸载时**一定退订** + 清定时器（否则会重复连接、内存泄漏）
+   */
+  useEffect(() => {
+    if (!userId) return
+
+    let cancelled = false
+    let pending: number | null = null
+
+    const bump = () => {
+      if (cancelled || pending !== null) return
+      pending = window.setTimeout(() => {
+        pending = null
+        if (!cancelled) setRefreshKey((k) => k + 1)
+      }, 3000)
+    }
+
+    const channel = supabase
+      .channel('world-replies:real:' + userId)
+      .on(
+        'postgres_changes',
+        {
+          event: 'INSERT',
+          schema: 'public',
+          table: 'world_comments',
+          filter: `author_id=neq.${userId}`,
+        },
+        bump,
+      )
+      .subscribe()
+
+    const timer = window.setInterval(() => {
+      if (cancelled || document.visibilityState !== 'visible') return
+      setRefreshKey((k) => k + 1)
+    }, 20_000)
+
+    return () => {
+      cancelled = true
+      if (pending !== null) window.clearTimeout(pending)
+      window.clearInterval(timer)
+      void supabase.removeChannel(channel)
+    }
+  }, [userId])
+
   return { count, items, markRead, refresh }
 }
 
