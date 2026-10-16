@@ -47,17 +47,55 @@ export default function Error({
         要是一直这样，跟站主说一声。
       </p>
 
-      {error.digest && (
-        <p className="mt-2 font-mono text-[11px] text-base-content/60">编号 {error.digest}</p>
-      )}
+      {/*
+        把**真正的报错**显示出来（可以选中复制）
+        为什么：以前只给一句"出了点问题"，排查只能靠猜；
+        现在用户截一张图，就能直接看到是哪里、哪一句报的错
+      */}
+      <p className="mt-3 max-w-sm select-text break-words px-2 text-left font-mono text-[10.5px] leading-relaxed text-base-content/45">
+        {String(error?.message || error || '未知错误')}
+        {error?.digest ? `  (编号 ${error.digest})` : ''}
+      </p>
 
-      <div className="mt-6 flex items-center gap-2">
+      <div className="mt-6 flex flex-wrap items-center justify-center gap-2">
         <button
           type="button"
           onClick={reset}
           className="btn btn-primary font-serif-cn transition hover:shadow-sm"
         >
           再试一次
+        </button>
+        {/*
+          「清缓存重载」：自己就能修，不用卸载重装
+          —— 注销 Service Worker + 清掉所有缓存 + 强制重新拉取
+          （只有在这个错误页上才会出现，平时不影响任何东西）
+        */}
+        <button
+          type="button"
+          onClick={() => {
+            void (async () => {
+              try {
+                if ('serviceWorker' in navigator) {
+                  const regs = await navigator.serviceWorker.getRegistrations()
+                  await Promise.all(regs.map((r) => r.unregister()))
+                }
+              } catch {
+                /* 忽略 */
+              }
+              try {
+                if ('caches' in window) {
+                  const keys = await caches.keys()
+                  await Promise.all(keys.map((k) => caches.delete(k)))
+                }
+              } catch {
+                /* 忽略 */
+              }
+              window.location.reload()
+            })()
+          }}
+          className="rounded-full border border-base-300 bg-base-100/70 px-5 py-2.5 font-serif-cn text-[12.5px] text-primary transition hover:bg-base-100"
+        >
+          清缓存重载
         </button>
         <Link
           href="/"
