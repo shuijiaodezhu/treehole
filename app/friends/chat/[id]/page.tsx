@@ -99,7 +99,18 @@ function ChatInner() {
   }, [friendId])
 
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
+    /*
+     * 只滚**消息容器自己**，不要用 scrollIntoView：
+     *   scrollIntoView 会滚动**所有**可滚动的祖先 —— 包括整个窗口 ✗
+     *   → 聊天滚到底的同时窗口也被拽下去（用户报"一打开小屋就下滑"）
+     * 这里从底部哨兵往上找**第一个真正能滚**的祖先，只改它的 scrollTop。
+     * 兜底：万一找到的是 documentElement（整页滚动），就干脆不动，别把页面拽下去。
+     */
+    let box: HTMLElement | null = bottomRef.current?.parentElement ?? null
+    while (box && box.scrollHeight <= box.clientHeight + 1) box = box.parentElement
+    if (box && box !== document.documentElement && box !== document.body) {
+      box.scrollTop = box.scrollHeight
+    }
   }, [messages])
 
   // 好感度（互动值）

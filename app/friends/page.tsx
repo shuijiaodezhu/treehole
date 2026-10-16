@@ -203,6 +203,8 @@ export default function FriendsPage() {
   const router = useRouter()
   const supabase = createClient()
   const bottomRef = useRef<HTMLDivElement>(null)
+  /** 消息滚动容器：直接改它的 scrollTop，避免 scrollIntoView 连带滚动整个窗口 */
+  const listRef = useRef<HTMLDivElement>(null)
   /** 上一次的消息条数：用来判断"是不是真的来了新消息"（首次铺缓存不算） */
   const prevMsgCount = useRef(0)
 
@@ -326,7 +328,20 @@ export default function FriendsPage() {
     const grew = messages.length > prevMsgCount.current
     prevMsgCount.current = messages.length
     if (!grew) return
-    bottomRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
+
+    /*
+
+     * 只滚**消息容器自己**（改 scrollTop），不要用 scrollIntoView：
+
+     *   scrollIntoView 会滚动**所有**可滚动的祖先 —— 包括整个窗口
+
+     *   → 聊天滚到底的同时窗口也被拽下去（用户报"一打开小屋就下滑"）
+
+     */
+
+    const box = listRef.current
+
+    if (box) box.scrollTop = box.scrollHeight
   }, [messages])
 
   /*
@@ -1191,7 +1206,7 @@ export default function FriendsPage() {
                   )}
                 </div>
 
-                <div data-lenis-prevent className="th-scroll flex-1 overflow-y-auto px-5 py-4">
+                <div data-lenis-prevent ref={listRef} className="th-scroll flex-1 overflow-y-auto px-5 py-4">
                   {!currentFriend ? (
                     /* 还没点任何人的占位状态：不是空白，也绝不是某人的聊天 */
                     <div className="h-full flex flex-col items-center justify-center px-6 text-center">
