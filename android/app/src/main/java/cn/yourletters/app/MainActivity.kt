@@ -31,6 +31,8 @@ class MainActivity : AppCompatActivity() {
     private var web: WebView? = null
     private var fileCallback: ValueCallback<Array<Uri>>? = null
     private var geoCallback: GeolocationPermissions.Callback? = null
+    /** 用户**拒绝过**定位 → 之后不再弹框（直接回答"不允许"），免得每次进来都问 */
+    private var geoDenied = false
     private var geoOrigin: String? = null
 
     @SuppressLint("SetJavaScriptEnabled")
@@ -65,6 +67,11 @@ class MainActivity : AppCompatActivity() {
                 ) == PackageManager.PERMISSION_GRANTED
                 if (granted) {
                     callback.invoke(origin, true, false)
+                    return
+                }
+                // 拒绝过就不再弹框：直接告诉网页"不允许"，它会自己退回不显示城市
+                if (geoDenied) {
+                    callback.invoke(origin, false, false)
                     return
                 }
                 geoCallback = callback
@@ -135,6 +142,7 @@ class MainActivity : AppCompatActivity() {
     ) {
         if (requestCode == REQ_LOCATION) {
             val ok = grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED
+            if (!ok) geoDenied = true   // 记下来：以后不再弹（想授权请去系统设置里开）
             geoCallback?.invoke(geoOrigin, ok, false)
             geoCallback = null
             geoOrigin = null
