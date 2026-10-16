@@ -6,6 +6,7 @@ import { createClient } from '../lib/supabase'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { markMomentsSeen, useMomentsBadge, useUnreadMessages } from '../../components/unread'
+import { peek, save } from '../../components/local-store'
 import { markModuleSeen } from '../../components/module-badges'
 import { ChatMessages } from '../../components/chat-bubbles'
 import { useChatRealtime } from '../../components/chat-realtime'
@@ -148,6 +149,28 @@ export default function FriendsPage() {
   const [friends, setFriends] = useState<Friend[]>([])
   const [requests, setRequests] = useState<Request[]>([])
   const [loading, setLoading] = useState(true)
+
+  /*
+   * 小屋也像 App：**先用本机那份好友列表立刻铺出来**
+   *
+   * 以前进小屋要等"好友关系 + 资料 + 会话 + 消息"几趟跨境查询（每次约 150ms）
+   * 期间列表是空的。
+   * 现在：本机有就直接画 ✓ 再把 loading 关掉 ✓ → 进小屋**立刻见好友**
+   * 随后照常去服务器拉一次 ✓ 拉到就换新（不会闪空）
+   */
+  useEffect(() => {
+    const cached = peek<Friend[]>('friends-list', 10 * 60 * 1000)
+    if (!cached || cached.length === 0) return
+    // 读本机后同步铺上：这条只在客户端跑，必须赶在查询回来之前
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setFriends(cached)
+    setLoading(false)
+  }, [])
+
+  /* 好友列表有变化就存回本机（下次打开立刻就有 ✓） */
+  useEffect(() => {
+    if (friends.length > 0) save('friends-list', friends)
+  }, [friends])
   const [meId, setMeId] = useState<string | null>(null)
   const [friendName, setFriendName] = useState('')
   const [currentFriend, setCurrentFriend] = useState<Friend | null>(null)
