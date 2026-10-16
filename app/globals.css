@@ -379,17 +379,24 @@
 
    写法：跟着当前主题的强调色走（很浅的一层），字仍然是墨色
    ============================================================ */
-::selection {
-  /* 老内核兜底（iQOO 这类机器上 WebView 可能很旧，不支持 color-mix）：
-     先给一个纯色，再让支持的内核用 color-mix 覆盖 —— 顺序不能反 */
-  background: rgba(168, 86, 58, 0.25);
-  background: color-mix(in oklab, var(--wax) 25%, transparent);
+/*
+  选中文字的颜色
+  写 html ::selection 而不是 ::selection ✗
+    因为 daisyUI 自己也给 ::selection 定了 primary 色（**不透明**）
+    两边优先级相同时"谁在后面谁赢" → 它赢了 → 选中一片刺眼的纯红（用户截图就是这样）
+    html 前缀把它提到 (0,0,2) ✓ 不管顺序都赢 ✓
+  颜色：很浅的一层强调色 + 墨色字（不是满饱和 ✓）
+*/
+html ::selection {
+  /* 老内核兜底（iQOO 这类机器 WebView 很旧，不认识 color-mix）：先给纯色 */
+  background: rgba(168, 86, 58, 0.28);
+  background: color-mix(in oklab, var(--wax) 28%, transparent);
   color: var(--ink);
 }
 
-::-moz-selection {
-  background: rgba(168, 86, 58, 0.25);
-  background: color-mix(in oklab, var(--wax) 25%, transparent);
+html ::-moz-selection {
+  background: rgba(168, 86, 58, 0.28);
+  background: color-mix(in oklab, var(--wax) 28%, transparent);
   color: var(--ink);
 }
 /* ============================================================
