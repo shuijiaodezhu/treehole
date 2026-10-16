@@ -55,6 +55,23 @@ export function HomeCurrent() {
   const [email, setEmail] = useState('')
   const [userId, setUserId] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
+
+  /*
+   * 首屏兜底（A「打开慢」的核心之一）
+   *
+   * 首屏原本要等 checkUser() 里那次「拉好友申请」的网络请求
+   *   （跨境约 229ms，网络差时 1 秒以上）
+   * → 期间一直显示「正在展开这封信…」——你们看到的就是它
+   *
+   * 这里做一个**和业务逻辑完全无关**的兜底：
+   *   不管上面成没成，最多 1.2 秒就把等待页撤掉
+   *   页面先出来，数据回来了自然补上（页面是响应式的）
+   * 用独立 effect 写：作用域绝对不会出问题，卸载时也会清掉定时器
+   */
+  useEffect(() => {
+    const t = window.setTimeout(() => setLoading(false), 1200)
+    return () => window.clearTimeout(t)
+  }, [])
   /** 冬日信箱：写给站主的悄悄话 */
   const mailbox = useMailbox(userId)
   const [mailboxOpen, setMailboxOpen] = useState(false)
