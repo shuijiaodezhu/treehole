@@ -38,7 +38,7 @@ function describeWeather(code: number): { condition: string; icon: IconName } {
 /** 首屏 / 降级用占位数据，避免接口未返回时布局跳动 */
 export function fallbackWeather(): WeatherState {
   return {
-    city: DEFAULT_CITY,
+    city: '',
     temp: 18,
     tempMax: 20,
     tempMin: 12,
@@ -66,26 +66,58 @@ function getPosition(timeoutMs = 6000): Promise<Coords> {
   })
 }
 
-/** 逆地理编码取城市名（免费、无需 key），失败则沿用默认城市名 */
-async function fetchCityName(lat: number, lon: number, signal: AbortSignal): Promise<string> {
+/**
+ * 逆地理编码取城市名（免费、无需 key）。
+ *
+ * 为什么要两个接口：bigdatacloud 是境外服务，国内网络经常直接连不上；
+ * 连不上时原来的实现会返回默认城市（徐州）—— 于是**每个访客都看到站主的城市**。
+ * 现在：两个都试；都拿不到就返回 null，调用处会退到"不说城市"或 IP 城市。
+ */
+async function fetchCityName(
+  lat: number,
+  lon: number,
+  signal: AbortSignal,
+): Promise<string | null> {
+  const pick = (json: unknown, keys: string[]): string | null => {
+    if (typeof json !== 'object' || json === null) return null
+    const rec = json as Record<string, unknown>
+    for (const key of keys) {
+      const value = rec[key]
+      if (typeof value === 'string' && value.trim()) return value.trim()
+    }
+    return null
+  }
+
+  // ① bigdatacloud
   try {
     const res = await fetch(
       `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lon}&localityLanguage=zh`,
       { signal },
     )
-    if (!res.ok) return DEFAULT_CITY
-    const json: unknown = await res.json()
-    if (typeof json === 'object' && json !== null) {
-      const rec = json as Record<string, unknown>
-      for (const key of ['city', 'locality', 'principalSubdivision']) {
-        const value = rec[key]
-        if (typeof value === 'string' && value.trim()) return value.trim()
-      }
+    if (res.ok) {
+      const name = pick(await res.json(), ['city', 'locality', 'principalSubdivision'])
+      if (name) return name
     }
-    return DEFAULT_CITY
   } catch {
-    return DEFAULT_CITY
+    /* 继续试下一个 */
   }
+
+  // ② nominatim（OpenStreetMap）
+  try {
+    const res = await fetch(
+      `https://nominatim.openstreetmap.org/reverse?format=json&zoom=10&accept-language=zh&lat=${lat}&lon=${lon}`,
+      { signal },
+    )
+    if (res.ok) {
+      const json = (await res.json()) as { address?: unknown }
+      const name = pick(json?.address, ['city', 'town', 'county', 'state', 'province'])
+      if (name) return name
+    }
+  } catch {
+    /* 继续试下一个 */
+  }
+
+  return null
 }
 
 /**
@@ -206,7 +238,14 @@ export function useWeather(): WeatherState {
       try {
         coords = await getPosition()
         located = true
-        city = await fetchCityName(coords.lat, coords.lon, controller.signal)
+        const named = await fetchCityName(coords.lat, coords.lon, controller.signal)
+        if (named) {
+          city = named
+        } else {
+          // 坐标有了，但查不到城市名 → 用 IP 城市补一下（不弹窗）
+          const byIp = await ipLocate(controller.signal)
+          city = byIp?.city ?? ''
+        }
       } catch {
         /*
          * 定位被拒 / 超时 / 不支持 → 先试 IP 粗定位（不弹窗、不需要权限）。
@@ -228,8 +267,7 @@ export function useWeather(): WeatherState {
       try {
         const data = await fetchWeather(coords.lat, coords.lon, city, controller.signal)
         if (controller.signal.aborted) return
-        if (data && located) setWeather(data)
-        else if (data) setWeather({ ...data, city: '', isLive: false })
+        if (data) setWeather({ ...data, city, isLive: located })
         else if (located) setWeather((prev) => ({ ...prev, city, isLive: false }))
       } catch {
         // 网络异常：保持占位数据
