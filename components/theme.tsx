@@ -162,6 +162,9 @@ function deriveShades(accent: string): {
 /** 页面根节点要挂的样式：把页面色阶映射成通用的 --accent-* */
 export function pageAccentVars(page: PageKey): React.CSSProperties {
   return {
+    /* 让 daisyUI 的 primary 跟着本页调色板走（这样按钮/卡片/角标都用本模块的颜色）*/
+    '--color-primary': `var(--page-${page})`,
+    '--color-primary-content': '#fdf8f0',
     '--accent': `var(--page-${page})`,
     '--accent-deep': `var(--page-${page}-deep)`,
     '--accent-ink': `var(--page-${page}-ink)`,
