@@ -13,6 +13,9 @@ import type { MetadataRoute } from 'next'
  */
 export default function manifest(): MetadataRoute.Manifest {
   return {
+    /* PWABuilder 的建议：给应用一个固定 id ✓
+       这样以后即使 start_url 变了，系统也认得"还是同一个 App" ✓ */
+    id: '/',
     name: '你的来信 · Dear You',
     short_name: '你的来信',
     description: '一间小屋、一个院子、几个朋友。没有算法，不推广告。',
