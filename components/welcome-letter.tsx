@@ -74,12 +74,25 @@ export function WelcomeLetter({ userId }: { userId: string | null }) {
     const builtin = findDefaultPage('letter')
 
     let cancelled = false
+
+    /*
+     * ⚠️ 关键兜底（真事故）：
+     * 这一趟是**跨境请求** ✗ 可能很慢、甚至一直不返回 ✗
+     * 而整页都在等"信判定完"才继续（首页那句"正在展开这封信…"就是等它 ✗）
+     * → 所以 1.5 秒还不回来，就当作"没有自定义内容" ✓ 用内置初稿继续走 ✓
+     *   （不然首页会**永远卡在那句话上** ✗ 手机上尤其容易 ✗）
+     */
+    const fallbackTimer = window.setTimeout(() => {
+      if (!cancelled) setReady(true)
+    }, 1500)
+
     void (async () => {
       const { data, error } = await supabase
         .from('site_pages')
         .select('title, body')
         .eq('slug', 'letter')
         .maybeSingle()
+      window.clearTimeout(fallbackTimer)
       if (cancelled) return
       if (error) {
         // 取不到就用内置初稿判断（也算"确定了"）
@@ -96,6 +109,7 @@ export function WelcomeLetter({ userId }: { userId: string | null }) {
 
     return () => {
       cancelled = true
+      window.clearTimeout(fallbackTimer)
     }
   }, [])
 
