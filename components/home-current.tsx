@@ -78,8 +78,8 @@ export function HomeCurrent() {
       title: '小屋',
       desc: '好友与私聊，慢慢说',
       Icon: House,
-      tint: 'bg-base-100',
-      ink: 'text-base-content',
+      tint: 'bg-primary/10',
+      ink: 'text-primary',
     },
     {
       key: 'world',
@@ -87,8 +87,8 @@ export function HomeCurrent() {
       title: '院子',
       desc: '大家在想什么',
       Icon: Trees,
-      tint: 'bg-base-100',
-      ink: 'text-base-content/70',
+      tint: 'bg-primary/10',
+      ink: 'text-primary',
     },
     {
       key: 'play',
@@ -96,8 +96,8 @@ export function HomeCurrent() {
       title: '聚会',
       desc: '活动、小工具、一起听歌',
       Icon: PartyPopper,
-      tint: 'bg-base-100',
-      ink: 'text-base-content/70',
+      tint: 'bg-primary/10',
+      ink: 'text-primary',
     },
     {
       key: 'me',
@@ -105,8 +105,8 @@ export function HomeCurrent() {
       title: '我的',
       desc: '资料、收藏、设置',
       Icon: UserRound,
-      tint: 'bg-base-200',
-      ink: 'text-base-content/70',
+      tint: 'bg-primary/10',
+      ink: 'text-primary',
     },
   ] as const
 
@@ -434,7 +434,9 @@ export function HomeCurrent() {
                 <Link
                   href={card.href}
                   onClick={() => markModuleSeen(card.key as Parameters<typeof markModuleSeen>[0])}
-                  className="card card-border group h-full overflow-hidden bg-base-100 transition-all duration-200 [--radius-box:1rem] hover:-translate-y-0.5 hover:shadow-xl"
+                  /* 套上这张卡所属模块的调色板：primary / accent 于是变成那个模块的颜色 */
+                  style={pageAccentVars(card.key as Parameters<typeof pageAccentVars>[0])}
+                  className="card card-border group h-full overflow-hidden bg-primary/5 transition-all duration-200 [--radius-box:1rem] hover:-translate-y-0.5 hover:shadow-xl"
                 >
                   <div className="card-body flex-row items-center gap-5 py-6">
                     <span
