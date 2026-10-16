@@ -42,3 +42,9 @@ next-env.d.ts
 
 # 数据库备份（含真实数据，绝不入库）
 backups/
+
+# 安卓构建产物
+android/.gradle/
+android/build/
+android/app/build/
+android/local.properties
