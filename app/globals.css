@@ -700,13 +700,15 @@ body {
   100% { transform: translateX(100%); }
 }
 
-.animate-fade-up { animation: th-fade-up 0.22s cubic-bezier(0.22, 0.61, 0.36, 1) both; }
-.animate-fade-in { animation: th-fade-in 0.22s ease-out both; }
+/* 入场动画直接去掉：内容立刻出现（你反馈「要脆」）——
+   留着 keyframes 定义，想恢复只需把 animation 那行加回来 */
+.animate-fade-up { animation: none; }
+.animate-fade-in { animation: none; }
 .animate-breathe { animation: th-breathe 2.6s ease-in-out infinite; }
 .animate-float   { animation: th-float 3.4s ease-in-out infinite; }
 
 /* 逐个淡入：给列表用 */
-.stagger > * { animation: th-fade-up 0.24s cubic-bezier(0.22, 0.61, 0.36, 1) both; }
+.stagger > * { animation: none; }
 .stagger > *:nth-child(1) { animation-delay: 0.02s; }
 .stagger > *:nth-child(2) { animation-delay: 0.06s; }
 .stagger > *:nth-child(3) { animation-delay: 0.10s; }
@@ -832,10 +834,10 @@ body {
   to   { opacity: 1; transform: translate(-50%, -50%) scale(1); }
 }
 .dsh-overlay[data-state="open"] {
-  animation: dsh-overlay-in 160ms ease-out;
+  animation: dsh-overlay-in 100ms ease-out;
 }
 .dsh-content[data-state="open"] {
-  animation: dsh-content-in 200ms cubic-bezier(0.22, 1, 0.36, 1);
+  animation: dsh-content-in 120ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 
@@ -857,7 +859,7 @@ body {
 }
 html[data-first-load="1"] .dsh-splash {
   display: flex;
-  animation: dsh-splash-out 340ms cubic-bezier(0.4, 0, 0.2, 1) 330ms forwards;
+  animation: dsh-splash-out 250ms cubic-bezier(0.4, 0, 0.2, 1) 200ms forwards;
 }
 .dsh-splash-inner {
   display: flex;
@@ -890,7 +892,7 @@ html[data-first-load="1"] .dsh-splash {
 html[data-first-load="1"] .dsh-splash-inner {
   animation:
     dsh-splash-in 420ms cubic-bezier(0.22, 1, 0.36, 1) both,
-    dsh-splash-title-out 340ms cubic-bezier(0.4, 0, 0.2, 1) 330ms forwards;
+    dsh-splash-title-out 250ms cubic-bezier(0.4, 0, 0.2, 1) 200ms forwards;
 }
 /* 主页标题：等 splash 开始收的时候升起来，接住那四个字 */
 @keyframes dsh-hero-title-in {
@@ -902,7 +904,7 @@ html[data-first-load="1"] .dsh-hero-title {
    * 主页标题：**必须和启动图离开的时刻对齐**（现在启动图 330ms 开始收）
    * 原来等 900ms → 启动图 330ms 就走了，中间会空 570ms 没有标题
    */
-  animation: dsh-hero-title-in 340ms cubic-bezier(0.22, 1, 0.36, 1) 330ms both;
+  animation: dsh-hero-title-in 250ms cubic-bezier(0.22, 1, 0.36, 1) 200ms both;
 }
 @media (prefers-reduced-motion: reduce) {
   html[data-first-load="1"] .dsh-splash-inner,
@@ -1048,7 +1050,7 @@ select:-webkit-autofill {
  */
 .dsh-open.dsh-wait-blur,
 .dsh-open .dsh-wait-blur {
-  animation: dsh-unblur 320ms ease-out 0ms both;
+  animation: dsh-unblur 200ms ease-out 0ms both;
 }
 
 @media (prefers-reduced-motion: reduce) {
