@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import { createClient } from '../app/lib/supabase'
 import { markModuleSeen, writeSeenAt } from './module-badges'
+import { age, peek, save } from './cache'
 
 /**
  * 页内未读：好友私信 / 朋友圈 / 院子的"有人回我"
@@ -212,6 +213,23 @@ export function useUnreadMessages(userId: string | null): UnreadMessages {
         // order + limit：只看最近的，别把几年的私信全拉回来算
         // 不再排除自己发的 —— 好友列表排序要用「最后一条消息」，
         // 自己刚发完的那个人也应该待在最上面；统计未读时再跳过自己的。
+        /*
+         * 先把上一次的角标摆出来（立刻有数字 ✓ 不用干等跨境往返 ✓）
+         * 顺便：30 秒内刚问过就不再问 ✓（切标签页回来、来回跳页面都不再重复查 ✓）
+         */
+        const cachedUnread = peek<{ counts: Record<string, number>; lastAt: Record<string, string> }>(
+          'unread:' + userId,
+        )
+        if (cachedUnread) {
+          setByConversation(cachedUnread.counts)
+          setLastAtByConversation(cachedUnread.lastAt)
+          setLoaded(true)
+        }
+        if (age('unread:' + userId) < 30_000) {
+          setLoaded(true)
+          return
+        }
+
         const { data: msgs, error: msgError } = await supabase
           .from('messages')
           .select('id, conversation_id, sender_id, created_at')
@@ -257,6 +275,7 @@ export function useUnreadMessages(userId: string | null): UnreadMessages {
         setByConversation(counts)
         setLastAtByConversation(lastAt)
         setLoaded(true)
+        save('unread:' + userId, { counts, lastAt })
       } catch (err) {
         if (!cancelled) console.error('私信未读统计失败:', err)
       }
