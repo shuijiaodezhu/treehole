@@ -148,7 +148,7 @@ export function EmojiPicker({
             ))}
           </div>
 
-          <div className="grid max-h-48 grid-cols-8 gap-1 overflow-y-auto p-2.5">
+          <div data-lenis-prevent className="grid max-h-48 grid-cols-8 gap-1 overflow-y-auto p-2.5">
             {GROUPS[group].emojis.map((emoji) => (
               <button
                 key={emoji}

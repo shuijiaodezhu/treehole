@@ -448,7 +448,7 @@ export function MusicRoom() {
                       </label>
                     </div>
 
-                    <div className="max-h-80 space-y-2.5 overflow-y-auto px-5 py-4">
+                    <div data-lenis-prevent className="max-h-80 space-y-2.5 overflow-y-auto px-5 py-4">
                       {chatMissing ? (
                         <p className="text-[11px] leading-relaxed text-base-content/60">
                           聊天还没开通：先执行 <code>supabase-music.sql</code>。

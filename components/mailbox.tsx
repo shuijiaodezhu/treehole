@@ -364,7 +364,7 @@ export function MailboxDialog({
         </div>
 
         {/* 信 */}
-        <div ref={listRef} className="flex-1 space-y-3 overflow-y-auto px-5 py-4">
+        <div ref={listRef} data-lenis-prevent className="flex-1 space-y-3 overflow-y-auto px-5 py-4">
           {mailbox.loading && mailbox.messages.length === 0 ? (
             <p className="py-10 text-center font-serif-cn text-xs text-base-content/60">开信箱中…</p>
           ) : mailbox.errorKind === 'missing-table' ? (

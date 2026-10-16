@@ -699,7 +699,7 @@ export default function PlayPage() {
       </div>
 
       {detailActivity && (
-        <div className="fixed inset-0 bg-black/30 backdrop-blur-sm z-50 flex items-center justify-center px-4" onClick={() => setDetailActivity(null)}>          <div className="bg-base-100 rounded-box w-full max-w-lg p-6 shadow-2xl max-h-[85vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
+        <div className="fixed inset-0 bg-black/30 backdrop-blur-sm z-50 flex items-center justify-center px-4" onClick={() => setDetailActivity(null)}>          <div data-lenis-prevent className="bg-base-100 rounded-box w-full max-w-lg p-6 shadow-2xl max-h-[85vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
             <div className="flex items-start justify-between gap-3 mb-4">
               <div className="flex items-start gap-3 flex-1 min-w-0">
                 {detailActivity.type_icon && (

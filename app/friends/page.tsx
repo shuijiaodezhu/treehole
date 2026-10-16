@@ -1027,7 +1027,7 @@ export default function FriendsPage() {
                 </div>
               )}
 
-              <div className="card rounded-box border border-base-300 bg-base-100 shadow-sm overflow-hidden flex-1 overflow-y-auto">
+              <div data-lenis-prevent className="card rounded-box border border-base-300 bg-base-100 shadow-sm overflow-hidden flex-1 overflow-y-auto">
                 <div className="px-4 py-3 border-b border-base-300">
                   <p className="text-[11px] text-base-content/60 tracking-wide">
                     我的好友 · {shownFriends.length}
@@ -1151,7 +1151,7 @@ export default function FriendsPage() {
                   )}
                 </div>
 
-                <div className="th-scroll flex-1 overflow-y-auto px-5 py-4">
+                <div data-lenis-prevent className="th-scroll flex-1 overflow-y-auto px-5 py-4">
                   {!currentFriend ? (
                     /* 还没点任何人的占位状态：不是空白，也绝不是某人的聊天 */
                     <div className="h-full flex flex-col items-center justify-center px-6 text-center">
@@ -1268,7 +1268,7 @@ export default function FriendsPage() {
                 <p className="mt-2 text-[11px] text-base-content/60">{VISIBILITY_HINT[visibility]}</p>
 
                 {showPicker && visibility === 'friends' && (
-                  <div className="mt-2 max-h-40 overflow-y-auto rounded-box border border-base-300 bg-primary/5 p-3">
+                  <div data-lenis-prevent className="mt-2 max-h-40 overflow-y-auto rounded-box border border-base-300 bg-primary/5 p-3">
                     {visFriends.length === 0 ? (
                       <p className="text-[11px] text-base-content/60">还没有好友</p>
                     ) : (

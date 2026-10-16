@@ -190,7 +190,7 @@ export function WelcomeLetter({ userId }: { userId: string | null }) {
       </div>
 
       {/* 正文：可滚动，居中一列 */}
-      <div className="min-h-0 flex-1 overflow-y-auto px-6 py-8">
+      <div data-lenis-prevent className="min-h-0 flex-1 overflow-y-auto px-6 py-8">
         <p className="mx-auto max-w-xl whitespace-pre-line font-serif-cn text-[12.5px] leading-[1.95] text-base-content">
           {letter.body}
         </p>

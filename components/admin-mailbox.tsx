@@ -283,7 +283,7 @@ export function AdminMailbox({ adminId }: { adminId: string }) {
       ) : (
         <div className="grid gap-4 md:grid-cols-[260px_1fr]">
           {/* 来信人 */}
-          <nav className="max-h-[420px] space-y-1.5 overflow-y-auto pr-1">
+          <nav data-lenis-prevent className="max-h-[420px] space-y-1.5 overflow-y-auto pr-1">
             {rows.map((r) => (
               <button
                 key={r.threadUserId}
@@ -319,7 +319,7 @@ export function AdminMailbox({ adminId }: { adminId: string }) {
                   {message && <span className="w-full text-[11px] text-base-content/60">{message}</span>}
                 </div>
 
-                <div ref={listRef} className="max-h-[300px] flex-1 space-y-3 overflow-y-auto px-4 py-4">
+                <div ref={listRef} data-lenis-prevent className="max-h-[300px] flex-1 space-y-3 overflow-y-auto px-4 py-4">
                   {threadLoading ? (
                     <p className="py-8 text-center text-xs text-base-content/40">开信箱中…</p>
                   ) : letters.length === 0 ? (

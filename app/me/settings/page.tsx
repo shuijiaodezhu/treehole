@@ -516,7 +516,7 @@ export default function SettingsPage() {
                     </div>
 
                     {open && (
-                      <div className="mt-3 max-h-48 overflow-y-auto border-t border-base-300 pt-2">
+                      <div data-lenis-prevent className="mt-3 max-h-48 overflow-y-auto border-t border-base-300 pt-2">
                         {friendList.friends.length === 0 ? (
                           <p className="text-[11px] text-accent">还没有好友</p>
                         ) : (

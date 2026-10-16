@@ -405,7 +405,7 @@ export default function MomentsPage() {
                 <p className="text-[11px] text-base-content/40 mt-2">{VISIBILITY_HINT[visibility]}</p>
 
                 {showPicker && visibility === 'friends' && (
-                  <div className="card mt-2 max-h-40 overflow-y-auto rounded-box border border-base-300 bg-base-100 p-3">
+                  <div data-lenis-prevent className="card mt-2 max-h-40 overflow-y-auto rounded-box border border-base-300 bg-base-100 p-3">
                     {friends.length === 0 ? (
                       <p className="text-[11px] text-base-content/40">还没有好友，先去加几个吧。</p>
                     ) : (
