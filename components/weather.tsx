@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { peek } from './local-store'
 import type { IconName } from './icons'
 import { DEFAULT_CITY, DEFAULT_LAT, DEFAULT_LON } from './utils'
 
@@ -226,6 +227,48 @@ async function fetchWeather(
   }
 }
 
+/* ==================== 资料里的城市（最优先） ==================== */
+
+/** 读用户资料里填的城市（开屏同步存在本机的 me-profile，0 请求） */
+function readProfileCity(): string {
+  try {
+    const me = peek<{ location?: string | null }>('me-profile', 24 * 60 * 60 * 1000)
+    const v = (me?.location ?? '').trim()
+    return v
+  } catch {
+    return ''
+  }
+}
+
+/**
+ * 城市名 → 坐标（Open-Meteo 地理编码，免费无需 key）
+ *
+ * 为什么要它：如果只用名字、坐标却还是别处的，就会出现
+ *   "写着六安、天气是徐州的" 这种错位 ✗
+ * 拿不到坐标时返回 null → 上层只显示名字、坐标用默认值（至少名字是对的）
+ */
+async function geocodeCity(
+  name: string,
+  signal: AbortSignal,
+): Promise<{ lat: number; lon: number; name: string } | null> {
+  try {
+    const url =
+      'https://geocoding-api.open-meteo.com/v1/search?name=' +
+      encodeURIComponent(name) +
+      '&count=1&language=zh&format=json'
+    const res = await fetch(url, { signal })
+    if (!res.ok) return null
+    const json = (await res.json()) as {
+      results?: { latitude: number; longitude: number; name?: string }[]
+    }
+    const r = json.results?.[0]
+    if (!r || typeof r.latitude !== 'number' || typeof r.longitude !== 'number') return null
+    return { lat: r.latitude, lon: r.longitude, name: (r.name || name).trim() }
+  } catch {
+    return null
+  }
+}
+
 /* ==================== Hook ==================== */
 
 /**
@@ -242,6 +285,36 @@ export function useWeather(): WeatherState {
       let coords: Coords = { lat: DEFAULT_LAT, lon: DEFAULT_LON }
       let city = DEFAULT_CITY
       let located = false
+
+      /*
+       * 优先级（用户报"为啥跳到北京了"之后定的）：
+       *   ① **资料里填的城市** ✓ 用户自己填的，确定、稳定、不受代理/运营商影响
+       *   ② 精确定位（GPS，需要授权）
+       *   ③ IP 兜底 —— 只在前两条都拿不到时用，而且它可能因为代理而指到别的地方
+       * 之前是 ②③ 优先 ✗ 于是"拒绝定位 + 挂代理"就会显示成北京 ✓
+       */
+      const profileCity = readProfileCity()
+      if (profileCity) {
+        const geo = await geocodeCity(profileCity, controller.signal)
+        if (controller.signal.aborted) return
+        if (geo) {
+          coords = { lat: geo.lat, lon: geo.lon }
+          city = geo.name || profileCity
+        } else {
+          // 查不到坐标：名字照用，坐标用默认值（至少名字不会因为代理而变）
+          city = profileCity
+        }
+        located = true
+        try {
+          const data = await fetchWeather(coords.lat, coords.lon, city, controller.signal)
+          if (controller.signal.aborted) return
+          if (data) setWeather({ ...data, city })
+          else setWeather((prev) => ({ ...prev, city, isLive: false }))
+        } catch {
+          /* 保持占位数据 */
+        }
+        return
+      }
 
       try {
         coords = await getPosition()

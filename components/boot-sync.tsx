@@ -62,7 +62,7 @@ export function BootSync() {
         const [cats, me, friends, conversations, messages, unread, convReads, moduleReads, posts] = await Promise.all([
           q(supabase.from('categories').select('id, name, icon, parent_id, sort_order').eq('status', 'approved').order('sort_order', { ascending: true }), []),
 
-          q(supabase.from('profiles').select('id, username, nickname, avatar_url, signature').eq('id', uid).maybeSingle(), null),
+          q(supabase.from('profiles').select('id, username, nickname, avatar_url, signature, location').eq('id', uid).maybeSingle(), null),
 
           q(supabase.from('friendships').select('id, requester_id, addressee_id').or(`requester_id.eq.${uid},addressee_id.eq.${uid}`).eq('status', 'accepted'), []),
 
