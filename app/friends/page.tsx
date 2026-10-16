@@ -6,7 +6,6 @@ import { createClient } from '../lib/supabase'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { markMomentsSeen, useMomentsBadge, useUnreadMessages } from '../../components/unread'
-import { getProfiles } from '../../components/cache'
 import { markModuleSeen } from '../../components/module-badges'
 import { ChatMessages } from '../../components/chat-bubbles'
 import { useChatRealtime } from '../../components/chat-realtime'
@@ -380,19 +379,10 @@ export default function FriendsPage() {
       const friendIds = accepted.map((f) =>
         f.requester_id === uid ? f.addressee_id : f.requester_id
       )
-      const profilesData = await getProfiles(friendIds, async (missing) => {
-          const { data } = await supabase
-            .from('profiles')
-            .select('id, username, nickname, avatar_url, signature')
-            .in('id', missing)
-          return (data ?? []) as {
-            id: string
-            username: string | null
-            nickname: string | null
-            avatar_url: string | null
-            signature: string | null
-          }[]
-        })
+      const { data: profilesData } = await supabase
+        .from('profiles')
+        .select('id, username, nickname, avatar_url, signature')
+        .in('id', friendIds)
 
       const list: Friend[] = accepted.map((f) => {
         const fid = f.requester_id === uid ? f.addressee_id : f.requester_id
@@ -425,19 +415,10 @@ export default function FriendsPage() {
 
     if (pending && pending.length > 0) {
       const reqIds = pending.map((r) => r.requester_id)
-      const profilesData = await getProfiles(reqIds, async (missing) => {
-          const { data } = await supabase
-            .from('profiles')
-            .select('id, username, nickname, avatar_url, signature')
-            .in('id', missing)
-          return (data ?? []) as {
-            id: string
-            username: string | null
-            nickname: string | null
-            avatar_url: string | null
-            signature: string | null
-          }[]
-        })
+      const { data: profilesData } = await supabase
+        .from('profiles')
+        .select('id, username, nickname, avatar_url')
+        .in('id', reqIds)
 
       const list: Request[] = pending.map((r) => {
         const p = profilesData?.find((x) => x.id === r.requester_id)
