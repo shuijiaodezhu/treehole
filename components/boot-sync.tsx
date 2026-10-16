@@ -97,6 +97,27 @@ export function BootSync() {
     }
   }, [])
 
+  /*
+   * 注册 Service Worker（离线可用 + 图片/字体一次下载就留着）
+   *
+   * 三道保险（免得出现"卡在旧版本"那种经典事故）：
+   *   · updateViaCache: 'none' → 每次都去问最新版，不吃 HTTP 缓存
+   *   · 每次打开都顺手 reg.update() 问一次有没有新版
+   *   · sw.js 里用 skipWaiting + clients.claim → 新版**立刻接管** ✓
+   * 注册失败/不支持（比如某些 WebView 设置）→ 什么都不影响 ✓
+   */
+  useEffect(() => {
+    void (async () => {
+      try {
+        if (typeof navigator === 'undefined' || !('serviceWorker' in navigator)) return
+        const reg = await navigator.serviceWorker.register('/sw.js', { updateViaCache: 'none' })
+        void reg.update()
+      } catch {
+        /* 注册不上就算了 ✓ 网站照常用 ✓ */
+      }
+    })()
+  }, [])
+
   // 它不渲染任何东西 ✓ 所以不可能影响页面结构 ✓
   return null
 }
