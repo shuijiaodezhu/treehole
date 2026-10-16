@@ -158,40 +158,62 @@ export default function WorldPage() {
   }, [router])
 
   const loadPosts = useCallback(async (categoryId: string | null) => {
-    let query = supabase.from('world_posts').select('id, author_id, is_anonymous, anonymous_id, content, category_id, created_at, image_urls').eq('status', 'published').eq('is_hidden', false).order('created_at', { ascending: false }).limit(50)
-    if (categoryId) query = query.eq('category_id', categoryId)
-    else query = query.is('category_id', null)
-
-    const { data: postsData } = await query
-    if (!postsData || postsData.length === 0) { setPosts([]); return }
-
-    const postIds = postsData.map((p) => p.id)
-    const authorIds = [...new Set(postsData.filter((p) => !p.is_anonymous).map((p) => p.author_id))]
-    const { data: likesData } = await supabase.from('world_likes').select('post_id, user_id').in('post_id', postIds)
-    const { data: commentsData } = await supabase.from('world_comments').select('id, post_id, author_id, content, created_at, is_anonymous, anonymous_id, parent_id').in('post_id', postIds).order('created_at', { ascending: true })
-
-    const commentAuthorIds = commentsData ? [...new Set(commentsData.filter((c) => !c.is_anonymous).map((c) => c.author_id))] : []
-    const allAuthorIds = [...new Set([...authorIds, ...commentAuthorIds])]
     /*
-     * 资料（头像/昵称）是最重也最重复的一次查询 ✗
-     * 改成本地存一份 id→资料 的字典 ✓ 只去拉"本地还没有的那些 id" ✓
-     *   · 首次：只拉这几个人 ✓（比原来可能少很多）
-     *   · 再来：**一行都不用拉** ✓ 直接本地拼出来 ✓
+     * 一次拿回整页 ✓
+     * 原来：帖子 → 点赞 → 评论 → 资料 分 4 次问（4 × 150ms 跨境 ✗）
+     * 现在：数据库里的 world_feed() 一个事务拼好 ✓（1 × 150ms ✓）
      */
-    type ProfileRow = { id: string; username: string | null; nickname: string | null; avatar_url: string | null }
-    const profileMap = peek<Record<string, ProfileRow>>('profiles:v1') ?? {}
-    const missingIds = allAuthorIds.filter((id) => !profileMap[id])
-    if (missingIds.length > 0) {
-      const { data: fetched } = await supabase
-        .from('profiles')
-        .select('id, username, nickname, avatar_url, signature')
-        .in('id', missingIds)
-      for (const row of (fetched ?? []) as ProfileRow[]) profileMap[row.id] = row
-      save('profiles:v1', profileMap)
+    const { data: feed, error: feedError } = await supabase.rpc('world_feed', {
+      p_category_id: categoryId,
+      p_limit: 50,
+    })
+    if (feedError) {
+      console.error('院子取数失败:', feedError)
+      setPosts([])
+      return
     }
-    const allProfilesData: ProfileRow[] = allAuthorIds
+
+    type FeedComment = {
+      id: string; post_id: string; author_id: string; content: string; created_at: string
+      is_anonymous: boolean; anonymous_id: string | null; parent_id: string | null
+    }
+    type FeedPost = {
+      id: string; author_id: string; is_anonymous: boolean; anonymous_id: string | null
+      content: string; category_id: string | null; created_at: string
+      image_urls: string[] | null; like_count: number; liked_by_me: boolean
+      comments: FeedComment[]
+    }
+    type ProfileRow = { id: string; username: string | null; nickname: string | null; avatar_url: string | null }
+
+    const postsData = (feed?.posts ?? []) as FeedPost[]
+    if (postsData.length === 0) { setPosts([]); return }
+
+    // 函数带回来的资料并进本地字典 ✓（下次别的页面直接命中 ✓）
+    const profileMap = peek<Record<string, ProfileRow>>('profiles:v1') ?? {}
+    for (const row of (feed?.profiles ?? []) as ProfileRow[]) profileMap[row.id] = row
+    save('profiles:v1', profileMap)
+
+    const allProfilesData: ProfileRow[] = [
+      ...new Set([
+        ...postsData.map((p) => p.author_id),
+        ...postsData.flatMap((p) => (p.comments ?? []).map((c) => c.author_id)),
+      ]),
+    ]
       .map((id) => profileMap[id])
       .filter((x): x is ProfileRow => Boolean(x))
+
+    /*
+     * 下面那段"拼帖子"的代码要的是**行**形状 ✓
+     * 函数给的是**聚合**结果（like_count / liked_by_me / comments ✓）
+     * → 这里拼成它认识的形状 ✓ 那段逻辑就一行都不用改 ✓
+     */
+    const likesData = postsData.flatMap((p) =>
+      Array.from({ length: p.like_count ?? 0 }, (_, i) => ({
+        post_id: p.id,
+        user_id: i === 0 && p.liked_by_me ? meId : '__other__',
+      })),
+    )
+    const commentsData = postsData.flatMap((p) => p.comments ?? [])
 
     const list: Post[] = postsData.map((p) => {
       const prof = allProfilesData?.find((x) => x.id === p.author_id)
