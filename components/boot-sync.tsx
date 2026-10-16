@@ -15,6 +15,7 @@
  */
 
 import { useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 import { createClient } from '../app/lib/supabase'
 import { age, save, withTimeout } from './local-store'
 
@@ -96,6 +97,39 @@ export function BootSync() {
       cancelled = true
     }
   }, [])
+
+  /*
+   * 预热主要页面的代码（微信/抖音那种"点进去秒开"的手感）
+   *
+   * 原理：每个页面是一份独立的 JS 包，第一次进要**现下载**（跨境很慢）
+   * 现在：进来之后空闲时就把这几个常用页面的包**悄悄下好**
+   *   → 你点过去时是**从本机读** ✓ 不是等网络 ✓（这就是"秒切"✓）
+   * 只在空闲时做 ✓ 不抢首屏的带宽 ✓ 失败也不影响任何功能 ✓
+   */
+  const router = useRouter()
+  useEffect(() => {
+    const routes = ['/world', '/friends', '/me', '/play', '/search']
+    const warm = () => {
+      for (const r of routes) {
+        try {
+          router.prefetch(r)
+        } catch {
+          /* 忽略 */
+        }
+      }
+    }
+    try {
+      const ric = (window as unknown as { requestIdleCallback?: (cb: () => void) => number }).requestIdleCallback
+      if (typeof ric === 'function') {
+        ric(warm)
+        return
+      }
+    } catch {
+      /* 忽略 */
+    }
+    const t = window.setTimeout(warm, 1200)
+    return () => window.clearTimeout(t)
+  }, [router])
 
   /*
    * 注册 Service Worker（离线可用 + 图片/字体一次下载就留着）

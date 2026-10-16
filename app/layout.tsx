@@ -106,6 +106,10 @@ export default function RootLayout({
       */}
               {/* 字体从 jsDelivr 拉：提前把域名连上，省掉一次 DNS + TLS 握手（约 100-300ms）*/}
         <link rel="preconnect" href="https://cdn.jsdelivr.net" crossOrigin="anonymous" />
+        {/* 数据库域名也提前连上（每个页面第一次查数据都能省一次握手 ✓
+            注意：这个地址和 app/lib/supabase.ts 里的是同一个 ✓ 换项目要一起改 ✓）*/}
+        <link rel="preconnect" href="https://cdmytrvpskkdwjsenidt.supabase.co" crossOrigin="anonymous" />
+        <link rel="dns-prefetch" href="https://cdmytrvpskkdwjsenidt.supabase.co" />
         <link rel="dns-prefetch" href="https://cdn.jsdelivr.net" />
 {/* 字体：懒加载（见下方说明）—— font-lazy-ok */}
 {/*
