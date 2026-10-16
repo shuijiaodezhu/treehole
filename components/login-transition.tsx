@@ -29,7 +29,6 @@ import { clearJustLoggedIn } from './login-handoff'
 const TOTAL_MS = 600
 const REDUCED_MS = 150
 /** 等登录页两边淡完就换页 */
-const NAVIGATE_MS = 160
 
 type Listener = (active: boolean) => void
 
@@ -42,15 +41,26 @@ function notify() {
 
 /** 登录成功后调用：开始过场（覆盖层在 layout 上，会横跨跳转继续播） */
 export function startLoginTransition() {
-  if (transitioning) return
-  transitioning = true
-  notify()
+  /*
+   * 过场现在只留「你的来信」那一张纸（启动图），登录幕布已经移除
+   *
+   * ⚠️ 这里必须**什么都不做**：
+   *   原来 transitioning 是由幕布组件在结束时置回 false 的
+   *   幕布删掉之后，如果这里还设成 true，就**没有任何人会把它改回来**
+   *   → 首页与欢迎信都会一直等「过场结束」→ 永久卡住（上次那类事故）
+   * 所以：不设状态、不通知 —— 一切都当作「没有过场」✓
+   */
+  void transitioning
+  void notify
 }
 
 /** 等两边淡完再换页；返回给调用方做 router.push 用 */
 export function loginNavigateDelay(): number {
-  if (typeof window === 'undefined') return 0
-  return window.matchMedia('(prefers-reduced-motion: reduce)').matches ? REDUCED_MS : NAVIGATE_MS
+  /*
+   * 过场只留「你的来信」那一张纸 → 登录后**不再等幕布**，立刻跳转
+   * （这一处改了就不需要动登录页的代码）
+   */
+  return 0
 }
 
 /** 现在是否正在播过场（首次登录那封信要等它结束再出现） */

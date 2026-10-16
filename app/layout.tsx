@@ -10,7 +10,6 @@ import { PageTransition } from "../components/page-transition"
 import { PageDecor } from "../components/page-decor"
 import { PaperGrain } from "../components/paper-pattern"
 import { Toaster } from "../components/ui/sonner";
-import { LoginTransitionOverlay } from "../components/login-transition";
 import { ThemeApplier } from '../components/theme-applier'
 import { BootSync } from '../components/boot-sync'
 
@@ -154,7 +153,6 @@ export default function RootLayout({
           {/* 整站边缘的极淡装饰（颜色与图案跟着当前页面走） */}
           <Suspense fallback={null}>
             {/* 登录过场：挂在 layout 上，所以换页时动画不会中断 */}
-            <LoginTransitionOverlay />
           </Suspense>
           {children}
           <Suspense fallback={null}>

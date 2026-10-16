@@ -69,7 +69,7 @@ export function HomeCurrent() {
    * 用独立 effect 写：作用域绝对不会出问题，卸载时也会清掉定时器
    */
   useEffect(() => {
-    const t = window.setTimeout(() => setLoading(false), 700)
+    const t = window.setTimeout(() => setLoading(false), 400)
     return () => window.clearTimeout(t)
   }, [])
   /** 冬日信箱：写给站主的悄悄话 */
