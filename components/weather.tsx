@@ -95,7 +95,15 @@ async function fetchCityName(
       { signal },
     )
     if (res.ok) {
-      const name = pick(await res.json(), ['city', 'locality', 'principalSubdivision'])
+      /*
+     * 顺序很重要：这个接口带了 localityLanguage=zh，
+     *   但它同时返回
+     *     city     = Xuzhou   （英文/拼音）
+     *     locality = 徐州      （中文）
+     *   原来先取 city ✗ → 界面上永远是拼音（用户报的"怎么是拼音"）
+     *   → 先取 locality ✓ 取不到再退 city ✓
+     */
+    const name = pick(await res.json(), ['locality', 'city', 'principalSubdivision'])
       if (name) return name
     }
   } catch {
@@ -135,7 +143,7 @@ type IpInfo = { city: string; lat: number; lon: number }
 
 async function ipLocate(signal: AbortSignal): Promise<IpInfo | null> {
   try {
-    const cached = window.localStorage.getItem('treehole:ipcity')
+    const cached = window.localStorage.getItem('treehole:ipcity:zh')
     if (cached) {
       const parsed = JSON.parse(cached) as IpInfo
       if (
@@ -152,7 +160,7 @@ async function ipLocate(signal: AbortSignal): Promise<IpInfo | null> {
   }
 
   try {
-    const res = await fetch('https://ipwho.is/', { signal })
+    const res = await fetch('https://ipwho.is/?lang=zh', { signal })
     if (!res.ok) return null
     const json = (await res.json()) as {
       success?: boolean
@@ -166,7 +174,7 @@ async function ipLocate(signal: AbortSignal): Promise<IpInfo | null> {
 
     const info: IpInfo = { city: json.city.trim(), lat: json.latitude, lon: json.longitude }
     try {
-      window.localStorage.setItem('treehole:ipcity', JSON.stringify(info))
+      window.localStorage.setItem('treehole:ipcity:zh', JSON.stringify(info))
     } catch {
       /* 忽略 */
     }
