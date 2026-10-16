@@ -147,7 +147,10 @@ export default function RootLayout({
           +'<p style="margin:0;font-size:13px;color:#8a7a6a">也可以在 设置 → 应用 → 显示系统程序 里查看 WebView 的版本号，低于 111 就是它。</p>'
           +'<p style="margin:22px 0 0;font-size:13px;color:#8a7a6a">（当前内核：WebView 版本偏低）</p>'
           +'</div>';
-        d.body.appendChild(box);
+        /* 插到 <html> 上而不是 <body>：
+           React 水合时会重建 body 的子节点，塞在 body 里的提示**会被清掉** ✗
+           <html> 那边 React 不碰 → 提示能稳稳留在最上层 */
+        d.documentElement.appendChild(box);
       }
       if(d.body){notice();}else{d.addEventListener("DOMContentLoaded",notice);}
     }catch(e){}})()`
