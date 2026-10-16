@@ -53,7 +53,8 @@ export default function FavoritesPage() {
     void (async () => {
       try {
         const { data, error } = await supabase.auth.getUser()
-        if (error) throw error
+        // 「没有会话」不是错误：未登录是正常状态，下面按未登录处理（跳登录页）
+        if (error && error.name !== 'AuthSessionMissingError') throw error
         if (cancelled) return
         if (!data.user) {
           router.replace('/login')
