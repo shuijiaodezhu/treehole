@@ -74,15 +74,33 @@ export function AppLoading() {
 
   if (!show) return null
 
-  /*
-   * 这里**故意什么都不放**。
-   *
-   * 原来这里是「信封图标 + 正在打开…」的加载动画 ✗
-   * 但主页自己有「一开始就是模糊的 → 化开变清晰」那一下 ✓
-   * 两个叠在一起就是"重复表达一次加载" ✗ 用户明确说：有模糊就够了 ✓
-   *
-   * 所以现在只留这层纸色底：它的作用只是"路由还在加载时别白一帧" ✓
-   * 不再有任何图标、文字、动画 ✓ 视觉上就是"纸"，然后直接进模糊→清晰 ✓
-   */
-  return <div className="min-h-screen bg-[var(--paper)]" aria-hidden="true" />
+  return (
+    <div className="flex min-h-screen flex-col items-center justify-center gap-5 bg-[var(--paper)]">
+      <svg
+        className="animate-float h-14 w-14 text-primary"
+        viewBox="0 0 24 24"
+        fill="none"
+        aria-hidden="true"
+      >
+        {/* 速度线 */}
+        <g stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" opacity="0.45">
+          <path d="M0.9 8.4h2.2" />
+          <path d="M0.4 12h1.8" />
+          <path d="M1.1 15.6h2" />
+        </g>
+        {/* 信封 */}
+        <rect x="5" y="6.5" width="16" height="11" rx="1.8" stroke="currentColor" strokeWidth="1.7" />
+        <path
+          d="M5.7 7.2 13 12.3 20.3 7.2"
+          stroke="currentColor"
+          strokeWidth="1.7"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+        <circle cx="13" cy="12.8" r="1.25" fill="currentColor" />
+      </svg>
+
+      <p className="font-serif-cn text-xs tracking-wide text-base-content/60">正在打开…</p>
+    </div>
+  )
 }
