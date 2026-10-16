@@ -88,14 +88,14 @@ export function ExportDataSection({ userId, email }: { userId: string | null; em
   const [result, setResult] = useState<ExportResult | null>(null)
 
   return (
-    <section className="rounded-2xl border border-[var(--accent-line)] bg-white p-6 shadow-sm">
+    <section className="rounded-box border border-base-300 bg-base-100 p-6 shadow-sm">
       <div className="flex items-center gap-3">
-        <div className="flex h-9 w-9 items-center justify-center rounded-full bg-[var(--accent-soft)]">
+        <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary/5">
           <Icon name="download" className="h-4 w-4 text-[var(--accent-deep)]" />
         </div>
         <div className="min-w-0 flex-1">
-          <h2 className="text-sm font-semibold text-[#2b2430]">导出我的数据</h2>
-          <p className="mt-0.5 text-[11px] leading-relaxed text-[var(--accent-muted)]">
+          <h2 className="text-sm font-semibold text-base-content">导出我的数据</h2>
+          <p className="mt-0.5 text-[11px] leading-relaxed text-base-content/60">
             把你写过的动态、帖子、回复、私信和信箱，打包成一个 JSON 文件下载。
           </p>
         </div>
@@ -110,7 +110,7 @@ export function ExportDataSection({ userId, email }: { userId: string | null; em
           setResult(await exportMyData(userId, email))
           setBusy(false)
         }}
-        className="mt-4 inline-flex items-center gap-1.5 rounded-full bg-[var(--accent)] px-4 py-2 text-xs text-white transition hover:shadow-sm disabled:opacity-50"
+        className="mt-4 inline-flex items-center gap-1.5 rounded-full bg-primary px-4 py-2 text-xs text-white transition hover:shadow-sm disabled:opacity-50"
       >
         <Icon name="download" className="h-3.5 w-3.5" />
         {busy ? '整理中…' : '导出为 JSON'}
@@ -120,9 +120,9 @@ export function ExportDataSection({ userId, email }: { userId: string | null; em
         <div className="mt-3">
           <p className={`text-[11px] ${result.ok ? 'text-[#5a7a4a]' : 'text-red-500'}`}>{result.message}</p>
           {result.failures && result.failures.length > 0 && (
-            <ul className="mt-2 space-y-1 rounded-xl border border-[var(--accent-line)] bg-[var(--accent-soft)] px-3 py-2">
+            <ul className="mt-2 space-y-1 rounded-box border border-base-300 bg-primary/5 px-3 py-2">
               {result.failures.map((f) => (
-                <li key={f} className="text-[11px] leading-relaxed text-[var(--accent-muted)]">
+                <li key={f} className="text-[11px] leading-relaxed text-base-content/60">
                   {f}
                 </li>
               ))}
@@ -172,14 +172,14 @@ export function DeleteAccountSection({ userId }: { userId: string | null }) {
   }
 
   return (
-    <section className="rounded-2xl border border-[#f0d9d2] bg-white p-6 shadow-sm">
+    <section className="rounded-box border border-[#f0d9d2] bg-base-100 p-6 shadow-sm">
       <div className="flex items-center gap-3">
         <div className="flex h-9 w-9 items-center justify-center rounded-full bg-[#fdeeea]">
           <Icon name="alert" className="h-4 w-4 text-[#c0553c]" />
         </div>
         <div className="min-w-0 flex-1">
-          <h2 className="text-sm font-semibold text-[#2b2430]">注销账号</h2>
-          <p className="mt-0.5 text-[11px] leading-relaxed text-[var(--accent-muted)]">
+          <h2 className="text-sm font-semibold text-base-content">注销账号</h2>
+          <p className="mt-0.5 text-[11px] leading-relaxed text-base-content/60">
             想走的话，提交一下就行，站主会替你删干净。
           </p>
         </div>
@@ -189,18 +189,18 @@ export function DeleteAccountSection({ userId }: { userId: string | null }) {
         <button
           type="button"
           onClick={() => setStep('confirm')}
-          className="mt-4 rounded-full border border-[#e6c8bf] bg-white px-4 py-2 text-xs text-[#c0553c] transition hover:bg-[#fdf3f0]"
+          className="mt-4 rounded-full border border-[#e6c8bf] bg-base-100 px-4 py-2 text-xs text-[#c0553c] transition hover:bg-[#fdf3f0]"
         >
           我要注销
         </button>
       )}
 
       {step === 'confirm' && (
-        <div className="mt-4 rounded-2xl border border-[#f0d9d2] bg-[#fdf7f5] px-4 py-4">
+        <div className="mt-4 rounded-box border border-[#f0d9d2] bg-[#fdf7f5] px-4 py-4">
           <p className="text-[11.5px] leading-relaxed text-[#7a4a3c]">
             提交后，站主会收到一条申请，然后去后台把你的账号和内容一起删掉。
             <br />
-            <span className="text-[var(--accent-muted)]">
+            <span className="text-base-content/60">
               在你收到确认之前，账号还能照常使用；想反悔就告诉站主一声。
             </span>
           </p>
@@ -210,7 +210,7 @@ export function DeleteAccountSection({ userId }: { userId: string | null }) {
             rows={2}
             maxLength={200}
             placeholder="想说的话（可以留空）"
-            className="mt-3 w-full resize-none rounded-xl border border-[#e6c8bf] bg-white px-3 py-2 text-[12px] text-[#2b2430] placeholder:text-[var(--accent-muted)] focus:border-[#c0553c] focus:outline-none"
+            className="mt-3 w-full resize-none rounded-box border border-[#e6c8bf] bg-base-100 px-3 py-2 text-[12px] text-base-content placeholder:text-base-content/60 focus:border-[#c0553c] focus:outline-none"
           />
           {error && <p className="mt-2 text-[11.5px] text-red-500">{error}</p>}
           <div className="mt-3 flex items-center gap-2">
@@ -228,7 +228,7 @@ export function DeleteAccountSection({ userId }: { userId: string | null }) {
                 setStep('idle')
                 setError('')
               }}
-              className="rounded-full border border-[var(--accent-line)] bg-white px-4 py-2 text-xs text-[var(--accent-muted)] transition"
+              className="rounded-full border border-base-300 bg-base-100 px-4 py-2 text-xs text-base-content/60 transition"
             >
               再想想
             </button>
@@ -237,7 +237,7 @@ export function DeleteAccountSection({ userId }: { userId: string | null }) {
       )}
 
       {step === 'done' && (
-        <p className="mt-4 rounded-2xl border border-[var(--accent-line)] bg-[var(--accent-soft)] px-4 py-3 text-[11.5px] leading-relaxed text-[var(--accent-muted)]">
+        <p className="mt-4 rounded-box border border-base-300 bg-primary/5 px-4 py-3 text-[11.5px] leading-relaxed text-base-content/60">
           申请已提交。站主看到后会处理，删完会告诉你一声。
           <br />
           在那之前，账号照常可用——想留下的话，跟站主说一声就行。
@@ -337,13 +337,13 @@ export function DeletionRequestsSection({ adminId }: { adminId: string }) {
   }, [rows])
 
   return (
-    <section className="mb-6 rounded-2xl border border-[#f0d9d2] bg-white/80 p-6 backdrop-blur shadow-sm">
+    <section className="mb-6 rounded-box border border-[#f0d9d2] bg-base-100/80 p-6 backdrop-blur shadow-sm">
       <div className="flex items-start gap-3">
         <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full bg-[#fdeeea]">
           <Icon name="alert" className="h-4 w-4 text-[#c0553c]" />
         </div>
         <div className="min-w-0 flex-1">
-          <h2 className="flex items-baseline gap-2 text-sm font-semibold text-[#2b2430]">
+          <h2 className="flex items-baseline gap-2 text-sm font-semibold text-base-content">
             注销申请
             {rows.length > 0 && (
               <span className="rounded-full bg-[#c0553c] px-2 py-0.5 text-[11px] font-normal text-white">
@@ -359,7 +359,7 @@ export function DeletionRequestsSection({ adminId }: { adminId: string }) {
         <button
           type="button"
           onClick={reload}
-          className="inline-flex items-center gap-1 rounded-xl border border-[var(--accent-line)] bg-white px-3 py-1.5 text-xs text-[var(--accent-muted)] transition hover:bg-[var(--accent-soft)]"
+          className="inline-flex items-center gap-1 rounded-box border border-base-300 bg-base-100 px-3 py-1.5 text-xs text-base-content/60 transition hover:bg-primary/5"
         >
           <Icon name="refresh" className="h-3.5 w-3.5" />
           刷新
@@ -370,7 +370,7 @@ export function DeletionRequestsSection({ adminId }: { adminId: string }) {
         {loading ? (
           <p className="py-6 text-center text-xs text-[#b8a8c8]">读取中…</p>
         ) : error ? (
-          <p className="rounded-xl border border-red-100 bg-red-50 px-4 py-3 text-xs text-red-600">{error}</p>
+          <p className="rounded-box border border-red-100 bg-red-50 px-4 py-3 text-xs text-red-600">{error}</p>
         ) : rows.length === 0 ? (
           <p className="py-6 text-center text-xs text-[#b8a8c8]">没有待处理的注销申请</p>
         ) : (
@@ -378,12 +378,12 @@ export function DeletionRequestsSection({ adminId }: { adminId: string }) {
             {rows.map((r) => (
               <li
                 key={r.id}
-                className="flex flex-wrap items-center gap-x-3 gap-y-1 rounded-2xl border border-[#f0d9d2] bg-[#fdf9f8] px-4 py-3"
+                className="flex flex-wrap items-center gap-x-3 gap-y-1 rounded-box border border-[#f0d9d2] bg-[#fdf9f8] px-4 py-3"
               >
-                <span className="text-xs font-medium text-[#2b2430]">
+                <span className="text-xs font-medium text-base-content">
                   {names[r.user_id] || '（没查到昵称）'}
                 </span>
-                <code className="select-all rounded bg-white px-2 py-0.5 text-[11px] text-[#8a7a9a]">
+                <code className="select-all rounded bg-base-100 px-2 py-0.5 text-[11px] text-[#8a7a9a]">
                   {r.user_id}
                 </code>
                 <span className="text-[11px] text-[#b8a8c8]">{relativeTime(r.created_at)}</span>
@@ -393,7 +393,7 @@ export function DeletionRequestsSection({ adminId }: { adminId: string }) {
                 <button
                   type="button"
                   onClick={() => void markDone(r.id)}
-                  className="ml-auto rounded-full border border-[var(--accent-line)] bg-white px-3 py-1.5 text-[11px] text-[var(--accent-deep)] transition hover:bg-[var(--accent-soft)]"
+                  className="ml-auto rounded-full border border-base-300 bg-base-100 px-3 py-1.5 text-[11px] text-[var(--accent-deep)] transition hover:bg-primary/5"
                 >
                   已处理
                 </button>

@@ -41,7 +41,7 @@ export const DialogContent = React.forwardRef<
       ref={ref}
       className={cn(
         'dsh-content fixed left-1/2 top-1/2 z-50 w-[calc(100%-2rem)] max-w-md',
-        '-translate-x-1/2 -translate-y-1/2 rounded-xl border border-[#e0d3bd] bg-[#fdf8f0] p-6',
+        '-translate-x-1/2 -translate-y-1/2 rounded-box border border-[#e0d3bd] bg-[#fdf8f0] p-6',
         className,
       )}
       {...props}

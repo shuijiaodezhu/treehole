@@ -41,27 +41,27 @@ export default function Error({
         <path d="M12 24.5 16 20l4 4.5" />
       </svg>
 
-      <h1 className="mt-5 font-serif-cn text-base font-semibold text-[#2b2620]">这一页出了点问题</h1>
-      <p className="mt-2 max-w-xs font-serif-cn text-[12px] leading-relaxed text-[var(--accent-muted)]">
+      <h1 className="mt-5 font-serif-cn text-base font-semibold text-base-content">这一页出了点问题</h1>
+      <p className="mt-2 max-w-xs font-serif-cn text-[12px] leading-relaxed text-base-content/60">
         不是你的操作有错。刷新一下多半就好；
         要是一直这样，跟站主说一声。
       </p>
 
       {error.digest && (
-        <p className="mt-2 font-mono text-[11px] text-[var(--accent-muted)]">编号 {error.digest}</p>
+        <p className="mt-2 font-mono text-[11px] text-base-content/60">编号 {error.digest}</p>
       )}
 
       <div className="mt-6 flex items-center gap-2">
         <button
           type="button"
           onClick={reset}
-          className="rounded-full bg-[var(--accent)] px-5 py-2.5 font-serif-cn text-[12.5px] text-white transition hover:shadow-sm"
+          className="rounded-full bg-primary px-5 py-2.5 font-serif-cn text-[12.5px] text-white transition hover:shadow-sm"
         >
           再试一次
         </button>
         <Link
           href="/"
-          className="rounded-full border border-[var(--accent-line)] bg-white/70 px-5 py-2.5 font-serif-cn text-[12.5px] text-[var(--accent-deep)] transition hover:bg-white"
+          className="rounded-full border border-base-300 bg-base-100/70 px-5 py-2.5 font-serif-cn text-[12.5px] text-[var(--accent-deep)] transition hover:bg-base-100"
         >
           回首页
         </Link>

@@ -58,7 +58,7 @@ export default function LoginPage() {
 
       {/* 左侧装饰文字（大屏可见） */}
       <div className={`hidden lg:block absolute left-20 top-1/2 -translate-y-1/2 max-w-sm ${entering ? 'th-page-out' : ''}`}>
-        <h1 className="font-brush text-[44px] leading-[1.05] text-[#2b2620]">你的来信</h1>
+        <h1 className="font-brush text-[44px] leading-[1.05] text-base-content">你的来信</h1>
         <p className="mt-4 text-[#8a6a4a] flex items-baseline gap-2">
           <span className="font-art text-3xl text-[#c96447]">Dear You</span>
         </p>
@@ -88,13 +88,13 @@ export default function LoginPage() {
 
       {/* 登录卡片 */}
       <div className={`relative w-full max-w-sm ml-auto mr-auto lg:mr-32 ${entering ? 'th-page-out' : ''}`}>
-        <div className="rounded-2xl border border-[#f0e4d4] bg-white p-8 shadow-sm">
+        <div className="rounded-box border border-[#f0e4d4] bg-base-100 p-8 shadow-sm">
           <div className="lg:hidden text-center mb-6">
-            <h1 className="font-brush text-[26px] leading-[1.05] text-[#2b2620]">你的来信</h1>
+            <h1 className="font-brush text-[26px] leading-[1.05] text-base-content">你的来信</h1>
             <p className="mt-1 font-art italic text-[#c96447]">Dear You</p>
           </div>
 
-          <h2 className="hidden lg:block text-lg font-semibold text-[#2b2620] mb-1">
+          <h2 className="hidden lg:block text-lg font-semibold text-base-content mb-1">
             欢迎回来
           </h2>
           <p className="hidden lg:block text-xs text-[#8a827a] mb-6">
@@ -110,7 +110,7 @@ export default function LoginPage() {
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="you@example.com"
                 required
-                className="w-full px-4 py-2.5 rounded-xl border border-[#ece6dd] bg-[#fefcf9] text-sm focus:outline-none focus:border-[#d97757] focus:ring-2 focus:ring-[#d97757]/10 transition"
+                className="w-full px-4 py-2.5 rounded-box border border-[#ece6dd] bg-[#fefcf9] text-sm focus:outline-none focus:border-[#d97757] focus:ring-2 focus:ring-[#d97757]/10 transition"
               />
             </div>
 
@@ -122,14 +122,14 @@ export default function LoginPage() {
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
                 required
-                className="w-full px-4 py-2.5 rounded-xl border border-[#ece6dd] bg-[#fefcf9] text-sm focus:outline-none focus:border-[#d97757] focus:ring-2 focus:ring-[#d97757]/10 transition"
+                className="w-full px-4 py-2.5 rounded-box border border-[#ece6dd] bg-[#fefcf9] text-sm focus:outline-none focus:border-[#d97757] focus:ring-2 focus:ring-[#d97757]/10 transition"
               />
             </div>
 
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-2.5 rounded-xl bg-gradient-to-r from-[#e8a87c] to-[#d97757] text-white text-sm font-medium hover:shadow-sm transition-all disabled:opacity-60 disabled:cursor-not-allowed"
+              className="w-full py-2.5 rounded-box bg-gradient-to-r from-[#e8a87c] to-[#d97757] text-white text-sm font-medium hover:shadow-sm transition-all disabled:opacity-60 disabled:cursor-not-allowed"
             >
               {loading ? '登录中...' : '登 录'}
             </button>
@@ -142,7 +142,7 @@ export default function LoginPage() {
           <div className="mt-6 text-center">
             <p className="text-xs text-[#8a827a]">
               还没有账号？
-              <Link href="/forgot-password" className="text-xs text-[var(--accent-muted)] hover:text-[var(--accent-deep)] transition">
+              <Link href="/forgot-password" className="text-xs text-base-content/60 hover:text-[var(--accent-deep)] transition">
               忘记密码？
             </Link>
 

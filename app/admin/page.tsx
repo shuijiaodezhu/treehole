@@ -346,7 +346,7 @@ export default function AdminPage() {
     return (
       <div className="min-h-screen flex items-center justify-center bg-[#f2eef7]">
         <div className="text-center">
-          <p className="text-lg font-semibold text-[#2b2430]">这里不是你能来的地方</p>
+          <p className="text-lg font-semibold text-base-content">这里不是你能来的地方</p>
           <Link href="/" className="text-sm text-[#8a7aaa] mt-4 inline-block hover:underline">← 回首页</Link>
         </div>
       </div>
@@ -364,11 +364,11 @@ export default function AdminPage() {
             <Icon name="back" className="w-4 h-4" />返回我的
           </Link>
           <div className="flex items-center gap-3 mt-4">
-            <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-[#b89ac8] to-[#a88ab8] flex items-center justify-center">
+            <div className="w-10 h-10 rounded-box bg-gradient-to-br from-[#b89ac8] to-[#a88ab8] flex items-center justify-center">
               <Icon name="shield" className="w-5 h-5 text-white" />
             </div>
             <div>
-              <h1 className="text-2xl font-bold text-[#2b2430]">站主后台</h1>
+              <h1 className="text-2xl font-bold text-base-content">站主后台</h1>
               <p className="text-xs text-[#8a7a9a] mt-0.5">审核分区 · 处理举报</p>
             </div>
           </div>
@@ -393,25 +393,25 @@ export default function AdminPage() {
         <div className="flex gap-6 mb-6 border-b border-[#e0d4e8]">
           <button
             onClick={() => setTab('categories')}
-            className={`pb-2.5 text-sm transition ${tab === 'categories' ? 'border-b-2 border-[#a88ab8] text-[#8a7aaa] font-medium' : 'text-[#8a7a9a] hover:text-[#2b2430]'}`}
+            className={`pb-2.5 text-sm transition ${tab === 'categories' ? 'border-b-2 border-[#a88ab8] text-[#8a7aaa] font-medium' : 'text-[#8a7a9a] hover:text-base-content'}`}
           >
             分区审核 {categories.length > 0 && `(${categories.length})`}
           </button>
           <button
             onClick={() => setTab('reports')}
-            className={`pb-2.5 text-sm transition ${tab === 'reports' ? 'border-b-2 border-[#a88ab8] text-[#8a7aaa] font-medium' : 'text-[#8a7a9a] hover:text-[#2b2430]'}`}
+            className={`pb-2.5 text-sm transition ${tab === 'reports' ? 'border-b-2 border-[#a88ab8] text-[#8a7aaa] font-medium' : 'text-[#8a7a9a] hover:text-base-content'}`}
           >
             举报处理 {totalReports > 0 && `(${totalReports})`}
           </button>
           <button
             onClick={() => setTab('mailbox')}
-            className={`pb-2.5 text-sm transition ${tab === 'mailbox' ? 'border-b-2 border-[#a88ab8] text-[#8a7aaa] font-medium' : 'text-[#8a7a9a] hover:text-[#2b2430]'}`}
+            className={`pb-2.5 text-sm transition ${tab === 'mailbox' ? 'border-b-2 border-[#a88ab8] text-[#8a7aaa] font-medium' : 'text-[#8a7a9a] hover:text-base-content'}`}
           >
             冬日信箱
           </button>
           <button
             onClick={() => setTab('pages')}
-            className={`pb-2.5 text-sm transition ${tab === 'pages' ? 'border-b-2 border-[#a88ab8] text-[#8a7aaa] font-medium' : 'text-[#8a7a9a] hover:text-[#2b2430]'}`}
+            className={`pb-2.5 text-sm transition ${tab === 'pages' ? 'border-b-2 border-[#a88ab8] text-[#8a7aaa] font-medium' : 'text-[#8a7a9a] hover:text-base-content'}`}
           >
             站点页面
           </button>
@@ -420,15 +420,15 @@ export default function AdminPage() {
         {tab === 'categories' && (
           <div className="space-y-3">
             {categories.length === 0 ? (
-              <div className="rounded-2xl border border-[#e0d4e8] bg-white/60 backdrop-blur p-12 text-center">
+              <div className="rounded-box border border-[#e0d4e8] bg-base-100/60 backdrop-blur p-12 text-center">
                 <p className="text-sm text-[#8a7a9a]">没有待审核的分区</p>
               </div>
             ) : (
               categories.map((cat) => (
-                <div key={cat.id} className="rounded-2xl border border-[#e0d4e8] bg-white p-5 shadow-sm">
+                <div key={cat.id} className="rounded-box border border-[#e0d4e8] bg-base-100 p-5 shadow-sm">
                   <div className="flex items-center justify-between gap-4">
                     <div className="flex-1 min-w-0">
-                      <p className="text-base font-semibold text-[#2b2430]">
+                      <p className="text-base font-semibold text-base-content">
                         {cat.parent_name ? `${cat.parent_name} · ` : ''}{cat.name}
                       </p>
                       <p className="text-xs text-[#8a7a9a] mt-1">
@@ -438,10 +438,10 @@ export default function AdminPage() {
                     </div>
 
                     <div className="flex gap-2 flex-shrink-0">
-                      <button onClick={() => handleCategoryApprove(cat.id)} className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-gradient-to-r from-[#b89ac8] to-[#a88ab8] text-white text-xs font-medium hover:shadow-sm transition">
+                      <button onClick={() => handleCategoryApprove(cat.id)} className="flex items-center gap-1.5 px-4 py-2 rounded-box bg-gradient-to-r from-[#b89ac8] to-[#a88ab8] text-white text-xs font-medium hover:shadow-sm transition">
                         <Icon name="check" className="w-3.5 h-3.5" />通过
                       </button>
-                      <button onClick={() => handleCategoryReject(cat.id)} className="flex items-center gap-1.5 px-4 py-2 rounded-xl border border-[#e0d4e8] text-[#8a7a9a] text-xs hover:bg-[#f8f2fc] transition">
+                      <button onClick={() => handleCategoryReject(cat.id)} className="flex items-center gap-1.5 px-4 py-2 rounded-box border border-[#e0d4e8] text-[#8a7a9a] text-xs hover:bg-[#f8f2fc] transition">
                         <Icon name="x" className="w-3.5 h-3.5" />拒绝
                       </button>
                     </div>
@@ -459,12 +459,12 @@ export default function AdminPage() {
               <h2 className="text-xs text-[#8a7a9a] tracking-wider mb-3 px-1">帖子举报 · {reports.length}</h2>
               <div className="space-y-3">
                 {reports.length === 0 ? (
-                  <div className="rounded-2xl border border-[#e0d4e8] bg-white/60 backdrop-blur p-8 text-center">
+                  <div className="rounded-box border border-[#e0d4e8] bg-base-100/60 backdrop-blur p-8 text-center">
                     <p className="text-sm text-[#8a7a9a]">没有待处理的帖子举报</p>
                   </div>
                 ) : (
                   reports.map((report) => (
-                    <div key={report.id} className="rounded-2xl border border-[#e0d4e8] bg-white p-5 shadow-sm">
+                    <div key={report.id} className="rounded-box border border-[#e0d4e8] bg-base-100 p-5 shadow-sm">
                       <div className="flex items-start gap-3 mb-3">
                         <Icon name="alert" className="w-4 h-4 text-[#a88ab8] flex-shrink-0 mt-1" />
                         <div className="flex-1 min-w-0">
@@ -476,16 +476,16 @@ export default function AdminPage() {
                         </div>
                       </div>
 
-                      <div className="rounded-xl bg-[#faf5ff] p-4 mb-4">
+                      <div className="rounded-box bg-[#faf5ff] p-4 mb-4">
                         <p className="text-[11px] text-[#8a7a9a] mb-1.5">被举报内容</p>
                         <p className="text-sm text-[#4a3a5a] whitespace-pre-wrap break-words">{report.target_content}</p>
                       </div>
 
                       <div className="flex gap-2 justify-end">
-                        <button onClick={() => handleReportAction(report.id, 'dismiss')} className="flex items-center gap-1.5 px-4 py-2 rounded-xl border border-[#e0d4e8] text-[#8a7a9a] text-xs hover:bg-[#f8f2fc] transition">
+                        <button onClick={() => handleReportAction(report.id, 'dismiss')} className="flex items-center gap-1.5 px-4 py-2 rounded-box border border-[#e0d4e8] text-[#8a7a9a] text-xs hover:bg-[#f8f2fc] transition">
                           <Icon name="x" className="w-3.5 h-3.5" />忽略举报
                         </button>
-                        <button onClick={() => { if (confirm('确定要删除这条内容吗？')) { handleReportAction(report.id, 'delete_post') } }} className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-red-500 text-white text-xs font-medium hover:bg-red-600 transition">
+                        <button onClick={() => { if (confirm('确定要删除这条内容吗？')) { handleReportAction(report.id, 'delete_post') } }} className="flex items-center gap-1.5 px-4 py-2 rounded-box bg-red-500 text-white text-xs font-medium hover:bg-red-600 transition">
                           <Icon name="trash" className="w-3.5 h-3.5" />删除内容
                         </button>
                       </div>
@@ -502,17 +502,17 @@ export default function AdminPage() {
               </h2>
               <div className="space-y-3">
                 {activityReports.length === 0 ? (
-                  <div className="rounded-2xl border border-[#e0d4e8] bg-white/60 backdrop-blur p-8 text-center">
+                  <div className="rounded-box border border-[#e0d4e8] bg-base-100/60 backdrop-blur p-8 text-center">
                     <p className="text-sm text-[#8a7a9a]">没有被举报 3 次以上的活动</p>
                   </div>
                 ) : (
                   activityReports.map((a) => (
-                    <div key={a.activity_id} className="rounded-2xl border border-[#e0d4e8] bg-white p-5 shadow-sm">
+                    <div key={a.activity_id} className="rounded-box border border-[#e0d4e8] bg-base-100 p-5 shadow-sm">
                       <div className="flex items-start gap-3 mb-3">
                         <Icon name="alert" className="w-4 h-4 text-[#a88ab8] flex-shrink-0 mt-1" />
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2 flex-wrap">
-                            <h3 className="text-base font-semibold text-[#2b2430]">{a.title}</h3>
+                            <h3 className="text-base font-semibold text-base-content">{a.title}</h3>
                             <span className="text-[11px] bg-[#f0e6f8] text-[#8a7aaa] px-2 py-0.5 rounded-full font-medium">
                               被举报 {a.report_count} 次
                             </span>
@@ -524,7 +524,7 @@ export default function AdminPage() {
                       </div>
 
                       {a.content && (
-                        <div className="rounded-xl bg-[#faf5ff] p-4 mb-3">
+                        <div className="rounded-box bg-[#faf5ff] p-4 mb-3">
                           <p className="text-[11px] text-[#8a7a9a] mb-1.5">活动内容</p>
                           <p className="text-sm text-[#4a3a5a] whitespace-pre-wrap break-words">{a.content}</p>
                         </div>
@@ -554,10 +554,10 @@ export default function AdminPage() {
                       </div>
 
                       <div className="flex gap-2 justify-end">
-                        <button onClick={() => handleActivityReportDismiss(a.activity_id)} className="flex items-center gap-1.5 px-4 py-2 rounded-xl border border-[#e0d4e8] text-[#8a7a9a] text-xs hover:bg-[#f8f2fc] transition">
+                        <button onClick={() => handleActivityReportDismiss(a.activity_id)} className="flex items-center gap-1.5 px-4 py-2 rounded-box border border-[#e0d4e8] text-[#8a7a9a] text-xs hover:bg-[#f8f2fc] transition">
                           <Icon name="x" className="w-3.5 h-3.5" />忽略举报
                         </button>
-                        <button onClick={() => handleActivityDelete(a.activity_id)} className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-red-500 text-white text-xs font-medium hover:bg-red-600 transition">
+                        <button onClick={() => handleActivityDelete(a.activity_id)} className="flex items-center gap-1.5 px-4 py-2 rounded-box bg-red-500 text-white text-xs font-medium hover:bg-red-600 transition">
                           <Icon name="trash" className="w-3.5 h-3.5" />删除活动
                         </button>
                       </div>

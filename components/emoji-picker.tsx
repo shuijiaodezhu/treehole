@@ -111,8 +111,8 @@ export function EmojiPicker({
         aria-expanded={open}
         className={`flex ${t.box} items-center justify-center rounded-full border transition-all duration-200 ${
           open
-            ? 'border-[var(--accent)] bg-[var(--accent)] text-white shadow-sm'
-            : 'border-[var(--accent-line)] bg-[var(--accent-soft)] text-[var(--accent-deep)] hover:-translate-y-0.5 hover:border-[var(--accent-light)] hover:shadow-sm'
+            ? 'border-primary bg-primary text-white shadow-sm'
+            : 'border-base-300 bg-primary/5 text-[var(--accent-deep)] hover:-translate-y-0.5 hover:border-[var(--accent-light)] hover:shadow-sm'
         }`}
       >
         <CuteFace className={`${t.icon} transition-transform duration-200 ${open ? 'scale-110' : ''}`} />
@@ -120,18 +120,18 @@ export function EmojiPicker({
 
       {open && (
         <div
-          className={`absolute bottom-full z-40 mb-3 w-72 overflow-hidden rounded-2xl border border-[var(--accent-line)] bg-white shadow-sm ${
+          className={`absolute bottom-full z-40 mb-3 w-72 overflow-hidden rounded-box border border-base-300 bg-base-100 shadow-sm ${
             align === 'right' ? 'right-0' : 'left-0'
           }`}
         >
           {/* 小尖角，视觉上连回按钮 */}
           <span
-            className={`absolute -bottom-1.5 h-3 w-3 rotate-45 border-b border-r border-[var(--accent-line)] bg-white ${
+            className={`absolute -bottom-1.5 h-3 w-3 rotate-45 border-b border-r border-base-300 bg-base-100 ${
               align === 'right' ? 'right-3' : 'left-3'
             }`}
           />
 
-          <div className="flex gap-1 border-b border-[var(--accent-line)] bg-[var(--accent-soft)] px-2.5 py-2">
+          <div className="flex gap-1 border-b border-base-300 bg-primary/5 px-2.5 py-2">
             {GROUPS.map((g, i) => (
               <button
                 key={g.name}
@@ -139,8 +139,8 @@ export function EmojiPicker({
                 onClick={() => setGroup(i)}
                 className={`rounded-full px-2.5 py-1 text-[11px] transition ${
                   i === group
-                    ? 'bg-white font-medium text-[var(--accent-deep)] shadow-sm'
-                    : 'text-[var(--accent-muted)] hover:bg-white/70'
+                    ? 'bg-base-100 font-medium text-[var(--accent-deep)] shadow-sm'
+                    : 'text-base-content/60 hover:bg-base-100/70'
                 }`}
               >
                 {g.name}
@@ -154,14 +154,14 @@ export function EmojiPicker({
                 key={emoji}
                 type="button"
                 onClick={() => onPick(emoji)}
-                className="flex h-7 w-7 items-center justify-center rounded-full text-lg leading-none transition duration-150 hover:scale-125 hover:bg-[var(--accent-soft)]"
+                className="flex h-7 w-7 items-center justify-center rounded-full text-lg leading-none transition duration-150 hover:scale-125 hover:bg-primary/5"
               >
                 {emoji}
               </button>
             ))}
           </div>
 
-          <p className="border-t border-[var(--accent-line)] px-3.5 py-2 text-[11px] text-[var(--accent-muted)]">
+          <p className="border-t border-base-300 px-3.5 py-2 text-[11px] text-base-content/60">
             点一下就插到光标处
           </p>
         </div>

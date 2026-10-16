@@ -222,7 +222,7 @@ export function MailboxTrigger({ mailbox, onOpen }: { mailbox: Mailbox; onOpen: 
       onClick={onOpen}
       aria-label="冬日信箱"
       title="冬日信箱"
-      className="relative inline-flex h-9 w-9 items-center justify-center rounded-full border border-[var(--accent-line)] bg-white/60 text-[var(--accent-muted)] transition hover:bg-white/90 hover:text-[var(--accent-deep)]"
+      className="relative inline-flex h-9 w-9 items-center justify-center rounded-full border border-base-300 bg-base-100/60 text-base-content/60 transition hover:bg-base-100/90 hover:text-[var(--accent-deep)]"
     >
       <svg
         className="h-[18px] w-[18px]"
@@ -239,7 +239,7 @@ export function MailboxTrigger({ mailbox, onOpen }: { mailbox: Mailbox; onOpen: 
         <path d="M22 10V6.5A1.5 1.5 0 0 1 23.5 5h3A1.5 1.5 0 0 1 28 6.5V10" />
       </svg>
       {mailbox.unread > 0 && (
-        <span className="absolute -right-0.5 -top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-[var(--accent)] px-1 text-[11px] text-white">
+        <span className="absolute -right-0.5 -top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-primary px-1 text-[11px] text-white">
           {mailbox.unread > 9 ? '9+' : mailbox.unread}
         </span>
       )}
@@ -326,14 +326,14 @@ export function MailboxDialog({
       onClick={onClose}
     >
       <div
-        className="flex max-h-[82vh] w-full max-w-lg flex-col overflow-hidden rounded-2xl border border-[var(--accent-line)] bg-white shadow-2xl"
+        className="flex max-h-[82vh] w-full max-w-lg flex-col overflow-hidden rounded-box border border-base-300 bg-base-100 shadow-2xl"
         onClick={(e) => e.stopPropagation()}
       >
         {/* 抬头 */}
-        <div className="flex items-start gap-3 border-b border-[var(--accent-line)] bg-[var(--accent-soft)] px-5 py-4">
-          <span className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-2xl bg-white/70">
+        <div className="flex items-start gap-3 border-b border-base-300 bg-primary/5 px-5 py-4">
+          <span className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-box bg-base-100/70">
             <svg
-              className="h-5 w-5 text-[var(--accent)]"
+              className="h-5 w-5 text-primary"
               viewBox="0 0 32 32"
               fill="none"
               stroke="currentColor"
@@ -348,8 +348,8 @@ export function MailboxDialog({
             </svg>
           </span>
           <div className="min-w-0 flex-1">
-            <h2 className="font-serif-cn text-sm font-semibold text-[#2b2620]">冬日信箱</h2>
-            <p className="mt-0.5 font-serif-cn text-[11px] text-[var(--accent-muted)]">
+            <h2 className="font-serif-cn text-sm font-semibold text-base-content">冬日信箱</h2>
+            <p className="mt-0.5 font-serif-cn text-[11px] text-base-content/60">
               {isOwner ? '你是站主 · 大家写来的烦心事都在后台' : '匿名 · 只写给站主一个人'}
             </p>
           </div>
@@ -357,7 +357,7 @@ export function MailboxDialog({
             type="button"
             onClick={onClose}
             aria-label="关上信箱"
-            className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full text-[var(--accent-muted)] transition hover:bg-white/70"
+            className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full text-base-content/60 transition hover:bg-base-100/70"
           >
             <Icon name="x" className="h-3.5 w-3.5" />
           </button>
@@ -366,7 +366,7 @@ export function MailboxDialog({
         {/* 信 */}
         <div ref={listRef} className="flex-1 space-y-3 overflow-y-auto px-5 py-4">
           {mailbox.loading && mailbox.messages.length === 0 ? (
-            <p className="py-10 text-center font-serif-cn text-xs text-[var(--accent-muted)]">开信箱中…</p>
+            <p className="py-10 text-center font-serif-cn text-xs text-base-content/60">开信箱中…</p>
           ) : mailbox.errorKind === 'missing-table' ? (
             <MailboxSetup onRetry={mailbox.refresh} />
           ) : mailbox.error ? (
@@ -378,14 +378,14 @@ export function MailboxDialog({
                 <p className="font-serif-cn text-[13px] leading-relaxed text-[#3a3229]">
                   你是站主
                 </p>
-                <p className="mt-2 font-serif-cn text-[11px] leading-relaxed text-[var(--accent-muted)]">
+                <p className="mt-2 font-serif-cn text-[11px] leading-relaxed text-base-content/60">
                   大家写来的烦心事都在后台的「冬日信箱」里，
                   <br />
                   在那边一封一封回。
                 </p>
                 <Link
                   href="/admin"
-                  className="mt-5 inline-flex items-center gap-1.5 rounded-full border border-[var(--accent-line)] bg-[var(--accent-soft)] px-4 py-2 font-serif-cn text-[11.5px] text-[var(--accent-deep)] transition hover:bg-[var(--accent-line)]"
+                  className="mt-5 inline-flex items-center gap-1.5 rounded-full border border-base-300 bg-primary/5 px-4 py-2 font-serif-cn text-[11.5px] text-[var(--accent-deep)] transition hover:bg-[var(--accent-line)]"
                 >
                   去后台看信
                   <Icon name="arrow" className="h-3 w-3" />
@@ -399,12 +399,12 @@ export function MailboxDialog({
                   <br />
                   写在这里就好。
                 </p>
-                <p className="mt-2 text-center font-serif-cn text-[11px] leading-relaxed text-[var(--accent-muted)]">
+                <p className="mt-2 text-center font-serif-cn text-[11px] leading-relaxed text-base-content/60">
                   不用组织语言，也不必写得体面。
                 </p>
 
                 <div className="mt-4 text-center">
-                  <span className="inline-flex items-center gap-1.5 rounded-full bg-[var(--accent-soft)] px-3 py-1.5 font-serif-cn text-[11px] text-[var(--accent-deep)]">
+                  <span className="inline-flex items-center gap-1.5 rounded-full bg-primary/5 px-3 py-1.5 font-serif-cn text-[11px] text-[var(--accent-deep)]">
                     <Icon name="lock" className="h-3 w-3" />
                     匿名 · 站主看不到你的名字
                   </span>
@@ -417,12 +417,12 @@ export function MailboxDialog({
                   { t: '匿名，只给你和他看', d: '他没有你的名字；不公开、不进动态' },
                 ].map((step, i) => (
                   <li key={step.t} className="flex items-start gap-3">
-                    <span className="mt-0.5 flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-[var(--accent-soft)] font-serif-cn text-[11px] text-[var(--accent-deep)]">
+                    <span className="mt-0.5 flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-primary/5 font-serif-cn text-[11px] text-[var(--accent-deep)]">
                       {i + 1}
                     </span>
                     <span className="min-w-0">
                       <span className="block font-serif-cn text-[12px] text-[#3a3229]">{step.t}</span>
-                      <span className="mt-0.5 block font-serif-cn text-[11.5px] leading-relaxed text-[var(--accent-muted)]">
+                      <span className="mt-0.5 block font-serif-cn text-[11.5px] leading-relaxed text-base-content/60">
                         {step.d}
                       </span>
                     </span>
@@ -441,14 +441,14 @@ export function MailboxDialog({
               return (
                 <div key={m.id} className={`flex ${mine ? 'justify-end' : 'justify-start'}`}>
                   <div
-                    className={`max-w-[78%] rounded-2xl px-3.5 py-2.5 font-serif-cn text-[12.5px] leading-relaxed ${
+                    className={`max-w-[78%] rounded-box px-3.5 py-2.5 font-serif-cn text-[12.5px] leading-relaxed ${
                       mine
-                        ? 'bg-[var(--accent)] text-white'
-                        : 'border border-[var(--accent-line)] bg-[var(--accent-soft)] text-[#3a3229]'
+                        ? 'bg-primary text-white'
+                        : 'border border-base-300 bg-primary/5 text-[#3a3229]'
                     }`}
                   >
                     <p className="whitespace-pre-wrap break-words">{m.content}</p>
-                    <p className={`mt-1 text-[11px] ${mine ? 'text-white/70' : 'text-[var(--accent-muted)]'}`}>
+                    <p className={`mt-1 text-[11px] ${mine ? 'text-white/70' : 'text-base-content/60'}`}>
                       {formatStamp(m.created_at)}
                     </p>
                   </div>
@@ -460,10 +460,10 @@ export function MailboxDialog({
 
         {/* 写信：站主不在前台写，他回信在后台 */}
         {!isOwner && (
-          <div className="border-t border-[var(--accent-line)] px-4 py-3">
+          <div className="border-t border-base-300 px-4 py-3">
             {hint && (
               <p
-                className={'mb-2 text-[11px] ' + (hintTone === 'error' ? 'text-red-500' : 'text-[var(--accent-muted)]')}
+                className={'mb-2 text-[11px] ' + (hintTone === 'error' ? 'text-red-500' : 'text-base-content/60')}
               >
                 {hint}
               </p>
@@ -482,20 +482,20 @@ export function MailboxDialog({
                 rows={2}
                 maxLength={500}
                 placeholder="写点想说的…"
-                className="min-w-0 flex-1 resize-none rounded-2xl border border-[var(--accent-line)] bg-[var(--accent-soft)] px-3.5 py-2.5 font-serif-cn text-[12.5px] text-[#2b2620] placeholder:text-[var(--accent-muted)] focus:border-[var(--accent)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/10"
+                className="min-w-0 flex-1 resize-none rounded-box border border-base-300 bg-primary/5 px-3.5 py-2.5 font-serif-cn text-[12.5px] text-base-content placeholder:text-base-content/60 focus:border-primary focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/10"
               />
             <EmojiPicker onPick={insertEmoji} align="right" />
               <button
                 type="button"
                 disabled={mailbox.sending || !draft.trim()}
                 onClick={() => void handleSend()}
-                className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-[var(--accent)] text-white transition hover:shadow-sm disabled:opacity-50"
+                className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-primary text-white transition hover:shadow-sm disabled:opacity-50"
                 aria-label="寄出"
               >
                 <Icon name="send" className="h-4 w-4" />
               </button>
             </div>
-            <p className="mt-1.5 text-[11px] text-[var(--accent-muted)]">
+            <p className="mt-1.5 text-[11px] text-base-content/60">
               {draft.length}/500 · Ctrl+Enter 寄出 · 匿名，只有站主看得到
             </p>
           </div>

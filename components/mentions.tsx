@@ -193,7 +193,7 @@ export function MentionInput({
       {withEmoji && <EmojiPicker onPick={(emoji) => onChange(value + emoji)} align="right" />}
 
       {open && candidates.length > 0 && (
-        <div className="absolute bottom-full left-0 z-30 mb-1 w-56 overflow-hidden rounded-xl border border-[#d8e8c8] bg-white shadow-lg">
+        <div className="absolute bottom-full left-0 z-30 mb-1 w-56 overflow-hidden rounded-box border border-[#d8e8c8] bg-base-100 shadow-lg">
           <p className="border-b border-[#f0f7e8] px-3 py-1.5 text-[11px] text-[#9aa88a]">
             选一个人 @ 一下
           </p>

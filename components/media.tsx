@@ -146,7 +146,7 @@ export function ImageGrid({
           <img
             src={url}
             alt=""
-            className={`w-full rounded-xl border border-[var(--accent-line)] object-cover ${
+            className={`w-full rounded-box border border-base-300 object-cover ${
               single ? 'max-h-80' : 'h-24'
             }`}
           />
@@ -230,7 +230,7 @@ export function ImagePicker({
     <div className="mt-3">
       <div className="flex flex-wrap items-center gap-2">
         <label
-          className={`cursor-pointer rounded-xl border border-[var(--accent-line)] bg-white px-3 py-1.5 text-xs text-[var(--accent-muted)] transition hover:border-[var(--accent-light)] ${
+          className={`cursor-pointer rounded-box border border-base-300 bg-base-100 px-3 py-1.5 text-xs text-base-content/60 transition hover:border-[var(--accent-light)] ${
             disabled || uploading ? 'opacity-50 pointer-events-none' : ''
           }`}
         >
@@ -264,13 +264,13 @@ export function ImagePicker({
               }
             }}
             placeholder="也可以粘贴图片链接"
-            className="min-w-0 flex-1 rounded-xl border border-[var(--accent-line)] bg-[var(--accent-soft)] px-3 py-1.5 text-xs text-[#2b2620] focus:outline-none focus:border-[var(--accent)] transition"
+            className="min-w-0 flex-1 rounded-box border border-base-300 bg-primary/5 px-3 py-1.5 text-xs text-base-content focus:outline-none focus:border-primary transition"
           />
           <button
             type="button"
             onClick={addLink}
             disabled={disabled || !linkInput.trim()}
-            className="rounded-xl border border-[var(--accent-line)] bg-white px-2.5 py-1.5 text-xs text-[var(--accent-muted)] transition hover:border-[var(--accent-light)] disabled:opacity-50"
+            className="rounded-box border border-base-300 bg-base-100 px-2.5 py-1.5 text-xs text-base-content/60 transition hover:border-[var(--accent-light)] disabled:opacity-50"
           >
             添加
           </button>

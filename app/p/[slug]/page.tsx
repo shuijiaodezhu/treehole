@@ -25,7 +25,7 @@ export default function SitePageView() {
     <Suspense
       fallback={
         <div className="min-h-screen bg-[var(--paper)]" style={pageAccentVars('home')}>
-          <p className="py-24 text-center font-serif-cn text-sm text-[var(--accent-muted)]">翻页中…</p>
+          <p className="py-24 text-center font-serif-cn text-sm text-base-content/60">翻页中…</p>
         </div>
       }
     >
@@ -50,37 +50,37 @@ function SitePageInner() {
       <div className="mx-auto max-w-2xl px-6 py-10">
         <Link
           href="/p"
-          className="inline-flex items-center gap-1.5 text-sm text-[var(--accent-muted)] transition hover:text-[var(--accent-deep)]"
+          className="inline-flex items-center gap-1.5 text-sm text-base-content/60 transition hover:text-[var(--accent-deep)]"
         >
           <Icon name="back" className="h-4 w-4" />
           全部条款与说明
         </Link>
 
-        <article className="mt-5 rounded-2xl border border-[var(--accent-line)] bg-white/85 p-7 shadow-sm backdrop-blur">
-          <header className="border-b border-dashed border-[var(--accent-line)] pb-4">
-            <h1 className="font-serif-cn text-2xl font-semibold tracking-wide text-[#2b2620]">{title}</h1>
+        <article className="mt-5 rounded-box border border-base-300 bg-base-100/85 p-7 shadow-sm backdrop-blur">
+          <header className="border-b border-dashed border-base-300 pb-4">
+            <h1 className="font-serif-cn text-2xl font-semibold tracking-wide text-base-content">{title}</h1>
             {page?.summary && (
-              <p className="mt-1.5 font-serif-cn text-xs text-[var(--accent-muted)]">{page.summary}</p>
+              <p className="mt-1.5 font-serif-cn text-xs text-base-content/60">{page.summary}</p>
             )}
             {page?.updated_at && (
-              <p className="mt-2 text-[11px] text-[var(--accent-muted)]">
+              <p className="mt-2 text-[11px] text-base-content/60">
                 最后更新：{formatUpdated(page.updated_at)}
               </p>
             )}
           </header>
 
           {loading ? (
-            <p className="py-12 text-center font-serif-cn text-sm text-[var(--accent-muted)]">翻页中…</p>
+            <p className="py-12 text-center font-serif-cn text-sm text-base-content/60">翻页中…</p>
           ) : error ? (
             <p className="py-10 text-center text-sm text-red-500">{error}</p>
           ) : !page ? (
             <div className="py-10 text-center">
-              <p className="font-serif-cn text-sm text-[var(--accent-muted)]">
+              <p className="font-serif-cn text-sm text-base-content/60">
                 这一页还没有内容{fallback ? '，或者还没建表' : ''}。
               </p>
               <Link
                 href="/p"
-                className="mt-4 inline-block rounded-xl bg-[var(--accent)] px-4 py-2 text-xs text-white transition hover:bg-[var(--accent-deep)]"
+                className="mt-4 inline-block rounded-box bg-primary px-4 py-2 text-xs text-white transition hover:bg-[var(--accent-deep)]"
               >
                 回去看看有哪些页
               </Link>
@@ -116,13 +116,13 @@ function SitePageInner() {
 
         {others.length > 0 && (
           <nav className="mt-6">
-            <p className="mb-2 font-serif-cn text-[11px] text-[var(--accent-muted)]">其他</p>
+            <p className="mb-2 font-serif-cn text-[11px] text-base-content/60">其他</p>
             <div className="flex flex-wrap gap-2">
               {others.map((p) => (
                 <Link
                   key={p.slug}
                   href={`/p/${p.slug}`}
-                  className="rounded-full border border-[var(--accent-line)] bg-white/70 px-3 py-1.5 text-[11px] text-[var(--accent-deep)] transition hover:bg-[var(--accent-soft)]"
+                  className="rounded-full border border-base-300 bg-base-100/70 px-3 py-1.5 text-[11px] text-[var(--accent-deep)] transition hover:bg-primary/5"
                 >
                   {p.title}
                 </Link>

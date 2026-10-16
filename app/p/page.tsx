@@ -16,35 +16,35 @@ export default function SitePageIndex() {
       <div className="mx-auto max-w-2xl px-6 py-10">
         <Link
           href="/"
-          className="inline-flex items-center gap-1.5 text-sm text-[var(--accent-muted)] transition hover:text-[var(--accent-deep)]"
+          className="inline-flex items-center gap-1.5 text-sm text-base-content/60 transition hover:text-[var(--accent-deep)]"
         >
           <Icon name="back" className="h-4 w-4" />
           回首页
         </Link>
 
         <header className="mt-5 mb-5">
-          <h1 className="font-serif-cn text-2xl font-semibold tracking-wide text-[#2b2620]">
+          <h1 className="font-serif-cn text-2xl font-semibold tracking-wide text-base-content">
             条款与说明
           </h1>
-          <p className="mt-1.5 font-serif-cn text-xs text-[var(--accent-muted)]">
+          <p className="mt-1.5 font-serif-cn text-xs text-base-content/60">
             这个站怎么运转、你的东西怎么被对待，都写在这里
           </p>
         </header>
 
         {loading && pages.length === 0 ? (
-          <p className="py-12 text-center font-serif-cn text-sm text-[var(--accent-muted)]">翻页中…</p>
+          <p className="py-12 text-center font-serif-cn text-sm text-base-content/60">翻页中…</p>
         ) : (
           <div className="space-y-2.5">
             {list.map((p) => (
               <Link
                 key={p.slug}
                 href={`/p/${p.slug}`}
-                className="flex items-center gap-3 rounded-2xl border border-[var(--accent-line)] bg-white/85 px-5 py-4 transition hover:-translate-y-0.5 hover:shadow-sm"
+                className="flex items-center gap-3 rounded-box border border-base-300 bg-base-100/85 px-5 py-4 transition hover:-translate-y-0.5 hover:shadow-sm"
               >
                 <span className="min-w-0 flex-1">
-                  <span className="block font-serif-cn text-sm font-medium text-[#2b2620]">{p.title}</span>
+                  <span className="block font-serif-cn text-sm font-medium text-base-content">{p.title}</span>
                   {p.summary && (
-                    <span className="mt-0.5 block font-serif-cn text-[11px] text-[var(--accent-muted)]">
+                    <span className="mt-0.5 block font-serif-cn text-[11px] text-base-content/60">
                       {p.summary}
                     </span>
                   )}
@@ -55,7 +55,7 @@ export default function SitePageIndex() {
           </div>
         )}
 
-        <p className="mt-6 text-center font-serif-cn text-[11px] text-[var(--accent-muted)]">
+        <p className="mt-6 text-center font-serif-cn text-[11px] text-base-content/60">
           内容由站主随时修订，以本页最新版本为准
         </p>
       </div>

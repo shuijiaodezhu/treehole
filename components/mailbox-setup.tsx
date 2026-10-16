@@ -21,17 +21,17 @@ export function MailboxSetup({ onRetry, accent = 'warm' }: { onRetry: () => void
     accent === 'purple'
       ? {
           panel: 'border-[#e0d4e8] bg-[#fcf8ff]',
-          title: 'text-[#2b2430]',
+          title: 'text-base-content',
           body: 'text-[#8a7a9a]',
-          btn: 'border-[#e0d4e8] bg-white text-[#8a7aaa] hover:bg-[#faf5ff]',
+          btn: 'border-[#e0d4e8] bg-base-100 text-[#8a7aaa] hover:bg-[#faf5ff]',
           primary: 'bg-gradient-to-r from-[#b89ac8] to-[#a88ab8] text-white',
         }
       : {
-          panel: 'border-[var(--accent-line)] bg-[var(--accent-soft)]',
-          title: 'text-[#2b2430]',
-          body: 'text-[var(--accent-muted)]',
-          btn: 'border-[var(--accent-line)] bg-white text-[var(--accent-deep)] hover:bg-white/80',
-          primary: 'bg-[var(--accent)] text-white',
+          panel: 'border-base-300 bg-primary/5',
+          title: 'text-base-content',
+          body: 'text-base-content/60',
+          btn: 'border-base-300 bg-base-100 text-[var(--accent-deep)] hover:bg-base-100/80',
+          primary: 'bg-primary text-white',
         }
 
   async function copy() {
@@ -46,7 +46,7 @@ export function MailboxSetup({ onRetry, accent = 'warm' }: { onRetry: () => void
   }
 
   return (
-    <div className={`rounded-2xl border px-4 py-4 ${tone.panel}`}>
+    <div className={`rounded-box border px-4 py-4 ${tone.panel}`}>
       <p className={`font-serif-cn text-[12.5px] ${tone.title}`}>信箱还没开通</p>
       <p className={`mt-1.5 font-serif-cn text-[11px] leading-relaxed ${tone.body}`}>
         只差一步：在 Supabase 里建一张属于信箱自己的表。
@@ -86,7 +86,7 @@ export function MailboxSetup({ onRetry, accent = 'warm' }: { onRetry: () => void
       </div>
 
       {showSql && (
-        <pre className="mt-3 max-h-64 overflow-auto rounded-xl border border-black/5 bg-white/80 p-3 text-[11px] leading-relaxed text-[#4a4238]">
+        <pre className="mt-3 max-h-64 overflow-auto rounded-box border border-black/5 bg-base-100/80 p-3 text-[11px] leading-relaxed text-[#4a4238]">
           {WINTER_MAILBOX_SQL}
         </pre>
       )}

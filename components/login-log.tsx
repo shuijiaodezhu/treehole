@@ -117,14 +117,14 @@ export function LoginDevicesSection({ userId }: { userId: string | null }) {
   }, [userId])
 
   return (
-    <section className="rounded-2xl border border-[var(--accent-line)] bg-white p-6 shadow-sm">
+    <section className="rounded-box border border-base-300 bg-base-100 p-6 shadow-sm">
       <div className="flex items-center gap-3">
-        <div className="flex h-9 w-9 items-center justify-center rounded-full bg-[var(--accent-soft)]">
+        <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary/5">
           <Icon name="shield" className="h-4 w-4 text-[var(--accent-deep)]" />
         </div>
         <div>
-          <h2 className="text-sm font-semibold text-[#2b2430]">登录设备</h2>
-          <p className="mt-0.5 text-[11px] text-[var(--accent-muted)]">
+          <h2 className="text-sm font-semibold text-base-content">登录设备</h2>
+          <p className="mt-0.5 text-[11px] text-base-content/60">
             最近在这些设备上登录过。看到不认识的，建议改密码。
           </p>
         </div>
@@ -132,33 +132,33 @@ export function LoginDevicesSection({ userId }: { userId: string | null }) {
 
       <div className="mt-5">
         {loading ? (
-          <p className="py-6 text-center text-xs text-[var(--accent-muted)]">读取中…</p>
+          <p className="py-6 text-center text-xs text-base-content/60">读取中…</p>
         ) : missing ? (
-          <p className="rounded-xl border border-[var(--accent-line)] bg-[var(--accent-soft)] px-4 py-3 text-[11px] leading-relaxed text-[var(--accent-muted)]">
+          <p className="rounded-box border border-base-300 bg-primary/5 px-4 py-3 text-[11px] leading-relaxed text-base-content/60">
             登录记录还没开通：先在 Supabase 里执行 <code>supabase-security.sql</code>，
             之后每次登录都会自动记下来。
           </p>
         ) : records.length === 0 ? (
-          <p className="py-6 text-center text-xs text-[var(--accent-muted)]">
+          <p className="py-6 text-center text-xs text-base-content/60">
             还没有记录。从下次登录开始就会出现在这里。
           </p>
         ) : (
           <ul className="divide-y divide-[var(--accent-line)]">
             {records.map((r, i) => (
               <li key={r.id} className="flex items-center gap-3 py-3">
-                <span className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-[var(--accent-soft)]">
-                  <Icon name={/iPhone|iPad|Android/i.test(r.user_agent ?? '') ? 'user' : 'box'} className="h-3.5 w-3.5 text-[var(--accent-muted)]" />
+                <span className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-primary/5">
+                  <Icon name={/iPhone|iPad|Android/i.test(r.user_agent ?? '') ? 'user' : 'box'} className="h-3.5 w-3.5 text-base-content/60" />
                 </span>
                 <span className="min-w-0 flex-1">
                   <span className="flex items-center gap-2">
-                    <span className="truncate text-xs font-medium text-[#2b2430]">{describeDevice(r.user_agent)}</span>
+                    <span className="truncate text-xs font-medium text-base-content">{describeDevice(r.user_agent)}</span>
                     {i === 0 && (
-                      <span className="rounded-full bg-[var(--accent-soft)] px-2 py-0.5 text-[11px] text-[var(--accent-deep)]">
+                      <span className="rounded-full bg-primary/5 px-2 py-0.5 text-[11px] text-[var(--accent-deep)]">
                         本次
                       </span>
                     )}
                   </span>
-                  <span className="mt-0.5 block text-[11px] text-[var(--accent-muted)]">{relativeTime(r.created_at)}</span>
+                  <span className="mt-0.5 block text-[11px] text-base-content/60">{relativeTime(r.created_at)}</span>
                 </span>
               </li>
             ))}

@@ -93,7 +93,7 @@ export default function FavoritesPage() {
   const loading = !authChecked || favorites.loading
 
   return (
-    <div className="min-h-screen bg-[var(--accent-soft)]" style={pageAccentVars('me')}>
+    <div className="min-h-screen bg-primary/5" style={pageAccentVars('me')}>
       <div className="relative max-w-3xl mx-auto px-6 pt-10 pb-16">
         <Link
           href="/me"
@@ -105,7 +105,7 @@ export default function FavoritesPage() {
 
         <div className="mt-4 flex items-end justify-between">
           <div>
-            <h1 className="text-3xl font-bold text-[#2b2430]">我的收藏</h1>
+            <h1 className="text-3xl font-bold text-base-content">我的收藏</h1>
             <p className="text-sm text-[var(--accent-deep)] mt-1">
               {counts.all > 0 ? `一共收藏了 ${counts.all} 条` : '把心跳的瞬间藏进口袋里'}
             </p>
@@ -114,7 +114,7 @@ export default function FavoritesPage() {
           <button
             type="button"
             onClick={() => meId && void reload(meId)}
-            className="inline-flex items-center gap-1.5 rounded-xl border border-[var(--accent-soft)] bg-white px-3 py-1.5 text-xs text-[var(--accent-deep)] hover:text-[var(--accent-deep)] transition"
+            className="inline-flex items-center gap-1.5 rounded-box border border-[var(--accent-soft)] bg-base-100 px-3 py-1.5 text-xs text-[var(--accent-deep)] hover:text-[var(--accent-deep)] transition"
           >
             <Icon name="refresh" className="w-3.5 h-3.5" />
             刷新
@@ -122,7 +122,7 @@ export default function FavoritesPage() {
         </div>
 
         {/* 分类页签 */}
-        <div className="mt-6 flex flex-wrap gap-x-5 gap-y-2 border-b border-[var(--accent-line)]">
+        <div className="mt-6 flex flex-wrap gap-x-5 gap-y-2 border-b border-base-300">
           {TABS.map((t) => {
             const label = t === 'all' ? '全部' : FAVORITE_KIND_LABEL[t]
             const active = tab === t
@@ -133,26 +133,26 @@ export default function FavoritesPage() {
                 onClick={() => setTab(t)}
                 className={`pb-2.5 text-sm transition flex items-center gap-1.5 ${
                   active
-                    ? 'border-b-2 border-[var(--accent)] text-[var(--accent-deep)] font-medium'
-                    : 'text-[var(--accent-deep)] hover:text-[#2b2430]'
+                    ? 'border-b-2 border-primary text-[var(--accent-deep)] font-medium'
+                    : 'text-[var(--accent-deep)] hover:text-base-content'
                 }`}
               >
                 {label}
-                <span className="text-[11px] text-[var(--accent-muted)]">{counts[t]}</span>
+                <span className="text-[11px] text-base-content/60">{counts[t]}</span>
               </button>
             )
           })}
         </div>
 
         {favorites.error && (
-          <div className="mt-4 rounded-xl border border-red-100 bg-red-50 px-4 py-3 text-sm text-red-600">
+          <div className="mt-4 rounded-box border border-red-100 bg-red-50 px-4 py-3 text-sm text-red-600">
             {favorites.error}
           </div>
         )}
 
         {/* 视频 / 图片：站内暂无这类内容 */}
         {tab !== 'all' && MEDIA_HINT[tab] && (
-          <p className="py-12 text-center text-xs leading-relaxed text-[var(--accent-muted)]">{MEDIA_HINT[tab]}</p>
+          <p className="py-12 text-center text-xs leading-relaxed text-base-content/60">{MEDIA_HINT[tab]}</p>
         )}
 
         {loading && <SkeletonList count={2} lines={2} />}
@@ -166,7 +166,7 @@ export default function FavoritesPage() {
             />
             <Link
               href="/world"
-              className="mt-5 inline-flex items-center gap-1.5 rounded-xl bg-[var(--accent)] px-4 py-2 text-sm text-white hover:shadow-sm transition-all"
+              className="mt-5 inline-flex items-center gap-1.5 rounded-box bg-primary px-4 py-2 text-sm text-white hover:shadow-sm transition-all"
             >
               去院子逛逛
             </Link>
@@ -178,16 +178,16 @@ export default function FavoritesPage() {
             {visible.map((f) => (
               <div
                 key={f.id}
-                className="rounded-2xl border border-[var(--accent-line)] bg-white p-4 shadow-sm"
+                className="rounded-box border border-base-300 bg-base-100 p-4 shadow-sm"
               >
                 <div className="flex items-center gap-2 mb-2">
-                  <span className="rounded-full bg-[var(--accent-soft)] px-2 py-0.5 text-[11px] text-[var(--accent-deep)]">
+                  <span className="rounded-full bg-primary/5 px-2 py-0.5 text-[11px] text-[var(--accent-deep)]">
                     {FAVORITE_KIND_LABEL[f.kind]}
                   </span>
                   {f.author_name && (
-                    <span className="text-[11px] text-[var(--accent-muted)] truncate">{f.author_name}</span>
+                    <span className="text-[11px] text-base-content/60 truncate">{f.author_name}</span>
                   )}
-                  <span className="ml-auto flex-shrink-0 text-[11px] text-[var(--accent-muted)]">
+                  <span className="ml-auto flex-shrink-0 text-[11px] text-base-content/60">
                     收藏于 {formatTime(f.created_at)}
                   </span>
                 </div>
@@ -198,7 +198,7 @@ export default function FavoritesPage() {
                     href={f.target_id}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="mt-1 mb-3 block overflow-hidden rounded-xl border border-[var(--accent-line)]"
+                    className="mt-1 mb-3 block overflow-hidden rounded-box border border-base-300"
                   >
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img src={f.target_id} alt="" className="max-h-64 w-full object-cover" />
@@ -206,7 +206,7 @@ export default function FavoritesPage() {
                 )}
 
                 {f.title && (
-                  <p className="text-sm font-medium text-[#2b2430] mb-1 break-words">{f.title}</p>
+                  <p className="text-sm font-medium text-base-content mb-1 break-words">{f.title}</p>
                 )}
                 {f.content && (
                   <p className="text-xs text-[#4a3a5a] leading-relaxed whitespace-pre-wrap break-words">
@@ -245,7 +245,7 @@ export default function FavoritesPage() {
                       })
                     }
                     disabled={favorites.busyKey === `${f.kind}:${f.target_id}`}
-                    className="ml-auto text-xs text-[var(--accent-muted)] hover:text-red-500 transition disabled:opacity-50"
+                    className="ml-auto text-xs text-base-content/60 hover:text-red-500 transition disabled:opacity-50"
                   >
                     取消收藏
                   </button>

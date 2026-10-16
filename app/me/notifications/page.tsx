@@ -43,12 +43,12 @@ export default function NotificationsPage() {
         <header className="mb-6">
           <Link
             href="/me"
-            className="text-sm text-[var(--accent-muted)] transition hover:text-[var(--accent-deep)]"
+            className="text-sm text-base-content/60 transition hover:text-[var(--accent-deep)]"
           >
             ← 返回
           </Link>
-          <h1 className="mt-2 text-3xl font-bold text-[#2b2430]">通知</h1>
-          <p className="mt-1 text-sm text-[var(--accent-muted)]">
+          <h1 className="mt-2 text-3xl font-bold text-base-content">通知</h1>
+          <p className="mt-1 text-sm text-base-content/60">
             提到你、回了你的信、处理了你的举报，都会落在这里。
           </p>
         </header>

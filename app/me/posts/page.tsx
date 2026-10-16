@@ -72,13 +72,13 @@ export default function MyPostsPage() {
       <div className="relative max-w-xl mx-auto px-6 py-10">
         <header className="mb-6">
           <Link href="/me" className="text-sm text-[#8a7a9a] hover:text-[#8a7aaa] transition">← 返回</Link>
-          <h1 className="text-3xl font-bold text-[#2b2430] mt-2">我的帖子</h1>
+          <h1 className="text-3xl font-bold text-base-content mt-2">我的帖子</h1>
           <p className="text-sm text-[#8a7a9a] mt-1">一共发过 <span className="text-[#8a7aaa] font-medium">{posts.length}</span> 条</p>
         </header>
 
         <main className="space-y-3">
           {posts.length === 0 ? (
-            <div className="rounded-2xl border border-[#e0d4e8] bg-white/60 backdrop-blur p-10 text-center">
+            <div className="rounded-box border border-[#e0d4e8] bg-base-100/60 backdrop-blur p-10 text-center">
               <div className="w-12 h-12 rounded-full bg-[#f0e6f8] flex items-center justify-center mx-auto mb-3">
                 <IconDoc className="w-5 h-5 text-[#8a7aaa]" />
               </div>
@@ -87,7 +87,7 @@ export default function MyPostsPage() {
             </div>
           ) : (
             posts.map((post) => (
-              <div key={post.id} className="group rounded-2xl border border-[#e0d4e8] bg-white p-5 hover:shadow-sm transition-all relative overflow-hidden">
+              <div key={post.id} className="group rounded-box border border-[#e0d4e8] bg-base-100 p-5 hover:shadow-sm transition-all relative overflow-hidden">
                 <div className="flex justify-between items-start mb-3">
                   <span className="text-[11px] text-[#b8a8c8] tracking-wide">
                     {new Date(post.created_at).toLocaleString('zh-CN', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' })}

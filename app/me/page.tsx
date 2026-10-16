@@ -133,16 +133,16 @@ export default function MePage() {
 
       <div className="relative max-w-xl mx-auto px-6 py-10">
         <header className="mb-6">
-          <Link href="/" className="text-sm text-[var(--accent-muted)] hover:text-[var(--accent-deep)] transition">← 返回</Link>
-          <h1 className="text-3xl font-bold text-[#2b2430] mt-2">我的</h1>
-          <p className="text-sm text-[var(--accent-muted)] mt-1">我的口袋有糖，你吃吗？</p>
+          <Link href="/" className="text-sm text-base-content/60 hover:text-[var(--accent-deep)] transition">← 返回</Link>
+          <h1 className="text-3xl font-bold text-base-content mt-2">我的</h1>
+          <p className="text-sm text-base-content/60 mt-1">我的口袋有糖，你吃吗？</p>
         </header>
 
         <main className="space-y-4">
-          <div className="rounded-2xl border border-[var(--accent-line)] bg-white p-6 shadow-sm relative overflow-hidden">
+          <div className="rounded-box border border-base-300 bg-base-100 p-6 shadow-sm relative overflow-hidden">
 
             <div className="relative flex items-start gap-4">
-              <div className="w-16 h-16 rounded-2xl bg-[var(--accent-soft)] flex items-center justify-center text-2xl overflow-hidden flex-shrink-0 shadow-sm">
+              <div className="w-16 h-16 rounded-box bg-primary/5 flex items-center justify-center text-2xl overflow-hidden flex-shrink-0 shadow-sm">
                 {profile?.avatar_url ? (
                   <img src={profile.avatar_url} alt="avatar" className="w-full h-full object-cover" />
                 ) : (
@@ -151,14 +151,14 @@ export default function MePage() {
               </div>
 
               <div className="flex-1 min-w-0">
-                <h2 className="text-xl font-semibold text-[#2b2430]">{displayName}</h2>
-                <p className="text-xs text-[var(--accent-muted)] mt-0.5">{email}</p>
+                <h2 className="text-xl font-semibold text-base-content">{displayName}</h2>
+                <p className="text-xs text-base-content/60 mt-0.5">{email}</p>
 
                 {profile?.signature && (
                   <p className="text-sm text-[#5a4a6a] mt-3 font-art italic">「{profile.signature}」</p>
                 )}
 
-                <div className="flex flex-wrap gap-3 text-[11px] text-[var(--accent-muted)] mt-3">
+                <div className="flex flex-wrap gap-3 text-[11px] text-base-content/60 mt-3">
                   {profile?.location && (
                     <span className="flex items-center gap-1"><IconPin className="w-3 h-3" />{profile.location}</span>
                   )}
@@ -170,7 +170,7 @@ export default function MePage() {
 
             <Link
               href="/me/edit"
-              className="relative mt-5 inline-block px-5 py-2 rounded-xl bg-[var(--accent)] text-white text-sm font-medium hover:shadow-sm transition-all"
+              className="relative mt-5 inline-block px-5 py-2 rounded-box bg-primary text-white text-sm font-medium hover:shadow-sm transition-all"
             >
               编辑资料
             </Link>
@@ -183,65 +183,65 @@ export default function MePage() {
           <ShowcaseSettingsSection userId={profile?.id ?? null} />
 
           <div className="grid grid-cols-2 gap-4">
-            <div className="rounded-2xl border border-[var(--accent-line)] bg-[var(--accent-soft)] p-5 text-center relative overflow-hidden">
+            <div className="rounded-box border border-base-300 bg-primary/5 p-5 text-center relative overflow-hidden">
               <div className="absolute -top-4 -right-4 w-16 h-16 bg-[var(--accent-light)] opacity-[0.15] rounded-full blur-xl pointer-events-none"></div>
               <p className="relative text-3xl font-bold text-[var(--accent-deep)]">{postCount}</p>
-              <p className="relative text-[11px] text-[var(--accent-muted)] mt-1.5 tracking-wide">已发帖</p>
+              <p className="relative text-[11px] text-base-content/60 mt-1.5 tracking-wide">已发帖</p>
             </div>
-            <div className="rounded-2xl border border-[var(--accent-line)] bg-white p-5 text-center">
+            <div className="rounded-box border border-base-300 bg-base-100 p-5 text-center">
               <p className="text-3xl font-bold text-[var(--accent-line)]">—</p>
-              <p className="text-[11px] text-[var(--accent-muted)] mt-1.5 tracking-wide">收到的赞</p>
+              <p className="text-[11px] text-base-content/60 mt-1.5 tracking-wide">收到的赞</p>
             </div>
           </div>
 
-          <div className="rounded-2xl border border-[var(--accent-line)] bg-white overflow-hidden">
-            <Link href="/me/posts" className="flex items-center justify-between p-4 hover:bg-[var(--accent-soft)] transition group">
+          <div className="rounded-box border border-base-300 bg-base-100 overflow-hidden">
+            <Link href="/me/posts" className="flex items-center justify-between p-4 hover:bg-primary/5 transition group">
               <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-full bg-[var(--accent-soft)] flex items-center justify-center"><IconDoc className="w-4 h-4 text-[var(--accent-deep)]" /></div>
-                <span className="text-sm text-[#2b2430]">我的帖子</span>
+                <div className="w-8 h-8 rounded-full bg-primary/5 flex items-center justify-center"><IconDoc className="w-4 h-4 text-[var(--accent-deep)]" /></div>
+                <span className="text-sm text-base-content">我的帖子</span>
               </div>
               <IconArrow className="w-4 h-4 text-[var(--accent-light)] group-hover:translate-x-0.5 transition-transform" />
             </Link>
 
-            <div className="border-t border-[var(--accent-line)]"></div>
+            <div className="border-t border-base-300"></div>
 
-            <Link href="/me/favorites" className="flex items-center justify-between p-4 hover:bg-[var(--accent-soft)] transition group">
+            <Link href="/me/favorites" className="flex items-center justify-between p-4 hover:bg-primary/5 transition group">
               <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-full bg-[var(--accent-soft)] flex items-center justify-center"><IconStar className="w-4 h-4 text-[var(--accent-deep)]" /></div>
-                <span className="text-sm text-[#2b2430]">我的收藏</span>
+                <div className="w-8 h-8 rounded-full bg-primary/5 flex items-center justify-center"><IconStar className="w-4 h-4 text-[var(--accent-deep)]" /></div>
+                <span className="text-sm text-base-content">我的收藏</span>
               </div>
               <IconArrow className="w-4 h-4 text-[var(--accent-light)] group-hover:translate-x-0.5 transition-transform" />
             </Link>
 
-            <div className="border-t border-[var(--accent-line)]"></div>
+            <div className="border-t border-base-300"></div>
 
-            <Link href="/me/notifications" className="flex items-center justify-between p-4 hover:bg-[var(--accent-soft)] transition group">
+            <Link href="/me/notifications" className="flex items-center justify-between p-4 hover:bg-primary/5 transition group">
               <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-full bg-[var(--accent-soft)] flex items-center justify-center"><IconBell className="w-4 h-4 text-[var(--accent-deep)]" /></div>
-                <span className="text-sm text-[#2b2430]">通知</span>
+                <div className="w-8 h-8 rounded-full bg-primary/5 flex items-center justify-center"><IconBell className="w-4 h-4 text-[var(--accent-deep)]" /></div>
+                <span className="text-sm text-base-content">通知</span>
               </div>
               <IconArrow className="w-4 h-4 text-[var(--accent-light)] group-hover:translate-x-0.5 transition-transform" />
             </Link>
 
-            <div className="border-t border-[var(--accent-line)]"></div>
+            <div className="border-t border-base-300"></div>
 
-            <Link href="/me/settings" className="flex items-center justify-between p-4 hover:bg-[var(--accent-soft)] transition group">
+            <Link href="/me/settings" className="flex items-center justify-between p-4 hover:bg-primary/5 transition group">
               <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-full bg-[var(--accent-soft)] flex items-center justify-center"><IconGear className="w-4 h-4 text-[var(--accent-deep)]" /></div>
-                <span className="text-sm text-[#2b2430]">设置</span>
+                <div className="w-8 h-8 rounded-full bg-primary/5 flex items-center justify-center"><IconGear className="w-4 h-4 text-[var(--accent-deep)]" /></div>
+                <span className="text-sm text-base-content">设置</span>
               </div>
               <IconArrow className="w-4 h-4 text-[var(--accent-light)] group-hover:translate-x-0.5 transition-transform" />
             </Link>
 
             {isAdmin && (
               <>
-                <div className="border-t border-[var(--accent-line)]"></div>
-                <Link href="/admin" className="flex items-center justify-between p-4 hover:bg-[var(--accent-soft)] transition group">
+                <div className="border-t border-base-300"></div>
+                <Link href="/admin" className="flex items-center justify-between p-4 hover:bg-primary/5 transition group">
                   <div className="flex items-center gap-3">
                     <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[var(--accent-light)] to-[var(--accent)] flex items-center justify-center">
                       <IconShield className="w-4 h-4 text-white" />
                     </div>
-                    <span className="text-sm text-[#2b2430] font-medium">站主后台</span>
+                    <span className="text-sm text-base-content font-medium">站主后台</span>
                   </div>
                   <IconArrow className="w-4 h-4 text-[var(--accent-light)] group-hover:translate-x-0.5 transition-transform" />
                 </Link>
@@ -249,7 +249,7 @@ export default function MePage() {
             )}
           </div>
 
-          <button onClick={handleLogout} className="w-full text-center py-3 rounded-2xl border border-[var(--accent-line)] bg-white text-sm text-[var(--accent-deep)] hover:bg-[var(--accent-soft)] transition">
+          <button onClick={handleLogout} className="w-full text-center py-3 rounded-box border border-base-300 bg-base-100 text-sm text-[var(--accent-deep)] hover:bg-primary/5 transition">
             退出登录
           </button>
         </main>

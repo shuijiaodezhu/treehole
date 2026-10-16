@@ -68,21 +68,21 @@ export function VaultView({ userId }: { userId: string | null }) {
   return (
     <div className="mx-auto max-w-3xl">
       {/* 顶部：容量与上传 */}
-      <div className="mb-4 rounded-2xl border border-[var(--accent-line)] bg-white/80 p-5 shadow-sm backdrop-blur">
+      <div className="mb-4 rounded-box border border-base-300 bg-base-100/80 p-5 shadow-sm backdrop-blur">
         <div className="flex flex-wrap items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-br from-[var(--accent-light)] to-[var(--accent-light)]">
+          <div className="flex h-10 w-10 items-center justify-center rounded-box bg-gradient-to-br from-[var(--accent-light)] to-[var(--accent-light)]">
             <Icon name="box" className="h-5 w-5 text-[var(--accent-deep)]" />
           </div>
           <div className="min-w-0 flex-1">
-            <p className="text-sm font-semibold text-[#2b2620]">储物箱</p>
-            <p className="mt-0.5 text-[11px] text-[var(--accent-muted)]">
+            <p className="text-sm font-semibold text-base-content">储物箱</p>
+            <p className="mt-0.5 text-[11px] text-base-content/60">
               只你自己能看 · 单文件不超过 {MAX_FILE_BYTES / 1024 / 1024}MB
               {vault.files.length > 0 && ` · 共 ${vault.files.length} 个 / ${formatBytes(vault.totalBytes)}`}
             </p>
           </div>
 
           <label
-            className={`cursor-pointer rounded-xl bg-[var(--accent)] px-4 py-2 text-sm font-medium text-white transition hover:shadow-sm ${
+            className={`cursor-pointer rounded-box bg-primary px-4 py-2 text-sm font-medium text-white transition hover:shadow-sm ${
               vault.uploading ? 'pointer-events-none opacity-60' : ''
             }`}
           >
@@ -100,7 +100,7 @@ export function VaultView({ userId }: { userId: string | null }) {
           </label>
         </div>
 
-        {message && <p className="mt-3 text-[11px] text-[var(--accent-muted)]">{message}</p>}
+        {message && <p className="mt-3 text-[11px] text-base-content/60">{message}</p>}
         {vault.error && <p className="mt-3 text-[11px] text-red-500">{vault.error}</p>}
       </div>
 
@@ -111,8 +111,8 @@ export function VaultView({ userId }: { userId: string | null }) {
           onClick={() => setFilter('all')}
           className={`rounded-full px-3 py-1 text-[11px] transition ${
             filter === 'all'
-              ? 'bg-[var(--accent)] text-white'
-              : 'border border-[var(--accent-line)] bg-white text-[var(--accent-muted)] hover:border-[var(--accent-light)]'
+              ? 'bg-primary text-white'
+              : 'border border-base-300 bg-base-100 text-base-content/60 hover:border-[var(--accent-light)]'
           }`}
         >
           全部 {vault.files.length}
@@ -124,8 +124,8 @@ export function VaultView({ userId }: { userId: string | null }) {
             onClick={() => setFilter(c)}
             className={`rounded-full px-3 py-1 text-[11px] transition ${
               filter === c
-                ? 'bg-[var(--accent)] text-white'
-                : 'border border-[var(--accent-line)] bg-white text-[var(--accent-muted)] hover:border-[var(--accent-light)]'
+                ? 'bg-primary text-white'
+                : 'border border-base-300 bg-base-100 text-base-content/60 hover:border-[var(--accent-light)]'
             }`}
           >
             {CATEGORY_LABEL[c]} {vault.counts[c]}
@@ -137,7 +137,7 @@ export function VaultView({ userId }: { userId: string | null }) {
       {vault.loading && vault.files.length === 0 ? (
         <SkeletonList count={2} lines={1} />
       ) : visible.length === 0 ? (
-        <div className="rounded-2xl border border-[var(--accent-line)] bg-white/60 backdrop-blur">
+        <div className="rounded-box border border-base-300 bg-base-100/60 backdrop-blur">
           <EmptyState
             art="box"
             title={vault.files.length === 0 ? '储物箱还是空的' : `没有${CATEGORY_LABEL[filter as FileCategory]}类文件`}
@@ -149,17 +149,17 @@ export function VaultView({ userId }: { userId: string | null }) {
           {visible.map((f) => (
             <div
               key={f.id}
-              className="flex items-center gap-3 rounded-2xl border border-[var(--accent-line)] bg-white/80 p-3.5 backdrop-blur"
+              className="flex items-center gap-3 rounded-box border border-base-300 bg-base-100/80 p-3.5 backdrop-blur"
             >
-              <span className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl bg-[var(--accent-soft)] text-[var(--accent-deep)]">
+              <span className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-box bg-primary/5 text-[var(--accent-deep)]">
                 <Icon name={CATEGORY_ICON[f.category]} className="h-4 w-4" />
               </span>
 
               <div className="min-w-0 flex-1">
-                <p className="truncate text-sm text-[#2b2620]" title={f.name}>
+                <p className="truncate text-sm text-base-content" title={f.name}>
                   {f.name}
                 </p>
-                <p className="mt-0.5 text-[11px] text-[var(--accent-muted)]">
+                <p className="mt-0.5 text-[11px] text-base-content/60">
                   {CATEGORY_LABEL[f.category]} · {formatBytes(f.size)} · {formatTime(f.created_at)}
                 </p>
               </div>
@@ -167,7 +167,7 @@ export function VaultView({ userId }: { userId: string | null }) {
               <button
                 type="button"
                 onClick={() => void handleDownload(f.path)}
-                className="flex flex-shrink-0 items-center gap-1 rounded-lg border border-[var(--accent-line)] px-2.5 py-1 text-[11px] text-[var(--accent-muted)] transition hover:border-[var(--accent-light)] hover:text-[var(--accent-deep)]"
+                className="flex flex-shrink-0 items-center gap-1 rounded-lg border border-base-300 px-2.5 py-1 text-[11px] text-base-content/60 transition hover:border-[var(--accent-light)] hover:text-[var(--accent-deep)]"
               >
                 <Icon name="download" className="h-3.5 w-3.5" />
                 下载
@@ -193,7 +193,7 @@ export function VaultView({ userId }: { userId: string | null }) {
                     setConfirmId(f.id)
                     window.setTimeout(() => setConfirmId((cur) => (cur === f.id ? null : cur)), 4000)
                   }}
-                  className="flex-shrink-0 rounded-lg border border-[var(--accent-line)] px-2.5 py-1 text-[11px] text-[var(--accent-muted)] transition hover:border-red-200 hover:text-red-500"
+                  className="flex-shrink-0 rounded-lg border border-base-300 px-2.5 py-1 text-[11px] text-base-content/60 transition hover:border-red-200 hover:text-red-500"
                 >
                   删除
                 </button>

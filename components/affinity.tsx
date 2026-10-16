@@ -230,14 +230,14 @@ export function AffinitySettingsSection({ userId }: { userId: string | null }) {
   }
 
   return (
-    <section className="rounded-2xl border border-[var(--accent-line)] bg-white p-6 shadow-sm">
+    <section className="rounded-box border border-base-300 bg-base-100 p-6 shadow-sm">
       <div className="flex items-center gap-3">
-        <div className="flex h-9 w-9 items-center justify-center rounded-full bg-[var(--accent-soft)]">
+        <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary/5">
           <Icon name="heart" className="h-4 w-4 text-[var(--accent-deep)]" />
         </div>
         <div className="min-w-0 flex-1">
-          <h2 className="text-sm font-semibold text-[#2b2430]">好感度</h2>
-          <p className="mt-0.5 text-[11px] leading-relaxed text-[var(--accent-muted)]">
+          <h2 className="text-sm font-semibold text-base-content">好感度</h2>
+          <p className="mt-0.5 text-[11px] leading-relaxed text-base-content/60">
             你和每个朋友来往留下的痕迹：聊天、点赞都会加一点，只增不减，
             不催你天天说话。
           </p>
@@ -259,8 +259,8 @@ export function AffinitySettingsSection({ userId }: { userId: string | null }) {
             className="mt-0.5 h-4 w-4 accent-[var(--accent)]"
           />
           <span className="min-w-0">
-            <span className="block text-xs font-medium text-[#2b2430]">在聊天里显示好感度</span>
-            <span className="mt-0.5 block text-[11.5px] leading-relaxed text-[var(--accent-muted)]">
+            <span className="block text-xs font-medium text-base-content">在聊天里显示好感度</span>
+            <span className="mt-0.5 block text-[11.5px] leading-relaxed text-base-content/60">
               只是你自己这台设备上的显示偏好。关掉之后，聊天抬头不再出现那个数字。
             </span>
           </span>
@@ -276,10 +276,10 @@ export function AffinitySettingsSection({ userId }: { userId: string | null }) {
             className="mt-0.5 h-4 w-4 accent-[var(--accent)] disabled:opacity-50"
           />
           <span className="min-w-0">
-            <span className="block text-xs font-medium text-[#2b2430]">
+            <span className="block text-xs font-medium text-base-content">
               让朋友看到我对他的好感度
             </span>
-            <span className="mt-0.5 block text-[11.5px] leading-relaxed text-[var(--accent-muted)]">
+            <span className="mt-0.5 block text-[11.5px] leading-relaxed text-base-content/60">
               默认关闭：只有你自己看得到。开启后，对方在聊天抬头能看到你那一侧的分数；
               其他人任何时候都看不到。
             </span>
@@ -287,12 +287,12 @@ export function AffinitySettingsSection({ userId }: { userId: string | null }) {
         </label>
 
         {missing && (
-          <p className="rounded-xl border border-[var(--accent-line)] bg-[var(--accent-soft)] px-3 py-2 text-[11.5px] leading-relaxed text-[var(--accent-muted)]">
+          <p className="rounded-box border border-base-300 bg-primary/5 px-3 py-2 text-[11.5px] leading-relaxed text-base-content/60">
             好感度还没开通：先在 Supabase 里执行 <code>supabase-affinity.sql</code>。
             （没跑也不影响别的功能，只是不显示这个数）
           </p>
         )}
-        {hint && <p className="text-[11.5px] text-[var(--accent-muted)]">{hint}</p>}
+        {hint && <p className="text-[11.5px] text-base-content/60">{hint}</p>}
       </div>
     </section>
   )

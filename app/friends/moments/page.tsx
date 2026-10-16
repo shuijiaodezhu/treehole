@@ -335,14 +335,14 @@ export default function MomentsPage() {
           <Link href="/friends" className="text-sm text-[#8a827a] hover:text-[#c96447] transition">
             ← 返回小屋
           </Link>
-          <h1 className="text-3xl font-bold text-[#2b2620] mt-2">朋友圈</h1>
+          <h1 className="text-3xl font-bold text-base-content mt-2">朋友圈</h1>
           <p className="text-sm text-[#8a827a] mt-1">只有好友看得到</p>
 
           {/* 标签切换 */}
           <div className="flex gap-6 mt-5 border-b border-[#ece6dd]">
             <Link
               href="/friends"
-              className="pb-2.5 text-[#8a827a] hover:text-[#2b2620] text-sm transition"
+              className="pb-2.5 text-[#8a827a] hover:text-base-content text-sm transition"
             >
               好友
             </Link>
@@ -356,7 +356,7 @@ export default function MomentsPage() {
           {/* 发布区 */}
           <form
             onSubmit={handlePost}
-            className="rounded-2xl border border-[#f0e4d4] bg-white p-5 shadow-sm relative overflow-hidden"
+            className="rounded-box border border-[#f0e4d4] bg-base-100 p-5 shadow-sm relative overflow-hidden"
           >
 
             <div className="relative">
@@ -366,7 +366,7 @@ export default function MomentsPage() {
                 onChange={(e) => setContent(e.target.value)}
                 placeholder="说点什么… 用 #话题# 加标签，也可以发个表情"
                 rows={3}
-                className="w-full px-4 py-3 rounded-xl border border-[#ece6dd] bg-[#fefcf9] text-sm text-[#2b2620] resize-none focus:outline-none focus:border-[#d97757] focus:ring-2 focus:ring-[#d97757]/10 transition placeholder:text-[#c0b8ae]"
+                className="w-full px-4 py-3 rounded-box border border-[#ece6dd] bg-[#fefcf9] text-sm text-base-content resize-none focus:outline-none focus:border-[#d97757] focus:ring-2 focus:ring-[#d97757]/10 transition placeholder:text-[#c0b8ae]"
                 maxLength={500}
               />
               {/* 图片：本地上传或粘贴链接 */}
@@ -393,7 +393,7 @@ export default function MomentsPage() {
                         className={`rounded-full px-3 py-1 text-[11px] transition ${
                           active
                             ? 'bg-[#d97757] text-white'
-                            : 'border border-[#ece6dd] bg-white text-[#8a827a] hover:border-[#e0a184]'
+                            : 'border border-[#ece6dd] bg-base-100 text-[#8a827a] hover:border-[#e0a184]'
                         }`}
                       >
                         {VISIBILITY_LABEL[v]}
@@ -405,7 +405,7 @@ export default function MomentsPage() {
                 <p className="text-[11px] text-[#b0a89e] mt-2">{VISIBILITY_HINT[visibility]}</p>
 
                 {showPicker && visibility === 'friends' && (
-                  <div className="mt-2 max-h-40 overflow-y-auto rounded-xl border border-[#ece6dd] bg-[#fefcf9] p-3">
+                  <div className="mt-2 max-h-40 overflow-y-auto rounded-box border border-[#ece6dd] bg-[#fefcf9] p-3">
                     {friends.length === 0 ? (
                       <p className="text-[11px] text-[#b0a89e]">还没有好友，先去加几个吧。</p>
                     ) : (
@@ -432,7 +432,7 @@ export default function MomentsPage() {
                 )}
 
                 {showPicker && visibility === 'groups' && (
-                  <div className="mt-2 rounded-xl border border-[#ece6dd] bg-[#fefcf9] p-3">
+                  <div className="mt-2 rounded-box border border-[#ece6dd] bg-[#fefcf9] p-3">
                     {groups.length === 0 ? (
                       <p className="text-[11px] leading-relaxed text-[#b0a89e]">
                         还没有分组。去{' '}
@@ -471,7 +471,7 @@ export default function MomentsPage() {
                 <button
                   type="submit"
                   disabled={posting || !content.trim()}
-                  className="px-6 py-2 rounded-xl bg-gradient-to-r from-[#e8a87c] to-[#d97757] text-white text-sm font-medium hover:shadow-sm transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="px-6 py-2 rounded-box bg-gradient-to-r from-[#e8a87c] to-[#d97757] text-white text-sm font-medium hover:shadow-sm transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {posting ? '发布中...' : '发布'}
                 </button>
@@ -482,7 +482,7 @@ export default function MomentsPage() {
           {/* 帖子列表 */}
           <div className="space-y-3">
             {posts.length === 0 ? (
-              <div className="rounded-2xl border border-[#f0e4d4] bg-white/60 backdrop-blur">
+              <div className="rounded-box border border-[#f0e4d4] bg-base-100/60 backdrop-blur">
                 <EmptyState art="heart" title="还没有内容" hint="写第一条吧。" />
               </div>
             ) : (
@@ -494,14 +494,14 @@ export default function MomentsPage() {
                 <div
                   key={post.id}
                   data-moment-id={post.id}
-                  className={`rounded-2xl border bg-white p-5 shadow-sm relative overflow-hidden transition ${
+                  className={`rounded-box border bg-base-100 p-5 shadow-sm relative overflow-hidden transition ${
                     focusPostId === post.id
                       ? 'border-[#d97757] ring-2 ring-[#d97757]/25'
                       : 'border-[#ece6dd]'
                   }`}
                 >
                   <div className="flex items-center gap-3 mb-3">
-                    <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-[#fae0cc] to-[#f9d5ba] flex items-center justify-center overflow-hidden flex-shrink-0 shadow-sm">
+                    <div className="w-10 h-10 rounded-box bg-gradient-to-br from-[#fae0cc] to-[#f9d5ba] flex items-center justify-center overflow-hidden flex-shrink-0 shadow-sm">
                       {post.author_avatar ? (
                         // 头像尺寸固定、来自 Supabase 存储，不值得为它引 next/image 的远程域名配置
                         // eslint-disable-next-line @next/next/no-img-element
@@ -513,7 +513,7 @@ export default function MomentsPage() {
                       )}
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium text-[#2b2620]">{post.author_name}</p>
+                      <p className="text-sm font-medium text-base-content">{post.author_name}</p>
                       <p className="text-[11px] text-[#b0a89e] mt-0.5">
                         {new Date(post.created_at).toLocaleString('zh-CN', {
                           year: 'numeric',
@@ -540,7 +540,7 @@ export default function MomentsPage() {
                         rows={3}
                         maxLength={editor.maxLength.moment}
                         autoFocus
-                        className="w-full rounded-xl border border-[#e8d0be] bg-[#fefcf9] px-3 py-2 text-sm text-[#4a423c] resize-none focus:outline-none focus:border-[#d97757] focus:ring-2 focus:ring-[#d97757]/10 transition"
+                        className="w-full rounded-box border border-[#e8d0be] bg-[#fefcf9] px-3 py-2 text-sm text-[#4a423c] resize-none focus:outline-none focus:border-[#d97757] focus:ring-2 focus:ring-[#d97757]/10 transition"
                       />
                       <div className="mt-2 flex items-center gap-3">
                         <button

@@ -123,7 +123,7 @@ export function UserBanSection({ adminId }: { adminId: string }) {
   if (adminId !== ADMIN_UUID) return null
 
   return (
-    <section className="rounded-2xl border border-[#f0e6dc] bg-white/80 p-4">
+    <section className="rounded-box border border-[#f0e6dc] bg-base-100/80 p-4">
       <h2 className="text-xs tracking-wider text-[#8a7a9a]">用户管理 · 停用账号</h2>
       <p className="mt-2 text-[11.5px] leading-relaxed text-[#8a7a9a]">
         停用是真的封禁（改 auth 里的 banned_until），被封的人登录不上、
@@ -142,12 +142,12 @@ export function UserBanSection({ adminId }: { adminId: string }) {
             if (e.key === 'Enter') void search()
           }}
           placeholder="按昵称或用户名搜"
-          className="min-w-0 flex-1 rounded-xl border border-[#f0e6dc] bg-[#fdfaf7] px-3 py-2 text-xs text-[#3a3229] placeholder:text-[#c3b3a5] focus:border-[#e0a184] focus:outline-none"
+          className="min-w-0 flex-1 rounded-box border border-[#f0e6dc] bg-[#fdfaf7] px-3 py-2 text-xs text-[#3a3229] placeholder:text-[#c3b3a5] focus:border-[#e0a184] focus:outline-none"
         />
         <button
           type="button"
           onClick={() => void search()}
-          className="rounded-xl bg-[#d97757] px-3 py-2 text-xs text-white transition hover:opacity-90"
+          className="rounded-box bg-[#d97757] px-3 py-2 text-xs text-white transition hover:opacity-90"
         >
           搜索
         </button>
@@ -176,7 +176,7 @@ export function UserBanSection({ adminId }: { adminId: string }) {
           {found.map((person) => (
             <li
               key={person.id}
-              className="rounded-xl border border-[#f4ece4] bg-[#fffdfb] px-3 py-2.5"
+              className="rounded-box border border-[#f4ece4] bg-[#fffdfb] px-3 py-2.5"
             >
               <div className="flex items-center justify-between gap-3">
                 <span className="min-w-0">

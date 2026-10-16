@@ -70,27 +70,27 @@ export default function ResetPasswordPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center px-4">
-      <div className="w-full max-w-sm rounded-2xl border border-[var(--accent-line)] bg-white/80 p-7 backdrop-blur shadow-sm">
-        <h1 className="font-serif-cn text-lg font-semibold text-[#2b2620]">设置新密码</h1>
+      <div className="w-full max-w-sm rounded-box border border-base-300 bg-base-100/80 p-7 backdrop-blur shadow-sm">
+        <h1 className="font-serif-cn text-lg font-semibold text-base-content">设置新密码</h1>
 
         {checking ? (
-          <p className="mt-6 font-serif-cn text-[11.5px] text-[var(--accent-muted)]">正在确认链接…</p>
+          <p className="mt-6 font-serif-cn text-[11.5px] text-base-content/60">正在确认链接…</p>
         ) : done ? (
-          <div className="mt-6 rounded-2xl border border-[var(--accent-line)] bg-[var(--accent-soft)] px-4 py-4">
+          <div className="mt-6 rounded-box border border-base-300 bg-primary/5 px-4 py-4">
             <p className="font-serif-cn text-[12px] leading-relaxed text-[#3a3229]">改好了。</p>
-            <p className="mt-1.5 font-serif-cn text-[11px] text-[var(--accent-muted)]">正在带你去登录…</p>
+            <p className="mt-1.5 font-serif-cn text-[11px] text-base-content/60">正在带你去登录…</p>
           </div>
         ) : !hasSession ? (
-          <div className="mt-6 rounded-2xl border border-[#f0d9d2] bg-[#fdf7f5] px-4 py-4">
+          <div className="mt-6 rounded-box border border-[#f0d9d2] bg-[#fdf7f5] px-4 py-4">
             <p className="font-serif-cn text-[12px] leading-relaxed text-[#7a4a3c]">
               这个链接已经失效了。
             </p>
-            <p className="mt-1.5 font-serif-cn text-[11px] leading-relaxed text-[var(--accent-muted)]">
+            <p className="mt-1.5 font-serif-cn text-[11px] leading-relaxed text-base-content/60">
               重置链接只能用一次，而且有时间限制。重新申请一封就好。
             </p>
             <Link
               href="/forgot-password"
-              className="mt-3 inline-block rounded-full bg-[var(--accent)] px-4 py-2 font-serif-cn text-[11.5px] text-white"
+              className="mt-3 inline-block rounded-full bg-primary px-4 py-2 font-serif-cn text-[11.5px] text-white"
             >
               重新申请
             </Link>
@@ -104,7 +104,7 @@ export default function ResetPasswordPage() {
               onChange={(e) => setPassword(e.target.value)}
               placeholder="新密码（至少 8 位，含字母和数字）"
               autoComplete="new-password"
-              className="w-full rounded-2xl border border-[var(--accent-line)] bg-[var(--accent-soft)] px-4 py-3 font-serif-cn text-[13px] text-[#2b2620] placeholder:text-[var(--accent-muted)] focus:border-[var(--accent)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/10"
+              className="w-full rounded-box border border-base-300 bg-primary/5 px-4 py-3 font-serif-cn text-[13px] text-base-content placeholder:text-base-content/60 focus:border-primary focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/10"
             />
             <input
               type="password"
@@ -113,13 +113,13 @@ export default function ResetPasswordPage() {
               onChange={(e) => setConfirm(e.target.value)}
               placeholder="再输一次"
               autoComplete="new-password"
-              className="w-full rounded-2xl border border-[var(--accent-line)] bg-[var(--accent-soft)] px-4 py-3 font-serif-cn text-[13px] text-[#2b2620] placeholder:text-[var(--accent-muted)] focus:border-[var(--accent)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/10"
+              className="w-full rounded-box border border-base-300 bg-primary/5 px-4 py-3 font-serif-cn text-[13px] text-base-content placeholder:text-base-content/60 focus:border-primary focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/10"
             />
             {message && <p className="text-[11px] text-red-500">{message}</p>}
             <button
               type="submit"
               disabled={loading || !password || !confirm}
-              className="w-full rounded-2xl bg-[var(--accent)] py-3 font-serif-cn text-[13px] text-white transition hover:shadow-sm disabled:opacity-50"
+              className="w-full rounded-box bg-primary py-3 font-serif-cn text-[13px] text-white transition hover:shadow-sm disabled:opacity-50"
             >
               {loading ? '保存中…' : '保存新密码'}
             </button>

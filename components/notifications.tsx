@@ -212,11 +212,11 @@ export function NotificationBell({
     <Link
       href="/me/notifications"
       title={missing ? '通知（还没开通）' : '通知'}
-      className={`relative inline-flex h-9 w-9 items-center justify-center rounded-full border border-[var(--accent-line)] bg-white/70 text-[var(--accent-muted)] transition hover:text-[var(--accent-deep)] ${className}`}
+      className={`relative inline-flex h-9 w-9 items-center justify-center rounded-full border border-base-300 bg-base-100/70 text-base-content/60 transition hover:text-[var(--accent-deep)] ${className}`}
     >
       <Icon name="bell" className="h-4 w-4" />
       {unread > 0 && (
-        <span className="absolute -right-0.5 -top-0.5 min-w-[16px] rounded-full bg-[var(--accent)] px-1 text-[11px] font-medium leading-4 text-white">
+        <span className="absolute -right-0.5 -top-0.5 min-w-[16px] rounded-full bg-primary px-1 text-[11px] font-medium leading-4 text-white">
           {unread > 99 ? '99+' : unread}
         </span>
       )}
@@ -231,7 +231,7 @@ export function NotificationsList({ userId }: { userId: string | null }) {
 
   if (missing) {
     return (
-      <div className="rounded-2xl border border-[var(--accent-line)] bg-white/80 px-4 py-3 text-[11px] leading-relaxed text-[var(--accent-muted)]">
+      <div className="rounded-box border border-base-300 bg-base-100/80 px-4 py-3 text-[11px] leading-relaxed text-base-content/60">
         <p>
           通知还没开通。需要在 Supabase 的 SQL Editor 里，执行{' '}
           <code>supabase-notifications.sql</code> 这个文件的
@@ -242,7 +242,7 @@ export function NotificationsList({ userId }: { userId: string | null }) {
           没跑也不影响别的功能，只是收不到提醒。
         </p>
         {errorText && (
-          <p className="mt-2.5 whitespace-pre-wrap rounded-xl bg-[var(--accent-soft)] px-3 py-2 text-[11.5px] text-[var(--accent-deep)]">
+          <p className="mt-2.5 whitespace-pre-wrap rounded-box bg-primary/5 px-3 py-2 text-[11.5px] text-[var(--accent-deep)]">
             数据库的原话：{errorText}
           </p>
         )}
@@ -253,7 +253,7 @@ export function NotificationsList({ userId }: { userId: string | null }) {
   return (
     <div className="space-y-3">
       <div className="flex items-center justify-between gap-3 px-1">
-        <p className="text-[11px] text-[var(--accent-muted)]">
+        <p className="text-[11px] text-base-content/60">
           {loading ? '读取中…' : unread > 0 ? `${unread} 条未读` : '都看过了'}
         </p>
         <div className="flex items-center gap-3">
@@ -261,7 +261,7 @@ export function NotificationsList({ userId }: { userId: string | null }) {
             <button
               type="button"
               onClick={() => void markAllRead()}
-              className="text-[11px] text-[var(--accent-muted)] transition hover:text-[var(--accent-deep)]"
+              className="text-[11px] text-base-content/60 transition hover:text-[var(--accent-deep)]"
             >
               全部已读
             </button>
@@ -279,8 +279,8 @@ export function NotificationsList({ userId }: { userId: string | null }) {
       </div>
 
       {!loading && items.length === 0 ? (
-        <div className="rounded-2xl border border-dashed border-[var(--accent-line)] bg-white/60 px-4 py-10 text-center">
-          <p className="text-xs text-[var(--accent-muted)]">还没有通知</p>
+        <div className="rounded-box border border-dashed border-base-300 bg-base-100/60 px-4 py-10 text-center">
+          <p className="text-xs text-base-content/60">还没有通知</p>
           <p className="mt-1 text-[11.5px] text-[var(--accent-light)]">
             有人提到你、回了你的信、处理了你的举报，都会出现在这里。
           </p>
@@ -290,14 +290,14 @@ export function NotificationsList({ userId }: { userId: string | null }) {
           {items.map((notice) => {
             const inner = (
               <>
-                <span className="mt-0.5 flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-[var(--accent-soft)]">
+                <span className="mt-0.5 flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-primary/5">
                   <Icon name={iconOf(notice.kind)} className="h-3.5 w-3.5 text-[var(--accent-deep)]" />
                 </span>
                 <span className="min-w-0 flex-1">
                   <span className="flex items-baseline justify-between gap-2">
                     <span
                       className={`min-w-0 truncate text-xs ${
-                        notice.read_at ? 'text-[var(--accent-muted)]' : 'font-medium text-[#2b2430]'
+                        notice.read_at ? 'text-base-content/60' : 'font-medium text-base-content'
                       }`}
                     >
                       {notice.title}
@@ -307,21 +307,21 @@ export function NotificationsList({ userId }: { userId: string | null }) {
                     </span>
                   </span>
                   {notice.body && (
-                    <span className="mt-1 line-clamp-2 block text-[11.5px] leading-relaxed text-[var(--accent-muted)]">
+                    <span className="mt-1 line-clamp-2 block text-[11.5px] leading-relaxed text-base-content/60">
                       {notice.body}
                     </span>
                   )}
                 </span>
                 {!notice.read_at && (
-                  <span className="mt-1.5 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-[var(--accent)]" />
+                  <span className="mt-1.5 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-primary" />
                 )}
               </>
             )
 
-            const rowClass = `flex items-start gap-3 rounded-2xl border px-4 py-3 transition ${
+            const rowClass = `flex items-start gap-3 rounded-box border px-4 py-3 transition ${
               notice.read_at
-                ? 'border-[var(--accent-line)] bg-white/60'
-                : 'border-[var(--accent-line)] bg-white/90 shadow-sm'
+                ? 'border-base-300 bg-base-100/60'
+                : 'border-base-300 bg-base-100/90 shadow-sm'
             }`
 
             // 有链接就整条可点；点的时候顺手标记已读

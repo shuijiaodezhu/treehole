@@ -13,7 +13,7 @@ export default function NotFound() {
       <div className="animate-fade-up w-full max-w-md text-center">
         {/* 一张飘走的信 */}
         <svg
-          className="animate-float mx-auto h-24 w-24 text-[var(--accent)]"
+          className="animate-float mx-auto h-24 w-24 text-primary"
           viewBox="0 0 64 64"
           fill="none"
           aria-hidden="true"
@@ -36,23 +36,23 @@ export default function NotFound() {
           />
         </svg>
 
-        <h1 className="font-serif-cn mt-6 text-2xl font-semibold tracking-wide text-[#2b2620]">
+        <h1 className="font-serif-cn mt-6 text-2xl font-semibold tracking-wide text-base-content">
           这封信寄丢了
         </h1>
-        <p className="font-serif-cn mt-2 text-sm leading-relaxed text-[var(--accent-muted)]">
+        <p className="font-serif-cn mt-2 text-sm leading-relaxed text-base-content/60">
           你要找的页面不在了，或者地址写错了一个字。
         </p>
 
         <div className="mt-7 flex flex-wrap items-center justify-center gap-3">
           <Link
             href="/"
-            className="rounded-xl bg-[var(--accent)] px-5 py-2.5 text-sm font-medium text-white transition hover:shadow-sm"
+            className="rounded-box bg-primary px-5 py-2.5 text-sm font-medium text-white transition hover:shadow-sm"
           >
             回首页
           </Link>
           <Link
             href="/p"
-            className="rounded-xl border border-[var(--accent-line)] px-5 py-2.5 text-sm text-[var(--accent-deep)] transition hover:bg-[var(--accent-soft)]"
+            className="rounded-box border border-base-300 px-5 py-2.5 text-sm text-[var(--accent-deep)] transition hover:bg-primary/5"
           >
             看看条款与说明
           </Link>

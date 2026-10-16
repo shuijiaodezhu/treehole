@@ -156,14 +156,14 @@ function UserShowcase() {
           <button
             type="button"
             onClick={() => router.back()}
-            className="text-sm text-[var(--accent-muted)] transition hover:text-[var(--accent-deep)]"
+            className="text-sm text-base-content/60 transition hover:text-[var(--accent-deep)]"
           >
             ← 返回
           </button>
           {isMe && (
             <Link
               href="/me"
-              className="text-xs text-[var(--accent-muted)] transition hover:text-[var(--accent-deep)]"
+              className="text-xs text-base-content/60 transition hover:text-[var(--accent-deep)]"
             >
               这是我 · 去改资料
             </Link>
@@ -172,9 +172,9 @@ function UserShowcase() {
 
         <main className="space-y-4">
           {/* 资料 */}
-          <section className="rounded-2xl border border-[var(--accent-line)] bg-white/80 p-6 backdrop-blur shadow-sm">
+          <section className="rounded-box border border-base-300 bg-base-100/80 p-6 backdrop-blur shadow-sm">
             <div className="flex items-start gap-4">
-              <div className="flex h-16 w-16 flex-shrink-0 items-center justify-center overflow-hidden rounded-2xl bg-[var(--accent-soft)] text-2xl shadow-sm">
+              <div className="flex h-16 w-16 flex-shrink-0 items-center justify-center overflow-hidden rounded-box bg-primary/5 text-2xl shadow-sm">
                 {profile?.avatar_url ? (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img src={profile.avatar_url} alt="" className="h-full w-full object-cover" />
@@ -185,7 +185,7 @@ function UserShowcase() {
 
               <div className="min-w-0 flex-1">
                 <div className="flex min-w-0 items-center gap-2">
-                  <h1 className="min-w-0 truncate text-xl font-semibold text-[#2b2430]">{name}</h1>
+                  <h1 className="min-w-0 truncate text-xl font-semibold text-base-content">{name}</h1>
                   <StatusLabel text={status} />
                 </div>
 
@@ -195,7 +195,7 @@ function UserShowcase() {
               </div>
             </div>
 
-            <div className="mt-4 flex flex-wrap gap-3 text-[11px] text-[var(--accent-muted)]">
+            <div className="mt-4 flex flex-wrap gap-3 text-[11px] text-base-content/60">
               {profile?.location && <span>{profile.location}</span>}
               {profile?.birthday && <span>生日 {profile.birthday}</span>}
               {profile?.created_at && (
@@ -215,19 +215,19 @@ function UserShowcase() {
               {isFriend ? (
                 <Link
                   href={`/friends/chat/${targetId}`}
-                  className="rounded-xl bg-[var(--accent)] px-5 py-2 text-sm font-medium text-white transition-all hover:shadow-sm"
+                  className="rounded-box bg-primary px-5 py-2 text-sm font-medium text-white transition-all hover:shadow-sm"
                 >
                   去小屋聊聊
                 </Link>
               ) : (
-                <span className="rounded-xl border border-[var(--accent-line)] px-5 py-2 text-sm text-[var(--accent-muted)]">
+                <span className="rounded-box border border-base-300 px-5 py-2 text-sm text-base-content/60">
                   还不是好友
                 </span>
               )}
               {!isMe && (
                 <Link
                   href="/friends"
-                  className="text-xs text-[var(--accent-muted)] transition hover:text-[var(--accent-deep)]"
+                  className="text-xs text-base-content/60 transition hover:text-[var(--accent-deep)]"
                 >
                   去小屋
                 </Link>
@@ -236,13 +236,13 @@ function UserShowcase() {
           </section>
 
           {/* 公开的帖子 */}
-          <section className="rounded-2xl border border-[var(--accent-line)] bg-white/80 p-6 backdrop-blur">
-            <h2 className="text-sm font-semibold text-[#2b2430]">
+          <section className="rounded-box border border-base-300 bg-base-100/80 p-6 backdrop-blur">
+            <h2 className="text-sm font-semibold text-base-content">
               {isMe ? '我在院子里说过的' : `TA 在院子里说过的`}
             </h2>
 
             {posts.length === 0 ? (
-              <p className="mt-3 text-[11px] leading-relaxed text-[var(--accent-muted)]">
+              <p className="mt-3 text-[11px] leading-relaxed text-base-content/60">
                 {missing
                   ? '展示页还没开通：先在 Supabase 里执行 supabase-profile-page.sql。'
                   : isMe
@@ -271,7 +271,7 @@ function UserShowcase() {
             )}
 
             <p className="mt-4 text-[11px] leading-relaxed text-[var(--accent-light)]">
-              只显示公开的帖子。<span className="text-[var(--accent-muted)]">匿名说的不会出现在这里。</span>
+              只显示公开的帖子。<span className="text-base-content/60">匿名说的不会出现在这里。</span>
             </p>
           </section>
         </main>
@@ -283,7 +283,7 @@ function UserShowcase() {
 export default function UserShowcasePage() {
   // useParams 需要包一层 Suspense（构建时会预渲染这个路由）
   return (
-    <Suspense fallback={<div className="min-h-screen bg-[var(--accent-soft)]" />}>
+    <Suspense fallback={<div className="min-h-screen bg-primary/5" />}>
       <UserShowcase />
     </Suspense>
   )

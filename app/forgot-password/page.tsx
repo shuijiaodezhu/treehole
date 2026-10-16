@@ -61,18 +61,18 @@ export default function ForgotPasswordPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center px-4">
-      <div className="w-full max-w-sm rounded-2xl border border-[var(--accent-line)] bg-white/80 p-7 backdrop-blur shadow-sm">
-        <h1 className="font-serif-cn text-lg font-semibold text-[#2b2620]">找回密码</h1>
-        <p className="mt-1.5 font-serif-cn text-[11.5px] leading-relaxed text-[var(--accent-muted)]">
+      <div className="w-full max-w-sm rounded-box border border-base-300 bg-base-100/80 p-7 backdrop-blur shadow-sm">
+        <h1 className="font-serif-cn text-lg font-semibold text-base-content">找回密码</h1>
+        <p className="mt-1.5 font-serif-cn text-[11.5px] leading-relaxed text-base-content/60">
           填注册用的邮箱，我们把重置链接寄过去。
         </p>
 
         {sent ? (
-          <div className="mt-6 rounded-2xl border border-[var(--accent-line)] bg-[var(--accent-soft)] px-4 py-4">
+          <div className="mt-6 rounded-box border border-base-300 bg-primary/5 px-4 py-4">
             <p className="font-serif-cn text-[12px] leading-relaxed text-[#3a3229]">
               重置链接已经发出去了（如果这个邮箱注册过的话）。
             </p>
-            <p className="mt-2 font-serif-cn text-[11px] leading-relaxed text-[var(--accent-muted)]">
+            <p className="mt-2 font-serif-cn text-[11px] leading-relaxed text-base-content/60">
               去收件箱点开链接，就能设新密码。
               <br />
               没收到的话，翻一下垃圾邮件，或者过一会儿再试一次。
@@ -87,13 +87,13 @@ export default function ForgotPasswordPage() {
               onChange={(e) => setEmail(e.target.value)}
               placeholder="你的邮箱"
               autoComplete="email"
-              className="w-full rounded-2xl border border-[var(--accent-line)] bg-[var(--accent-soft)] px-4 py-3 font-serif-cn text-[13px] text-[#2b2620] placeholder:text-[var(--accent-muted)] focus:border-[var(--accent)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/10"
+              className="w-full rounded-box border border-base-300 bg-primary/5 px-4 py-3 font-serif-cn text-[13px] text-base-content placeholder:text-base-content/60 focus:border-primary focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/10"
             />
             {message && <p className="text-[11px] text-red-500">{message}</p>}
             <button
               type="submit"
               disabled={loading || !email.trim()}
-              className="w-full rounded-2xl bg-[var(--accent)] py-3 font-serif-cn text-[13px] text-white transition hover:shadow-sm disabled:opacity-50"
+              className="w-full rounded-box bg-primary py-3 font-serif-cn text-[13px] text-white transition hover:shadow-sm disabled:opacity-50"
             >
               {loading ? '发送中…' : '寄出重置链接'}
             </button>
@@ -104,7 +104,7 @@ export default function ForgotPasswordPage() {
           <Link href="/login" className="text-[var(--accent-deep)] hover:underline">
             回登录
           </Link>
-          <Link href="/register" className="text-[var(--accent-muted)] hover:text-[var(--accent-deep)]">
+          <Link href="/register" className="text-base-content/60 hover:text-[var(--accent-deep)]">
             还没有账号
           </Link>
         </div>

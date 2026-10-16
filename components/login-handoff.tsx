@@ -77,7 +77,7 @@ export function AppLoading() {
   return (
     <div className="flex min-h-screen flex-col items-center justify-center gap-5 bg-[var(--paper)]">
       <svg
-        className="animate-float h-14 w-14 text-[var(--accent)]"
+        className="animate-float h-14 w-14 text-primary"
         viewBox="0 0 24 24"
         fill="none"
         aria-hidden="true"
@@ -100,7 +100,7 @@ export function AppLoading() {
         <circle cx="13" cy="12.8" r="1.25" fill="currentColor" />
       </svg>
 
-      <p className="font-serif-cn text-xs tracking-wide text-[var(--accent-muted)]">正在打开…</p>
+      <p className="font-serif-cn text-xs tracking-wide text-base-content/60">正在打开…</p>
     </div>
   )
 }

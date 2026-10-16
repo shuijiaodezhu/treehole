@@ -209,13 +209,13 @@ export function AdminSitePages() {
   }
 
   return (
-    <section className="rounded-2xl border border-[#e0d4e8] bg-white/80 p-6 backdrop-blur shadow-sm">
+    <section className="rounded-box border border-[#e0d4e8] bg-base-100/80 p-6 backdrop-blur shadow-sm">
       <div className="mb-5 flex items-center gap-3">
         <div className="flex h-9 w-9 items-center justify-center rounded-full bg-[#f0e6f8]">
           <Icon name="file" className="h-4 w-4 text-[#8a7aaa]" />
         </div>
         <div className="flex-1">
-          <h2 className="text-sm font-semibold text-[#2b2430]">站点页面</h2>
+          <h2 className="text-sm font-semibold text-base-content">站点页面</h2>
           <p className="mt-0.5 text-[11px] text-[#b8a8c8]">
             公约、隐私、协议这些，改完点保存就生效，不用重新部署
           </p>
@@ -224,19 +224,19 @@ export function AdminSitePages() {
       </div>
 
       {message && message.includes('\n') && (
-        <p className="mb-4 whitespace-pre-line rounded-xl border border-red-100 bg-red-50 px-4 py-3 text-[11px] leading-relaxed text-red-600">
+        <p className="mb-4 whitespace-pre-line rounded-box border border-red-100 bg-red-50 px-4 py-3 text-[11px] leading-relaxed text-red-600">
           {message}
         </p>
       )}
 
       {error && (
-        <p className="mb-4 rounded-xl border border-amber-100 bg-amber-50 px-4 py-3 text-xs text-amber-700">
+        <p className="mb-4 rounded-box border border-amber-100 bg-amber-50 px-4 py-3 text-xs text-amber-700">
           {error}
         </p>
       )}
 
       {missingCount > 0 && !error && (
-        <div className="mb-4 flex flex-wrap items-center gap-3 rounded-xl border border-[#e0d4e8] bg-[#faf5ff] px-4 py-3">
+        <div className="mb-4 flex flex-wrap items-center gap-3 rounded-box border border-[#e0d4e8] bg-[#faf5ff] px-4 py-3">
           <p className="flex-1 text-[11px] text-[#7a5a9a]">
             有 {missingCount} 页还没存进数据库，前台现在显示的是内置初稿。
             写入之后就能在这里随意改。
@@ -245,7 +245,7 @@ export function AdminSitePages() {
             type="button"
             disabled={seeding}
             onClick={() => void handleSeed()}
-            className="rounded-xl bg-gradient-to-r from-[#b89ac8] to-[#a88ab8] px-4 py-1.5 text-xs text-white transition hover:shadow-sm disabled:opacity-50"
+            className="rounded-box bg-gradient-to-r from-[#b89ac8] to-[#a88ab8] px-4 py-1.5 text-xs text-white transition hover:shadow-sm disabled:opacity-50"
           >
             {seeding ? '写入中…' : '写入初稿'}
           </button>
@@ -266,7 +266,7 @@ export function AdminSitePages() {
                   if (dirty && !window.confirm('这一页还没保存，切走会丢掉改动。继续？')) return
                   setActiveSlug(r.slug)
                 }}
-                className={`flex items-center gap-1.5 rounded-xl px-3 py-2 text-left text-xs transition ${
+                className={`flex items-center gap-1.5 rounded-box px-3 py-2 text-left text-xs transition ${
                   r.slug === active?.slug
                     ? 'bg-[#f0e6f8] font-medium text-[#7a5a9a]'
                     : 'text-[#8a7a9a] hover:bg-[#faf5ff]'
@@ -282,7 +282,7 @@ export function AdminSitePages() {
           {active && (
             <div className="min-w-0">
               <div className="mb-2 flex flex-wrap items-center gap-2">
-                <span className="text-xs font-medium text-[#2b2430]">{active.title}</span>
+                <span className="text-xs font-medium text-base-content">{active.title}</span>
                 <a
                   href={`/p/${active.slug}`}
                   target="_blank"
@@ -301,7 +301,7 @@ export function AdminSitePages() {
                 onChange={(e) => setDraft(e.target.value)}
                 rows={18}
                 spellCheck={false}
-                className="w-full rounded-2xl border border-[#e0d4e8] bg-[#fcf8ff] px-4 py-3 font-mono text-[12px] leading-relaxed text-[#2b2430] focus:outline-none focus:border-[#a88ab8] focus:ring-2 focus:ring-[#a88ab8]/10 transition"
+                className="w-full rounded-box border border-[#e0d4e8] bg-[#fcf8ff] px-4 py-3 font-mono text-[12px] leading-relaxed text-base-content focus:outline-none focus:border-[#a88ab8] focus:ring-2 focus:ring-[#a88ab8]/10 transition"
               />
 
               <div className="mt-3 flex flex-wrap items-center gap-3">
@@ -309,7 +309,7 @@ export function AdminSitePages() {
                   type="button"
                   disabled={saving || !dirty}
                   onClick={() => void handleSave()}
-                  className="rounded-xl bg-gradient-to-r from-[#b89ac8] to-[#a88ab8] px-5 py-2 text-sm text-white transition hover:shadow-sm disabled:opacity-50"
+                  className="rounded-box bg-gradient-to-r from-[#b89ac8] to-[#a88ab8] px-5 py-2 text-sm text-white transition hover:shadow-sm disabled:opacity-50"
                 >
                   {saving ? '保存中…' : dirty ? '保存' : '没有改动'}
                 </button>
@@ -317,7 +317,7 @@ export function AdminSitePages() {
                   type="button"
                   disabled={!dirty}
                   onClick={() => setDraft(originalBody)}
-                  className="rounded-xl border border-[#e0d4e8] px-4 py-2 text-xs text-[#8a7a9a] transition hover:bg-[#faf5ff] disabled:opacity-40"
+                  className="rounded-box border border-[#e0d4e8] px-4 py-2 text-xs text-[#8a7a9a] transition hover:bg-[#faf5ff] disabled:opacity-40"
                 >
                   放弃改动
                 </button>

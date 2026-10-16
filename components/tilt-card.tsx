@@ -93,7 +93,7 @@ export function TiltCard({
         {/* 跟随指针的柔光层：它让卡片"有厚度" */}
         <motion.span
           aria-hidden="true"
-          className="pointer-events-none absolute inset-0 rounded-2xl opacity-0 transition-opacity duration-300"
+          className="pointer-events-none absolute inset-0 rounded-box opacity-0 transition-opacity duration-300"
           style={{ backgroundImage: glow, opacity: hovering ? 1 : 0 }}
         />
         {children}

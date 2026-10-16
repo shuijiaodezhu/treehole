@@ -75,11 +75,11 @@ export function ShowcaseSettingsSection({ userId }: { userId: string | null }) {
   }
 
   return (
-    <section className="rounded-2xl border border-[var(--accent-line)] bg-white/80 p-4">
+    <section className="rounded-box border border-base-300 bg-base-100/80 p-4">
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
-          <p className="text-xs font-medium text-[#2b2430]">展示页</p>
-          <p className="mt-1 text-[11.5px] leading-relaxed text-[var(--accent-muted)]">
+          <p className="text-xs font-medium text-base-content">展示页</p>
+          <p className="mt-1 text-[11.5px] leading-relaxed text-base-content/60">
             每个朋友都有一个展示页：别人点你的头像能看到你的头像、昵称、签名、状态。
             内容就是下面资料里填的那些。
           </p>
@@ -87,7 +87,7 @@ export function ShowcaseSettingsSection({ userId }: { userId: string | null }) {
         {userId && (
           <Link
             href={`/u/${userId}`}
-            className="flex flex-shrink-0 items-center gap-1 rounded-xl border border-[var(--accent-line)] px-3 py-1.5 text-[11px] text-[var(--accent-muted)] transition hover:border-[var(--accent-light)] hover:text-[var(--accent-deep)]"
+            className="flex flex-shrink-0 items-center gap-1 rounded-box border border-base-300 px-3 py-1.5 text-[11px] text-base-content/60 transition hover:border-[var(--accent-light)] hover:text-[var(--accent-deep)]"
           >
             <Icon name="user" className="h-3 w-3" />
             看看我的
@@ -104,10 +104,10 @@ export function ShowcaseSettingsSection({ userId }: { userId: string | null }) {
           className="mt-0.5 h-4 w-4 accent-[var(--accent)] disabled:opacity-50"
         />
         <span className="min-w-0">
-          <span className="block text-xs font-medium text-[#2b2430]">
+          <span className="block text-xs font-medium text-base-content">
             在展示页列出我公开的帖子
           </span>
-          <span className="mt-0.5 block text-[11.5px] leading-relaxed text-[var(--accent-muted)]">
+          <span className="mt-0.5 block text-[11.5px] leading-relaxed text-base-content/60">
             只列院子里公开说过的话（最多 5 条）。
             <span className="text-[var(--accent-deep)]">匿名说的永远不会出现在展示页。</span>
           </span>
@@ -115,12 +115,12 @@ export function ShowcaseSettingsSection({ userId }: { userId: string | null }) {
       </label>
 
       {missing && (
-        <p className="mt-3 rounded-xl border border-[var(--accent-line)] bg-[var(--accent-soft)] px-3 py-2 text-[11.5px] leading-relaxed text-[var(--accent-muted)]">
+        <p className="mt-3 rounded-box border border-base-300 bg-primary/5 px-3 py-2 text-[11.5px] leading-relaxed text-base-content/60">
           展示页还没开通：先在 Supabase 里执行 <code>supabase-profile-page.sql</code>。
           （没跑也能看展示页，只是少那个开关）
         </p>
       )}
-      {hint && <p className="mt-2 text-[11.5px] text-[var(--accent-muted)]">{hint}</p>}
+      {hint && <p className="mt-2 text-[11.5px] text-base-content/60">{hint}</p>}
     </section>
   )
 }

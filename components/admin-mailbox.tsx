@@ -230,13 +230,13 @@ export function AdminMailbox({ adminId }: { adminId: string }) {
   const unreadTotal = useMemo(() => rows.filter((r) => r.unread).length, [rows])
 
   return (
-    <section className="rounded-2xl border border-[#e0d4e8] bg-white/80 p-6 backdrop-blur shadow-sm">
+    <section className="rounded-box border border-[#e0d4e8] bg-base-100/80 p-6 backdrop-blur shadow-sm">
       <div className="mb-5 flex items-start gap-3">
         <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full bg-[#f0e6f8]">
           <Icon name="mail" className="h-4 w-4 text-[#8a7aaa]" />
         </div>
         <div className="min-w-0 flex-1">
-          <h2 className="flex items-baseline gap-2 text-sm font-semibold text-[#2b2430]">
+          <h2 className="flex items-baseline gap-2 text-sm font-semibold text-base-content">
             冬日信箱
             {unreadTotal > 0 && (
               <span className="rounded-full bg-[#a88ab8] px-2 py-0.5 text-[11px] font-normal text-white">
@@ -257,7 +257,7 @@ export function AdminMailbox({ adminId }: { adminId: string }) {
         <button
           type="button"
           onClick={() => void load()}
-          className="inline-flex items-center gap-1 rounded-xl border border-[#e0d4e8] bg-white px-3 py-1.5 text-xs text-[#8a7aaa] transition hover:bg-[#faf5ff]"
+          className="inline-flex items-center gap-1 rounded-box border border-[#e0d4e8] bg-base-100 px-3 py-1.5 text-xs text-[#8a7aaa] transition hover:bg-[#faf5ff]"
         >
           <Icon name="refresh" className="h-3.5 w-3.5" />
           刷新
@@ -270,7 +270,7 @@ export function AdminMailbox({ adminId }: { adminId: string }) {
         </div>
       ) : (
         error && (
-          <p className="mb-4 rounded-xl border border-red-100 bg-red-50 px-4 py-3 text-xs text-red-600">{error}</p>
+          <p className="mb-4 rounded-box border border-red-100 bg-red-50 px-4 py-3 text-xs text-red-600">{error}</p>
         )
       )}
 
@@ -289,12 +289,12 @@ export function AdminMailbox({ adminId }: { adminId: string }) {
                 key={r.threadUserId}
                 type="button"
                 onClick={() => void openThread(r)}
-                className={`w-full rounded-xl px-3 py-2.5 text-left transition ${
+                className={`w-full rounded-box px-3 py-2.5 text-left transition ${
                   active?.threadUserId === r.threadUserId ? 'bg-[#f0e6f8]' : 'hover:bg-[#faf5ff]'
                 }`}
               >
                 <span className="flex items-center gap-2">
-                  <span className="truncate text-xs font-medium text-[#2b2430]">{r.label}</span>
+                  <span className="truncate text-xs font-medium text-base-content">{r.label}</span>
                   {r.unread && <span className="h-1.5 w-1.5 flex-shrink-0 rounded-full bg-[#a88ab8]" />}
                   <span className="ml-auto flex-shrink-0 text-[11px] text-[#b8a8c8]">{stamp(r.lastAt)}</span>
                 </span>
@@ -307,13 +307,13 @@ export function AdminMailbox({ adminId }: { adminId: string }) {
           </nav>
 
           {/* 读信 / 回信 */}
-          <div className="flex min-h-[320px] min-w-0 flex-col rounded-2xl border border-[#e0d4e8] bg-[#fcf8ff]">
+          <div className="flex min-h-[320px] min-w-0 flex-col rounded-box border border-[#e0d4e8] bg-[#fcf8ff]">
             {!active ? (
               <p className="m-auto py-10 text-center text-xs text-[#b8a8c8]">左边选一个人，看看他写了什么</p>
             ) : (
               <>
                 <div className="flex flex-wrap items-center gap-x-2 gap-y-1 border-b border-[#ece4f4] px-4 py-3">
-                  <span className="text-xs font-medium text-[#2b2430]">{active.label}</span>
+                  <span className="text-xs font-medium text-base-content">{active.label}</span>
                   <span className="text-[11px] text-[#b8a8c8]">写来的</span>
                   <span className="ml-auto text-[11px] text-[#c8b8d8]">只有你和对方看得到</span>
                   {message && <span className="w-full text-[11px] text-[#8a7aaa]">{message}</span>}
@@ -330,10 +330,10 @@ export function AdminMailbox({ adminId }: { adminId: string }) {
                       return (
                         <div key={m.id} className={`flex ${mine ? 'justify-end' : 'justify-start'}`}>
                           <div
-                            className={`max-w-[78%] rounded-2xl px-3.5 py-2.5 font-serif-cn text-[12.5px] leading-relaxed ${
+                            className={`max-w-[78%] rounded-box px-3.5 py-2.5 font-serif-cn text-[12.5px] leading-relaxed ${
                               mine
                                 ? 'bg-gradient-to-r from-[#b89ac8] to-[#a88ab8] text-white'
-                                : 'border border-[#ece4f4] bg-white text-[#3a3229]'
+                                : 'border border-[#ece4f4] bg-base-100 text-[#3a3229]'
                             }`}
                           >
                             <p className="whitespace-pre-wrap break-words">{m.content}</p>
@@ -361,7 +361,7 @@ export function AdminMailbox({ adminId }: { adminId: string }) {
                       rows={2}
                       maxLength={500}
                       placeholder={`回 ${active.label} 一封…`}
-                      className="min-w-0 flex-1 resize-none rounded-2xl border border-[#e0d4e8] bg-white px-3.5 py-2.5 font-serif-cn text-[12.5px] text-[#2b2430] focus:border-[#a88ab8] focus:outline-none"
+                      className="min-w-0 flex-1 resize-none rounded-box border border-[#e0d4e8] bg-base-100 px-3.5 py-2.5 font-serif-cn text-[12.5px] text-base-content focus:border-[#a88ab8] focus:outline-none"
                     />
                     <EmojiPicker onPick={(emoji) => setDraft((cur) => cur + emoji)} align="right" />
                     <button

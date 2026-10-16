@@ -109,11 +109,11 @@ export function PageDecor() {
       className="pointer-events-none absolute inset-0 z-0 hidden select-none lg:block"
     >
       {/* 纸边：离屏幕边一点点的一圈细虚线 */}
-      <div className="absolute inset-4 rounded-[30px] border border-dashed border-[var(--accent-line)]" />
+      <div className="absolute inset-4 rounded-[30px] border border-dashed border-base-300" />
 
       {/* 两条竖向虚线：像信纸的边线 */}
-      <span className="absolute left-4 top-[34vh] h-32 w-px border-l border-dashed border-[var(--accent-line)]" />
-      <span className="absolute right-4 top-[34vh] h-32 w-px border-l border-dashed border-[var(--accent-line)]" />
+      <span className="absolute left-4 top-[34vh] h-32 w-px border-l border-dashed border-base-300" />
+      <span className="absolute right-4 top-[34vh] h-32 w-px border-l border-dashed border-base-300" />
 
       {/* 左下：当前页面的图案（首页没有） */}
       {page !== 'home' && (

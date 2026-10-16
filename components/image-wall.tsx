@@ -55,7 +55,7 @@ export function ImageWall({
               <button
                 type="button"
                 onClick={() => setPreview(url)}
-                className="block w-full overflow-hidden rounded-xl border border-[var(--accent-line)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/30"
+                className="block w-full overflow-hidden rounded-box border border-base-300 focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/30"
                 aria-label="查看大图"
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -80,7 +80,7 @@ export function ImageWall({
                 title={saved ? '取消收藏这张图' : '收藏这张图'}
                 className={`absolute right-1.5 top-1.5 flex h-7 w-7 items-center justify-center rounded-full backdrop-blur transition disabled:opacity-50 ${
                   saved
-                    ? 'bg-white/90 text-[var(--accent)]'
+                    ? 'bg-base-100/90 text-primary'
                     : 'bg-black/35 text-white opacity-0 group-hover:opacity-100 focus:opacity-100'
                 }`}
               >
@@ -107,8 +107,8 @@ export function ImageWall({
               }}
               className={`flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs transition disabled:opacity-50 ${
                 favorites.isFavorited('image', preview)
-                  ? 'bg-[var(--accent)] text-white'
-                  : 'bg-white/15 text-white hover:bg-white/25'
+                  ? 'bg-primary text-white'
+                  : 'bg-base-100/15 text-white hover:bg-base-100/25'
               }`}
             >
               <Icon
@@ -122,7 +122,7 @@ export function ImageWall({
               target="_blank"
               rel="noopener noreferrer"
               onClick={(e) => e.stopPropagation()}
-              className="flex items-center gap-1.5 rounded-full bg-white/15 px-3 py-1.5 text-xs text-white transition hover:bg-white/25"
+              className="flex items-center gap-1.5 rounded-full bg-base-100/15 px-3 py-1.5 text-xs text-white transition hover:bg-base-100/25"
             >
               <Icon name="arrow" className="h-3.5 w-3.5" />
               原图
@@ -131,7 +131,7 @@ export function ImageWall({
               type="button"
               onClick={() => setPreview(null)}
               aria-label="关闭"
-              className="flex h-7 w-7 items-center justify-center rounded-full bg-white/15 text-white transition hover:bg-white/25"
+              className="flex h-7 w-7 items-center justify-center rounded-full bg-base-100/15 text-white transition hover:bg-base-100/25"
             >
               <Icon name="x" className="h-3.5 w-3.5" />
             </button>
@@ -142,7 +142,7 @@ export function ImageWall({
             src={preview}
             alt=""
             onClick={(e) => e.stopPropagation()}
-            className="max-h-[75vh] max-w-full rounded-2xl object-contain shadow-2xl"
+            className="max-h-[75vh] max-w-full rounded-box object-contain shadow-2xl"
           />
         </div>
       )}

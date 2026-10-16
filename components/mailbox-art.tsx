@@ -153,8 +153,8 @@ export function MailboxArt({ onOpen }: { onOpen: () => void }) {
         </g>
       </svg>
 
-      <span className="mt-4 block font-serif-cn text-sm font-semibold text-[#2b2620]">冬日信箱</span>
-      <span className="mt-1.5 block font-serif-cn text-[11.5px] leading-relaxed text-[var(--accent-muted)]">
+      <span className="mt-4 block font-serif-cn text-sm font-semibold text-base-content">冬日信箱</span>
+      <span className="mt-1.5 block font-serif-cn text-[11.5px] leading-relaxed text-base-content/60">
         把冬天的心事，
         <br />
         寄给会回信的人。

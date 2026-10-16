@@ -201,15 +201,15 @@ function ChatInner() {
   }
 
   return (
-    <div className="min-h-screen bg-[var(--accent-soft)] relative" style={pageAccentVars('friends')}>
+    <div className="min-h-screen bg-primary/5 relative" style={pageAccentVars('friends')}>
       {/* 背景光晕 */}
 
       {/* 顶部 */}
-      <header className="fixed top-0 left-0 right-0 z-20 border-b border-[var(--accent-line)] bg-white/95 backdrop-blur-lg shadow-sm">
+      <header className="fixed top-0 left-0 right-0 z-20 border-b border-base-300 bg-base-100/95 backdrop-blur-lg shadow-sm">
         <div className="max-w-xl mx-auto px-5 py-4 flex items-center gap-3">
           <Link
             href="/friends"
-            className="text-[var(--accent-muted)] hover:text-[var(--accent-deep)] transition p-1.5 rounded-lg hover:bg-[var(--accent-soft)]"
+            className="text-base-content/60 hover:text-[var(--accent-deep)] transition p-1.5 rounded-lg hover:bg-primary/5"
           >
             <IconArrow className="w-5 h-5" />
           </Link>
@@ -225,7 +225,7 @@ function ChatInner() {
                 <span className="text-sm text-[var(--accent-deep)] font-semibold">{friendName[0]}</span>
               )}
             </div>
-            <h1 className="min-w-0 truncate text-sm font-semibold text-[#2b2620]">{friendName}</h1>
+            <h1 className="min-w-0 truncate text-sm font-semibold text-base-content">{friendName}</h1>
           </Link>
           {friendStatus && <StatusLabel text={friendStatus} />}
           {friendTyping && (
@@ -240,13 +240,13 @@ function ChatInner() {
         <div className="max-w-xl mx-auto space-y-3">
           {messages.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-20 text-center">
-              <div className="w-16 h-16 rounded-full bg-[var(--accent-soft)] flex items-center justify-center mb-4">
-                <svg className="w-7 h-7 text-[var(--accent)]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+              <div className="w-16 h-16 rounded-full bg-primary/5 flex items-center justify-center mb-4">
+                <svg className="w-7 h-7 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
                 </svg>
               </div>
-              <p className="text-sm text-[var(--accent-muted)]">还没有消息</p>
-              <p className="text-xs text-[var(--accent-muted)] mt-1.5">说点什么吧</p>
+              <p className="text-sm text-base-content/60">还没有消息</p>
+              <p className="text-xs text-base-content/60 mt-1.5">说点什么吧</p>
             </div>
           ) : (
             <ChatMessages messages={messages} meId={meId} friendName={friendName} bottomRef={bottomRef} />
@@ -255,7 +255,7 @@ function ChatInner() {
       </main>
 
       {/* 底部 */}
-      <footer className="fixed bottom-0 left-0 right-0 z-20 border-t border-[var(--accent-line)] bg-white/95 backdrop-blur-lg shadow-sm">
+      <footer className="fixed bottom-0 left-0 right-0 z-20 border-t border-base-300 bg-base-100/95 backdrop-blur-lg shadow-sm">
         <form onSubmit={handleSend} className="max-w-xl mx-auto px-5 py-4 flex items-center gap-2">
           <input
             ref={inputRef}
@@ -266,14 +266,14 @@ function ChatInner() {
               reportTyping()
             }}
             placeholder="说点什么... 也可以发个表情"
-            className="flex-1 px-4 py-2.5 rounded-full border border-[var(--accent-line)] bg-[var(--accent-soft)] text-sm text-[#2b2620] focus:outline-none focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent)]/10 transition placeholder:text-[var(--accent-muted)]"
+            className="flex-1 px-4 py-2.5 rounded-full border border-base-300 bg-primary/5 text-sm text-base-content focus:outline-none focus:border-primary focus:ring-2 focus:ring-[var(--accent)]/10 transition placeholder:text-base-content/60"
             maxLength={500}
           />
           <EmojiPicker onPick={insertEmoji} align="right" size="md" />
           <button
             type="submit"
             disabled={sending || !content.trim()}
-            className="w-11 h-11 rounded-full bg-[var(--accent)] text-white flex items-center justify-center hover:shadow-sm transition-all disabled:opacity-50 disabled:cursor-not-allowed flex-shrink-0"
+            className="w-11 h-11 rounded-full bg-primary text-white flex items-center justify-center hover:shadow-sm transition-all disabled:opacity-50 disabled:cursor-not-allowed flex-shrink-0"
           >
             <IconSend className="w-4 h-4" />
           </button>

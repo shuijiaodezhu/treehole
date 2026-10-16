@@ -121,14 +121,14 @@ export function EmptyState({
       />
       <p className={`font-serif-cn mt-4 ${compact ? 'text-xs' : 'text-sm'} text-[#5a4a3a]`}>{title}</p>
       {hint && (
-        <p className="font-serif-cn mt-1.5 max-w-xs text-[11px] leading-relaxed text-[var(--accent-muted)]">
+        <p className="font-serif-cn mt-1.5 max-w-xs text-[11px] leading-relaxed text-base-content/60">
           {hint}
         </p>
       )}
       {action && (
         <Link
           href={action.href}
-          className="mt-4 rounded-xl bg-[var(--accent-soft)] px-4 py-2 text-xs text-[var(--accent-deep)] transition hover:bg-[var(--accent-line)]"
+          className="mt-4 rounded-box bg-primary/5 px-4 py-2 text-xs text-[var(--accent-deep)] transition hover:bg-[var(--accent-line)]"
         >
           {action.label}
         </Link>

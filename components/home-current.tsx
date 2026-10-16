@@ -435,7 +435,7 @@ export function HomeCurrent() {
                   <div className="card-body flex-row items-center gap-5 py-6">
                     <span
                       className={cn(
-                        'flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-2xl transition-transform duration-200 group-hover:scale-105',
+                        'flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-box transition-transform duration-200 group-hover:scale-105',
                         card.tint,
                         card.ink,
                       )}
