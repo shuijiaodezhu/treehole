@@ -65,6 +65,9 @@ export function WelcomeLetter({ userId }: { userId: string | null }) {
     }
   })
   const [open, setOpen] = useState(false)
+  /* 数据库那份（或它的失败）确定了没有 —— 没确定之前不做「读过没有」的判断 ✗
+     否则会拿内置初稿的指纹去比，每次都判定成「没读过」→ 每次刷新都弹 ✓ */
+  const [ready, setReady] = useState(false)
 
   /* ---------- 挂载就取正文（数据库优先，没有就用内置初稿） ---------- */
   useEffect(() => {
@@ -77,12 +80,18 @@ export function WelcomeLetter({ userId }: { userId: string | null }) {
         .select('title, body')
         .eq('slug', 'letter')
         .maybeSingle()
-      if (cancelled || error) return
+      if (cancelled) return
+      if (error) {
+        // 取不到就用内置初稿判断（也算"确定了"）
+        setReady(true)
+        return
+      }
       const row = data as { title?: string; body?: string } | null
       if (row?.body) {
         const title = row.title || builtin?.title || '致每一位来到这里的人'
         setLetter({ title, body: row.body, sig: fingerprint(title, row.body) })
       }
+      setReady(true)
     })()
 
     return () => {
@@ -92,7 +101,7 @@ export function WelcomeLetter({ userId }: { userId: string | null }) {
 
   /* ---------- 该不该出现：比对指纹 ---------- */
   useEffect(() => {
-    if (!userId || !letter) return
+    if (!userId || !letter || !ready) return
 
     let read = ''
     try {
@@ -135,7 +144,7 @@ export function WelcomeLetter({ userId }: { userId: string | null }) {
     function scheduleFallback() {
       timer = window.setTimeout(show, 2600)
     }
-  }, [userId, letter])
+  }, [userId, letter, ready])
 
   /* ---------- 开门期间锁住背景滚动 ---------- */
   useEffect(() => {
