@@ -48,6 +48,9 @@ import { FallingBits } from './paper-pattern'
 // 客户端单例：放在模块级，保证引用稳定（useCallback / useEffect 不会每次渲染都重跑）
 const supabase = createClient()
 
+/* 标题『写一遍』只在本次浏览器会话里播一次 */
+const PLAYED_KEY = 'treehole:title-played'
+
 export function HomeCurrent() {
   const router = useRouter()
   const mountedRef = useRef(true)
@@ -128,8 +131,37 @@ export function HomeCurrent() {
    */
   const [waiting, setWaiting] = useState(true)
 
+  /*
+   * 标题只『写』一次
+   * 你反馈：每次刷新主页，字都会跳
+   * 现在：本次浏览器会话里已经写过 → 直接显示最终状态，不再播动画
+   *   （登录过场之后仍会写一遍；只是不再每次刷新都跳）
+   */
+  useEffect(() => {
+    let played = false
+    try {
+      played = Boolean(window.sessionStorage.getItem(PLAYED_KEY))
+    } catch {
+      /* 隐私模式读不到 → 当没播过 */
+    }
+    if (!played) return
+    // 用 setTimeout 而不是同步 setState：effect 里同步 setState 会被 lint 拦下
+    const t = window.setTimeout(() => {
+      setWriteKey((k) => (k === 0 ? 1 : k))
+      setWaiting(false)
+      setOpening(false)
+    }, 0)
+    return () => window.clearTimeout(t)
+  }, [])
+
   useEffect(() => {
     function onDone() {
+      try {
+        if (window.sessionStorage.getItem(PLAYED_KEY)) return
+        window.sessionStorage.setItem(PLAYED_KEY, '1')
+      } catch {
+        /* 忽略 */
+      }
       setWriteKey((k) => k + 1)
       setOpening(true)
       window.setTimeout(() => {
@@ -155,6 +187,12 @@ export function HomeCurrent() {
     const bump = () => {
       if (done) return
       done = true
+      try {
+        if (window.sessionStorage.getItem(PLAYED_KEY)) return
+        window.sessionStorage.setItem(PLAYED_KEY, '1')
+      } catch {
+        /* 忽略 */
+      }
       setWriteKey((k) => k + 1)
       setOpening(true)
       window.setTimeout(() => {

@@ -1,7 +1,6 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { createClient } from '../../lib/supabase'
 import { pageAccentVars } from '../../../components/theme'
@@ -41,12 +40,17 @@ export default function NotificationsPage() {
 
       <div className="relative max-w-xl mx-auto px-6 py-10">
         <header className="mb-6">
-          <Link
-            href="/me"
+          {/* 返回 = 回到**来时的页面**（以前写死 /me ✗ 从首页铃铛进来返回却跳个人主页 ✗） */}
+          <button
+            type="button"
+            onClick={() => {
+              if (window.history.length > 1) router.back()
+              else router.push('/')
+            }}
             className="text-sm text-base-content/60 transition hover:text-primary"
           >
             ← 返回
-          </Link>
+          </button>
           <h1 className="mt-2 text-3xl font-bold text-base-content">通知</h1>
           <p className="mt-1 text-sm text-base-content/60">
             提到你、回了你的信、处理了你的举报，都会落在这里。
