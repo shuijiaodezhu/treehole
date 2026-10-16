@@ -119,10 +119,18 @@ export default function RootLayout({
     __html: `(function(){try{
       var d=document;
       var sup=(d.defaultView&&d.defaultView.CSS&&CSS.supports)?CSS.supports:null;
-      if(!sup){return;}
-      var hasColorMix=sup("color","color-mix(in oklab, red, blue)");
-      var hasHas=sup("selector(:has(*))");
-      if(hasColorMix&&hasHas){return;}
+      /* 连 CSS.supports 都没有 → 这内核老得不能再老，照样要显示提示
+         （上一版这里写成 if(!sup){return} ✗ → 最老的那批反而看不到提示 ✗ 已修）*/
+      var tooOld=!sup;
+      if(!tooOld){
+        var hasColorMix=sup("color","color-mix(in oklab, red, blue)");
+        var hasHas=sup("selector(:has(*))");
+        /* oklch 是 Tailwind v4 大量用到的（Chrome 111+）
+           老内核不认识 → 会把整块 @layer 丢掉 → **全站没样式**（用户看到的就是这个）*/
+        var hasOklch=sup("color","oklch(60% 0.15 30)");
+        tooOld=!(hasColorMix&&hasHas&&hasOklch);
+      }
+      if(!tooOld){return;}
       function notice(){
         if(d.getElementById("old-engine-notice")){return;}
         var box=d.createElement("div");
