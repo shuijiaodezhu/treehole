@@ -422,7 +422,22 @@
     cursor: not-allowed;
   }
 
-  @media (prefers-reduced-motion: reduce) {
+  /* ============================================================
+   手机上关掉"一直循环"的装饰动画
+   呼吸 / 漂浮 / 骨架闪光 这类是无限循环的
+   它们**不拖慢加载** ✗ 但会一直占 CPU ✓
+   → 老手机因此发烫、切换变卡 ✗（视觉上几乎看不出差别 ✓）
+   ============================================================ */
+@media (max-width: 640px) {
+  .animate-breathe,
+  .animate-float,
+  .animate-shimmer,
+  .th-skeleton::after {
+    animation: none !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
     :where(button, [role="button"], a, summary, label[for]) {
       transition: none;
     }
@@ -796,7 +811,8 @@ body {
 .th-flap { transform-origin: top center; animation: th-flap-open 0.46s ease-in-out 1.05s both; }
 
 /* 整幕淡出并轻微放大，随后进入主页 */
-.th-overlay-out { animation: th-overlay-out 0.45s ease-in 1.75s both; }
+/* 幕布淡出：延迟 + 时长 加起来 = 1000ms ✓ 和 JS 的 TOTAL_MS 对齐 ✓ */
+.th-overlay-out { animation: th-overlay-out 0.45s ease-in 0.55s both; }
 
 /* 幕布淡入（0.28s 起，0.28s） */
 .th-veil { animation: th-veil-in 0.28s ease-out 0.28s both; }
