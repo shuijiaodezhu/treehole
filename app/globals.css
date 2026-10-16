@@ -812,10 +812,11 @@ body {
 
 /* 整幕淡出并轻微放大，随后进入主页 */
 /* 幕布淡出：延迟 + 时长 加起来 = 1000ms ✓ 和 JS 的 TOTAL_MS 对齐 ✓ */
-.th-overlay-out { animation: th-overlay-out 0.45s ease-in 0.55s both; }
+/* 幕布淡出：延迟 + 时长 = 600ms，必须和 JS 的 TOTAL_MS 对齐 */
+.th-overlay-out { animation: th-overlay-out 0.32s ease-in 0.28s both; }
 
 /* 幕布淡入（0.28s 起，0.28s） */
-.th-veil { animation: th-veil-in 0.28s ease-out 0.28s both; }
+.th-veil { animation: th-veil-in 0.20s ease-out 0.16s both; }
 
 /* ============================================================
    弹窗（Radix Dialog）的进入动画

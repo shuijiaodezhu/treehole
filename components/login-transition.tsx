@@ -26,10 +26,10 @@ import { clearJustLoggedIn } from './login-handoff'
  * 系统开了「减少动态效果」时不做动画，直接换页。
  */
 
-const TOTAL_MS = 1000
+const TOTAL_MS = 600
 const REDUCED_MS = 150
 /** 等登录页两边淡完就换页 */
-const NAVIGATE_MS = 250
+const NAVIGATE_MS = 160
 
 type Listener = (active: boolean) => void
 
