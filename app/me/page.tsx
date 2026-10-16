@@ -2,6 +2,7 @@
 /* eslint-disable @next/next/no-img-element -- 头像/背景图用原生 img 即可，尺寸固定 */
 
 import { useEffect, useState } from 'react'
+import { peek, save } from '../../components/local-store'
 import { createClient } from '../lib/supabase'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
@@ -92,6 +93,36 @@ export default function MePage() {
   const [postCount, setPostCount] = useState(0)
   const [loading, setLoading] = useState(true)
   const [isAdmin, setIsAdmin] = useState(false)
+
+  /*
+   * 先读本机（/me 也像 App）
+   *
+   * 资料和发帖数都是慢变的，却每次进页面都要等两次网络请求
+   * → 本机存过就直接画出来，再去服务器对齐
+   * 本机没有 → 照旧等网络（行为完全不变）
+   *
+   * 再配一个 1.2 秒兜底：不管上面成没成，等待页一定撤掉
+   * （和首页、欢迎信同一套思路：不让首屏干等网络）
+   */
+  useEffect(() => {
+    // 用一个 0 延迟把"读本机 + 铺数据"挪到下一拍
+    // （effect 里同步 setState 会触发连锁渲染，lint 也会拦）
+    const paint = window.setTimeout(() => {
+      const cachedProfile = peek<Profile>('me-profile-full', 30 * 60 * 1000)
+      const cachedCount = peek<number>('me-post-count', 5 * 60 * 1000)
+      if (cachedProfile) setProfile(cachedProfile)
+      if (typeof cachedCount === 'number') setPostCount(cachedCount)
+      if (cachedProfile || typeof cachedCount === 'number') setLoading(false)
+    }, 0)
+
+    // 兜底：最多 1.2 秒一定撤掉等待页（和首页同一套思路）
+    const bail = window.setTimeout(() => setLoading(false), 1200)
+
+    return () => {
+      window.clearTimeout(paint)
+      window.clearTimeout(bail)
+    }
+  }, [])
   const router = useRouter()
   const supabase = createClient()
 
@@ -104,9 +135,11 @@ export default function MePage() {
 
       const { data: profileData } = await supabase.from('profiles').select('*').eq('id', userData.user.id).single()
       if (profileData) setProfile(profileData as Profile)
+    if (profileData) save('me-profile-full', profileData)
 
       const { count } = await supabase.from('world_posts').select('*', { count: 'exact', head: true }).eq('author_id', userData.user.id)
       setPostCount(count || 0)
+    save('me-post-count', count ?? 0)
       setLoading(false)
     }
     load()
