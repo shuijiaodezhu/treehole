@@ -388,16 +388,23 @@
   颜色：很浅的一层强调色 + 墨色字（不是满饱和 ✓）
 */
 html ::selection {
-  /* 老内核兜底（iQOO 这类机器 WebView 很旧，不认识 color-mix）：先给纯色 */
-  background: rgba(168, 86, 58, 0.28);
-  background: color-mix(in oklab, var(--wax) 28%, transparent);
-  color: var(--ink);
+  /*
+   * ⚠️ 这里**故意不用 color-mix**（踩过坑）：
+   *   打包器（Lightning CSS）会给 color-mix 生成"兼容兜底"，
+   *   但它把透明度丢了 → 写成 background: var(--wax)（满饱和）
+   *   而且排在后面 → 赢了 → 选中永远是一片刺眼的纯红（怎么调 28% 都没用）
+   * → 改成一句朴素的 rgba：打包器不会动它 ✓ 透明度一定生效 ✓
+   * 颜色用固定的暖色（和默认主题的蜡封红一致）：选中底色本来就该很淡，
+   * 不值得为它引入 color-mix 这种会被降级的写法
+   * !important：确保压过任何别处的 ::selection 定义
+   */
+  background: rgba(168, 86, 58, 0.28) !important;
+  color: var(--ink) !important;
 }
 
 html ::-moz-selection {
-  background: rgba(168, 86, 58, 0.28);
-  background: color-mix(in oklab, var(--wax) 28%, transparent);
-  color: var(--ink);
+  background: rgba(168, 86, 58, 0.28) !important;
+  color: var(--ink) !important;
 }
 /* ============================================================
    交互基线
