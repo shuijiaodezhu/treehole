@@ -109,15 +109,15 @@ export function PlansView({ userId }: { userId: string | null }) {
 
           {/* 概览 */}
           <div className="mb-6 grid grid-cols-3 gap-3">
-            <div className="rounded-box border border-base-300 bg-base-100/70 px-3 py-2.5">
+            <div className="card rounded-box border border-base-300 bg-base-100/70 px-3 py-2.5">
               <p className="text-[11px] text-base-content/60">待完成</p>
               <p className="mt-0.5 text-lg font-semibold text-primary">{plans.stats.openTasks}</p>
             </div>
-            <div className="rounded-box border border-base-300 bg-base-100/70 px-3 py-2.5">
+            <div className="card rounded-box border border-base-300 bg-base-100/70 px-3 py-2.5">
               <p className="text-[11px] text-base-content/60">已完成</p>
               <p className="mt-0.5 text-lg font-semibold text-primary">{plans.stats.doneTasks}</p>
             </div>
-            <div className="rounded-box border border-base-300 bg-base-100/70 px-3 py-2.5">
+            <div className="card rounded-box border border-base-300 bg-base-100/70 px-3 py-2.5">
               <p className="text-[11px] text-base-content/60">目标进度</p>
               <p className="mt-0.5 text-lg font-semibold text-primary">{plans.stats.goalProgress}%</p>
             </div>
@@ -173,7 +173,7 @@ export function PlansView({ userId }: { userId: string | null }) {
               <button
                 type="submit"
                 disabled={plans.busy || !title.trim()}
-                className="flex items-center gap-1 rounded-full bg-primary px-4 py-1.5 text-xs font-medium text-primary-content transition hover:shadow-sm disabled:opacity-50"
+                className="btn btn-primary btn-sm flex items-center gap-1 transition hover:shadow-sm disabled:opacity-50"
               >
                 <Icon name="plus" className="h-3.5 w-3.5" />
                 记下来
@@ -188,13 +188,13 @@ export function PlansView({ userId }: { userId: string | null }) {
                   onChange={(e) => setNote(e.target.value)}
                   placeholder="补充一句（可留空）"
                   maxLength={200}
-                  className="min-w-0 flex-1 rounded-box border border-base-300 bg-base-100/70 px-3 py-1.5 text-xs text-base-content focus:border-primary focus:outline-none transition"
+                  className="card min-w-0 flex-1 rounded-box border border-base-300 bg-base-100/70 px-3 py-1.5 text-xs text-base-content focus:border-primary focus:outline-none transition"
                 />
                 <input
                   type="date"
                   value={due}
                   onChange={(e) => setDue(e.target.value)}
-                  className="rounded-box border border-base-300 bg-base-100/70 px-3 py-1.5 text-xs text-base-content focus:border-primary focus:outline-none transition"
+                  className="card rounded-box border border-base-300 bg-base-100/70 px-3 py-1.5 text-xs text-base-content focus:border-primary focus:outline-none transition"
                 />
               </div>
             )}
@@ -302,7 +302,7 @@ function PlanRow({
 
   return (
     <div
-      className={`group relative overflow-hidden rounded-box border bg-base-100/80 pl-4 pr-3 py-2.5 transition ${
+      className={`card group relative overflow-hidden rounded-box border bg-base-100/80 pl-4 pr-3 py-2.5 transition ${
         item.done ? 'border-base-300 opacity-70' : 'border-base-300 hover:shadow-sm'
       }`}
     >

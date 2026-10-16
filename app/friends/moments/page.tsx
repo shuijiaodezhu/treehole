@@ -356,7 +356,7 @@ export default function MomentsPage() {
           {/* 发布区 */}
           <form
             onSubmit={handlePost}
-            className="rounded-box border border-base-300 bg-base-100 p-5 shadow-sm relative overflow-hidden"
+            className="card rounded-box border border-base-300 bg-base-100 p-5 shadow-sm relative overflow-hidden"
           >
 
             <div className="relative">
@@ -366,7 +366,7 @@ export default function MomentsPage() {
                 onChange={(e) => setContent(e.target.value)}
                 placeholder="说点什么… 用 #话题# 加标签，也可以发个表情"
                 rows={3}
-                className="w-full px-4 py-3 rounded-box border border-base-300 bg-base-100 text-sm text-base-content resize-none focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition placeholder:text-base-content/40"
+                className="card w-full px-4 py-3 rounded-box border border-base-300 bg-base-100 text-sm text-base-content resize-none focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition placeholder:text-base-content/40"
                 maxLength={500}
               />
               {/* 图片：本地上传或粘贴链接 */}
@@ -405,7 +405,7 @@ export default function MomentsPage() {
                 <p className="text-[11px] text-base-content/40 mt-2">{VISIBILITY_HINT[visibility]}</p>
 
                 {showPicker && visibility === 'friends' && (
-                  <div className="mt-2 max-h-40 overflow-y-auto rounded-box border border-base-300 bg-base-100 p-3">
+                  <div className="card mt-2 max-h-40 overflow-y-auto rounded-box border border-base-300 bg-base-100 p-3">
                     {friends.length === 0 ? (
                       <p className="text-[11px] text-base-content/40">还没有好友，先去加几个吧。</p>
                     ) : (
@@ -432,7 +432,7 @@ export default function MomentsPage() {
                 )}
 
                 {showPicker && visibility === 'groups' && (
-                  <div className="mt-2 rounded-box border border-base-300 bg-base-100 p-3">
+                  <div className="card mt-2 rounded-box border border-base-300 bg-base-100 p-3">
                     {groups.length === 0 ? (
                       <p className="text-[11px] leading-relaxed text-base-content/40">
                         还没有分组。去{' '}
@@ -482,7 +482,7 @@ export default function MomentsPage() {
           {/* 帖子列表 */}
           <div className="space-y-3">
             {posts.length === 0 ? (
-              <div className="rounded-box border border-base-300 bg-base-100/60 backdrop-blur">
+              <div className="card rounded-box border border-base-300 bg-base-100/60 backdrop-blur">
                 <EmptyState art="heart" title="还没有内容" hint="写第一条吧。" />
               </div>
             ) : (
@@ -494,7 +494,7 @@ export default function MomentsPage() {
                 <div
                   key={post.id}
                   data-moment-id={post.id}
-                  className={`rounded-box border bg-base-100 p-5 shadow-sm relative overflow-hidden transition ${
+                  className={`card rounded-box border bg-base-100 p-5 shadow-sm relative overflow-hidden transition ${
                     focusPostId === post.id
                       ? 'border-primary ring-2 ring-primary/25'
                       : 'border-base-300'
@@ -540,7 +540,7 @@ export default function MomentsPage() {
                         rows={3}
                         maxLength={editor.maxLength.moment}
                         autoFocus
-                        className="w-full rounded-box border border-base-300 bg-base-100 px-3 py-2 text-sm text-base-content resize-none focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition"
+                        className="card w-full rounded-box border border-base-300 bg-base-100 px-3 py-2 text-sm text-base-content resize-none focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition"
                       />
                       <div className="mt-2 flex items-center gap-3">
                         <button

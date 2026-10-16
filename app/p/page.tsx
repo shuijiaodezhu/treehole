@@ -39,7 +39,7 @@ export default function SitePageIndex() {
               <Link
                 key={p.slug}
                 href={`/p/${p.slug}`}
-                className="flex items-center gap-3 rounded-box border border-base-300 bg-base-100/85 px-5 py-4 transition hover:-translate-y-0.5 hover:shadow-sm"
+                className="card flex items-center gap-3 rounded-box border border-base-300 bg-base-100/85 px-5 py-4 transition hover:-translate-y-0.5 hover:shadow-sm"
               >
                 <span className="min-w-0 flex-1">
                   <span className="block font-serif-cn text-sm font-medium text-base-content">{p.title}</span>

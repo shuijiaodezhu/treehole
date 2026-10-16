@@ -209,7 +209,7 @@ export function AdminSitePages() {
   }
 
   return (
-    <section className="rounded-box border border-base-300 bg-base-100/80 p-6 backdrop-blur shadow-sm">
+    <section className="card rounded-box border border-base-300 bg-base-100/80 p-6 backdrop-blur shadow-sm">
       <div className="mb-5 flex items-center gap-3">
         <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary/5">
           <Icon name="file" className="h-4 w-4 text-base-content/60" />
@@ -301,7 +301,7 @@ export function AdminSitePages() {
                 onChange={(e) => setDraft(e.target.value)}
                 rows={18}
                 spellCheck={false}
-                className="w-full rounded-box border border-base-300 bg-base-100 px-4 py-3 font-mono text-[12px] leading-relaxed text-base-content focus:outline-none focus:border-primary/40 focus:ring-2 focus:ring-primary/10 transition"
+                className="card w-full rounded-box border border-base-300 bg-base-100 px-4 py-3 font-mono text-[12px] leading-relaxed text-base-content focus:outline-none focus:border-primary/40 focus:ring-2 focus:ring-primary/10 transition"
               />
 
               <div className="mt-3 flex flex-wrap items-center gap-3">

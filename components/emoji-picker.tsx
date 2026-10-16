@@ -120,7 +120,7 @@ export function EmojiPicker({
 
       {open && (
         <div
-          className={`absolute bottom-full z-40 mb-3 w-72 overflow-hidden rounded-box border border-base-300 bg-base-100 shadow-sm ${
+          className={`card absolute bottom-full z-40 mb-3 w-72 overflow-hidden rounded-box border border-base-300 bg-base-100 shadow-sm ${
             align === 'right' ? 'right-0' : 'left-0'
           }`}
         >

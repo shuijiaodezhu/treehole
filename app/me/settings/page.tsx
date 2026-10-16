@@ -236,7 +236,7 @@ export default function SettingsPage() {
           <DeleteAccountSection userId={meId} />
 
           {/* ==================== 修改密码（两步点击） ==================== */}
-          <section className="rounded-box border border-base-300 bg-base-100 p-6 shadow-sm relative overflow-hidden">
+          <section className="card rounded-box border border-base-300 bg-base-100 p-6 shadow-sm relative overflow-hidden">
 
             <div className="relative">
               <div className="flex items-center gap-3 mb-5">
@@ -301,7 +301,7 @@ export default function SettingsPage() {
                     </button>
                     <button
                       type="submit"
-                      className="flex-1 py-2.5 rounded-box bg-primary text-primary-content text-sm font-medium hover:shadow-sm transition-all"
+                      className="btn btn-primary flex-1 hover:shadow-sm transition-all"
                     >
                       下一步
                     </button>
@@ -318,7 +318,7 @@ export default function SettingsPage() {
                     <button
                       type="button"
                       onClick={() => setPwStep('editing')}
-                      className="flex-1 py-2.5 rounded-box border border-base-300 text-sm text-base-content/60 hover:bg-base-100 transition"
+                      className="card flex-1 py-2.5 rounded-box border border-base-300 text-sm text-base-content/60 hover:bg-base-100 transition"
                     >
                       返回改一下
                     </button>
@@ -343,7 +343,7 @@ export default function SettingsPage() {
           </section>
 
           {/* ==================== 拉黑 / 屏蔽 ==================== */}
-          <section className="rounded-box border border-base-300 bg-base-100 p-6 shadow-sm">
+          <section className="card rounded-box border border-base-300 bg-base-100 p-6 shadow-sm">
             <div className="flex items-center gap-3 mb-5">
               <div className="w-9 h-9 rounded-full bg-primary/5 flex items-center justify-center">
                 <Icon name="shield" className="w-4 h-4 text-primary" />
@@ -368,7 +368,7 @@ export default function SettingsPage() {
               <button
                 type="submit"
                 disabled={searching || !keyword.trim()}
-                className="px-4 py-2.5 rounded-box bg-primary text-primary-content text-sm hover:bg-primary transition disabled:opacity-50"
+                className="btn btn-primary hover: transition disabled:opacity-50"
               >
                 {searching ? '找…' : '查找'}
               </button>
@@ -450,7 +450,7 @@ export default function SettingsPage() {
           </section>
 
           {/* ==================== 好友分组 ==================== */}
-          <section className="rounded-box border border-base-300 bg-base-100 p-6 shadow-sm">
+          <section className="card rounded-box border border-base-300 bg-base-100 p-6 shadow-sm">
             <div className="flex items-center gap-3 mb-5">
               <div className="w-9 h-9 rounded-full bg-primary/5 flex items-center justify-center">
                 <Icon name="users" className="w-4 h-4 text-primary" />
@@ -475,7 +475,7 @@ export default function SettingsPage() {
               <button
                 type="submit"
                 disabled={groupApi.busy || !newGroupName.trim()}
-                className="px-4 py-2.5 rounded-box bg-primary text-primary-content text-sm hover:bg-primary transition disabled:opacity-50"
+                className="btn btn-primary hover: transition disabled:opacity-50"
               >
                 新建
               </button>
@@ -547,7 +547,7 @@ export default function SettingsPage() {
           </section>
 
           {/* 页面配色 */}
-          <section className="rounded-box border border-base-300 bg-base-100 p-6 shadow-sm">
+          <section className="card rounded-box border border-base-300 bg-base-100 p-6 shadow-sm">
             <div className="flex items-center gap-3 mb-5">
               <div className="w-9 h-9 rounded-full bg-primary/5 flex items-center justify-center">
                 <Icon name="sparkle" className="w-4 h-4 text-primary" />
@@ -619,7 +619,7 @@ export default function SettingsPage() {
               <button
                 type="button"
                 onClick={themeApi.reset}
-                className="rounded-box border border-base-300 px-4 py-2 text-sm text-primary transition hover:bg-primary/5"
+                className="btn btn-primary border transition hover: /5"
               >
                 恢复默认
               </button>
@@ -634,7 +634,7 @@ export default function SettingsPage() {
           </section>
 
           {/* 关于与条款 */}
-          <section className="rounded-box border border-base-300 bg-base-100 p-6 shadow-sm">
+          <section className="card rounded-box border border-base-300 bg-base-100 p-6 shadow-sm">
             <div className="flex items-center gap-3 mb-4">
               <div className="w-9 h-9 rounded-full bg-primary/5 flex items-center justify-center">
                 <Icon name="file" className="w-4 h-4 text-primary" />

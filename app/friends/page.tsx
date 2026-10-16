@@ -941,7 +941,7 @@ export default function FriendsPage() {
               </button>
 
               {showAdd && (
-                <div className="rounded-box border border-base-300 bg-base-100 p-4 shadow-sm flex-shrink-0">
+                <div className="card rounded-box border border-base-300 bg-base-100 p-4 shadow-sm flex-shrink-0">
                   <div className="flex gap-2">
                     <input
                       type="text"
@@ -954,7 +954,7 @@ export default function FriendsPage() {
                     <button
                       onClick={handleSearch}
                       disabled={searching}
-                      className="px-3 py-2 rounded-box bg-primary text-primary-content text-xs hover:bg-primary transition disabled:opacity-60"
+                      className="btn btn-primary btn-sm hover: transition disabled:opacity-60"
                     >
                       {searching ? '...' : '搜'}
                     </button>
@@ -1027,7 +1027,7 @@ export default function FriendsPage() {
                 </div>
               )}
 
-              <div className="rounded-box border border-base-300 bg-base-100 shadow-sm overflow-hidden flex-1 overflow-y-auto">
+              <div className="card rounded-box border border-base-300 bg-base-100 shadow-sm overflow-hidden flex-1 overflow-y-auto">
                 <div className="px-4 py-3 border-b border-base-300">
                   <p className="text-[11px] text-base-content/60 tracking-wide">
                     我的好友 · {shownFriends.length}
@@ -1104,7 +1104,7 @@ export default function FriendsPage() {
 
             <main className={`flex-1 flex-col min-w-0 ${showChatOnMobile ? 'flex' : 'hidden md:flex'}`}>
               <div
-                className={`rounded-box border backdrop-blur overflow-hidden flex-1 flex flex-col ${
+                className={`card rounded-box border backdrop-blur overflow-hidden flex-1 flex flex-col ${
                   currentFriend
                     ? 'border-base-300 bg-base-100/80 shadow-sm'
                     : /* 没选人时整块淡下去，一眼看出「这里还没开始」 */
@@ -1223,7 +1223,7 @@ export default function FriendsPage() {
           <div className="max-w-2xl mx-auto">
             <form
               onSubmit={handlePostMoment}
-              className="rounded-box border border-base-300 bg-base-100 p-5 mb-5 shadow-sm"
+              className="card rounded-box border border-base-300 bg-base-100 p-5 mb-5 shadow-sm"
             >
               <textarea
                 ref={momentRef}
@@ -1327,7 +1327,7 @@ export default function FriendsPage() {
                 <button
                   type="submit"
                   disabled={postingMoment || (!momentContent.trim() && momentImages.length === 0)}
-                  className="px-6 py-2 rounded-box bg-primary text-primary-content text-sm font-medium hover:shadow-sm transition-all disabled:opacity-50"
+                  className="btn btn-primary hover:shadow-sm transition-all disabled:opacity-50"
                 >
                   {postingMoment ? '发布中...' : '发布'}
                 </button>
@@ -1336,14 +1336,14 @@ export default function FriendsPage() {
 
             <div className="space-y-3">
               {visibleMoments.length === 0 ? (
-                <div className="rounded-box border border-base-300 bg-base-100/60 backdrop-blur">
+                <div className="card rounded-box border border-base-300 bg-base-100/60 backdrop-blur">
                   <EmptyState art="heart" title="这里还很安静" hint="写下第一条，朋友就看得见了" />
                 </div>
               ) : (
                 visibleMoments.map((post) => (
                   <div
                     key={post.id}
-                    className="rounded-box border border-base-300 bg-base-100 p-5 shadow-sm"
+                    className="card rounded-box border border-base-300 bg-base-100 p-5 shadow-sm"
                   >
                     <div className="flex items-center gap-3 mb-3">
                       <div className="w-10 h-10 rounded-box bg-gradient-to-br from-primary/20 to-primary/10 flex items-center justify-center overflow-hidden flex-shrink-0">

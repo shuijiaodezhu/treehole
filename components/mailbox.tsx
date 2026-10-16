@@ -326,7 +326,7 @@ export function MailboxDialog({
       onClick={onClose}
     >
       <div
-        className="flex max-h-[82vh] w-full max-w-lg flex-col overflow-hidden rounded-box border border-base-300 bg-base-100 shadow-2xl"
+        className="card flex max-h-[82vh] w-full max-w-lg flex-col overflow-hidden rounded-box border border-base-300 bg-base-100 shadow-2xl"
         onClick={(e) => e.stopPropagation()}
       >
         {/* 抬头 */}

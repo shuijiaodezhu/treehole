@@ -139,7 +139,7 @@ export default function MePage() {
         </header>
 
         <main className="space-y-4">
-          <div className="rounded-box border border-base-300 bg-base-100 p-6 shadow-sm relative overflow-hidden">
+          <div className="card rounded-box border border-base-300 bg-base-100 p-6 shadow-sm relative overflow-hidden">
 
             <div className="relative flex items-start gap-4">
               <div className="w-16 h-16 rounded-box bg-primary/5 flex items-center justify-center text-2xl overflow-hidden flex-shrink-0 shadow-sm">
@@ -188,13 +188,13 @@ export default function MePage() {
               <p className="relative text-3xl font-bold text-primary">{postCount}</p>
               <p className="relative text-[11px] text-base-content/60 mt-1.5 tracking-wide">已发帖</p>
             </div>
-            <div className="rounded-box border border-base-300 bg-base-100 p-5 text-center">
+            <div className="card rounded-box border border-base-300 bg-base-100 p-5 text-center">
               <p className="text-3xl font-bold text-[var(--accent-line)]">—</p>
               <p className="text-[11px] text-base-content/60 mt-1.5 tracking-wide">收到的赞</p>
             </div>
           </div>
 
-          <div className="rounded-box border border-base-300 bg-base-100 overflow-hidden">
+          <div className="card rounded-box border border-base-300 bg-base-100 overflow-hidden">
             <Link href="/me/posts" className="flex items-center justify-between p-4 hover:bg-primary/5 transition group">
               <div className="flex items-center gap-3">
                 <div className="w-8 h-8 rounded-full bg-primary/5 flex items-center justify-center"><IconDoc className="w-4 h-4 text-primary" /></div>
@@ -249,7 +249,7 @@ export default function MePage() {
             )}
           </div>
 
-          <button onClick={handleLogout} className="w-full text-center py-3 rounded-box border border-base-300 bg-base-100 text-sm text-primary hover:bg-primary/5 transition">
+          <button onClick={handleLogout} className="btn btn-primary w-full border hover: /5 transition">
             退出登录
           </button>
         </main>

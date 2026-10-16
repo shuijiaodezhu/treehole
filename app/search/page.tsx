@@ -284,7 +284,7 @@ export default function SearchPage() {
             placeholder="输入关键词，比如：奶龙 / user_ / 今天"
             autoFocus
             maxLength={50}
-            className="w-full pl-11 pr-10 py-3 rounded-box border border-base-300 bg-base-100 text-sm text-base-content placeholder:text-base-content/60 focus:outline-none focus:border-accent focus:ring-2 focus:ring-primary/10 transition"
+            className="card w-full pl-11 pr-10 py-3 rounded-box border border-base-300 bg-base-100 text-sm text-base-content placeholder:text-base-content/60 focus:outline-none focus:border-accent focus:ring-2 focus:ring-primary/10 transition"
           />
           {keyword && (
             <button
@@ -377,7 +377,7 @@ export default function SearchPage() {
                 <Link
                   key={p.id}
                   href={`/world?post=${p.id}`}
-                  className="block rounded-box border border-base-300 bg-base-100 p-4 hover:shadow-sm hover:-translate-y-0.5 transition"
+                  className="card block rounded-box border border-base-300 bg-base-100 p-4 hover:shadow-sm hover:-translate-y-0.5 transition"
                 >
                   <div className="flex items-center gap-2.5 mb-2">
                     <span className="w-7 h-7 rounded-full bg-base-200 flex items-center justify-center overflow-hidden flex-shrink-0 text-[11px] text-primary">
@@ -408,7 +408,7 @@ export default function SearchPage() {
                 <Link
                   key={a.id}
                   href={`/play?activity=${a.id}`}
-                  className="block rounded-box border border-base-300 bg-base-100 p-4 hover:shadow-sm hover:-translate-y-0.5 transition"
+                  className="card block rounded-box border border-base-300 bg-base-100 p-4 hover:shadow-sm hover:-translate-y-0.5 transition"
                 >
                   <div className="flex items-center gap-2 mb-2">
                     <span className="text-sm font-medium text-base-content truncate">{a.title}</span>
@@ -444,7 +444,7 @@ export default function SearchPage() {
                 <Link
                   key={m.id}
                   href={`/friends/moments?post=${m.id}`}
-                  className="block rounded-box border border-base-300 bg-base-100 p-4 hover:shadow-sm hover:-translate-y-0.5 transition"
+                  className="card block rounded-box border border-base-300 bg-base-100 p-4 hover:shadow-sm hover:-translate-y-0.5 transition"
                 >
                   <div className="flex items-center gap-2 mb-2">
                     <span className="text-[11px] text-base-content/40">朋友圈</span>
@@ -469,7 +469,7 @@ export default function SearchPage() {
                 return (
                   <div
                     key={u.id}
-                    className="flex items-center gap-3 rounded-box border border-base-300 bg-base-100 p-4"
+                    className="card flex items-center gap-3 rounded-box border border-base-300 bg-base-100 p-4"
                   >
                     <span className="w-10 h-10 rounded-full bg-gradient-to-br from-primary/20 to-primary/10 flex items-center justify-center overflow-hidden flex-shrink-0 text-sm text-primary font-semibold">
                       {u.avatar_url ? (

@@ -119,7 +119,7 @@ export default function RegisterPage() {
 
       {/* 注册卡片 */}
       <div className="relative w-full max-w-sm ml-auto mr-auto lg:mr-32">
-        <div className="rounded-box border border-base-300 bg-base-100 p-8 shadow-sm">
+        <div className="card rounded-box border border-base-300 bg-base-100 p-8 shadow-sm">
           <div className="lg:hidden text-center mb-6">
             <h1 className="font-brush text-[26px] leading-[1.05] text-base-content">你的来信</h1>
             <p className="mt-1 font-art italic text-primary">Dear You</p>
@@ -141,7 +141,7 @@ export default function RegisterPage() {
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="you@example.com"
                 required
-                className="w-full px-4 py-2.5 rounded-box border border-base-300 bg-base-100 text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition"
+                className="card w-full px-4 py-2.5 rounded-box border border-base-300 bg-base-100 text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition"
               />
             </div>
 
@@ -154,7 +154,7 @@ export default function RegisterPage() {
                 placeholder="至少 8 位，包含字母和数字"
                 required
                 minLength={8}
-                className="w-full px-4 py-2.5 rounded-box border border-base-300 bg-base-100 text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition"
+                className="card w-full px-4 py-2.5 rounded-box border border-base-300 bg-base-100 text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition"
               />
               <p className="text-[11px] text-base-content/40 mt-1.5">
                 至少 8 位，含字母和数字

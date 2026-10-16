@@ -230,7 +230,7 @@ export function AffinitySettingsSection({ userId }: { userId: string | null }) {
   }
 
   return (
-    <section className="rounded-box border border-base-300 bg-base-100 p-6 shadow-sm">
+    <section className="card rounded-box border border-base-300 bg-base-100 p-6 shadow-sm">
       <div className="flex items-center gap-3">
         <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary/5">
           <Icon name="heart" className="h-4 w-4 text-primary" />

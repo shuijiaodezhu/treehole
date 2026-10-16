@@ -28,7 +28,7 @@ export function SkeletonText({ lines = 3, className = '' }: { lines?: number; cl
 export function SkeletonCard({ lines = 3, className = '' }: { lines?: number; className?: string }) {
   return (
     <div
-      className={`rounded-box border border-base-300 bg-base-100/70 p-5 backdrop-blur ${className}`}
+      className={`card rounded-box border border-base-300 bg-base-100/70 p-5 backdrop-blur ${className}`}
     >
       <div className="mb-3 flex items-center gap-3">
         <Skeleton className="h-9 w-9 rounded-full" />
@@ -58,7 +58,7 @@ export function SkeletonHome() {
     <div className="mx-auto flex max-w-5xl gap-8 px-8 py-10">
       <aside className="flex w-64 flex-shrink-0 flex-col gap-4">
         {Array.from({ length: 3 }).map((_, i) => (
-          <div key={i} className="rounded-box border border-base-300 bg-base-100/70 p-5">
+          <div key={i} className="card rounded-box border border-base-300 bg-base-100/70 p-5">
             <Skeleton className="mb-3 h-4 w-20" />
             <SkeletonText lines={2} />
           </div>
@@ -67,7 +67,7 @@ export function SkeletonHome() {
       <main className="flex flex-1 flex-col gap-4">
         <div className="grid grid-cols-2 gap-4">
           {Array.from({ length: 6 }).map((_, i) => (
-            <div key={i} className="rounded-box border border-base-300 bg-base-100/70 p-5">
+            <div key={i} className="card rounded-box border border-base-300 bg-base-100/70 p-5">
               <Skeleton className="mb-3 h-9 w-9 rounded-box" />
               <Skeleton className="mb-2 h-4 w-20" />
               <Skeleton className="h-3 w-28" />
@@ -85,7 +85,7 @@ export function SkeletonSplit() {
     <div className="flex gap-5">
       <div className="flex w-72 flex-shrink-0 flex-col gap-3">
         <Skeleton className="h-11 w-full rounded-box" />
-        <div className="rounded-box border border-base-300 bg-base-100/70 p-3">
+        <div className="card rounded-box border border-base-300 bg-base-100/70 p-3">
           <Skeleton className="mb-3 h-3 w-16" />
           {Array.from({ length: 4 }).map((_, i) => (
             <div key={i} className="mb-2 flex items-center gap-3">
@@ -95,7 +95,7 @@ export function SkeletonSplit() {
           ))}
         </div>
       </div>
-      <div className="flex-1 rounded-box border border-base-300 bg-base-100/70 p-5">
+      <div className="card flex-1 rounded-box border border-base-300 bg-base-100/70 p-5">
         <SkeletonList count={3} lines={2} />
       </div>
     </div>

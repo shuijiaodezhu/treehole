@@ -166,7 +166,7 @@ export function AdminStats() {
   const maxTrend = Math.max(1, ...trend.map((t) => t.count))
 
   return (
-    <section className="mb-5 rounded-box border border-base-300 bg-base-100/80 p-6 backdrop-blur shadow-sm">
+    <section className="card mb-5 rounded-box border border-base-300 bg-base-100/80 p-6 backdrop-blur shadow-sm">
       <div className="mb-5 flex items-center gap-3">
         <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary/5">
           <Icon name="users" className="h-4 w-4 text-base-content/60" />
@@ -180,7 +180,7 @@ export function AdminStats() {
         <button
           type="button"
           onClick={() => setReloadKey((k) => k + 1)}
-          className="inline-flex items-center gap-1 rounded-box border border-base-300 bg-base-100 px-3 py-1.5 text-xs text-base-content/60 transition hover:bg-primary/5"
+          className="card inline-flex items-center gap-1 rounded-box border border-base-300 bg-base-100 px-3 py-1.5 text-xs text-base-content/60 transition hover:bg-primary/5"
         >
           <Icon name="refresh" className="h-3.5 w-3.5" />
           刷新
@@ -197,7 +197,7 @@ export function AdminStats() {
         <>
           {/* 四个核心数字 */}
           <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
-            <div className="rounded-box border border-base-300 bg-base-100 p-4">
+            <div className="card rounded-box border border-base-300 bg-base-100 p-4">
               <p className="text-[11px] text-base-content/40">注册人数</p>
               <p className="mt-1 text-2xl font-bold text-primary">{counts.registered}</p>
               <p className="mt-1 text-[11px] text-base-content/40">
@@ -205,7 +205,7 @@ export function AdminStats() {
               </p>
             </div>
 
-            <div className="rounded-box border border-base-300 bg-base-100 p-4">
+            <div className="card rounded-box border border-base-300 bg-base-100 p-4">
               <p className="flex items-center gap-1.5 text-[11px] text-base-content/70">
                 <span className="relative flex h-2 w-2">
                   {online.count > 0 && (
@@ -221,7 +221,7 @@ export function AdminStats() {
               </p>
             </div>
 
-            <div className="rounded-box border border-base-300 bg-base-100 p-4">
+            <div className="card rounded-box border border-base-300 bg-base-100 p-4">
               <p className="text-[11px] text-base-content/40">今日活跃（DAU）</p>
               <p className="mt-1 text-2xl font-bold text-primary">{counts.dauToday}</p>
               <p className="mt-1 text-[11px] text-base-content/40">
@@ -229,7 +229,7 @@ export function AdminStats() {
               </p>
             </div>
 
-            <div className="rounded-box border border-base-300 bg-base-100 p-4">
+            <div className="card rounded-box border border-base-300 bg-base-100 p-4">
               <p className="text-[11px] text-base-content/40">7 日 / 30 日活跃</p>
               <p className="mt-1 text-2xl font-bold text-primary">
                 {counts.wau}
@@ -240,7 +240,7 @@ export function AdminStats() {
           </div>
 
           {/* 近 14 天趋势 */}
-          <div className="mt-4 rounded-box border border-base-300 bg-base-100 p-4">
+          <div className="card mt-4 rounded-box border border-base-300 bg-base-100 p-4">
             <p className="mb-3 text-[11px] text-base-content/40">近 {TREND_DAYS} 天日活</p>
             <div className="flex h-24 items-end gap-1">
               {trend.map((point) => (
@@ -270,7 +270,7 @@ export function AdminStats() {
               { label: '聚会活动', value: counts.activities },
               { label: '朋友圈', value: counts.moments },
             ].map((item) => (
-              <div key={item.label} className="rounded-box border border-base-300 bg-base-100 p-3">
+              <div key={item.label} className="card rounded-box border border-base-300 bg-base-100 p-3">
                 <p className="text-[11px] text-base-content/40">{item.label}</p>
                 <p className="mt-0.5 text-lg font-semibold text-base-content">{item.value}</p>
               </div>

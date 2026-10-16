@@ -209,7 +209,7 @@ export function WelcomeLetter({ userId }: { userId: string | null }) {
           <button
             type="button"
             onClick={close}
-            className="rounded-box bg-primary px-6 py-2.5 text-xs font-medium text-primary-content transition hover:shadow-sm"
+            className="btn btn-primary btn-sm transition hover:shadow-sm"
           >
             我记住了，进去吧
           </button>

@@ -123,7 +123,7 @@ export function UserBanSection({ adminId }: { adminId: string }) {
   if (adminId !== ADMIN_UUID) return null
 
   return (
-    <section className="rounded-box border border-base-300 bg-base-100/80 p-4">
+    <section className="card rounded-box border border-base-300 bg-base-100/80 p-4">
       <h2 className="text-xs tracking-wider text-base-content/60">用户管理 · 停用账号</h2>
       <p className="mt-2 text-[11.5px] leading-relaxed text-base-content/60">
         停用是真的封禁（改 auth 里的 banned_until），被封的人登录不上、
@@ -142,7 +142,7 @@ export function UserBanSection({ adminId }: { adminId: string }) {
             if (e.key === 'Enter') void search()
           }}
           placeholder="按昵称或用户名搜"
-          className="min-w-0 flex-1 rounded-box border border-base-300 bg-base-100 px-3 py-2 text-xs text-base-content placeholder:text-base-content/40 focus:border-base-300 focus:outline-none"
+          className="card min-w-0 flex-1 rounded-box border border-base-300 bg-base-100 px-3 py-2 text-xs text-base-content placeholder:text-base-content/40 focus:border-base-300 focus:outline-none"
         />
         <button
           type="button"
@@ -176,7 +176,7 @@ export function UserBanSection({ adminId }: { adminId: string }) {
           {found.map((person) => (
             <li
               key={person.id}
-              className="rounded-box border border-base-300 bg-base-100 px-3 py-2.5"
+              className="card rounded-box border border-base-300 bg-base-100 px-3 py-2.5"
             >
               <div className="flex items-center justify-between gap-3">
                 <span className="min-w-0">

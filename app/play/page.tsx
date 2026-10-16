@@ -567,7 +567,7 @@ export default function PlayPage() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {activities.length === 0 ? (
-                <div className="md:col-span-2 rounded-box border border-base-300 bg-base-100/60 backdrop-blur">
+                <div className="card md:col-span-2 rounded-box border border-base-300 bg-base-100/60 backdrop-blur">
                   <EmptyState art="friends" title="还没有活动" hint="点右上角「发活动」，攒个局吧" />
                 </div>
               ) : (
@@ -592,7 +592,7 @@ export default function PlayPage() {
                           setDetailActivity(act)
                         }
                       }}
-                      className="relative cursor-pointer rounded-box border border-base-300 bg-base-100 p-5 shadow-sm hover:shadow-sm hover:-translate-y-0.5 transition-all text-left flex flex-col focus:outline-none focus:ring-2 focus:ring-primary/30"
+                      className="card relative cursor-pointer rounded-box border border-base-300 bg-base-100 p-5 shadow-sm hover:shadow-sm hover:-translate-y-0.5 transition-all text-left flex flex-col focus:outline-none focus:ring-2 focus:ring-primary/30"
                     >
                       {/* 收藏（放在卡片右上角，与"打开详情"的点击区分开） */}
                       <button
@@ -852,7 +852,7 @@ export default function PlayPage() {
 
             <div className="flex gap-2 justify-end">
               <button type="button" onClick={() => { setShowReportModal(false); setReportReason(''); setReportMessage('') }} className="px-5 py-2 rounded-box text-sm text-base-content/60 hover:bg-primary/5 transition">取消</button>
-              <button type="submit" disabled={reporting || !reportReason.trim()} className="px-5 py-2 rounded-box bg-primary text-primary-content text-sm font-medium hover:shadow-sm transition-all disabled:opacity-50">
+              <button type="submit" disabled={reporting || !reportReason.trim()} className="btn btn-primary hover:shadow-sm transition-all disabled:opacity-50">
                 {reporting ? '提交中...' : '提交'}
               </button>
             </div>
@@ -916,7 +916,7 @@ export default function PlayPage() {
 
             <div className="flex gap-2 justify-end">
               <button type="button" onClick={() => setShowPostModal(false)} className="px-5 py-2 rounded-box text-sm text-base-content/60 hover:bg-primary/5 transition">取消</button>
-              <button type="submit" disabled={posting || !newTitle.trim()} className="px-5 py-2 rounded-box bg-primary text-primary-content text-sm font-medium hover:shadow-sm transition-all disabled:opacity-50">
+              <button type="submit" disabled={posting || !newTitle.trim()} className="btn btn-primary hover:shadow-sm transition-all disabled:opacity-50">
                 {posting ? '发布中...' : '发布'}
               </button>
             </div>
@@ -946,7 +946,7 @@ export default function PlayPage() {
 
             <div className="flex gap-2 justify-end">
               <button type="button" onClick={() => { setShowNewTypeModal(false); setNewTypeName(''); setCreateTypeMessage('') }} className="px-5 py-2 rounded-box text-sm text-base-content/60 hover:bg-primary/5 transition">取消</button>
-              <button type="submit" disabled={creatingType || !newTypeName.trim()} className="px-5 py-2 rounded-box bg-primary text-primary-content text-sm font-medium hover:shadow-sm transition-all disabled:opacity-50">
+              <button type="submit" disabled={creatingType || !newTypeName.trim()} className="btn btn-primary hover:shadow-sm transition-all disabled:opacity-50">
                 {creatingType ? '提交中...' : '添加'}
               </button>
             </div>

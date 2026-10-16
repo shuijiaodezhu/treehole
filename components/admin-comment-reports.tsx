@@ -170,7 +170,7 @@ export function CommentReportsSection({ adminId }: { adminId: string }) {
   if (adminId !== ADMIN_UUID) return null
 
   return (
-    <section className="rounded-box border border-base-300 bg-base-100/80 p-4">
+    <section className="card rounded-box border border-base-300 bg-base-100/80 p-4">
       <div className="flex items-center justify-between gap-3">
         <h2 className="text-xs tracking-wider text-base-content/60">
           评论举报 · {loading ? '…' : reports.length}
@@ -191,7 +191,7 @@ export function CommentReportsSection({ adminId }: { adminId: string }) {
       ) : (
         <ul className="mt-3 space-y-3">
           {reports.map((report) => (
-            <li key={report.id} className="rounded-box border border-base-300 bg-base-100 p-3">
+            <li key={report.id} className="card rounded-box border border-base-300 bg-base-100 p-3">
               <p className="text-[11px] text-base-content/60">
                 由 <span className="text-base-content/60">{report.reporter_name}</span> 举报 ·{' '}
                 {new Date(report.created_at).toLocaleString('zh-CN')}

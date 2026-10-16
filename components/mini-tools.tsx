@@ -198,7 +198,7 @@ export function MiniTools() {
               key={tool.key}
               type="button"
               onClick={() => setActive(tool.key)}
-              className={`rounded-box border p-4 text-left transition-all ${
+              className={`card rounded-box border p-4 text-left transition-all ${
                 on
                   ? 'border-primary bg-primary/5 shadow-sm'
                   : 'border-base-300 bg-base-100/90 hover:-translate-y-0.5 hover:shadow-sm'
@@ -215,7 +215,7 @@ export function MiniTools() {
       </div>
 
       {/* 当前工具 */}
-      <div className="rounded-box border border-base-300 bg-base-100/90 p-5 backdrop-blur">
+      <div className="card rounded-box border border-base-300 bg-base-100/90 p-5 backdrop-blur">
         {active === 'dice' && (
           <div>
             <div className="flex flex-wrap items-center gap-3">
@@ -233,7 +233,7 @@ export function MiniTools() {
                 type="button"
                 onClick={rollDice}
                 disabled={rolling}
-                className="ml-auto rounded-box bg-primary px-5 py-2 text-xs font-medium text-primary-content transition hover:shadow-sm disabled:opacity-60"
+                className="btn btn-primary btn-sm ml-auto transition hover:shadow-sm disabled:opacity-60"
               >
                 {rolling ? '掷…' : '掷'}
               </button>
@@ -246,7 +246,7 @@ export function MiniTools() {
                 dice.map((face, i) => (
                   <span
                     key={i}
-                    className={`flex h-14 w-14 items-center justify-center rounded-box border text-2xl font-semibold transition ${
+                    className={`card flex h-14 w-14 items-center justify-center rounded-box border text-2xl font-semibold transition ${
                       rolling
                         ? 'border-base-300 bg-primary/5 text-accent'
                         : 'border-primary bg-base-100 text-primary shadow-sm'
@@ -283,7 +283,7 @@ export function MiniTools() {
                 type="button"
                 onClick={flipCoins}
                 disabled={rolling}
-                className="ml-auto rounded-box bg-primary px-5 py-2 text-xs font-medium text-primary-content transition hover:shadow-sm disabled:opacity-60"
+                className="btn btn-primary btn-sm ml-auto transition hover:shadow-sm disabled:opacity-60"
               >
                 {rolling ? '抛…' : '抛'}
               </button>
@@ -347,7 +347,7 @@ export function MiniTools() {
               <button
                 type="button"
                 onClick={pickOne}
-                className="ml-auto rounded-box bg-primary px-5 py-2 text-xs font-medium text-primary-content transition hover:shadow-sm"
+                className="btn btn-primary btn-sm ml-auto transition hover:shadow-sm"
               >
                 抽一个
               </button>
@@ -394,7 +394,7 @@ export function MiniTools() {
               <button
                 type="button"
                 onClick={rollNumbers}
-                className="ml-auto rounded-box bg-primary px-5 py-2 text-xs font-medium text-primary-content transition hover:shadow-sm"
+                className="btn btn-primary btn-sm ml-auto transition hover:shadow-sm"
               >
                 生成
               </button>
@@ -434,7 +434,7 @@ export function MiniTools() {
 
       {/* 最近结果 */}
       {history.length > 0 && (
-        <div className="rounded-box border border-base-300 bg-base-100/70 p-4">
+        <div className="card rounded-box border border-base-300 bg-base-100/70 p-4">
           <div className="flex items-center justify-between gap-3">
             <p className="text-[11.5px] tracking-wide text-base-content/60">最近结果（只存在这台设备上）</p>
             <button

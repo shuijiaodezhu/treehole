@@ -68,7 +68,7 @@ export function VaultView({ userId }: { userId: string | null }) {
   return (
     <div className="mx-auto max-w-3xl">
       {/* 顶部：容量与上传 */}
-      <div className="mb-4 rounded-box border border-base-300 bg-base-100/80 p-5 shadow-sm backdrop-blur">
+      <div className="card mb-4 rounded-box border border-base-300 bg-base-100/80 p-5 shadow-sm backdrop-blur">
         <div className="flex flex-wrap items-center gap-3">
           <div className="flex h-10 w-10 items-center justify-center rounded-box bg-gradient-to-br from-primary/20 to-primary/10">
             <Icon name="box" className="h-5 w-5 text-primary" />
@@ -90,7 +90,7 @@ export function VaultView({ userId }: { userId: string | null }) {
             <input
               type="file"
               multiple
-              className="hidden"
+              className="input hidden"
               disabled={vault.uploading}
               onChange={(e) => {
                 void handleFiles(e.target.files)
@@ -135,7 +135,7 @@ export function VaultView({ userId }: { userId: string | null }) {
       {vault.loading && vault.files.length === 0 ? (
         <SkeletonList count={2} lines={1} />
       ) : visible.length === 0 ? (
-        <div className="rounded-box border border-base-300 bg-base-100/60 backdrop-blur">
+        <div className="card rounded-box border border-base-300 bg-base-100/60 backdrop-blur">
           <EmptyState
             art="box"
             title={vault.files.length === 0 ? '储物箱还是空的' : `没有${CATEGORY_LABEL[filter as FileCategory]}类文件`}
@@ -147,7 +147,7 @@ export function VaultView({ userId }: { userId: string | null }) {
           {visible.map((f) => (
             <div
               key={f.id}
-              className="flex items-center gap-3 rounded-box border border-base-300 bg-base-100/80 p-3.5 backdrop-blur"
+              className="card flex items-center gap-3 rounded-box border border-base-300 bg-base-100/80 p-3.5 backdrop-blur"
             >
               <span className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-box bg-primary/5 text-primary">
                 <Icon name={CATEGORY_ICON[f.category]} className="h-4 w-4" />

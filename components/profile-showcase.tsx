@@ -75,7 +75,7 @@ export function ShowcaseSettingsSection({ userId }: { userId: string | null }) {
   }
 
   return (
-    <section className="rounded-box border border-base-300 bg-base-100/80 p-4">
+    <section className="card rounded-box border border-base-300 bg-base-100/80 p-4">
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
           <p className="text-xs font-medium text-base-content">展示页</p>

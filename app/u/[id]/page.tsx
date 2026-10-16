@@ -172,7 +172,7 @@ function UserShowcase() {
 
         <main className="space-y-4">
           {/* 资料 */}
-          <section className="rounded-box border border-base-300 bg-base-100/80 p-6 backdrop-blur shadow-sm">
+          <section className="card rounded-box border border-base-300 bg-base-100/80 p-6 backdrop-blur shadow-sm">
             <div className="flex items-start gap-4">
               <div className="flex h-16 w-16 flex-shrink-0 items-center justify-center overflow-hidden rounded-box bg-primary/5 text-2xl shadow-sm">
                 {profile?.avatar_url ? (
@@ -236,7 +236,7 @@ function UserShowcase() {
           </section>
 
           {/* 公开的帖子 */}
-          <section className="rounded-box border border-base-300 bg-base-100/80 p-6 backdrop-blur">
+          <section className="card rounded-box border border-base-300 bg-base-100/80 p-6 backdrop-blur">
             <h2 className="text-sm font-semibold text-base-content">
               {isMe ? '我在院子里说过的' : `TA 在院子里说过的`}
             </h2>

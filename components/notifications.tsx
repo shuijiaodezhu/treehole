@@ -231,7 +231,7 @@ export function NotificationsList({ userId }: { userId: string | null }) {
 
   if (missing) {
     return (
-      <div className="rounded-box border border-base-300 bg-base-100/80 px-4 py-3 text-[11px] leading-relaxed text-base-content/60">
+      <div className="card rounded-box border border-base-300 bg-base-100/80 px-4 py-3 text-[11px] leading-relaxed text-base-content/60">
         <p>
           通知还没开通。需要在 Supabase 的 SQL Editor 里，执行{' '}
           <code>supabase-notifications.sql</code> 这个文件的
@@ -279,7 +279,7 @@ export function NotificationsList({ userId }: { userId: string | null }) {
       </div>
 
       {!loading && items.length === 0 ? (
-        <div className="rounded-box border border-dashed border-base-300 bg-base-100/60 px-4 py-10 text-center">
+        <div className="card rounded-box border border-dashed border-base-300 bg-base-100/60 px-4 py-10 text-center">
           <p className="text-xs text-base-content/60">还没有通知</p>
           <p className="mt-1 text-[11.5px] text-accent">
             有人提到你、回了你的信、处理了你的举报，都会出现在这里。

@@ -115,7 +115,7 @@ export default function FavoritesPage() {
           <button
             type="button"
             onClick={() => meId && void reload(meId)}
-            className="inline-flex items-center gap-1.5 rounded-box border border-base-300 bg-base-100 px-3 py-1.5 text-xs text-primary hover:text-primary transition"
+            className="card inline-flex items-center gap-1.5 rounded-box border border-base-300 bg-base-100 px-3 py-1.5 text-xs text-primary hover:text-primary transition"
           >
             <Icon name="refresh" className="w-3.5 h-3.5" />
             刷新
@@ -179,7 +179,7 @@ export default function FavoritesPage() {
             {visible.map((f) => (
               <div
                 key={f.id}
-                className="rounded-box border border-base-300 bg-base-100 p-4 shadow-sm"
+                className="card rounded-box border border-base-300 bg-base-100 p-4 shadow-sm"
               >
                 <div className="flex items-center gap-2 mb-2">
                   <span className="rounded-full bg-primary/5 px-2 py-0.5 text-[11px] text-primary">

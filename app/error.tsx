@@ -55,7 +55,7 @@ export default function Error({
         <button
           type="button"
           onClick={reset}
-          className="rounded-full bg-primary px-5 py-2.5 font-serif-cn text-[12.5px] text-primary-content transition hover:shadow-sm"
+          className="btn btn-primary font-serif-cn transition hover:shadow-sm"
         >
           再试一次
         </button>

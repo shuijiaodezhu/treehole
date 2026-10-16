@@ -88,7 +88,7 @@ export function ExportDataSection({ userId, email }: { userId: string | null; em
   const [result, setResult] = useState<ExportResult | null>(null)
 
   return (
-    <section className="rounded-box border border-base-300 bg-base-100 p-6 shadow-sm">
+    <section className="card rounded-box border border-base-300 bg-base-100 p-6 shadow-sm">
       <div className="flex items-center gap-3">
         <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary/5">
           <Icon name="download" className="h-4 w-4 text-primary" />
@@ -172,7 +172,7 @@ export function DeleteAccountSection({ userId }: { userId: string | null }) {
   }
 
   return (
-    <section className="rounded-box border border-base-300 bg-base-100 p-6 shadow-sm">
+    <section className="card rounded-box border border-base-300 bg-base-100 p-6 shadow-sm">
       <div className="flex items-center gap-3">
         <div className="flex h-9 w-9 items-center justify-center rounded-full bg-base-100">
           <Icon name="alert" className="h-4 w-4 text-base-content" />
@@ -196,7 +196,7 @@ export function DeleteAccountSection({ userId }: { userId: string | null }) {
       )}
 
       {step === 'confirm' && (
-        <div className="mt-4 rounded-box border border-base-300 bg-base-100 px-4 py-4">
+        <div className="card mt-4 rounded-box border border-base-300 bg-base-100 px-4 py-4">
           <p className="text-[11.5px] leading-relaxed text-base-content">
             提交后，站主会收到一条申请，然后去后台把你的账号和内容一起删掉。
             <br />
@@ -210,7 +210,7 @@ export function DeleteAccountSection({ userId }: { userId: string | null }) {
             rows={2}
             maxLength={200}
             placeholder="想说的话（可以留空）"
-            className="mt-3 w-full resize-none rounded-box border border-base-300 bg-base-100 px-3 py-2 text-[12px] text-base-content placeholder:text-base-content/60 focus:border-base-300 focus:outline-none"
+            className="card mt-3 w-full resize-none rounded-box border border-base-300 bg-base-100 px-3 py-2 text-[12px] text-base-content placeholder:text-base-content/60 focus:border-base-300 focus:outline-none"
           />
           {error && <p className="mt-2 text-[11.5px] text-red-500">{error}</p>}
           <div className="mt-3 flex items-center gap-2">
@@ -337,7 +337,7 @@ export function DeletionRequestsSection({ adminId }: { adminId: string }) {
   }, [rows])
 
   return (
-    <section className="mb-6 rounded-box border border-base-300 bg-base-100/80 p-6 backdrop-blur shadow-sm">
+    <section className="card mb-6 rounded-box border border-base-300 bg-base-100/80 p-6 backdrop-blur shadow-sm">
       <div className="flex items-start gap-3">
         <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full bg-base-100">
           <Icon name="alert" className="h-4 w-4 text-base-content" />
@@ -359,7 +359,7 @@ export function DeletionRequestsSection({ adminId }: { adminId: string }) {
         <button
           type="button"
           onClick={reload}
-          className="inline-flex items-center gap-1 rounded-box border border-base-300 bg-base-100 px-3 py-1.5 text-xs text-base-content/60 transition hover:bg-primary/5"
+          className="btn btn-primary btn-sm inline-flex items-center gap-1 border transition hover: /5"
         >
           <Icon name="refresh" className="h-3.5 w-3.5" />
           刷新
@@ -378,7 +378,7 @@ export function DeletionRequestsSection({ adminId }: { adminId: string }) {
             {rows.map((r) => (
               <li
                 key={r.id}
-                className="flex flex-wrap items-center gap-x-3 gap-y-1 rounded-box border border-base-300 bg-base-100 px-4 py-3"
+                className="card flex flex-wrap items-center gap-x-3 gap-y-1 rounded-box border border-base-300 bg-base-100 px-4 py-3"
               >
                 <span className="text-xs font-medium text-base-content">
                   {names[r.user_id] || '（没查到昵称）'}

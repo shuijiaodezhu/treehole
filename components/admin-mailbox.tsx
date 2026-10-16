@@ -230,7 +230,7 @@ export function AdminMailbox({ adminId }: { adminId: string }) {
   const unreadTotal = useMemo(() => rows.filter((r) => r.unread).length, [rows])
 
   return (
-    <section className="rounded-box border border-base-300 bg-base-100/80 p-6 backdrop-blur shadow-sm">
+    <section className="card rounded-box border border-base-300 bg-base-100/80 p-6 backdrop-blur shadow-sm">
       <div className="mb-5 flex items-start gap-3">
         <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full bg-primary/5">
           <Icon name="mail" className="h-4 w-4 text-base-content/60" />
@@ -257,7 +257,7 @@ export function AdminMailbox({ adminId }: { adminId: string }) {
         <button
           type="button"
           onClick={() => void load()}
-          className="inline-flex items-center gap-1 rounded-box border border-base-300 bg-base-100 px-3 py-1.5 text-xs text-base-content/60 transition hover:bg-primary/5"
+          className="card inline-flex items-center gap-1 rounded-box border border-base-300 bg-base-100 px-3 py-1.5 text-xs text-base-content/60 transition hover:bg-primary/5"
         >
           <Icon name="refresh" className="h-3.5 w-3.5" />
           刷新
@@ -307,7 +307,7 @@ export function AdminMailbox({ adminId }: { adminId: string }) {
           </nav>
 
           {/* 读信 / 回信 */}
-          <div className="flex min-h-[320px] min-w-0 flex-col rounded-box border border-base-300 bg-base-100">
+          <div className="card flex min-h-[320px] min-w-0 flex-col rounded-box border border-base-300 bg-base-100">
             {!active ? (
               <p className="m-auto py-10 text-center text-xs text-base-content/40">左边选一个人，看看他写了什么</p>
             ) : (
@@ -330,7 +330,7 @@ export function AdminMailbox({ adminId }: { adminId: string }) {
                       return (
                         <div key={m.id} className={`flex ${mine ? 'justify-end' : 'justify-start'}`}>
                           <div
-                            className={`max-w-[78%] rounded-box px-3.5 py-2.5 font-serif-cn text-[12.5px] leading-relaxed ${
+                            className={`card max-w-[78%] rounded-box px-3.5 py-2.5 font-serif-cn text-[12.5px] leading-relaxed ${
                               mine
                                 ? 'bg-gradient-to-r from-primary/20 to-primary/10 text-white'
                                 : 'border border-base-300 bg-base-100 text-base-content'
@@ -361,7 +361,7 @@ export function AdminMailbox({ adminId }: { adminId: string }) {
                       rows={2}
                       maxLength={500}
                       placeholder={`回 ${active.label} 一封…`}
-                      className="min-w-0 flex-1 resize-none rounded-box border border-base-300 bg-base-100 px-3.5 py-2.5 font-serif-cn text-[12.5px] text-base-content focus:border-primary/40 focus:outline-none"
+                      className="card min-w-0 flex-1 resize-none rounded-box border border-base-300 bg-base-100 px-3.5 py-2.5 font-serif-cn text-[12.5px] text-base-content focus:border-primary/40 focus:outline-none"
                     />
                     <EmojiPicker onPick={(emoji) => setDraft((cur) => cur + emoji)} align="right" />
                     <button

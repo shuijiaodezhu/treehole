@@ -78,7 +78,7 @@ export default function MyPostsPage() {
 
         <main className="space-y-3">
           {posts.length === 0 ? (
-            <div className="rounded-box border border-base-300 bg-base-100/60 backdrop-blur p-10 text-center">
+            <div className="card rounded-box border border-base-300 bg-base-100/60 backdrop-blur p-10 text-center">
               <div className="w-12 h-12 rounded-full bg-primary/5 flex items-center justify-center mx-auto mb-3">
                 <IconDoc className="w-5 h-5 text-base-content/60" />
               </div>
@@ -87,7 +87,7 @@ export default function MyPostsPage() {
             </div>
           ) : (
             posts.map((post) => (
-              <div key={post.id} className="group rounded-box border border-base-300 bg-base-100 p-5 hover:shadow-sm transition-all relative overflow-hidden">
+              <div key={post.id} className="card group rounded-box border border-base-300 bg-base-100 p-5 hover:shadow-sm transition-all relative overflow-hidden">
                 <div className="flex justify-between items-start mb-3">
                   <span className="text-[11px] text-base-content/40 tracking-wide">
                     {new Date(post.created_at).toLocaleString('zh-CN', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' })}

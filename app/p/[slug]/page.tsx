@@ -56,7 +56,7 @@ function SitePageInner() {
           全部条款与说明
         </Link>
 
-        <article className="mt-5 rounded-box border border-base-300 bg-base-100/85 p-7 shadow-sm backdrop-blur">
+        <article className="card mt-5 rounded-box border border-base-300 bg-base-100/85 p-7 shadow-sm backdrop-blur">
           <header className="border-b border-dashed border-base-300 pb-4">
             <h1 className="font-serif-cn text-2xl font-semibold tracking-wide text-base-content">{title}</h1>
             {page?.summary && (

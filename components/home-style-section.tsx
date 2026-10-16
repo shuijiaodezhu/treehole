@@ -65,7 +65,7 @@ export function HomeStyleSection() {
                 <input
                   type="radio"
                   name="treehole-home-style"
-                  className="radio radio-sm radio-primary mt-0.5"
+                  className="input radio radio-sm radio-primary mt-0.5"
                   checked={active}
                   onChange={() => writeHomeStyle(item.value)}
                 />

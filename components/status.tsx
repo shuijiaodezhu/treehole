@@ -189,7 +189,7 @@ export function StatusPicker({ userId }: { userId: string | null }) {
 
   if (missing) {
     return (
-      <section className="rounded-box border border-base-300 bg-base-100/80 p-4">
+      <section className="card rounded-box border border-base-300 bg-base-100/80 p-4">
         <p className="text-xs font-medium text-base-content">状态</p>
         <p className="mt-1 text-[11.5px] leading-relaxed text-base-content/60">
           还没开通：先在 Supabase 里执行 <code>supabase-status.sql</code>。
@@ -199,7 +199,7 @@ export function StatusPicker({ userId }: { userId: string | null }) {
   }
 
   return (
-    <section className="rounded-box border border-base-300 bg-base-100/80 p-4">
+    <section className="card rounded-box border border-base-300 bg-base-100/80 p-4">
       <div className="flex items-baseline justify-between gap-3">
         <p className="text-xs font-medium text-base-content">状态</p>
         <p className="text-[11px] text-accent">

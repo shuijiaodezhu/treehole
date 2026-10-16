@@ -61,7 +61,7 @@ export default function ForgotPasswordPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center px-4">
-      <div className="w-full max-w-sm rounded-box border border-base-300 bg-base-100/80 p-7 backdrop-blur shadow-sm">
+      <div className="card w-full max-w-sm rounded-box border border-base-300 bg-base-100/80 p-7 backdrop-blur shadow-sm">
         <h1 className="font-serif-cn text-lg font-semibold text-base-content">找回密码</h1>
         <p className="mt-1.5 font-serif-cn text-[11.5px] leading-relaxed text-base-content/60">
           填注册用的邮箱，我们把重置链接寄过去。
@@ -93,7 +93,7 @@ export default function ForgotPasswordPage() {
             <button
               type="submit"
               disabled={loading || !email.trim()}
-              className="w-full rounded-box bg-primary py-3 font-serif-cn text-[13px] text-primary-content transition hover:shadow-sm disabled:opacity-50"
+              className="btn btn-primary w-full font-serif-cn transition hover:shadow-sm disabled:opacity-50"
             >
               {loading ? '发送中…' : '寄出重置链接'}
             </button>

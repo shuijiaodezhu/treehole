@@ -655,7 +655,7 @@ export default function WorldPage() {
               <span className="text-[11px] text-white/80 font-normal">发到「{currentLocationName}」</span>
             </button>
 
-            <div className="rounded-box border border-base-300 bg-base-100 shadow-sm overflow-hidden">
+            <div className="card rounded-box border border-base-300 bg-base-100 shadow-sm overflow-hidden">
               <div className="px-4 py-3 border-b border-base-300">
                 <p className="text-[11px] text-base-content/60 tracking-wide">分区 · 看哪儿的帖子</p>
               </div>
@@ -717,7 +717,7 @@ export default function WorldPage() {
               </div>
             </div>
 
-            <div className="rounded-box border border-base-300 bg-base-100 shadow-sm overflow-hidden">
+            <div className="card rounded-box border border-base-300 bg-base-100 shadow-sm overflow-hidden">
               <Link href="/friends" className="flex items-center gap-2 px-4 py-3 text-sm text-base-content hover:bg-primary/5 transition border-b border-base-300">
                 <Icon name="home" className="w-4 h-4 text-base-content/60" />小屋
               </Link>
@@ -754,7 +754,7 @@ export default function WorldPage() {
               )}
 
               {visiblePosts.length === 0 ? (
-                <div className="rounded-box border border-base-300 bg-base-100/60 backdrop-blur">
+                <div className="card rounded-box border border-base-300 bg-base-100/60 backdrop-blur">
                   <EmptyState
                     art={focusMissing ? 'search' : 'leaf'}
                     title={focusMissing ? '没能找到这条帖子' : '这里还空空的'}
@@ -772,7 +772,7 @@ export default function WorldPage() {
                       </div>
                     )}
 
-                    <div className="rounded-box border border-base-300 bg-base-100 p-5 shadow-sm">
+                    <div className="card rounded-box border border-base-300 bg-base-100 p-5 shadow-sm">
                     <div className="flex items-center gap-3 mb-3">
                       {post.is_anonymous ? (
                         <div className="w-10 h-10 rounded-box bg-base-300 flex items-center justify-center flex-shrink-0">
