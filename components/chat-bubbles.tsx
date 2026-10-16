@@ -112,9 +112,14 @@ export function ChatMessages({
               */}
               {!mine && (
                 <div className="chat-image avatar placeholder self-start">
+                  {/* 圆圈必须写死正方形（h-7 w-7）：daisyUI 的 chat-image 默认跨两行
+                      （气泡 + 时间），只写 w-7 时高度会继承那两行 → 圆被拉成椭圆
+                      → 里头的字母看着就是"歪"的。再自己 flex 居中 + 字加 leading-none */}
                   {lastOfGroup && (
-                    <div className="w-7 rounded-full bg-accent/25 text-base-content">
-                      <span className="font-serif-cn text-[11px] font-semibold">{initial}</span>
+                    <div className="flex h-7 w-7 items-center justify-center rounded-full bg-accent/25 text-base-content">
+                      <span className="font-serif-cn text-[11px] font-semibold leading-none">
+                        {initial}
+                      </span>
                     </div>
                   )}
                 </div>
