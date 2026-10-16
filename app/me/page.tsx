@@ -139,7 +139,7 @@ export default function MePage() {
         </header>
 
         <main className="space-y-4 lg:grid lg:grid-cols-2 lg:items-start lg:gap-4 lg:space-y-0">
-          <div className="card rounded-box border border-base-300 bg-base-100 p-6 shadow-sm relative overflow-hidden">
+          <div className="card rounded-box border border-base-300 bg-base-100 p-6 shadow-sm relative overflow-hidden lg:col-span-2">
 
             <div className="relative flex items-start gap-4">
               <div className="w-16 h-16 rounded-box bg-base-content/5 flex items-center justify-center text-2xl overflow-hidden flex-shrink-0 shadow-sm">
