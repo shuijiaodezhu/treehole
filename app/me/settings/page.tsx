@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { createClient } from '../../lib/supabase'
 import { LoginDevicesSection } from '../../../components/login-log'
 import { HomeStyleSection } from '../../../components/home-style-section'
+import { ThemeSection } from '../../../components/theme-section'
 import { AffinitySettingsSection } from '../../../components/affinity'
 import { DeleteAccountSection, ExportDataSection } from '../../../components/account-tools'
 import { Icon } from '../../../components/icons'
@@ -221,7 +222,8 @@ export default function SettingsPage() {
 
         <main className="space-y-4">
           {/* ==================== 个性化 · 首页样式（localStorage，只影响本机） ==================== */}
-          <HomeStyleSection />
+          <ThemeSection />
+        <HomeStyleSection />
 
           {/* ==================== 登录设备（看自己在哪些设备登录过） ==================== */}
           <LoginDevicesSection userId={meId} />

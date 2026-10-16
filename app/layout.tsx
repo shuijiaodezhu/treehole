@@ -11,6 +11,7 @@ import { PageDecor } from "../components/page-decor"
 import { PaperGrain } from "../components/paper-pattern"
 import { Toaster } from "../components/ui/sonner";
 import { LoginTransitionOverlay } from "../components/login-transition";
+import { ThemeApplier } from '../components/theme-applier'
 
 const cormorant = Cormorant_Garamond({
   subsets: ["latin"],
@@ -97,6 +98,7 @@ export default function RootLayout({
         precedence="default"
       />
       <body>
+        <ThemeApplier />
       {/*
         首次加载才放 splash：这里用内联脚本在**首帧之前**写 html 属性，
         所以不会出现"先看到页面、再被盖住"的空窗。
