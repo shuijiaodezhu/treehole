@@ -101,9 +101,17 @@ export function ChatMessages({
                 firstOfGroup ? 'mt-3' : 'mt-0.5'
               }`}
             >
-              {/* 头像：只在组尾出现，和气泡底对齐 */}
+              {/*
+                头像：只在组尾出现。
+                ⚠️ 必须 self-start ✗ 否则会"歪"：
+                  daisyUI 的 chat-image 默认是 grid-row: span 2
+                  → 它跨了"气泡 + 下面的时间"两行 ✓
+                  → 头像的垂直中心落在两者之间 → 看着就是往下歪了 ✓
+                  self-start 让它贴住气泡顶端（和微信一致 ✓）
+                  （更喜欢贴气泡**底**的话，把 self-start 换成 self-end ✓）
+              */}
               {!mine && (
-                <div className="chat-image avatar placeholder">
+                <div className="chat-image avatar placeholder self-start">
                   {lastOfGroup && (
                     <div className="w-7 rounded-full bg-accent/25 text-base-content">
                       <span className="font-serif-cn text-[11px] font-semibold">{initial}</span>
