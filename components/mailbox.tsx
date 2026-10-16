@@ -1,6 +1,7 @@
 'use client'
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { isAfter } from './time-compare'
 import Link from 'next/link'
 import { createClient } from '../app/lib/supabase'
 import { useTableRealtime } from './realtime-table'
@@ -196,7 +197,7 @@ export function useMailbox(meId: string | null): Mailbox {
   /** 站主发来、且比上次读到的更新 → 未读 */
   const unread = useMemo(() => {
     if (!seenAt) return messages.filter((m) => m.sender_id !== meId).length
-    return messages.filter((m) => m.sender_id !== meId && m.created_at > seenAt).length
+    return messages.filter((m) => m.sender_id !== meId && isAfter(m.created_at, seenAt)).length
   }, [messages, seenAt, meId])
 
   return {

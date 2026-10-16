@@ -1,6 +1,7 @@
 'use client'
 
 import { useCallback, useEffect, useState } from 'react'
+import { newest } from './time-compare'
 import { createClient } from '../app/lib/supabase'
 import { markModuleSeen, writeSeenAt } from './module-badges'
 import { peek } from './local-store'
@@ -245,12 +246,8 @@ export function useUnreadMessages(userId: string | null): UnreadMessages {
        */
       const localSeenAt = readKey(`${CONV_SEEN_PREFIX}${userId}:${msg.conversation_id}`)
       const serverSeenAt = serverReads[msg.conversation_id] ?? null
-      const seenAt =
-        localSeenAt && serverSeenAt
-          ? localSeenAt > serverSeenAt
-            ? localSeenAt
-            : serverSeenAt
-          : localSeenAt || serverSeenAt
+      // 按时间戳取较新（原来比字符串 ✗ 本机是 Z、数据库是 +00:00 → 判错）
+      const seenAt = newest(localSeenAt, serverSeenAt)
           if (!isNewer(msg.created_at, seenAt)) continue
           counts[msg.conversation_id] = (counts[msg.conversation_id] ?? 0) + 1
         }

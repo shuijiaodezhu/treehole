@@ -1,6 +1,7 @@
 'use client'
 
 import { useCallback, useEffect, useState } from 'react'
+import { newest } from './time-compare'
 import { peek } from './local-store'
 import { createClient } from '../app/lib/supabase'
 
@@ -77,8 +78,8 @@ export function readSeenAt(key: keyof typeof SEEN_KEY): string | null {
     server = null
   }
 
-  if (local && server) return local > server ? local : server
-  return local || server
+  // 按时间戳取较新（原来比字符串 ✗ 格式不同会判错 → 角标又冒出来）
+  return newest(local, server)
 }
 
 export function writeSeenAt(key: keyof typeof SEEN_KEY, iso: string): void {

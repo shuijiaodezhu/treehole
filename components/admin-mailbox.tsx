@@ -1,6 +1,7 @@
 'use client'
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { isAfter } from './time-compare'
 import { createClient } from '../app/lib/supabase'
 import { Icon } from './icons'
 import { EmojiPicker } from './emoji-picker'
@@ -135,7 +136,7 @@ export function AdminMailbox({ adminId }: { adminId: string }) {
             lastText: last.content,
             fromMe: last.sender_id === adminId,
             // 最新一封是对方写的、而且比上次看过的新 → 未读
-            unread: last.sender_id !== adminId && last.created_at > (seenNow[threadUserId] ?? ''),
+            unread: last.sender_id !== adminId && isAfter(last.created_at, seenNow[threadUserId]),
           }
         })
         .sort((a, b) => b.lastAt.localeCompare(a.lastAt))
