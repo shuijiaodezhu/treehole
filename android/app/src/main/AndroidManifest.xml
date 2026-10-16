@@ -3,6 +3,10 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
 
+    <!-- 天气要用。像一般 App 那样，第一次用时弹框申请 ✓ 拒绝也能用（退回不显示城市） -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
     <application
         android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"

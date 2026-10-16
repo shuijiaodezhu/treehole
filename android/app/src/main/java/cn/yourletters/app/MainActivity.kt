@@ -9,6 +9,11 @@ import android.webkit.WebChromeClient
 import android.webkit.WebResourceRequest
 import android.webkit.WebSettings
 import android.webkit.WebView
+import android.Manifest
+import android.content.pm.PackageManager
+import android.webkit.GeolocationPermissions
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import android.webkit.WebViewClient
 import androidx.appcompat.app.AppCompatActivity
 
@@ -25,6 +30,8 @@ class MainActivity : AppCompatActivity() {
 
     private var web: WebView? = null
     private var fileCallback: ValueCallback<Array<Uri>>? = null
+    private var geoCallback: GeolocationPermissions.Callback? = null
+    private var geoOrigin: String? = null
 
     @SuppressLint("SetJavaScriptEnabled")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,9 +49,36 @@ class MainActivity : AppCompatActivity() {
             mediaPlaybackRequiresUserGesture = false // 音乐/语音能直接播 ✓
             useWideViewPort = true
             loadWithOverviewMode = true
+            setGeolocationEnabled(true)   // 网页里的 navigator.geolocation 才能用 ✓
         }
 
         wv.webChromeClient = object : WebChromeClient() {
+            // 网页要用定位 → 先按安卓规矩弹授权框 ✓ 授权后回答网页 ✓
+            override fun onGeolocationPermissionsShowPrompt(
+                origin: String?,
+                callback: GeolocationPermissions.Callback?,
+            ) {
+                if (origin == null || callback == null) return
+                val granted = ContextCompat.checkSelfPermission(
+                    this@MainActivity,
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                ) == PackageManager.PERMISSION_GRANTED
+                if (granted) {
+                    callback.invoke(origin, true, false)
+                    return
+                }
+                geoCallback = callback
+                geoOrigin = origin
+                ActivityCompat.requestPermissions(
+                    this@MainActivity,
+                    arrayOf(
+                        Manifest.permission.ACCESS_FINE_LOCATION,
+                        Manifest.permission.ACCESS_COARSE_LOCATION,
+                    ),
+                    REQ_LOCATION,
+                )
+            }
+
             // 头像/图片上传：把系统文件选择器接上 ✓
             override fun onShowFileChooser(
                 view: WebView?,
@@ -93,6 +127,22 @@ class MainActivity : AppCompatActivity() {
         web?.saveState(outState)
     }
 
+    /** 用户点了"允许/拒绝"之后，把结果告诉网页 ✓（拒绝也要回答，否则网页会一直等 ✗） */
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray,
+    ) {
+        if (requestCode == REQ_LOCATION) {
+            val ok = grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED
+            geoCallback?.invoke(geoOrigin, ok, false)
+            geoCallback = null
+            geoOrigin = null
+            return
+        }
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+    }
+
     @Deprecated("文件选择器用老接口最省事，且不需要额外依赖")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == REQ_FILE) {
@@ -124,5 +174,6 @@ class MainActivity : AppCompatActivity() {
     companion object {
         private const val START_URL = "https://yourletters.cn"
         private const val REQ_FILE = 1001
+        private const val REQ_LOCATION = 1002
     }
 }
