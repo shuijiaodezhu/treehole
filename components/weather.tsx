@@ -88,6 +88,62 @@ async function fetchCityName(lat: number, lon: number, signal: AbortSignal): Pro
   }
 }
 
+/**
+ * IP 粗定位：定位被拒 / 超时 / 浏览器不支持时的兜底。
+ *
+ * 为什么必须有这一步：
+ *   原来的兜底是写死的 DEFAULT_CITY（站主所在城市），
+ *   于是**每个访客看到的都是站主的城市** —— 等于把站主的地址贴给所有人。
+ *   IP 粗定位不需要授权、不弹窗，能给到大致城市，比"显示别人的城市"好得多。
+ *
+ * 结果缓存一天：同一个网络没必要每次都问。
+ * 拿不到就返回 null（调用处会退到"不说城市"）。
+ */
+type IpInfo = { city: string; lat: number; lon: number }
+
+async function ipLocate(signal: AbortSignal): Promise<IpInfo | null> {
+  try {
+    const cached = window.localStorage.getItem('treehole:ipcity')
+    if (cached) {
+      const parsed = JSON.parse(cached) as IpInfo
+      if (
+        parsed &&
+        typeof parsed.city === 'string' &&
+        typeof parsed.lat === 'number' &&
+        typeof parsed.lon === 'number'
+      ) {
+        return parsed
+      }
+    }
+  } catch {
+    /* 忽略 */
+  }
+
+  try {
+    const res = await fetch('https://ipwho.is/', { signal })
+    if (!res.ok) return null
+    const json = (await res.json()) as {
+      success?: boolean
+      city?: string
+      latitude?: number
+      longitude?: number
+    }
+    if (json?.success === false) return null
+    if (typeof json?.city !== 'string' || !json.city.trim()) return null
+    if (typeof json?.latitude !== 'number' || typeof json?.longitude !== 'number') return null
+
+    const info: IpInfo = { city: json.city.trim(), lat: json.latitude, lon: json.longitude }
+    try {
+      window.localStorage.setItem('treehole:ipcity', JSON.stringify(info))
+    } catch {
+      /* 忽略 */
+    }
+    return info
+  } catch {
+    return null
+  }
+}
+
 /* ==================== 天气接口（Open-Meteo，无需 API key） ==================== */
 
 type OpenMeteoResponse = {
@@ -152,7 +208,19 @@ export function useWeather(): WeatherState {
         located = true
         city = await fetchCityName(coords.lat, coords.lon, controller.signal)
       } catch {
-        // 定位失败：用默认城市继续尝试取天气
+        /*
+         * 定位被拒 / 超时 / 不支持 → 先试 IP 粗定位（不弹窗、不需要权限）。
+         * 两条路都失败才退到默认值，并且**不显示城市** ——
+         * 宁可不说城市，也不说错的城市（原来会让每个访客都看到"徐州"）。
+         */
+        const byIp = await ipLocate(controller.signal)
+        if (byIp) {
+          coords = { lat: byIp.lat, lon: byIp.lon }
+          city = byIp.city
+          located = true
+        } else {
+          city = ''
+        }
       }
 
       if (controller.signal.aborted) return
@@ -160,7 +228,8 @@ export function useWeather(): WeatherState {
       try {
         const data = await fetchWeather(coords.lat, coords.lon, city, controller.signal)
         if (controller.signal.aborted) return
-        if (data) setWeather(data)
+        if (data && located) setWeather(data)
+        else if (data) setWeather({ ...data, city: '', isLive: false })
         else if (located) setWeather((prev) => ({ ...prev, city, isLive: false }))
       } catch {
         // 网络异常：保持占位数据

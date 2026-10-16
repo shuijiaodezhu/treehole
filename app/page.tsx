@@ -335,7 +335,8 @@ export default function HomePage() {
             )}
 
             <p className="mt-7 text-[13px] text-[#6f5d4c]">
-              {weather.city} · {weather.condition}{' '}
+              {weather.city ? `${weather.city} · ` : ''}
+              {weather.condition}{' '}
               <span className="text-[#3a2f26]">{weather.temp}°</span>
               <span className="text-[#a2937f]"> / {weather.tempMin}°</span>
             </p>
