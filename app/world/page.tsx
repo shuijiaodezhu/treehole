@@ -8,6 +8,7 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { readSeenAt, writeSeenAt } from '../../components/module-badges'
 import { useWorldRepliesBadge } from '../../components/unread'
+import { age, peek, save } from '../../components/cache'
 import { useFocusQuery } from '../../components/use-focus-query'
 import { useFavorites } from '../../components/favorites'
 import { useDeleteContent } from '../../components/delete-content'
@@ -102,7 +103,8 @@ export default function WorldPage() {
   // 手机上：分区列表是「二级面板」，点按钮才展开，平时不占屏
   const [showCats, setShowCats] = useState(false)
 
-  const [categories, setCategories] = useState<Category[]>([])
+  // 分区很少变 → 先用上次缓存的画出来（立刻有 ✓）
+  const [categories, setCategories] = useState<Category[]>(() => peek<Category[]>('categories') ?? [])
   const [posts, setPosts] = useState<Post[]>([])
   const [loading, setLoading] = useState(true)
   const [meId, setMeId] = useState<string | null>(null)
@@ -140,8 +142,18 @@ export default function WorldPage() {
     const { data: userData } = await supabase.auth.getUser()
     if (!userData.user) { router.push('/login'); return }
     setMeId(userData.user.id)
-    const { data: cats } = await supabase.from('categories').select('id, name, icon, parent_id, sort_order').eq('status', 'approved').order('sort_order', { ascending: true })
-    setCategories((cats || []) as Category[])
+    /*
+     * 分区列表很少变 → 5 分钟内直接用缓存 ✓ 不再白跑一次跨境往返
+     * （超过 5 分钟才重新问一次；问到就存回去 ✓）
+     */
+    if (age('categories') < 5 * 60 * 1000) {
+      const cachedCats = peek<Category[]>('categories')
+      if (cachedCats) setCategories(cachedCats)
+    } else {
+      const { data: cats } = await supabase.from('categories').select('id, name, icon, parent_id, sort_order').eq('status', 'approved').order('sort_order', { ascending: true })
+      setCategories((cats || []) as Category[])
+      save('categories', cats || [])
+    }
     setLoading(false)
   }, [router])
 
@@ -160,7 +172,26 @@ export default function WorldPage() {
 
     const commentAuthorIds = commentsData ? [...new Set(commentsData.filter((c) => !c.is_anonymous).map((c) => c.author_id))] : []
     const allAuthorIds = [...new Set([...authorIds, ...commentAuthorIds])]
-    const { data: allProfilesData } = await supabase.from('profiles').select('id, username, nickname, avatar_url').in('id', allAuthorIds.length > 0 ? allAuthorIds : ['00000000-0000-0000-0000-000000000000'])
+    /*
+     * 资料（头像/昵称）是最重也最重复的一次查询 ✗
+     * 改成本地存一份 id→资料 的字典 ✓ 只去拉"本地还没有的那些 id" ✓
+     *   · 首次：只拉这几个人 ✓（比原来可能少很多）
+     *   · 再来：**一行都不用拉** ✓ 直接本地拼出来 ✓
+     */
+    type ProfileRow = { id: string; username: string | null; nickname: string | null; avatar_url: string | null }
+    const profileMap = peek<Record<string, ProfileRow>>('profiles:v1') ?? {}
+    const missingIds = allAuthorIds.filter((id) => !profileMap[id])
+    if (missingIds.length > 0) {
+      const { data: fetched } = await supabase
+        .from('profiles')
+        .select('id, username, nickname, avatar_url')
+        .in('id', missingIds)
+      for (const row of (fetched ?? []) as ProfileRow[]) profileMap[row.id] = row
+      save('profiles:v1', profileMap)
+    }
+    const allProfilesData: ProfileRow[] = allAuthorIds
+      .map((id) => profileMap[id])
+      .filter((x): x is ProfileRow => Boolean(x))
 
     const list: Post[] = postsData.map((p) => {
       const prof = allProfilesData?.find((x) => x.id === p.author_id)
