@@ -471,7 +471,7 @@ export default function MomentsPage() {
                 <button
                   type="submit"
                   disabled={posting || !content.trim()}
-                  className="px-6 py-2 rounded-box bg-gradient-to-r from-primary/20 to-primary/10 text-white text-sm font-medium hover:shadow-sm transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="bg-primary px-6 py-2 rounded-box text-primary-content text-sm font-medium hover:shadow-sm transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {posting ? '发布中...' : '发布'}
                 </button>

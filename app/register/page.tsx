@@ -201,7 +201,7 @@ export default function RegisterPage() {
             <button
               type="submit"
               disabled={loading || !agreed}
-              className="w-full py-2.5 rounded-box bg-gradient-to-r from-primary/20 to-primary/10 text-white text-sm font-medium hover:shadow-sm transition-all disabled:opacity-60 disabled:cursor-not-allowed"
+              className="bg-primary w-full py-2.5 rounded-box text-primary-content text-sm font-medium hover:shadow-sm transition-all disabled:opacity-60 disabled:cursor-not-allowed"
             >
               {loading ? '注册中...' : '注 册'}
             </button>

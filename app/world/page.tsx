@@ -649,7 +649,7 @@ export default function WorldPage() {
           <aside className="w-56 flex-shrink-0 flex flex-col gap-3">
             <button
               onClick={() => { setPostCategoryId(currentCategory?.id || ''); setShowPostModal(true) }}
-              className="w-full py-2.5 rounded-box bg-gradient-to-r from-base-300 to-primary/10 text-white text-sm font-medium hover:shadow-sm transition-all flex flex-col items-center justify-center gap-0.5"
+              className="bg-primary w-full py-2.5 rounded-box from-base-300 text-primary-content text-sm font-medium hover:shadow-sm transition-all flex flex-col items-center justify-center gap-0.5"
             >
               <span className="flex items-center gap-2"><Icon name="pen" className="w-4 h-4" />发帖</span>
               <span className="text-[11px] text-white/80 font-normal">发到「{currentLocationName}」</span>
@@ -1177,7 +1177,7 @@ export default function WorldPage() {
                           <button
                             onClick={() => handlePostComment(post.id)}
                             disabled={postingComment === post.id || !commentInputs[post.id]?.trim()}
-                            className="px-4 py-2 rounded-full bg-gradient-to-r from-base-300 to-primary/10 text-white text-xs font-medium transition-all disabled:opacity-50 flex-shrink-0"
+                            className="bg-primary px-4 py-2 rounded-full from-base-300 text-primary-content text-xs font-medium transition-all disabled:opacity-50 flex-shrink-0"
                           >
                             {postingComment === post.id ? '...' : '发送'}
                           </button>
@@ -1233,7 +1233,7 @@ export default function WorldPage() {
             </div>
             <div className="flex gap-2 justify-end">
               <button type="button" onClick={() => setShowPostModal(false)} className="px-5 py-2 rounded-box text-sm text-base-content/60 hover:bg-primary/5 transition">取消</button>
-              <button type="submit" disabled={posting || !postContent.trim()} className="px-5 py-2 rounded-box bg-gradient-to-r from-base-300 to-primary/10 text-white text-sm font-medium hover:shadow-sm transition-all disabled:opacity-50 flex items-center gap-1.5">
+              <button type="submit" disabled={posting || !postContent.trim()} className="bg-primary px-5 py-2 rounded-box from-base-300 text-primary-content text-sm font-medium hover:shadow-sm transition-all disabled:opacity-50 flex items-center gap-1.5">
                 <Icon name="send" className="w-3.5 h-3.5" />
                 {posting ? '发布中...' : '发送'}
               </button>
@@ -1251,7 +1251,7 @@ export default function WorldPage() {
             {createCategoryMessage && <p className={`text-xs mb-3 ${createCategoryMessage.includes('失败') ? 'text-red-500' : 'text-green-600'}`}>{createCategoryMessage}</p>}
             <div className="flex gap-2 justify-end">
               <button type="button" onClick={() => { setShowNewCategoryModal(false); setNewCategoryName(''); setNewCategoryParent(null); setCreateCategoryMessage('') }} className="px-5 py-2 rounded-box text-sm text-base-content/60 hover:bg-primary/5 transition">取消</button>
-              <button type="submit" disabled={creatingCategory || !newCategoryName.trim()} className="px-5 py-2 rounded-box bg-gradient-to-r from-base-300 to-primary/10 text-white text-sm font-medium hover:shadow-sm transition-all disabled:opacity-50">
+              <button type="submit" disabled={creatingCategory || !newCategoryName.trim()} className="bg-primary px-5 py-2 rounded-box from-base-300 text-primary-content text-sm font-medium hover:shadow-sm transition-all disabled:opacity-50">
                 {creatingCategory ? '提交中...' : '提交审核'}
               </button>
             </div>

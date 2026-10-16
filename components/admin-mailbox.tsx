@@ -330,11 +330,7 @@ export function AdminMailbox({ adminId }: { adminId: string }) {
                       return (
                         <div key={m.id} className={`flex ${mine ? 'justify-end' : 'justify-start'}`}>
                           <div
-                            className={`card max-w-[78%] rounded-box px-3.5 py-2.5 font-serif-cn text-[12.5px] leading-relaxed ${
-                              mine
-                                ? 'bg-gradient-to-r from-primary/20 to-primary/10 text-white'
-                                : 'border border-base-300 bg-base-100 text-base-content'
-                            }`}
+                            className={`bg-primary card max-w-[78%] rounded-box px-3.5 py-2.5 font-serif-cn text-[12.5px] leading-relaxed ${ mine ? ' text-primary-content' : 'border border-base-300 bg-base-100 text-base-content' }`}
                           >
                             <p className="whitespace-pre-wrap break-words">{m.content}</p>
                             <p className={`mt-1 text-[11px] ${mine ? 'text-white/70' : 'text-base-content/40'}`}>
@@ -368,7 +364,7 @@ export function AdminMailbox({ adminId }: { adminId: string }) {
                       type="button"
                       disabled={sending || !draft.trim()}
                       onClick={() => void handleReply()}
-                      className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-r from-primary/20 to-primary/10 text-white transition hover:shadow-sm disabled:opacity-50"
+                      className="bg-primary flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full text-primary-content transition hover:shadow-sm disabled:opacity-50"
                       aria-label="回信"
                     >
                       <Icon name="send" className="h-4 w-4" />

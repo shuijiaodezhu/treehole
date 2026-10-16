@@ -245,7 +245,7 @@ export function AdminSitePages() {
             type="button"
             disabled={seeding}
             onClick={() => void handleSeed()}
-            className="rounded-box bg-gradient-to-r from-primary/20 to-primary/10 px-4 py-1.5 text-xs text-white transition hover:shadow-sm disabled:opacity-50"
+            className="bg-primary rounded-box px-4 py-1.5 text-xs text-primary-content transition hover:shadow-sm disabled:opacity-50"
           >
             {seeding ? '写入中…' : '写入初稿'}
           </button>
@@ -309,7 +309,7 @@ export function AdminSitePages() {
                   type="button"
                   disabled={saving || !dirty}
                   onClick={() => void handleSave()}
-                  className="rounded-box bg-gradient-to-r from-primary/20 to-primary/10 px-5 py-2 text-sm text-white transition hover:shadow-sm disabled:opacity-50"
+                  className="bg-primary rounded-box px-5 py-2 text-sm text-primary-content transition hover:shadow-sm disabled:opacity-50"
                 >
                   {saving ? '保存中…' : dirty ? '保存' : '没有改动'}
                 </button>

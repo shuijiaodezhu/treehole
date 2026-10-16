@@ -438,7 +438,7 @@ export default function AdminPage() {
                     </div>
 
                     <div className="flex gap-2 flex-shrink-0">
-                      <button onClick={() => handleCategoryApprove(cat.id)} className="flex items-center gap-1.5 px-4 py-2 rounded-box bg-gradient-to-r from-primary/20 to-primary/10 text-white text-xs font-medium hover:shadow-sm transition">
+                      <button onClick={() => handleCategoryApprove(cat.id)} className="bg-primary flex items-center gap-1.5 px-4 py-2 rounded-box text-primary-content text-xs font-medium hover:shadow-sm transition">
                         <Icon name="check" className="w-3.5 h-3.5" />通过
                       </button>
                       <button onClick={() => handleCategoryReject(cat.id)} className="card flex items-center gap-1.5 px-4 py-2 rounded-box border border-base-300 text-base-content/60 text-xs hover:bg-base-100 transition">
