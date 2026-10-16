@@ -51,7 +51,7 @@ export function PageTransition() {
 
   return (
     <div className="dsh-nav-mask" aria-hidden="true">
-      <span className="font-brush text-[26px] tracking-[0.1em] text-[#8a7460]">你的来信</span>
+      <span className="font-brush text-[26px] tracking-[0.1em] text-base-content/70">你的来信</span>
     </div>
   );
 }

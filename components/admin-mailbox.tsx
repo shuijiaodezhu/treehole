@@ -230,34 +230,34 @@ export function AdminMailbox({ adminId }: { adminId: string }) {
   const unreadTotal = useMemo(() => rows.filter((r) => r.unread).length, [rows])
 
   return (
-    <section className="rounded-box border border-[#e0d4e8] bg-base-100/80 p-6 backdrop-blur shadow-sm">
+    <section className="rounded-box border border-base-300 bg-base-100/80 p-6 backdrop-blur shadow-sm">
       <div className="mb-5 flex items-start gap-3">
-        <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full bg-[#f0e6f8]">
-          <Icon name="mail" className="h-4 w-4 text-[#8a7aaa]" />
+        <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full bg-primary/5">
+          <Icon name="mail" className="h-4 w-4 text-base-content/60" />
         </div>
         <div className="min-w-0 flex-1">
           <h2 className="flex items-baseline gap-2 text-sm font-semibold text-base-content">
             冬日信箱
             {unreadTotal > 0 && (
-              <span className="rounded-full bg-[#a88ab8] px-2 py-0.5 text-[11px] font-normal text-white">
+              <span className="rounded-full bg-primary px-2 py-0.5 text-[11px] font-normal text-white">
                 {unreadTotal} 封新的
               </span>
             )}
           </h2>
-          <p className="mt-1 text-[11px] leading-relaxed text-[#8a7a9a]">
+          <p className="mt-1 text-[11px] leading-relaxed text-base-content/60">
             这里收到的，都是他们不好意思跟别人说的话
           </p>
-          <p className="mt-0.5 text-[11px] text-[#b8a8c8]">
+          <p className="mt-0.5 text-[11px] text-base-content/40">
             共 {total} 位来信人 · 匿名，你不会知道他们是谁
           </p>
-          <p className="mt-0.5 text-[11px] text-[#b8a8c8]">
+          <p className="mt-0.5 text-[11px] text-base-content/40">
             回信会送到对方信箱，只有他看得到
           </p>
         </div>
         <button
           type="button"
           onClick={() => void load()}
-          className="inline-flex items-center gap-1 rounded-box border border-[#e0d4e8] bg-base-100 px-3 py-1.5 text-xs text-[#8a7aaa] transition hover:bg-[#faf5ff]"
+          className="inline-flex items-center gap-1 rounded-box border border-base-300 bg-base-100 px-3 py-1.5 text-xs text-base-content/60 transition hover:bg-primary/5"
         >
           <Icon name="refresh" className="h-3.5 w-3.5" />
           刷新
@@ -275,9 +275,9 @@ export function AdminMailbox({ adminId }: { adminId: string }) {
       )}
 
       {loading && rows.length === 0 ? (
-        <p className="py-10 text-center text-xs text-[#b8a8c8]">加载中…</p>
+        <p className="py-10 text-center text-xs text-base-content/40">加载中…</p>
       ) : rows.length === 0 ? (
-        <p className="py-10 text-center text-xs text-[#b8a8c8]">
+        <p className="py-10 text-center text-xs text-base-content/40">
           暂时还没有人来信。有人写下烦心事，就会出现在这里。
         </p>
       ) : (
@@ -290,15 +290,15 @@ export function AdminMailbox({ adminId }: { adminId: string }) {
                 type="button"
                 onClick={() => void openThread(r)}
                 className={`w-full rounded-box px-3 py-2.5 text-left transition ${
-                  active?.threadUserId === r.threadUserId ? 'bg-[#f0e6f8]' : 'hover:bg-[#faf5ff]'
+                  active?.threadUserId === r.threadUserId ? 'bg-primary/5' : 'hover:bg-primary/5'
                 }`}
               >
                 <span className="flex items-center gap-2">
                   <span className="truncate text-xs font-medium text-base-content">{r.label}</span>
-                  {r.unread && <span className="h-1.5 w-1.5 flex-shrink-0 rounded-full bg-[#a88ab8]" />}
-                  <span className="ml-auto flex-shrink-0 text-[11px] text-[#b8a8c8]">{stamp(r.lastAt)}</span>
+                  {r.unread && <span className="h-1.5 w-1.5 flex-shrink-0 rounded-full bg-primary" />}
+                  <span className="ml-auto flex-shrink-0 text-[11px] text-base-content/40">{stamp(r.lastAt)}</span>
                 </span>
-                <span className="mt-0.5 block truncate text-[11px] text-[#8a7a9a]">
+                <span className="mt-0.5 block truncate text-[11px] text-base-content/60">
                   {r.fromMe ? '我：' : ''}
                   {r.lastText}
                 </span>
@@ -307,23 +307,23 @@ export function AdminMailbox({ adminId }: { adminId: string }) {
           </nav>
 
           {/* 读信 / 回信 */}
-          <div className="flex min-h-[320px] min-w-0 flex-col rounded-box border border-[#e0d4e8] bg-[#fcf8ff]">
+          <div className="flex min-h-[320px] min-w-0 flex-col rounded-box border border-base-300 bg-base-100">
             {!active ? (
-              <p className="m-auto py-10 text-center text-xs text-[#b8a8c8]">左边选一个人，看看他写了什么</p>
+              <p className="m-auto py-10 text-center text-xs text-base-content/40">左边选一个人，看看他写了什么</p>
             ) : (
               <>
-                <div className="flex flex-wrap items-center gap-x-2 gap-y-1 border-b border-[#ece4f4] px-4 py-3">
+                <div className="flex flex-wrap items-center gap-x-2 gap-y-1 border-b border-base-300 px-4 py-3">
                   <span className="text-xs font-medium text-base-content">{active.label}</span>
-                  <span className="text-[11px] text-[#b8a8c8]">写来的</span>
-                  <span className="ml-auto text-[11px] text-[#c8b8d8]">只有你和对方看得到</span>
-                  {message && <span className="w-full text-[11px] text-[#8a7aaa]">{message}</span>}
+                  <span className="text-[11px] text-base-content/40">写来的</span>
+                  <span className="ml-auto text-[11px] text-base-content/40">只有你和对方看得到</span>
+                  {message && <span className="w-full text-[11px] text-base-content/60">{message}</span>}
                 </div>
 
                 <div ref={listRef} className="max-h-[300px] flex-1 space-y-3 overflow-y-auto px-4 py-4">
                   {threadLoading ? (
-                    <p className="py-8 text-center text-xs text-[#b8a8c8]">开信箱中…</p>
+                    <p className="py-8 text-center text-xs text-base-content/40">开信箱中…</p>
                   ) : letters.length === 0 ? (
-                    <p className="py-8 text-center text-xs text-[#b8a8c8]">这个信箱还没有信</p>
+                    <p className="py-8 text-center text-xs text-base-content/40">这个信箱还没有信</p>
                   ) : (
                     letters.map((m) => {
                       const mine = m.sender_id === adminId
@@ -332,12 +332,12 @@ export function AdminMailbox({ adminId }: { adminId: string }) {
                           <div
                             className={`max-w-[78%] rounded-box px-3.5 py-2.5 font-serif-cn text-[12.5px] leading-relaxed ${
                               mine
-                                ? 'bg-gradient-to-r from-[#b89ac8] to-[#a88ab8] text-white'
-                                : 'border border-[#ece4f4] bg-base-100 text-[#3a3229]'
+                                ? 'bg-gradient-to-r from-primary/20 to-primary/10 text-white'
+                                : 'border border-base-300 bg-base-100 text-base-content'
                             }`}
                           >
                             <p className="whitespace-pre-wrap break-words">{m.content}</p>
-                            <p className={`mt-1 text-[11px] ${mine ? 'text-white/70' : 'text-[#b8a8c8]'}`}>
+                            <p className={`mt-1 text-[11px] ${mine ? 'text-white/70' : 'text-base-content/40'}`}>
                               {stamp(m.created_at)}
                             </p>
                           </div>
@@ -347,7 +347,7 @@ export function AdminMailbox({ adminId }: { adminId: string }) {
                   )}
                 </div>
 
-                <div className="border-t border-[#ece4f4] px-3 py-3">
+                <div className="border-t border-base-300 px-3 py-3">
                   <div className="flex items-end gap-2">
                     <textarea
                       value={draft}
@@ -361,20 +361,20 @@ export function AdminMailbox({ adminId }: { adminId: string }) {
                       rows={2}
                       maxLength={500}
                       placeholder={`回 ${active.label} 一封…`}
-                      className="min-w-0 flex-1 resize-none rounded-box border border-[#e0d4e8] bg-base-100 px-3.5 py-2.5 font-serif-cn text-[12.5px] text-base-content focus:border-[#a88ab8] focus:outline-none"
+                      className="min-w-0 flex-1 resize-none rounded-box border border-base-300 bg-base-100 px-3.5 py-2.5 font-serif-cn text-[12.5px] text-base-content focus:border-primary/40 focus:outline-none"
                     />
                     <EmojiPicker onPick={(emoji) => setDraft((cur) => cur + emoji)} align="right" />
                     <button
                       type="button"
                       disabled={sending || !draft.trim()}
                       onClick={() => void handleReply()}
-                      className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-r from-[#b89ac8] to-[#a88ab8] text-white transition hover:shadow-sm disabled:opacity-50"
+                      className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-r from-primary/20 to-primary/10 text-white transition hover:shadow-sm disabled:opacity-50"
                       aria-label="回信"
                     >
                       <Icon name="send" className="h-4 w-4" />
                     </button>
                   </div>
-                  <p className="mt-1.5 text-[11px] text-[#b8a8c8]">{draft.length}/500 · Ctrl+Enter 寄出</p>
+                  <p className="mt-1.5 text-[11px] text-base-content/40">{draft.length}/500 · Ctrl+Enter 寄出</p>
                 </div>
               </>
             )}

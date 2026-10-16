@@ -27,7 +27,7 @@ export function PaperPattern({ className = "" }: { className?: string }) {
       />
       {/* 几道手绘感的细弧，压在点阵上 */}
       <svg
-        className="absolute -left-10 top-10 h-[420px] w-[520px] text-[#e6d9c4]"
+        className="absolute -left-10 top-10 h-[420px] w-[520px] text-base-content/40"
         viewBox="0 0 520 420"
         fill="none"
         stroke="currentColor"
@@ -46,11 +46,11 @@ export function PaperPattern({ className = "" }: { className?: string }) {
 export function Ornament() {
   return (
     <div aria-hidden="true" className="flex items-center justify-center gap-3 py-2">
-      <span className="h-px w-10 bg-[#e6d9c4]" />
-      <span className="h-1 w-1 rounded-full bg-[#d9c7a8]" />
-      <span className="h-1 w-1 rounded-full bg-[#c9b393]" />
-      <span className="h-1 w-1 rounded-full bg-[#d9c7a8]" />
-      <span className="h-px w-10 bg-[#e6d9c4]" />
+      <span className="h-px w-10 bg-base-200" />
+      <span className="h-1 w-1 rounded-full bg-base-200" />
+      <span className="h-1 w-1 rounded-full bg-primary" />
+      <span className="h-1 w-1 rounded-full bg-base-200" />
+      <span className="h-px w-10 bg-base-200" />
     </div>
   );
 }

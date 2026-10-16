@@ -71,36 +71,36 @@ export default function MyPostsPage() {
 
       <div className="relative max-w-xl mx-auto px-6 py-10">
         <header className="mb-6">
-          <Link href="/me" className="text-sm text-[#8a7a9a] hover:text-[#8a7aaa] transition">← 返回</Link>
+          <Link href="/me" className="text-sm text-base-content/60 hover:text-base-content/60 transition">← 返回</Link>
           <h1 className="text-3xl font-bold text-base-content mt-2">我的帖子</h1>
-          <p className="text-sm text-[#8a7a9a] mt-1">一共发过 <span className="text-[#8a7aaa] font-medium">{posts.length}</span> 条</p>
+          <p className="text-sm text-base-content/60 mt-1">一共发过 <span className="text-base-content/60 font-medium">{posts.length}</span> 条</p>
         </header>
 
         <main className="space-y-3">
           {posts.length === 0 ? (
-            <div className="rounded-box border border-[#e0d4e8] bg-base-100/60 backdrop-blur p-10 text-center">
-              <div className="w-12 h-12 rounded-full bg-[#f0e6f8] flex items-center justify-center mx-auto mb-3">
-                <IconDoc className="w-5 h-5 text-[#8a7aaa]" />
+            <div className="rounded-box border border-base-300 bg-base-100/60 backdrop-blur p-10 text-center">
+              <div className="w-12 h-12 rounded-full bg-primary/5 flex items-center justify-center mx-auto mb-3">
+                <IconDoc className="w-5 h-5 text-base-content/60" />
               </div>
-              <p className="text-sm text-[#8a7a9a]">你还没发过帖子。</p>
-              <Link href="/world" className="inline-block mt-4 text-xs text-[#8a7aaa] hover:underline">去院子写一条 →</Link>
+              <p className="text-sm text-base-content/60">你还没发过帖子。</p>
+              <Link href="/world" className="inline-block mt-4 text-xs text-base-content/60 hover:underline">去院子写一条 →</Link>
             </div>
           ) : (
             posts.map((post) => (
-              <div key={post.id} className="group rounded-box border border-[#e0d4e8] bg-base-100 p-5 hover:shadow-sm transition-all relative overflow-hidden">
+              <div key={post.id} className="group rounded-box border border-base-300 bg-base-100 p-5 hover:shadow-sm transition-all relative overflow-hidden">
                 <div className="flex justify-between items-start mb-3">
-                  <span className="text-[11px] text-[#b8a8c8] tracking-wide">
+                  <span className="text-[11px] text-base-content/40 tracking-wide">
                     {new Date(post.created_at).toLocaleString('zh-CN', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' })}
                   </span>
                   <div className="flex gap-2 items-center flex-shrink-0">
-                    {post.is_anonymous && (<span className="text-[11px] bg-[#f0e6f8] text-[#8a7aaa] px-2 py-0.5 rounded-full font-medium">匿名</span>)}
+                    {post.is_anonymous && (<span className="text-[11px] bg-primary/5 text-base-content/60 px-2 py-0.5 rounded-full font-medium">匿名</span>)}
                     {post.is_hidden && (<span className="text-[11px] bg-red-50 text-red-500 px-2 py-0.5 rounded-full font-medium">已隐藏</span>)}
-                    <button onClick={() => handleDelete(post.id)} className="text-[#b8a8c8] hover:text-red-500 transition p-1 rounded-md hover:bg-red-50" title="删除">
+                    <button onClick={() => handleDelete(post.id)} className="text-base-content/40 hover:text-red-500 transition p-1 rounded-md hover:bg-red-50" title="删除">
                       <IconTrash className="w-3.5 h-3.5" />
                     </button>
                   </div>
                 </div>
-                <p className="text-sm text-[#4a3a5a] whitespace-pre-wrap break-words leading-relaxed">{post.content}</p>
+                <p className="text-sm text-base-content whitespace-pre-wrap break-words leading-relaxed">{post.content}</p>
               </div>
             ))
           )}

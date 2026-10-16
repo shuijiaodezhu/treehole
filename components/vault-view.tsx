@@ -203,7 +203,7 @@ export function VaultView({ userId }: { userId: string | null }) {
         </div>
       )}
 
-      <p className="mt-4 text-center text-[11px] leading-relaxed text-[#c0b8ae]">
+      <p className="mt-4 text-center text-[11px] leading-relaxed text-base-content/40">
         文件存在私有空间里，只有你自己能下载；删除后无法恢复。
       </p>
     </div>

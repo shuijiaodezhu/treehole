@@ -9,7 +9,7 @@ import { cn } from '../../lib/utils'
 export function Card({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
   return (
     <div
-      className={cn('rounded-box border border-[#e0d3bd] bg-base-100/70 text-[#3f332a]', className)}
+      className={cn('rounded-box border border-base-300 bg-base-100/70 text-base-content', className)}
       {...props}
     />
   )
@@ -22,14 +22,14 @@ export function CardHeader({ className, ...props }: React.HTMLAttributes<HTMLDiv
 export function CardTitle({ className, ...props }: React.HTMLAttributes<HTMLHeadingElement>) {
   return (
     <h3
-      className={cn('font-serif-cn text-[17px] leading-snug text-[#3f332a]', className)}
+      className={cn('font-serif-cn text-[17px] leading-snug text-base-content', className)}
       {...props}
     />
   )
 }
 
 export function CardDescription({ className, ...props }: React.HTMLAttributes<HTMLParagraphElement>) {
-  return <p className={cn('text-[13px] text-[#8a7a68]', className)} {...props} />
+  return <p className={cn('text-[13px] text-base-content/60', className)} {...props} />
 }
 
 export function CardContent({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {

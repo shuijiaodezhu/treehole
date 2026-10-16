@@ -95,7 +95,7 @@ function SitePageInner() {
                     {lines.map((line, j) => (
                       <li
                         key={j}
-                        className="font-serif-cn text-[13px] leading-relaxed text-[#3a3229] before:mr-1.5 before:text-[var(--accent-light)] before:content-['']"
+                        className="font-serif-cn text-[13px] leading-relaxed text-base-content before:mr-1.5 before:text-[var(--accent-light)] before:content-['']"
                       >
                         {line}
                       </li>
@@ -104,7 +104,7 @@ function SitePageInner() {
                 ) : (
                   <p
                     key={i}
-                    className="whitespace-pre-line font-serif-cn text-[13px] leading-[1.9] text-[#3a3229]"
+                    className="whitespace-pre-line font-serif-cn text-[13px] leading-[1.9] text-base-content"
                   >
                     {block}
                   </p>

@@ -17,10 +17,10 @@ export function Splash() {
   return (
     <div className="dsh-splash" aria-hidden="true">
       <div className="dsh-splash-inner">
-        <span className="font-brush text-[34px] tracking-[0.08em] text-[#7a6552] sm:text-[44px]">
+        <span className="font-brush text-[34px] tracking-[0.08em] text-base-content sm:text-[44px]">
           {SITE_NAME}
         </span>
-        <span className="mt-3 block h-px w-16 bg-[#d9c7a8] dsh-splash-line" />
+        <span className="mt-3 block h-px w-16 bg-base-200 dsh-splash-line" />
       </div>
     </div>
   );

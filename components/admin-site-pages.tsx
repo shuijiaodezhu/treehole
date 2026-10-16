@@ -209,18 +209,18 @@ export function AdminSitePages() {
   }
 
   return (
-    <section className="rounded-box border border-[#e0d4e8] bg-base-100/80 p-6 backdrop-blur shadow-sm">
+    <section className="rounded-box border border-base-300 bg-base-100/80 p-6 backdrop-blur shadow-sm">
       <div className="mb-5 flex items-center gap-3">
-        <div className="flex h-9 w-9 items-center justify-center rounded-full bg-[#f0e6f8]">
-          <Icon name="file" className="h-4 w-4 text-[#8a7aaa]" />
+        <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary/5">
+          <Icon name="file" className="h-4 w-4 text-base-content/60" />
         </div>
         <div className="flex-1">
           <h2 className="text-sm font-semibold text-base-content">站点页面</h2>
-          <p className="mt-0.5 text-[11px] text-[#b8a8c8]">
+          <p className="mt-0.5 text-[11px] text-base-content/40">
             公约、隐私、协议这些，改完点保存就生效，不用重新部署
           </p>
         </div>
-        {message && <span className="text-[11px] text-[#7a5a9a]">{message}</span>}
+        {message && <span className="text-[11px] text-primary">{message}</span>}
       </div>
 
       {message && message.includes('\n') && (
@@ -236,8 +236,8 @@ export function AdminSitePages() {
       )}
 
       {missingCount > 0 && !error && (
-        <div className="mb-4 flex flex-wrap items-center gap-3 rounded-box border border-[#e0d4e8] bg-[#faf5ff] px-4 py-3">
-          <p className="flex-1 text-[11px] text-[#7a5a9a]">
+        <div className="mb-4 flex flex-wrap items-center gap-3 rounded-box border border-base-300 bg-primary/5 px-4 py-3">
+          <p className="flex-1 text-[11px] text-primary">
             有 {missingCount} 页还没存进数据库，前台现在显示的是内置初稿。
             写入之后就能在这里随意改。
           </p>
@@ -245,7 +245,7 @@ export function AdminSitePages() {
             type="button"
             disabled={seeding}
             onClick={() => void handleSeed()}
-            className="rounded-box bg-gradient-to-r from-[#b89ac8] to-[#a88ab8] px-4 py-1.5 text-xs text-white transition hover:shadow-sm disabled:opacity-50"
+            className="rounded-box bg-gradient-to-r from-primary/20 to-primary/10 px-4 py-1.5 text-xs text-white transition hover:shadow-sm disabled:opacity-50"
           >
             {seeding ? '写入中…' : '写入初稿'}
           </button>
@@ -253,7 +253,7 @@ export function AdminSitePages() {
       )}
 
       {loading && rows.length === 0 && catalog.length === 0 ? (
-        <p className="py-10 text-center text-xs text-[#b8a8c8]">加载中…</p>
+        <p className="py-10 text-center text-xs text-base-content/40">加载中…</p>
       ) : (
         <div className="grid gap-4 md:grid-cols-[200px_1fr]">
           {/* 左侧目录 */}
@@ -268,8 +268,8 @@ export function AdminSitePages() {
                 }}
                 className={`flex items-center gap-1.5 rounded-box px-3 py-2 text-left text-xs transition ${
                   r.slug === active?.slug
-                    ? 'bg-[#f0e6f8] font-medium text-[#7a5a9a]'
-                    : 'text-[#8a7a9a] hover:bg-[#faf5ff]'
+                    ? 'bg-primary/5 font-medium text-primary'
+                    : 'text-base-content/60 hover:bg-primary/5'
                 }`}
               >
                 <span className="min-w-0 flex-1 truncate">{r.title}</span>
@@ -287,11 +287,11 @@ export function AdminSitePages() {
                   href={`/p/${active.slug}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-[11px] text-[#8a7aaa] underline"
+                  className="text-[11px] text-base-content/60 underline"
                 >
                   看前台效果 ↗
                 </a>
-                <span className="text-[11px] text-[#b8a8c8]">
+                <span className="text-[11px] text-base-content/40">
                   更新于 {formatUpdated(active.updated_at)} · {draft.length} 字
                 </span>
               </div>
@@ -301,7 +301,7 @@ export function AdminSitePages() {
                 onChange={(e) => setDraft(e.target.value)}
                 rows={18}
                 spellCheck={false}
-                className="w-full rounded-box border border-[#e0d4e8] bg-[#fcf8ff] px-4 py-3 font-mono text-[12px] leading-relaxed text-base-content focus:outline-none focus:border-[#a88ab8] focus:ring-2 focus:ring-[#a88ab8]/10 transition"
+                className="w-full rounded-box border border-base-300 bg-base-100 px-4 py-3 font-mono text-[12px] leading-relaxed text-base-content focus:outline-none focus:border-primary/40 focus:ring-2 focus:ring-[#a88ab8]/10 transition"
               />
 
               <div className="mt-3 flex flex-wrap items-center gap-3">
@@ -309,7 +309,7 @@ export function AdminSitePages() {
                   type="button"
                   disabled={saving || !dirty}
                   onClick={() => void handleSave()}
-                  className="rounded-box bg-gradient-to-r from-[#b89ac8] to-[#a88ab8] px-5 py-2 text-sm text-white transition hover:shadow-sm disabled:opacity-50"
+                  className="rounded-box bg-gradient-to-r from-primary/20 to-primary/10 px-5 py-2 text-sm text-white transition hover:shadow-sm disabled:opacity-50"
                 >
                   {saving ? '保存中…' : dirty ? '保存' : '没有改动'}
                 </button>
@@ -317,11 +317,11 @@ export function AdminSitePages() {
                   type="button"
                   disabled={!dirty}
                   onClick={() => setDraft(originalBody)}
-                  className="rounded-box border border-[#e0d4e8] px-4 py-2 text-xs text-[#8a7a9a] transition hover:bg-[#faf5ff] disabled:opacity-40"
+                  className="rounded-box border border-base-300 px-4 py-2 text-xs text-base-content/60 transition hover:bg-primary/5 disabled:opacity-40"
                 >
                   放弃改动
                 </button>
-                <span className="text-[11px] text-[#b8a8c8]">
+                <span className="text-[11px] text-base-content/40">
                   空行分段；一行一条的列表用 · 或 1. 开头即可
                 </span>
               </div>

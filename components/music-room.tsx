@@ -477,7 +477,7 @@ export function MusicRoom() {
                                   className={`whitespace-pre-wrap rounded-box px-3 py-2 text-xs leading-relaxed ${
                                     mine
                                       ? 'bg-primary text-white'
-                                      : 'bg-primary/5 text-[#3a3229]'
+                                      : 'bg-primary/5 text-base-content'
                                   }`}
                                 >
                                   {row.content}

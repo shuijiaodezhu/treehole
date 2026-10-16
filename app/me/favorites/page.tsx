@@ -209,7 +209,7 @@ export default function FavoritesPage() {
                   <p className="text-sm font-medium text-base-content mb-1 break-words">{f.title}</p>
                 )}
                 {f.content && (
-                  <p className="text-xs text-[#4a3a5a] leading-relaxed whitespace-pre-wrap break-words">
+                  <p className="text-xs text-base-content leading-relaxed whitespace-pre-wrap break-words">
                     {f.content.slice(0, 160)}
                     {f.content.length > 160 ? '…' : ''}
                   </p>

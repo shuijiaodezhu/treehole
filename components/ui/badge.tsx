@@ -8,9 +8,9 @@ const badgeVariants = cva(
   {
     variants: {
       variant: {
-        wax: 'bg-[#a8563a] text-[#fdf8f0]',
-        soft: 'bg-[#f1e9dc] text-[#6b5949]',
-        outline: 'border border-[#e0d3bd] text-[#8a7a68]',
+        wax: 'bg-primary text-base-content/40',
+        soft: 'bg-base-200 text-base-content',
+        outline: 'border border-base-300 text-base-content/60',
       },
     },
     defaultVariants: { variant: 'soft' },

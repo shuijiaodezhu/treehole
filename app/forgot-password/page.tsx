@@ -69,7 +69,7 @@ export default function ForgotPasswordPage() {
 
         {sent ? (
           <div className="mt-6 rounded-box border border-base-300 bg-primary/5 px-4 py-4">
-            <p className="font-serif-cn text-[12px] leading-relaxed text-[#3a3229]">
+            <p className="font-serif-cn text-[12px] leading-relaxed text-base-content">
               重置链接已经发出去了（如果这个邮箱注册过的话）。
             </p>
             <p className="mt-2 font-serif-cn text-[11px] leading-relaxed text-base-content/60">

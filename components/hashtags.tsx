@@ -53,7 +53,7 @@ export function HashtagList({
           href={hashtagHref(tag)}
           className={
             chipClassName ||
-            'rounded-full bg-[#f0f7e8] px-2 py-0.5 text-[11px] text-[#5a8a4a] hover:bg-[#e3f0d8] transition'
+            'rounded-full bg-base-100 px-2 py-0.5 text-[11px] text-primary hover:bg-base-200 transition'
           }
         >
           #{tag}

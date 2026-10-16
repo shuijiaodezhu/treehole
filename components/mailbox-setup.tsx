@@ -20,11 +20,11 @@ export function MailboxSetup({ onRetry, accent = 'warm' }: { onRetry: () => void
   const tone =
     accent === 'purple'
       ? {
-          panel: 'border-[#e0d4e8] bg-[#fcf8ff]',
+          panel: 'border-base-300 bg-base-100',
           title: 'text-base-content',
-          body: 'text-[#8a7a9a]',
-          btn: 'border-[#e0d4e8] bg-base-100 text-[#8a7aaa] hover:bg-[#faf5ff]',
-          primary: 'bg-gradient-to-r from-[#b89ac8] to-[#a88ab8] text-white',
+          body: 'text-base-content/60',
+          btn: 'border-base-300 bg-base-100 text-base-content/60 hover:bg-primary/5',
+          primary: 'bg-gradient-to-r from-primary/20 to-primary/10 text-white',
         }
       : {
           panel: 'border-base-300 bg-primary/5',
@@ -86,7 +86,7 @@ export function MailboxSetup({ onRetry, accent = 'warm' }: { onRetry: () => void
       </div>
 
       {showSql && (
-        <pre className="mt-3 max-h-64 overflow-auto rounded-box border border-black/5 bg-base-100/80 p-3 text-[11px] leading-relaxed text-[#4a4238]">
+        <pre className="mt-3 max-h-64 overflow-auto rounded-box border border-black/5 bg-base-100/80 p-3 text-[11px] leading-relaxed text-base-content">
           {WINTER_MAILBOX_SQL}
         </pre>
       )}

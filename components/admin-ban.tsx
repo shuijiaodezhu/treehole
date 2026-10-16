@@ -123,9 +123,9 @@ export function UserBanSection({ adminId }: { adminId: string }) {
   if (adminId !== ADMIN_UUID) return null
 
   return (
-    <section className="rounded-box border border-[#f0e6dc] bg-base-100/80 p-4">
-      <h2 className="text-xs tracking-wider text-[#8a7a9a]">用户管理 · 停用账号</h2>
-      <p className="mt-2 text-[11.5px] leading-relaxed text-[#8a7a9a]">
+    <section className="rounded-box border border-base-300 bg-base-100/80 p-4">
+      <h2 className="text-xs tracking-wider text-base-content/60">用户管理 · 停用账号</h2>
+      <p className="mt-2 text-[11.5px] leading-relaxed text-base-content/60">
         停用是真的封禁（改 auth 里的 banned_until），被封的人登录不上、
         旧登录态也会失效。解除后可以立刻重新登录。
       </p>
@@ -142,23 +142,23 @@ export function UserBanSection({ adminId }: { adminId: string }) {
             if (e.key === 'Enter') void search()
           }}
           placeholder="按昵称或用户名搜"
-          className="min-w-0 flex-1 rounded-box border border-[#f0e6dc] bg-[#fdfaf7] px-3 py-2 text-xs text-[#3a3229] placeholder:text-[#c3b3a5] focus:border-[#e0a184] focus:outline-none"
+          className="min-w-0 flex-1 rounded-box border border-base-300 bg-base-100 px-3 py-2 text-xs text-base-content placeholder:text-base-content/40 focus:border-base-300 focus:outline-none"
         />
         <button
           type="button"
           onClick={() => void search()}
-          className="rounded-box bg-[#d97757] px-3 py-2 text-xs text-white transition hover:opacity-90"
+          className="rounded-box bg-primary px-3 py-2 text-xs text-white transition hover:opacity-90"
         >
           搜索
         </button>
       </div>
 
       {found.length === 0 && (
-        <p className="mt-3 text-[11px] leading-relaxed text-[#8a7a9a]">
+        <p className="mt-3 text-[11px] leading-relaxed text-base-content/60">
           没找到这个人。昵称要写得完整一些；也可以直接粘贴他的**用户 id**
           （后台的「注销申请」「举报」里都能看到 id）。
           {' '}
-          <span className="text-[#b0a89e]">
+          <span className="text-base-content/40">
             邮箱搜不了 —— 邮箱在 auth 里，前端读不到，要按邮箱找请去 Supabase →
             Authentication → Users。
           </span>
@@ -166,7 +166,7 @@ export function UserBanSection({ adminId }: { adminId: string }) {
       )}
 
       {found.length > 0 && (
-        <p className="mt-3 text-[11px] text-[#b0a89e]">
+        <p className="mt-3 text-[11px] text-base-content/40">
           {searched ? `搜索结果 ${found.length} 人` : '最近注册的 20 人（在下面直接点）'}
         </p>
       )}
@@ -176,14 +176,14 @@ export function UserBanSection({ adminId }: { adminId: string }) {
           {found.map((person) => (
             <li
               key={person.id}
-              className="rounded-box border border-[#f4ece4] bg-[#fffdfb] px-3 py-2.5"
+              className="rounded-box border border-base-300 bg-base-100 px-3 py-2.5"
             >
               <div className="flex items-center justify-between gap-3">
                 <span className="min-w-0">
-                  <span className="block truncate text-xs text-[#3a3229]">
+                  <span className="block truncate text-xs text-base-content">
                     {person.nickname || person.username || '（无昵称）'}
                   </span>
-                  <span className="mt-0.5 block truncate text-[11px] text-[#a89a8e]">
+                  <span className="mt-0.5 block truncate text-[11px] text-base-content/70">
                     @{person.username ?? '—'} · {person.id.slice(0, 8)}
                   </span>
                 </span>
@@ -199,7 +199,7 @@ export function UserBanSection({ adminId }: { adminId: string }) {
                     type="button"
                     disabled={busy === person.id}
                     onClick={() => void setBan(person, option.days)}
-                    className="rounded-lg border border-[#f0e6dc] px-2.5 py-1 text-[11px] text-[#8a7a9a] transition hover:border-[#e0a184] hover:text-[#c96447] disabled:opacity-50"
+                    className="rounded-lg border border-base-300 px-2.5 py-1 text-[11px] text-base-content/60 transition hover:border-base-300 hover:text-primary disabled:opacity-50"
                   >
                     {option.label}
                   </button>
@@ -208,7 +208,7 @@ export function UserBanSection({ adminId }: { adminId: string }) {
                   type="button"
                   disabled={busy === person.id}
                   onClick={() => void setBan(person, 0)}
-                  className="flex items-center gap-1 rounded-lg border border-[#f0e6dc] px-2.5 py-1 text-[11px] text-[#8a7a9a] transition hover:text-[#3a3229] disabled:opacity-50"
+                  className="flex items-center gap-1 rounded-lg border border-base-300 px-2.5 py-1 text-[11px] text-base-content/60 transition hover:text-base-content disabled:opacity-50"
                 >
                   <Icon name="check" className="h-3 w-3" />
                   解除
@@ -219,7 +219,7 @@ export function UserBanSection({ adminId }: { adminId: string }) {
         </ul>
       )}
 
-      {hint && <p className="mt-3 whitespace-pre-line text-[11px] text-[#8a7a9a]">{hint}</p>}
+      {hint && <p className="mt-3 whitespace-pre-line text-[11px] text-base-content/60">{hint}</p>}
     </section>
   )
 }

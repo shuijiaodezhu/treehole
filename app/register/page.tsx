@@ -90,10 +90,10 @@ export default function RegisterPage() {
       {/* 左侧装饰文字（大屏可见） */}
       <div className="hidden lg:block absolute left-20 top-1/2 -translate-y-1/2 max-w-sm">
         <h1 className="font-brush text-[44px] leading-[1.05] text-base-content">你的来信</h1>
-        <p className="mt-4 text-[#8a6a4a] flex items-baseline gap-2">
-          <span className="font-art text-3xl text-[#c96447]">Dear You</span>
+        <p className="mt-4 text-base-content/70 flex items-baseline gap-2">
+          <span className="font-art text-3xl text-primary">Dear You</span>
         </p>
-        <p className="mt-6 text-[#8a827a] text-sm leading-relaxed">
+        <p className="mt-6 text-base-content/60 text-sm leading-relaxed">
           这里有一封，你的来信。
           <br />
           陌生人、朋友，和自己。
@@ -101,9 +101,9 @@ export default function RegisterPage() {
 
         {/* 一点点装饰：短线 + 小信封 + 短线（中间那片空就留着） */}
         <div className="mt-8 flex items-center gap-2.5">
-          <span className="h-px w-6 bg-[#ecd6c4]" />
+          <span className="h-px w-6 bg-base-200" />
           <svg
-            className="h-3.5 w-3.5 flex-shrink-0 text-[#e5bca3]"
+            className="h-3.5 w-3.5 flex-shrink-0 text-base-content/40"
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
@@ -113,40 +113,40 @@ export default function RegisterPage() {
             <rect x="2.5" y="6" width="19" height="12.5" rx="2" />
             <path d="M3.4 7 12 13.2 20.6 7" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
-          <span className="h-px w-10 bg-[#f2e3d6]" />
+          <span className="h-px w-10 bg-base-200" />
         </div>
       </div>
 
       {/* 注册卡片 */}
       <div className="relative w-full max-w-sm ml-auto mr-auto lg:mr-32">
-        <div className="rounded-box border border-[#f0e4d4] bg-base-100 p-8 shadow-sm">
+        <div className="rounded-box border border-base-300 bg-base-100 p-8 shadow-sm">
           <div className="lg:hidden text-center mb-6">
             <h1 className="font-brush text-[26px] leading-[1.05] text-base-content">你的来信</h1>
-            <p className="mt-1 font-art italic text-[#c96447]">Dear You</p>
+            <p className="mt-1 font-art italic text-primary">Dear You</p>
           </div>
 
           <h2 className="hidden lg:block text-lg font-semibold text-base-content mb-1">
             注册新账号
           </h2>
-          <p className="hidden lg:block text-xs text-[#8a827a] mb-6">
+          <p className="hidden lg:block text-xs text-base-content/60 mb-6">
             从写下第一句开始
           </p>
 
           <form onSubmit={handleRegister} className="space-y-4">
             <div>
-              <label className="block text-xs text-[#8a6a4a] mb-1.5 tracking-wide">邮箱</label>
+              <label className="block text-xs text-base-content/70 mb-1.5 tracking-wide">邮箱</label>
               <input
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="you@example.com"
                 required
-                className="w-full px-4 py-2.5 rounded-box border border-[#ece6dd] bg-[#fefcf9] text-sm focus:outline-none focus:border-[#d97757] focus:ring-2 focus:ring-[#d97757]/10 transition"
+                className="w-full px-4 py-2.5 rounded-box border border-base-300 bg-base-100 text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-[#d97757]/10 transition"
               />
             </div>
 
             <div>
-              <label className="block text-xs text-[#8a6a4a] mb-1.5 tracking-wide">密码</label>
+              <label className="block text-xs text-base-content/70 mb-1.5 tracking-wide">密码</label>
               <input
                 type="password"
                 value={password}
@@ -154,15 +154,15 @@ export default function RegisterPage() {
                 placeholder="至少 8 位，包含字母和数字"
                 required
                 minLength={8}
-                className="w-full px-4 py-2.5 rounded-box border border-[#ece6dd] bg-[#fefcf9] text-sm focus:outline-none focus:border-[#d97757] focus:ring-2 focus:ring-[#d97757]/10 transition"
+                className="w-full px-4 py-2.5 rounded-box border border-base-300 bg-base-100 text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-[#d97757]/10 transition"
               />
-              <p className="text-[11px] text-[#b0a89e] mt-1.5">
+              <p className="text-[11px] text-base-content/40 mt-1.5">
                 至少 8 位，含字母和数字
               </p>
 
               {/* 关于密码的小诗 */}
-              <div className="mt-3 pl-3 border-l-2 border-[#f0e4d4]">
-                <p className="text-[11px] text-[#a88868] leading-loose font-serif-cn">
+              <div className="mt-3 pl-3 border-l-2 border-base-300">
+                <p className="text-[11px] text-base-content/70 leading-loose font-serif-cn">
                   试试用一个你记得住的名字。
                   <br />
                   忘不掉的那种。
@@ -173,7 +173,7 @@ export default function RegisterPage() {
             </div>
 
             {/* 条款勾选：不勾不能注册 */}
-            <label className="flex cursor-pointer items-start gap-2 text-[11px] leading-relaxed text-[#8a827a]">
+            <label className="flex cursor-pointer items-start gap-2 text-[11px] leading-relaxed text-base-content/60">
               <input
                 type="checkbox"
                 checked={agreed}
@@ -183,15 +183,15 @@ export default function RegisterPage() {
               />
               <span>
                 我已阅读并同意
-                <Link href="/p/terms" target="_blank" className="text-[#c96447] underline">
+                <Link href="/p/terms" target="_blank" className="text-primary underline">
                   《用户协议》
                 </Link>
                 和
-                <Link href="/p/privacy" target="_blank" className="text-[#c96447] underline">
+                <Link href="/p/privacy" target="_blank" className="text-primary underline">
                   《隐私政策》
                 </Link>
                 ，并会遵守
-                <Link href="/p/community" target="_blank" className="text-[#c96447] underline">
+                <Link href="/p/community" target="_blank" className="text-primary underline">
                   《社区公约》
                 </Link>
                 。
@@ -201,7 +201,7 @@ export default function RegisterPage() {
             <button
               type="submit"
               disabled={loading || !agreed}
-              className="w-full py-2.5 rounded-box bg-gradient-to-r from-[#e8a87c] to-[#d97757] text-white text-sm font-medium hover:shadow-sm transition-all disabled:opacity-60 disabled:cursor-not-allowed"
+              className="w-full py-2.5 rounded-box bg-gradient-to-r from-primary/20 to-primary/10 text-white text-sm font-medium hover:shadow-sm transition-all disabled:opacity-60 disabled:cursor-not-allowed"
             >
               {loading ? '注册中...' : '注 册'}
             </button>
@@ -214,16 +214,16 @@ export default function RegisterPage() {
           </form>
 
           <div className="mt-6 text-center">
-            <p className="text-xs text-[#8a827a]">
+            <p className="text-xs text-base-content/60">
               已经有账号？
-              <Link href="/login" className="text-[#c96447] ml-1 hover:underline font-medium">
+              <Link href="/login" className="text-primary ml-1 hover:underline font-medium">
                 去登录
               </Link>
             </p>
           </div>
         </div>
 
-        <p className="text-center text-[11px] text-[#b0a89e] mt-4 tracking-wider">
+        <p className="text-center text-[11px] text-base-content/40 mt-4 tracking-wider">
           © 你的来信 · Dear You
         </p>
       </div>

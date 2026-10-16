@@ -310,7 +310,7 @@ export default function SettingsPage() {
 
               {pwStep === 'confirm' && (
                 <div className="rounded-box border border-base-300 bg-primary/5 p-4">
-                  <p className="text-xs text-[#5a4a6a] leading-relaxed">
+                  <p className="text-xs text-base-content leading-relaxed">
                     确认把密码改成这个吗？改完要记牢，忘了就得走邮箱找回。
                   </p>
                   <div className="flex gap-2 mt-4">
@@ -522,7 +522,7 @@ export default function SettingsPage() {
                           friendList.friends.map((f) => (
                             <label
                               key={f.id}
-                              className="flex cursor-pointer items-center gap-2 py-1 text-xs text-[#5a4a6a]"
+                              className="flex cursor-pointer items-center gap-2 py-1 text-xs text-base-content"
                             >
                               <input
                                 type="checkbox"
@@ -595,7 +595,7 @@ export default function SettingsPage() {
                           onClick={() => themeApi.setPageColor(page, color)}
                           aria-label={`把${PAGE_LABEL[page]}设成 ${color}`}
                           className={`h-6 w-6 rounded-full border-2 transition ${
-                            active ? 'border-[#2b2430] scale-110' : 'border-white hover:scale-110'
+                            active ? 'border-base-300 scale-110' : 'border-white hover:scale-110'
                           }`}
                           style={{ backgroundColor: color }}
                         />
@@ -659,7 +659,7 @@ export default function SettingsPage() {
                 <Link
                   key={item.slug}
                   href={`/p/${item.slug}`}
-                  className="flex items-center justify-between rounded-box border border-base-300 px-3.5 py-2.5 text-xs text-[#5a4a6a] transition hover:bg-primary/5"
+                  className="flex items-center justify-between rounded-box border border-base-300 px-3.5 py-2.5 text-xs text-base-content transition hover:bg-primary/5"
                 >
                   {item.label}
                   <Icon name="arrow" className="w-3.5 h-3.5 text-[var(--accent-light)]" />

@@ -25,7 +25,7 @@ export function WeatherCard({ weather, dateText }: { weather: WeatherState; date
         </div>
 
         <p className="text-xs text-base-content/60">{dateText}</p>
-        <p className="text-base text-[#5a4a3a] mt-1 font-medium">
+        <p className="text-base text-base-content mt-1 font-medium">
           {weather.city} · {weather.condition}
         </p>
 
@@ -69,7 +69,7 @@ export function DailyQuoteCard({ quote }: { quote: string }) {
 
       <div className="relative flex-1 flex flex-col justify-center">
         <p className="text-[11px] text-base-content/60 mb-3 tracking-wider">今天的一句话</p>
-        <p className="text-sm text-[#4a423c] leading-relaxed font-art italic">{quote || '……'}</p>
+        <p className="text-sm text-base-content leading-relaxed font-art italic">{quote || '……'}</p>
         <p className="text-[11px] text-base-content/60 mt-3">— 来自陌生人的问候</p>
       </div>
     </div>
@@ -140,32 +140,32 @@ const BLOCKS = [
     title: '小屋',
     desc: '好友与私聊，慢慢说',
     Icon: House,
-    tint: 'bg-[#f7e8e0]',
-    ink: 'text-[#a8563a]',
+    tint: 'bg-base-100',
+    ink: 'text-base-content',
   },
   {
     href: '/world',
     title: '院子',
     desc: '大家在想什么',
     Icon: Trees,
-    tint: 'bg-[#f8efe0]',
-    ink: 'text-[#c08a3e]',
+    tint: 'bg-base-100',
+    ink: 'text-base-content/70',
   },
   {
     href: '/play',
     title: '聚会',
     desc: '活动、小工具、一起听歌',
     Icon: PartyPopper,
-    tint: 'bg-[#fbeae3]',
-    ink: 'text-[#c96a4e]',
+    tint: 'bg-base-100',
+    ink: 'text-base-content/70',
   },
   {
     href: '/me',
     title: '我的',
     desc: '资料、收藏、设置',
     Icon: UserRound,
-    tint: 'bg-[#f1e9df]',
-    ink: 'text-[#8a6a4a]',
+    tint: 'bg-base-200',
+    ink: 'text-base-content/70',
   },
 ]
 
@@ -196,8 +196,8 @@ export function NavCardGrid({ badges }: { badges?: Partial<Record<string, { coun
               href={block.href}
               onClick={() => markModuleSeen(key as Parameters<typeof markModuleSeen>[0])}
               className={cn(
-                'group relative flex min-h-[136px] items-center gap-5 overflow-hidden rounded-box border border-[#e8dfd0] bg-base-100 p-6',
-                'transition-all duration-200 hover:-translate-y-1 hover:border-[#d9c3b2]',
+                'group relative flex min-h-[136px] items-center gap-5 overflow-hidden rounded-box border border-base-300 bg-base-100 p-6',
+                'transition-all duration-200 hover:-translate-y-1 hover:border-base-300',
                 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#a8563a]/30',
               )}
             >
@@ -213,26 +213,26 @@ export function NavCardGrid({ badges }: { badges?: Partial<Record<string, { coun
                     <Icon className="h-[22px] w-[22px]" strokeWidth={1.5} />
                   </span>
 
-                  <span className="font-serif-cn text-[20px] leading-none text-[#3f332a]">
+                  <span className="font-serif-cn text-[20px] leading-none text-base-content">
                     {block.title}
                   </span>
 
                   {badge?.count ? (
-                    <span className="text-[12px] tabular-nums text-[#a8563a]">
+                    <span className="text-[12px] tabular-nums text-base-content">
                       {badge.count > 99 ? '99+' : badge.count}
                     </span>
                   ) : badge?.dot ? (
-                    <span className="h-1.5 w-1.5 rounded-full bg-[#a8563a]" />
+                    <span className="h-1.5 w-1.5 rounded-full bg-primary" />
                   ) : null}
                 </div>
 
-                <p className="mt-3 pl-14 text-[13px] leading-relaxed text-[#8a7a68]">
+                <p className="mt-3 pl-14 text-[13px] leading-relaxed text-base-content/60">
                   {block.desc}
                 </p>
               </div>
 
               <ChevronRight
-                className="h-4 w-4 flex-shrink-0 self-center text-[#cfc3b0] transition-transform duration-200 group-hover:translate-x-1 group-hover:text-[#a8563a]"
+                className="h-4 w-4 flex-shrink-0 self-center text-base-content/40 transition-transform duration-200 group-hover:translate-x-1 group-hover:text-base-content"
                 strokeWidth={1.8}
               />
             </Link>

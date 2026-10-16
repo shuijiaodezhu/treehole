@@ -734,7 +734,7 @@ export default function WorldPage() {
             <div className="mb-3 flex items-center gap-2 text-xs text-base-content/60">
               <span>正在看：</span><span className="text-[var(--accent-deep)] font-medium">{currentLocationName}</span>
               {replies.count > 0 && (
-                <span className="ml-1 min-w-[16px] h-4 px-1 rounded-full bg-[#d97757] text-white text-[11px] leading-4 text-center font-medium">
+                <span className="ml-1 min-w-[16px] h-4 px-1 rounded-full bg-primary text-white text-[11px] leading-4 text-center font-medium">
                   {replies.count > 99 ? '99+' : replies.count}
                 </span>
               )}
@@ -869,8 +869,8 @@ export default function WorldPage() {
                         title={favorites.isFavorited('world_post', post.id) ? '取消收藏' : '收藏'}
                         className={`ml-auto flex items-center gap-1.5 text-xs transition disabled:opacity-50 ${
                           favorites.isFavorited('world_post', post.id)
-                            ? 'text-[#d97757]'
-                            : 'text-base-content/60 hover:text-[#d97757]'
+                            ? 'text-primary'
+                            : 'text-base-content/60 hover:text-primary'
                         }`}
                       >
                         <Icon
@@ -928,7 +928,7 @@ export default function WorldPage() {
                         title={reportedPosts.has(post.id) ? '撤回举报' : '举报'}
                         className={`flex items-center gap-1 text-xs transition ${
                           reportedPosts.has(post.id)
-                            ? 'text-[#c9a227] hover:text-[#a8861f]'
+                            ? 'text-base-content/70 hover:text-base-content/70'
                             : 'text-base-content/60 hover:text-red-500'
                         }`}
                       >

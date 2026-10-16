@@ -59,10 +59,10 @@ export default function LoginPage() {
       {/* 左侧装饰文字（大屏可见） */}
       <div className={`hidden lg:block absolute left-20 top-1/2 -translate-y-1/2 max-w-sm ${entering ? 'th-page-out' : ''}`}>
         <h1 className="font-brush text-[44px] leading-[1.05] text-base-content">你的来信</h1>
-        <p className="mt-4 text-[#8a6a4a] flex items-baseline gap-2">
-          <span className="font-art text-3xl text-[#c96447]">Dear You</span>
+        <p className="mt-4 text-base-content/70 flex items-baseline gap-2">
+          <span className="font-art text-3xl text-primary">Dear You</span>
         </p>
-        <p className="mt-6 text-[#8a827a] text-sm leading-relaxed">
+        <p className="mt-6 text-base-content/60 text-sm leading-relaxed">
           这里有一封，你的来信。
           <br />
           陌生人、朋友，和自己。
@@ -70,9 +70,9 @@ export default function LoginPage() {
 
         {/* 一点点装饰：短线 + 小信封 + 短线（中间那片空就留着） */}
         <div className="mt-8 flex items-center gap-2.5">
-          <span className="h-px w-6 bg-[#ecd6c4]" />
+          <span className="h-px w-6 bg-base-200" />
           <svg
-            className="h-3.5 w-3.5 flex-shrink-0 text-[#e5bca3]"
+            className="h-3.5 w-3.5 flex-shrink-0 text-base-content/40"
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
@@ -82,54 +82,54 @@ export default function LoginPage() {
             <rect x="2.5" y="6" width="19" height="12.5" rx="2" />
             <path d="M3.4 7 12 13.2 20.6 7" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
-          <span className="h-px w-10 bg-[#f2e3d6]" />
+          <span className="h-px w-10 bg-base-200" />
         </div>
       </div>
 
       {/* 登录卡片 */}
       <div className={`relative w-full max-w-sm ml-auto mr-auto lg:mr-32 ${entering ? 'th-page-out' : ''}`}>
-        <div className="rounded-box border border-[#f0e4d4] bg-base-100 p-8 shadow-sm">
+        <div className="rounded-box border border-base-300 bg-base-100 p-8 shadow-sm">
           <div className="lg:hidden text-center mb-6">
             <h1 className="font-brush text-[26px] leading-[1.05] text-base-content">你的来信</h1>
-            <p className="mt-1 font-art italic text-[#c96447]">Dear You</p>
+            <p className="mt-1 font-art italic text-primary">Dear You</p>
           </div>
 
           <h2 className="hidden lg:block text-lg font-semibold text-base-content mb-1">
             欢迎回来
           </h2>
-          <p className="hidden lg:block text-xs text-[#8a827a] mb-6">
+          <p className="hidden lg:block text-xs text-base-content/60 mb-6">
             继续你的来信
           </p>
 
           <form onSubmit={handleLogin} className="space-y-4">
             <div>
-              <label className="block text-xs text-[#8a6a4a] mb-1.5 tracking-wide">邮箱</label>
+              <label className="block text-xs text-base-content/70 mb-1.5 tracking-wide">邮箱</label>
               <input
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="you@example.com"
                 required
-                className="w-full px-4 py-2.5 rounded-box border border-[#ece6dd] bg-[#fefcf9] text-sm focus:outline-none focus:border-[#d97757] focus:ring-2 focus:ring-[#d97757]/10 transition"
+                className="w-full px-4 py-2.5 rounded-box border border-base-300 bg-base-100 text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-[#d97757]/10 transition"
               />
             </div>
 
             <div>
-              <label className="block text-xs text-[#8a6a4a] mb-1.5 tracking-wide">密码</label>
+              <label className="block text-xs text-base-content/70 mb-1.5 tracking-wide">密码</label>
               <input
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
                 required
-                className="w-full px-4 py-2.5 rounded-box border border-[#ece6dd] bg-[#fefcf9] text-sm focus:outline-none focus:border-[#d97757] focus:ring-2 focus:ring-[#d97757]/10 transition"
+                className="w-full px-4 py-2.5 rounded-box border border-base-300 bg-base-100 text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-[#d97757]/10 transition"
               />
             </div>
 
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-2.5 rounded-box bg-gradient-to-r from-[#e8a87c] to-[#d97757] text-white text-sm font-medium hover:shadow-sm transition-all disabled:opacity-60 disabled:cursor-not-allowed"
+              className="w-full py-2.5 rounded-box bg-gradient-to-r from-primary/20 to-primary/10 text-white text-sm font-medium hover:shadow-sm transition-all disabled:opacity-60 disabled:cursor-not-allowed"
             >
               {loading ? '登录中...' : '登 录'}
             </button>
@@ -140,20 +140,20 @@ export default function LoginPage() {
           </form>
 
           <div className="mt-6 text-center">
-            <p className="text-xs text-[#8a827a]">
+            <p className="text-xs text-base-content/60">
               还没有账号？
               <Link href="/forgot-password" className="text-xs text-base-content/60 hover:text-[var(--accent-deep)] transition">
               忘记密码？
             </Link>
 
-              <Link href="/register" className="text-[#c96447] ml-1 hover:underline font-medium">
+              <Link href="/register" className="text-primary ml-1 hover:underline font-medium">
                 去注册
               </Link>
             </p>
           </div>
         </div>
 
-        <p className="text-center text-[11px] text-[#b0a89e] mt-4 tracking-wider">
+        <p className="text-center text-[11px] text-base-content/40 mt-4 tracking-wider">
           © 你的来信 · Dear You
         </p>
       </div>

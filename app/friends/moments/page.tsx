@@ -318,7 +318,7 @@ export default function MomentsPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#fdf7f2] px-6 pt-24">
+      <div className="min-h-screen bg-base-100 px-6 pt-24">
         <div className="mx-auto max-w-2xl">
           <SkeletonList count={2} lines={3} />
         </div>
@@ -332,21 +332,21 @@ export default function MomentsPage() {
 
       <div className="relative max-w-xl mx-auto px-6 py-10">
         <header className="mb-6">
-          <Link href="/friends" className="text-sm text-[#8a827a] hover:text-[#c96447] transition">
+          <Link href="/friends" className="text-sm text-base-content/60 hover:text-primary transition">
             ← 返回小屋
           </Link>
           <h1 className="text-3xl font-bold text-base-content mt-2">朋友圈</h1>
-          <p className="text-sm text-[#8a827a] mt-1">只有好友看得到</p>
+          <p className="text-sm text-base-content/60 mt-1">只有好友看得到</p>
 
           {/* 标签切换 */}
-          <div className="flex gap-6 mt-5 border-b border-[#ece6dd]">
+          <div className="flex gap-6 mt-5 border-b border-base-300">
             <Link
               href="/friends"
-              className="pb-2.5 text-[#8a827a] hover:text-base-content text-sm transition"
+              className="pb-2.5 text-base-content/60 hover:text-base-content text-sm transition"
             >
               好友
             </Link>
-            <span className="pb-2.5 border-b-2 border-[#d97757] text-[#d97757] font-medium text-sm">
+            <span className="pb-2.5 border-b-2 border-primary text-primary font-medium text-sm">
               朋友圈
             </span>
           </div>
@@ -356,7 +356,7 @@ export default function MomentsPage() {
           {/* 发布区 */}
           <form
             onSubmit={handlePost}
-            className="rounded-box border border-[#f0e4d4] bg-base-100 p-5 shadow-sm relative overflow-hidden"
+            className="rounded-box border border-base-300 bg-base-100 p-5 shadow-sm relative overflow-hidden"
           >
 
             <div className="relative">
@@ -366,7 +366,7 @@ export default function MomentsPage() {
                 onChange={(e) => setContent(e.target.value)}
                 placeholder="说点什么… 用 #话题# 加标签，也可以发个表情"
                 rows={3}
-                className="w-full px-4 py-3 rounded-box border border-[#ece6dd] bg-[#fefcf9] text-sm text-base-content resize-none focus:outline-none focus:border-[#d97757] focus:ring-2 focus:ring-[#d97757]/10 transition placeholder:text-[#c0b8ae]"
+                className="w-full px-4 py-3 rounded-box border border-base-300 bg-base-100 text-sm text-base-content resize-none focus:outline-none focus:border-primary focus:ring-2 focus:ring-[#d97757]/10 transition placeholder:text-base-content/40"
                 maxLength={500}
               />
               {/* 图片：本地上传或粘贴链接 */}
@@ -392,8 +392,8 @@ export default function MomentsPage() {
                         }}
                         className={`rounded-full px-3 py-1 text-[11px] transition ${
                           active
-                            ? 'bg-[#d97757] text-white'
-                            : 'border border-[#ece6dd] bg-base-100 text-[#8a827a] hover:border-[#e0a184]'
+                            ? 'bg-primary text-white'
+                            : 'border border-base-300 bg-base-100 text-base-content/60 hover:border-base-300'
                         }`}
                       >
                         {VISIBILITY_LABEL[v]}
@@ -402,17 +402,17 @@ export default function MomentsPage() {
                   })}
                 </div>
 
-                <p className="text-[11px] text-[#b0a89e] mt-2">{VISIBILITY_HINT[visibility]}</p>
+                <p className="text-[11px] text-base-content/40 mt-2">{VISIBILITY_HINT[visibility]}</p>
 
                 {showPicker && visibility === 'friends' && (
-                  <div className="mt-2 max-h-40 overflow-y-auto rounded-box border border-[#ece6dd] bg-[#fefcf9] p-3">
+                  <div className="mt-2 max-h-40 overflow-y-auto rounded-box border border-base-300 bg-base-100 p-3">
                     {friends.length === 0 ? (
-                      <p className="text-[11px] text-[#b0a89e]">还没有好友，先去加几个吧。</p>
+                      <p className="text-[11px] text-base-content/40">还没有好友，先去加几个吧。</p>
                     ) : (
                       friends.map((f) => (
                         <label
                           key={f.id}
-                          className="flex cursor-pointer items-center gap-2 py-1 text-xs text-[#4a423c]"
+                          className="flex cursor-pointer items-center gap-2 py-1 text-xs text-base-content"
                         >
                           <input
                             type="checkbox"
@@ -432,11 +432,11 @@ export default function MomentsPage() {
                 )}
 
                 {showPicker && visibility === 'groups' && (
-                  <div className="mt-2 rounded-box border border-[#ece6dd] bg-[#fefcf9] p-3">
+                  <div className="mt-2 rounded-box border border-base-300 bg-base-100 p-3">
                     {groups.length === 0 ? (
-                      <p className="text-[11px] leading-relaxed text-[#b0a89e]">
+                      <p className="text-[11px] leading-relaxed text-base-content/40">
                         还没有分组。去{' '}
-                        <Link href="/me/settings" className="text-[#c96447] underline">
+                        <Link href="/me/settings" className="text-primary underline">
                           设置
                         </Link>{' '}
                         里建一个，再把好友放进去。
@@ -445,7 +445,7 @@ export default function MomentsPage() {
                       groups.map((g) => (
                         <label
                           key={g.id}
-                          className="flex cursor-pointer items-center gap-2 py-1 text-xs text-[#4a423c]"
+                          className="flex cursor-pointer items-center gap-2 py-1 text-xs text-base-content"
                         >
                           <input
                             type="checkbox"
@@ -458,7 +458,7 @@ export default function MomentsPage() {
                             className="accent-[#d97757]"
                           />
                           <span className="truncate">{g.name}</span>
-                          <span className="text-[11px] text-[#b0a89e]">{g.memberIds.length} 人</span>
+                          <span className="text-[11px] text-base-content/40">{g.memberIds.length} 人</span>
                         </label>
                       ))
                     )}
@@ -471,7 +471,7 @@ export default function MomentsPage() {
                 <button
                   type="submit"
                   disabled={posting || !content.trim()}
-                  className="px-6 py-2 rounded-box bg-gradient-to-r from-[#e8a87c] to-[#d97757] text-white text-sm font-medium hover:shadow-sm transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="px-6 py-2 rounded-box bg-gradient-to-r from-primary/20 to-primary/10 text-white text-sm font-medium hover:shadow-sm transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {posting ? '发布中...' : '发布'}
                 </button>
@@ -482,7 +482,7 @@ export default function MomentsPage() {
           {/* 帖子列表 */}
           <div className="space-y-3">
             {posts.length === 0 ? (
-              <div className="rounded-box border border-[#f0e4d4] bg-base-100/60 backdrop-blur">
+              <div className="rounded-box border border-base-300 bg-base-100/60 backdrop-blur">
                 <EmptyState art="heart" title="还没有内容" hint="写第一条吧。" />
               </div>
             ) : (
@@ -496,25 +496,25 @@ export default function MomentsPage() {
                   data-moment-id={post.id}
                   className={`rounded-box border bg-base-100 p-5 shadow-sm relative overflow-hidden transition ${
                     focusPostId === post.id
-                      ? 'border-[#d97757] ring-2 ring-[#d97757]/25'
-                      : 'border-[#ece6dd]'
+                      ? 'border-primary ring-2 ring-[#d97757]/25'
+                      : 'border-base-300'
                   }`}
                 >
                   <div className="flex items-center gap-3 mb-3">
-                    <div className="w-10 h-10 rounded-box bg-gradient-to-br from-[#fae0cc] to-[#f9d5ba] flex items-center justify-center overflow-hidden flex-shrink-0 shadow-sm">
+                    <div className="w-10 h-10 rounded-box bg-gradient-to-br from-primary/20 to-primary/10 flex items-center justify-center overflow-hidden flex-shrink-0 shadow-sm">
                       {post.author_avatar ? (
                         // 头像尺寸固定、来自 Supabase 存储，不值得为它引 next/image 的远程域名配置
                         // eslint-disable-next-line @next/next/no-img-element
                         <img src={post.author_avatar} alt="" className="w-full h-full object-cover" />
                       ) : (
-                        <span className="text-sm text-[#c96447] font-semibold">
+                        <span className="text-sm text-primary font-semibold">
                           {post.author_name[0]}
                         </span>
                       )}
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-medium text-base-content">{post.author_name}</p>
-                      <p className="text-[11px] text-[#b0a89e] mt-0.5">
+                      <p className="text-[11px] text-base-content/40 mt-0.5">
                         {new Date(post.created_at).toLocaleString('zh-CN', {
                           year: 'numeric',
                           month: '2-digit',
@@ -524,7 +524,7 @@ export default function MomentsPage() {
                         })}
                         {/* 自己的动态标出可见范围 */}
                         {post.author_id === userId && post.visibility !== 'public' && (
-                          <span className="ml-2 rounded-full bg-[#f3e2d3] px-1.5 py-0.5 text-[11px] text-[#c96447]">
+                          <span className="ml-2 rounded-full bg-base-200 px-1.5 py-0.5 text-[11px] text-primary">
                             {VISIBILITY_SHORT[(post.visibility ?? 'public') as Visibility]}
                           </span>
                         )}
@@ -540,34 +540,34 @@ export default function MomentsPage() {
                         rows={3}
                         maxLength={editor.maxLength.moment}
                         autoFocus
-                        className="w-full rounded-box border border-[#e8d0be] bg-[#fefcf9] px-3 py-2 text-sm text-[#4a423c] resize-none focus:outline-none focus:border-[#d97757] focus:ring-2 focus:ring-[#d97757]/10 transition"
+                        className="w-full rounded-box border border-base-300 bg-base-100 px-3 py-2 text-sm text-base-content resize-none focus:outline-none focus:border-primary focus:ring-2 focus:ring-[#d97757]/10 transition"
                       />
                       <div className="mt-2 flex items-center gap-3">
                         <button
                           type="button"
                           disabled={editor.isBusy('moment', post.id)}
                           onClick={() => void handleSaveMoment(post.id)}
-                          className="rounded-lg bg-[#d97757] px-3 py-1 text-xs text-white hover:bg-[#c96447] transition disabled:opacity-50"
+                          className="rounded-lg bg-primary px-3 py-1 text-xs text-white hover:bg-primary transition disabled:opacity-50"
                         >
                           {editor.isBusy('moment', post.id) ? '保存中…' : '保存'}
                         </button>
                         <button
                           type="button"
                           onClick={() => editor.cancel()}
-                          className="rounded-lg border border-[#ece6dd] px-3 py-1 text-xs text-[#8a827a] transition"
+                          className="rounded-lg border border-base-300 px-3 py-1 text-xs text-base-content/60 transition"
                         >
                           取消
                         </button>
-                        <span className="ml-auto text-[11px] text-[#b0a89e]">
+                        <span className="ml-auto text-[11px] text-base-content/40">
                           {editor.draft.length}/{editor.maxLength.moment}
                         </span>
                       </div>
                     </div>
                   ) : (
-                    <p className="text-sm text-[#4a423c] whitespace-pre-wrap break-words leading-relaxed pl-1">
+                    <p className="text-sm text-base-content whitespace-pre-wrap break-words leading-relaxed pl-1">
                       {post.content}
                       {editor.wasSaved('moment', post.id) && (
-                        <span className="ml-2 text-[11px] text-[#7ea86a]">已保存</span>
+                        <span className="ml-2 text-[11px] text-base-content/60">已保存</span>
                       )}
                     </p>
                   )}
@@ -575,19 +575,19 @@ export default function MomentsPage() {
                   <HashtagList
                     content={post.content}
                     className="mt-2 pl-1"
-                    chipClassName="rounded-full bg-[#fbeee4] px-2 py-0.5 text-[11px] text-[#c96447] hover:bg-[#f7e2d3] transition"
+                    chipClassName="rounded-full bg-base-100 px-2 py-0.5 text-[11px] text-primary hover:bg-base-200 transition"
                   />
 
                   {/* 图片墙 */}
                   <ImageGrid urls={post.image_urls} className="mt-3 pl-1" />
 
                   {/* 收藏 / 删除自己发的 */}
-                  <div className="mt-3 pt-3 border-t border-[#f2ece4] flex items-center justify-end gap-4">
+                  <div className="mt-3 pt-3 border-t border-base-300 flex items-center justify-end gap-4">
                     {editor.canEdit(post.author_id) && !editor.isEditing('moment', post.id) && (
                       <button
                         type="button"
                         onClick={() => editor.start('moment', post.id, post.content)}
-                        className="flex items-center gap-1.5 text-xs text-[#b0a89e] hover:text-[#c96447] transition"
+                        className="flex items-center gap-1.5 text-xs text-base-content/40 hover:text-primary transition"
                       >
                         <Icon name="pen" className="w-3.5 h-3.5" />
                         编辑
@@ -614,7 +614,7 @@ export default function MomentsPage() {
                               4000,
                             )
                           }}
-                          className="flex items-center gap-1.5 text-xs text-[#b0a89e] hover:text-red-500 transition"
+                          className="flex items-center gap-1.5 text-xs text-base-content/40 hover:text-red-500 transition"
                         >
                           <Icon name="trash" className="w-3.5 h-3.5" />
                           删除
@@ -629,7 +629,7 @@ export default function MomentsPage() {
                             ? void handleWithdrawMomentReport(post.id)
                             : void handleReportMoment(post.id)
                         }
-                        className="flex items-center gap-1.5 text-xs text-[#b0a89e] transition hover:text-[#c96447]"
+                        className="flex items-center gap-1.5 text-xs text-base-content/40 transition hover:text-primary"
                         title={reportedMoments.has(post.id) ? '撤回举报' : '举报'}
                       >
                         <Icon name="shield" className="w-3.5 h-3.5" />
@@ -649,8 +649,8 @@ export default function MomentsPage() {
                       disabled={favorites.busyKey === `moment:${post.id}`}
                       className={`flex items-center gap-1.5 text-xs transition disabled:opacity-50 ${
                         favorites.isFavorited('moment', post.id)
-                          ? 'text-[#d97757]'
-                          : 'text-[#b0a89e] hover:text-[#d97757]'
+                          ? 'text-primary'
+                          : 'text-base-content/40 hover:text-primary'
                       }`}
                     >
                       <Icon name={favorites.isFavorited('moment', post.id) ? 'heartfill' : 'heart'} className="w-3.5 h-3.5" />

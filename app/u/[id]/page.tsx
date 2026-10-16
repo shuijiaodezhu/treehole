@@ -190,7 +190,7 @@ function UserShowcase() {
                 </div>
 
                 {profile?.signature && (
-                  <p className="mt-1 font-art text-sm italic text-[#5a4a6a]">「{profile.signature}」</p>
+                  <p className="mt-1 font-art text-sm italic text-base-content">「{profile.signature}」</p>
                 )}
               </div>
             </div>
@@ -253,7 +253,7 @@ function UserShowcase() {
               <ul className="mt-3 space-y-3">
                 {posts.map((post) => (
                   <li key={post.id} className="border-b border-[var(--accent-soft)] pb-3 last:border-b-0 last:pb-0">
-                    <p className="line-clamp-3 whitespace-pre-wrap text-xs leading-relaxed text-[#4a3f38]">
+                    <p className="line-clamp-3 whitespace-pre-wrap text-xs leading-relaxed text-base-content">
                       {post.content}
                     </p>
                     <div className="mt-1.5 flex items-center gap-3 text-[11px] text-[var(--accent-light)]">

@@ -259,7 +259,7 @@ export default function SearchPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#fdf7f0]" style={pageAccentVars('home')}>
+    <div className="min-h-screen bg-base-100" style={pageAccentVars('home')}>
       <div className="relative max-w-3xl mx-auto px-6 pt-10 pb-16">
         <Link
           href="/"
@@ -310,7 +310,7 @@ export default function SearchPage() {
             }`}
           >
             帖子
-            {hasQuery && <span className="text-[11px] text-[#b0a89e]">{shownPosts.length}</span>}
+            {hasQuery && <span className="text-[11px] text-base-content/40">{shownPosts.length}</span>}
           </button>
           <button
             type="button"
@@ -322,7 +322,7 @@ export default function SearchPage() {
             }`}
           >
             活动
-            {hasQuery && <span className="text-[11px] text-[#b0a89e]">{shownActivities.length}</span>}
+            {hasQuery && <span className="text-[11px] text-base-content/40">{shownActivities.length}</span>}
           </button>
           <button
             type="button"
@@ -334,7 +334,7 @@ export default function SearchPage() {
             }`}
           >
             朋友圈
-            {hasQuery && <span className="text-[11px] text-[#b0a89e]">{shownMoments.length}</span>}
+            {hasQuery && <span className="text-[11px] text-base-content/40">{shownMoments.length}</span>}
           </button>
           <button
             type="button"
@@ -346,7 +346,7 @@ export default function SearchPage() {
             }`}
           >
             用户
-            {hasQuery && <span className="text-[11px] text-[#b0a89e]">{shownUsers.length}</span>}
+            {hasQuery && <span className="text-[11px] text-base-content/40">{shownUsers.length}</span>}
           </button>
         </div>
 
@@ -359,7 +359,7 @@ export default function SearchPage() {
           )}
 
           {!hasQuery && !error && (
-            <p className="py-12 text-center text-xs text-[#b0a89e]">
+            <p className="py-12 text-center text-xs text-base-content/40">
               输入关键词开始搜索。可以搜帖子内容，也可以搜用户名 / 昵称。
             </p>
           )}
@@ -380,7 +380,7 @@ export default function SearchPage() {
                   className="block rounded-box border border-base-300 bg-base-100 p-4 hover:shadow-sm hover:-translate-y-0.5 transition"
                 >
                   <div className="flex items-center gap-2.5 mb-2">
-                    <span className="w-7 h-7 rounded-full bg-[#f3e2d3] flex items-center justify-center overflow-hidden flex-shrink-0 text-[11px] text-[var(--accent-deep)]">
+                    <span className="w-7 h-7 rounded-full bg-base-200 flex items-center justify-center overflow-hidden flex-shrink-0 text-[11px] text-[var(--accent-deep)]">
                       {p.authorAvatar ? (
                         // eslint-disable-next-line @next/next/no-img-element
                         <img src={p.authorAvatar} alt="" className="w-full h-full object-cover" />
@@ -388,12 +388,12 @@ export default function SearchPage() {
                         avatarFallback({ username: p.authorName, nickname: null, avatar_url: null }, '友')
                       )}
                     </span>
-                    <span className="text-xs text-[#5a4a3a] truncate">{p.authorName}</span>
-                    <span className="text-[11px] text-[#b0a89e] ml-auto flex-shrink-0">
+                    <span className="text-xs text-base-content truncate">{p.authorName}</span>
+                    <span className="text-[11px] text-base-content/40 ml-auto flex-shrink-0">
                       {relativeTime(p.created_at)}
                     </span>
                   </div>
-                  <p className="text-sm text-[#3a4a2a] leading-relaxed whitespace-pre-wrap break-words">
+                  <p className="text-sm text-base-content leading-relaxed whitespace-pre-wrap break-words">
                     {renderContent(p.content)}
                   </p>
                 </Link>
@@ -408,21 +408,21 @@ export default function SearchPage() {
                 <Link
                   key={a.id}
                   href={`/play?activity=${a.id}`}
-                  className="block rounded-box border border-[#d8e0e8] bg-base-100 p-4 hover:shadow-sm hover:-translate-y-0.5 transition"
+                  className="block rounded-box border border-base-300 bg-base-100 p-4 hover:shadow-sm hover:-translate-y-0.5 transition"
                 >
                   <div className="flex items-center gap-2 mb-2">
-                    <span className="text-sm font-medium text-[#2b3a4a] truncate">{a.title}</span>
-                    <span className="text-[11px] text-[#9aa8b4] ml-auto flex-shrink-0">
+                    <span className="text-sm font-medium text-base-content truncate">{a.title}</span>
+                    <span className="text-[11px] text-base-content/70 ml-auto flex-shrink-0">
                       {relativeTime(a.created_at)}
                     </span>
                   </div>
                   {a.content && (
-                    <p className="text-xs text-[#4a5a6a] leading-relaxed whitespace-pre-wrap break-words">
+                    <p className="text-xs text-base-content leading-relaxed whitespace-pre-wrap break-words">
                       {renderContent(a.content)}
                     </p>
                   )}
                   {a.activity_time && (
-                    <p className="text-[11px] text-[#7a8a9a] mt-2">
+                    <p className="text-[11px] text-base-content/70 mt-2">
                       活动时间：
                       {new Intl.DateTimeFormat('zh-CN', {
                         month: 'numeric',
@@ -447,12 +447,12 @@ export default function SearchPage() {
                   className="block rounded-box border border-base-300 bg-base-100 p-4 hover:shadow-sm hover:-translate-y-0.5 transition"
                 >
                   <div className="flex items-center gap-2 mb-2">
-                    <span className="text-[11px] text-[#b0a89e]">朋友圈</span>
-                    <span className="text-[11px] text-[#b0a89e] ml-auto flex-shrink-0">
+                    <span className="text-[11px] text-base-content/40">朋友圈</span>
+                    <span className="text-[11px] text-base-content/40 ml-auto flex-shrink-0">
                       {relativeTime(m.created_at)}
                     </span>
                   </div>
-                  <p className="text-sm text-[#4a423c] leading-relaxed whitespace-pre-wrap break-words">
+                  <p className="text-sm text-base-content leading-relaxed whitespace-pre-wrap break-words">
                     {renderContent(m.content)}
                   </p>
                 </Link>
@@ -471,7 +471,7 @@ export default function SearchPage() {
                     key={u.id}
                     className="flex items-center gap-3 rounded-box border border-base-300 bg-base-100 p-4"
                   >
-                    <span className="w-10 h-10 rounded-full bg-gradient-to-br from-[#fae0cc] to-[#f9d5ba] flex items-center justify-center overflow-hidden flex-shrink-0 text-sm text-[var(--accent-deep)] font-semibold">
+                    <span className="w-10 h-10 rounded-full bg-gradient-to-br from-primary/20 to-primary/10 flex items-center justify-center overflow-hidden flex-shrink-0 text-sm text-[var(--accent-deep)] font-semibold">
                       {u.avatar_url ? (
                         // eslint-disable-next-line @next/next/no-img-element
                         <img src={u.avatar_url} alt="" className="w-full h-full object-cover" />
@@ -486,10 +486,10 @@ export default function SearchPage() {
                         {isMe && <span className="ml-1.5 text-[11px] text-[var(--accent-deep)]">（我）</span>}
                       </p>
                       {u.username && (
-                        <p className="text-[11px] text-[#b0a89e] truncate">@{u.username}</p>
+                        <p className="text-[11px] text-base-content/40 truncate">@{u.username}</p>
                       )}
                       {u.signature && (
-                        <p className="text-[11px] text-[#a88868] truncate mt-0.5">{u.signature}</p>
+                        <p className="text-[11px] text-base-content/70 truncate mt-0.5">{u.signature}</p>
                       )}
                     </div>
 

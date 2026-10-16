@@ -155,7 +155,7 @@ export default function MePage() {
                 <p className="text-xs text-base-content/60 mt-0.5">{email}</p>
 
                 {profile?.signature && (
-                  <p className="text-sm text-[#5a4a6a] mt-3 font-art italic">「{profile.signature}」</p>
+                  <p className="text-sm text-base-content mt-3 font-art italic">「{profile.signature}」</p>
                 )}
 
                 <div className="flex flex-wrap gap-3 text-[11px] text-base-content/60 mt-3">

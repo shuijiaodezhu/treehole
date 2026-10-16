@@ -77,12 +77,12 @@ export default function ResetPasswordPage() {
           <p className="mt-6 font-serif-cn text-[11.5px] text-base-content/60">正在确认链接…</p>
         ) : done ? (
           <div className="mt-6 rounded-box border border-base-300 bg-primary/5 px-4 py-4">
-            <p className="font-serif-cn text-[12px] leading-relaxed text-[#3a3229]">改好了。</p>
+            <p className="font-serif-cn text-[12px] leading-relaxed text-base-content">改好了。</p>
             <p className="mt-1.5 font-serif-cn text-[11px] text-base-content/60">正在带你去登录…</p>
           </div>
         ) : !hasSession ? (
-          <div className="mt-6 rounded-box border border-[#f0d9d2] bg-[#fdf7f5] px-4 py-4">
-            <p className="font-serif-cn text-[12px] leading-relaxed text-[#7a4a3c]">
+          <div className="mt-6 rounded-box border border-base-300 bg-base-100 px-4 py-4">
+            <p className="font-serif-cn text-[12px] leading-relaxed text-base-content">
               这个链接已经失效了。
             </p>
             <p className="mt-1.5 font-serif-cn text-[11px] leading-relaxed text-base-content/60">

@@ -1169,7 +1169,7 @@ export default function FriendsPage() {
                           <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
                         </svg>
                       </div>
-                      <p className="font-serif-cn text-sm text-[#5a4a3a]">选一个好友，开始聊</p>
+                      <p className="font-serif-cn text-sm text-base-content">选一个好友，开始聊</p>
                       <p className="mt-2 font-serif-cn text-[11.5px] leading-relaxed text-base-content/60">
                         左边点一个名字就好。
                         <br />
@@ -1273,7 +1273,7 @@ export default function FriendsPage() {
                       <p className="text-[11px] text-base-content/60">还没有好友</p>
                     ) : (
                       visFriends.map((f) => (
-                        <label key={f.id} className="flex cursor-pointer items-center gap-2 py-1 text-xs text-[#4a423c]">
+                        <label key={f.id} className="flex cursor-pointer items-center gap-2 py-1 text-xs text-base-content">
                           <input
                             type="checkbox"
                             checked={selectedFriends.includes(f.id)}
@@ -1303,7 +1303,7 @@ export default function FriendsPage() {
                       </p>
                     ) : (
                       visGroups.map((g) => (
-                        <label key={g.id} className="flex cursor-pointer items-center gap-2 py-1 text-xs text-[#4a423c]">
+                        <label key={g.id} className="flex cursor-pointer items-center gap-2 py-1 text-xs text-base-content">
                           <input
                             type="checkbox"
                             checked={selectedGroups.includes(g.id)}
@@ -1377,7 +1377,7 @@ export default function FriendsPage() {
                           rows={3}
                           maxLength={momentEditor.maxLength.moment}
                           autoFocus
-                          className="w-full rounded-box border border-base-300 bg-primary/5 px-3 py-2 text-sm text-[#4a423c] resize-none focus:outline-none focus:border-primary focus:ring-2 focus:ring-[var(--accent)]/10 transition"
+                          className="w-full rounded-box border border-base-300 bg-primary/5 px-3 py-2 text-sm text-base-content resize-none focus:outline-none focus:border-primary focus:ring-2 focus:ring-[var(--accent)]/10 transition"
                         />
                         <div className="mt-2 flex items-center gap-3">
                           <button
@@ -1398,10 +1398,10 @@ export default function FriendsPage() {
                         </div>
                       </div>
                     ) : (
-                      <p className="text-sm text-[#4a423c] whitespace-pre-wrap break-words leading-relaxed pl-1 mb-3">
+                      <p className="text-sm text-base-content whitespace-pre-wrap break-words leading-relaxed pl-1 mb-3">
                         {post.content}
                         {momentEditor.wasSaved('moment', post.id) && (
-                          <span className="ml-2 text-[11px] text-[#7ea86a]">已保存</span>
+                          <span className="ml-2 text-[11px] text-base-content/60">已保存</span>
                         )}
                       </p>
                     )}
@@ -1519,7 +1519,7 @@ export default function FriendsPage() {
                                     <p className="text-[11px] font-medium text-[var(--accent-deep)]">
                                       {parent.author_name}
                                     </p>
-                                    <p className="text-xs text-[#4a423c] mt-0.5 whitespace-pre-wrap break-words">
+                                    <p className="text-xs text-base-content mt-0.5 whitespace-pre-wrap break-words">
                                       {renderMentions(parent.content, mentionNames)}
                                     </p>
                                     <div className="flex items-center justify-between mt-1">
@@ -1557,7 +1557,7 @@ export default function FriendsPage() {
                                           )}
                                         </div>
                                         <div className="flex-1 min-w-0 bg-primary/5 rounded-box px-3 py-1.5">
-                                          <p className="text-[11px] text-[#4a423c] leading-relaxed">
+                                          <p className="text-[11px] text-base-content leading-relaxed">
                                             <span className="font-medium text-[var(--accent-deep)]">
                                               {c.author_name}
                                             </span>

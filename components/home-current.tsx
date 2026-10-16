@@ -78,8 +78,8 @@ export function HomeCurrent() {
       title: '小屋',
       desc: '好友与私聊，慢慢说',
       Icon: House,
-      tint: 'bg-[#f7e8e0]',
-      ink: 'text-[#a8563a]',
+      tint: 'bg-base-100',
+      ink: 'text-base-content',
     },
     {
       key: 'world',
@@ -87,8 +87,8 @@ export function HomeCurrent() {
       title: '院子',
       desc: '大家在想什么',
       Icon: Trees,
-      tint: 'bg-[#f8efe0]',
-      ink: 'text-[#c08a3e]',
+      tint: 'bg-base-100',
+      ink: 'text-base-content/70',
     },
     {
       key: 'play',
@@ -96,8 +96,8 @@ export function HomeCurrent() {
       title: '聚会',
       desc: '活动、小工具、一起听歌',
       Icon: PartyPopper,
-      tint: 'bg-[#fbeae3]',
-      ink: 'text-[#c96a4e]',
+      tint: 'bg-base-100',
+      ink: 'text-base-content/70',
     },
     {
       key: 'me',
@@ -105,8 +105,8 @@ export function HomeCurrent() {
       title: '我的',
       desc: '资料、收藏、设置',
       Icon: UserRound,
-      tint: 'bg-[#f1e9df]',
-      ink: 'text-[#8a6a4a]',
+      tint: 'bg-base-200',
+      ink: 'text-base-content/70',
     },
   ] as const
 

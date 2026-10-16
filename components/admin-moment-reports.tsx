@@ -187,41 +187,41 @@ export function MomentReportsSection({ adminId }: { adminId: string }) {
   if (adminId !== ADMIN_UUID) return null
 
   return (
-    <section className="rounded-box border border-[#f0e6dc] bg-base-100/80 p-4">
+    <section className="rounded-box border border-base-300 bg-base-100/80 p-4">
       <div className="flex items-center justify-between gap-3">
-        <h2 className="text-xs tracking-wider text-[#8a7a9a]">
+        <h2 className="text-xs tracking-wider text-base-content/60">
           朋友圈举报 · {loading ? '…' : reports.length}
         </h2>
         <button
           type="button"
           onClick={() => void load()}
-          className="rounded-lg border border-[#f0e6dc] px-2.5 py-1 text-[11px] text-[#8a7a9a] transition hover:text-[#c96447]"
+          className="rounded-lg border border-base-300 px-2.5 py-1 text-[11px] text-base-content/60 transition hover:text-primary"
         >
           刷新
         </button>
       </div>
 
       {loading ? (
-        <p className="mt-3 text-xs text-[#8a7a9a]">读取中…</p>
+        <p className="mt-3 text-xs text-base-content/60">读取中…</p>
       ) : reports.length === 0 ? (
-        <p className="mt-3 text-xs text-[#8a7a9a]">没有待处理的朋友圈举报</p>
+        <p className="mt-3 text-xs text-base-content/60">没有待处理的朋友圈举报</p>
       ) : (
         <ul className="mt-3 space-y-3">
           {reports.map((report) => (
-            <li key={report.id} className="rounded-box border border-[#f4ece4] bg-[#fffdfb] p-3">
-              <p className="text-[11px] text-[#8a7a9a]">
-                由 <span className="text-[#8a7aaa]">{report.reporter_name}</span> 举报 ·{' '}
+            <li key={report.id} className="rounded-box border border-base-300 bg-base-100 p-3">
+              <p className="text-[11px] text-base-content/60">
+                由 <span className="text-base-content/60">{report.reporter_name}</span> 举报 ·{' '}
                 {new Date(report.created_at).toLocaleString('zh-CN')}
               </p>
-              <p className="mt-2 text-[11px] text-[#8a7a9a]">
+              <p className="mt-2 text-[11px] text-base-content/60">
                 被举报内容（{report.author_name} 发的{report.hasImage ? '，含配图' : ''}）
               </p>
-              <p className="mt-1 whitespace-pre-wrap text-xs leading-relaxed text-[#3a3229]">
+              <p className="mt-1 whitespace-pre-wrap text-xs leading-relaxed text-base-content">
                 {report.content}
               </p>
               {report.reason && (
-                <p className="mt-2 text-[11px] text-[#8a7a9a]">
-                  理由：<span className="text-[#3a3229]">{report.reason}</span>
+                <p className="mt-2 text-[11px] text-base-content/60">
+                  理由：<span className="text-base-content">{report.reason}</span>
                 </p>
               )}
 
@@ -230,7 +230,7 @@ export function MomentReportsSection({ adminId }: { adminId: string }) {
                   type="button"
                   disabled={busy === report.id}
                   onClick={() => void dismiss(report.id)}
-                  className="flex items-center gap-1.5 text-xs text-[#8a7a9a] transition hover:text-[#c96447] disabled:opacity-50"
+                  className="flex items-center gap-1.5 text-xs text-base-content/60 transition hover:text-primary disabled:opacity-50"
                 >
                   <Icon name="x" className="h-3.5 w-3.5" />
                   忽略举报
@@ -250,7 +250,7 @@ export function MomentReportsSection({ adminId }: { adminId: string }) {
         </ul>
       )}
 
-      {hint && <p className="mt-3 whitespace-pre-line text-[11px] text-[#8a7a9a]">{hint}</p>}
+      {hint && <p className="mt-3 whitespace-pre-line text-[11px] text-base-content/60">{hint}</p>}
     </section>
   )
 }

@@ -119,7 +119,7 @@ export function EmptyState({
         art={art}
         className={`${compact ? 'h-12 w-12' : 'h-16 w-16'} animate-float text-[var(--accent-light)]`}
       />
-      <p className={`font-serif-cn mt-4 ${compact ? 'text-xs' : 'text-sm'} text-[#5a4a3a]`}>{title}</p>
+      <p className={`font-serif-cn mt-4 ${compact ? 'text-xs' : 'text-sm'} text-base-content`}>{title}</p>
       {hint && (
         <p className="font-serif-cn mt-1.5 max-w-xs text-[11px] leading-relaxed text-base-content/60">
           {hint}

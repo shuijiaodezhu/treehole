@@ -118,7 +118,7 @@ export function ExportDataSection({ userId, email }: { userId: string | null; em
 
       {result && (
         <div className="mt-3">
-          <p className={`text-[11px] ${result.ok ? 'text-[#5a7a4a]' : 'text-red-500'}`}>{result.message}</p>
+          <p className={`text-[11px] ${result.ok ? 'text-base-content' : 'text-red-500'}`}>{result.message}</p>
           {result.failures && result.failures.length > 0 && (
             <ul className="mt-2 space-y-1 rounded-box border border-base-300 bg-primary/5 px-3 py-2">
               {result.failures.map((f) => (
@@ -172,10 +172,10 @@ export function DeleteAccountSection({ userId }: { userId: string | null }) {
   }
 
   return (
-    <section className="rounded-box border border-[#f0d9d2] bg-base-100 p-6 shadow-sm">
+    <section className="rounded-box border border-base-300 bg-base-100 p-6 shadow-sm">
       <div className="flex items-center gap-3">
-        <div className="flex h-9 w-9 items-center justify-center rounded-full bg-[#fdeeea]">
-          <Icon name="alert" className="h-4 w-4 text-[#c0553c]" />
+        <div className="flex h-9 w-9 items-center justify-center rounded-full bg-base-100">
+          <Icon name="alert" className="h-4 w-4 text-base-content" />
         </div>
         <div className="min-w-0 flex-1">
           <h2 className="text-sm font-semibold text-base-content">注销账号</h2>
@@ -189,15 +189,15 @@ export function DeleteAccountSection({ userId }: { userId: string | null }) {
         <button
           type="button"
           onClick={() => setStep('confirm')}
-          className="mt-4 rounded-full border border-[#e6c8bf] bg-base-100 px-4 py-2 text-xs text-[#c0553c] transition hover:bg-[#fdf3f0]"
+          className="mt-4 rounded-full border border-base-300 bg-base-100 px-4 py-2 text-xs text-base-content transition hover:bg-base-100"
         >
           我要注销
         </button>
       )}
 
       {step === 'confirm' && (
-        <div className="mt-4 rounded-box border border-[#f0d9d2] bg-[#fdf7f5] px-4 py-4">
-          <p className="text-[11.5px] leading-relaxed text-[#7a4a3c]">
+        <div className="mt-4 rounded-box border border-base-300 bg-base-100 px-4 py-4">
+          <p className="text-[11.5px] leading-relaxed text-base-content">
             提交后，站主会收到一条申请，然后去后台把你的账号和内容一起删掉。
             <br />
             <span className="text-base-content/60">
@@ -210,7 +210,7 @@ export function DeleteAccountSection({ userId }: { userId: string | null }) {
             rows={2}
             maxLength={200}
             placeholder="想说的话（可以留空）"
-            className="mt-3 w-full resize-none rounded-box border border-[#e6c8bf] bg-base-100 px-3 py-2 text-[12px] text-base-content placeholder:text-base-content/60 focus:border-[#c0553c] focus:outline-none"
+            className="mt-3 w-full resize-none rounded-box border border-base-300 bg-base-100 px-3 py-2 text-[12px] text-base-content placeholder:text-base-content/60 focus:border-base-300 focus:outline-none"
           />
           {error && <p className="mt-2 text-[11.5px] text-red-500">{error}</p>}
           <div className="mt-3 flex items-center gap-2">
@@ -218,7 +218,7 @@ export function DeleteAccountSection({ userId }: { userId: string | null }) {
               type="button"
               disabled={busy}
               onClick={() => void submit()}
-              className="rounded-full bg-[#c0553c] px-4 py-2 text-xs text-white transition hover:bg-[#a8472f] disabled:opacity-50"
+              className="rounded-full bg-primary px-4 py-2 text-xs text-white transition hover:bg-primary disabled:opacity-50"
             >
               {busy ? '提交中…' : '确认提交'}
             </button>
@@ -337,21 +337,21 @@ export function DeletionRequestsSection({ adminId }: { adminId: string }) {
   }, [rows])
 
   return (
-    <section className="mb-6 rounded-box border border-[#f0d9d2] bg-base-100/80 p-6 backdrop-blur shadow-sm">
+    <section className="mb-6 rounded-box border border-base-300 bg-base-100/80 p-6 backdrop-blur shadow-sm">
       <div className="flex items-start gap-3">
-        <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full bg-[#fdeeea]">
-          <Icon name="alert" className="h-4 w-4 text-[#c0553c]" />
+        <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full bg-base-100">
+          <Icon name="alert" className="h-4 w-4 text-base-content" />
         </div>
         <div className="min-w-0 flex-1">
           <h2 className="flex items-baseline gap-2 text-sm font-semibold text-base-content">
             注销申请
             {rows.length > 0 && (
-              <span className="rounded-full bg-[#c0553c] px-2 py-0.5 text-[11px] font-normal text-white">
+              <span className="rounded-full bg-primary px-2 py-0.5 text-[11px] font-normal text-white">
                 {rows.length} 条待处理
               </span>
             )}
           </h2>
-          <p className="mt-0.5 text-[11px] leading-relaxed text-[#b8a8c8]">
+          <p className="mt-0.5 text-[11px] leading-relaxed text-base-content/40">
             删人要去 Supabase → Authentication → Users 里按 id 找到并删除；
             这里只负责记录申请、并标记已处理
           </p>
@@ -368,27 +368,27 @@ export function DeletionRequestsSection({ adminId }: { adminId: string }) {
 
       <div className="mt-4">
         {loading ? (
-          <p className="py-6 text-center text-xs text-[#b8a8c8]">读取中…</p>
+          <p className="py-6 text-center text-xs text-base-content/40">读取中…</p>
         ) : error ? (
           <p className="rounded-box border border-red-100 bg-red-50 px-4 py-3 text-xs text-red-600">{error}</p>
         ) : rows.length === 0 ? (
-          <p className="py-6 text-center text-xs text-[#b8a8c8]">没有待处理的注销申请</p>
+          <p className="py-6 text-center text-xs text-base-content/40">没有待处理的注销申请</p>
         ) : (
           <ul className="space-y-2">
             {rows.map((r) => (
               <li
                 key={r.id}
-                className="flex flex-wrap items-center gap-x-3 gap-y-1 rounded-box border border-[#f0d9d2] bg-[#fdf9f8] px-4 py-3"
+                className="flex flex-wrap items-center gap-x-3 gap-y-1 rounded-box border border-base-300 bg-base-100 px-4 py-3"
               >
                 <span className="text-xs font-medium text-base-content">
                   {names[r.user_id] || '（没查到昵称）'}
                 </span>
-                <code className="select-all rounded bg-base-100 px-2 py-0.5 text-[11px] text-[#8a7a9a]">
+                <code className="select-all rounded bg-base-100 px-2 py-0.5 text-[11px] text-base-content/60">
                   {r.user_id}
                 </code>
-                <span className="text-[11px] text-[#b8a8c8]">{relativeTime(r.created_at)}</span>
+                <span className="text-[11px] text-base-content/40">{relativeTime(r.created_at)}</span>
                 {r.reason && (
-                  <span className="w-full text-[11.5px] leading-relaxed text-[#8a7a9a]">「{r.reason}」</span>
+                  <span className="w-full text-[11.5px] leading-relaxed text-base-content/60">「{r.reason}」</span>
                 )}
                 <button
                   type="button"

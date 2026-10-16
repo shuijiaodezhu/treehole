@@ -38,7 +38,7 @@ export function renderMentions(text: string, names: string[]): ReactNode {
 
     if (start > lastIndex) nodes.push(text.slice(lastIndex, start))
     nodes.push(
-      <span key={`m-${key++}`} className="font-medium text-[#5a8a4a]">
+      <span key={`m-${key++}`} className="font-medium text-primary">
         @{name}
       </span>,
     )
@@ -193,8 +193,8 @@ export function MentionInput({
       {withEmoji && <EmojiPicker onPick={(emoji) => onChange(value + emoji)} align="right" />}
 
       {open && candidates.length > 0 && (
-        <div className="absolute bottom-full left-0 z-30 mb-1 w-56 overflow-hidden rounded-box border border-[#d8e8c8] bg-base-100 shadow-lg">
-          <p className="border-b border-[#f0f7e8] px-3 py-1.5 text-[11px] text-[#9aa88a]">
+        <div className="absolute bottom-full left-0 z-30 mb-1 w-56 overflow-hidden rounded-box border border-base-300 bg-base-100 shadow-lg">
+          <p className="border-b border-base-300 px-3 py-1.5 text-[11px] text-base-content/70">
             选一个人 @ 一下
           </p>
           {candidates.map((f, i) => (
@@ -207,10 +207,10 @@ export function MentionInput({
               }}
               onMouseEnter={() => setActiveIndex(i)}
               className={`flex w-full items-center gap-2 px-3 py-1.5 text-left text-xs transition ${
-                i === activeIndex ? 'bg-[#f0f7e8] text-[#3a4a2a]' : 'text-[#5a6a4a] hover:bg-[#f7fbf2]'
+                i === activeIndex ? 'bg-base-100 text-base-content' : 'text-base-content hover:bg-base-100'
               }`}
             >
-              <span className="h-5 w-5 flex-shrink-0 overflow-hidden rounded-full bg-[#e0e8d8] flex items-center justify-center text-[11px] text-[#5a8a4a]">
+              <span className="h-5 w-5 flex-shrink-0 overflow-hidden rounded-full bg-base-200 flex items-center justify-center text-[11px] text-primary">
                 {f.avatar_url ? (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img src={f.avatar_url} alt="" className="h-full w-full object-cover" />

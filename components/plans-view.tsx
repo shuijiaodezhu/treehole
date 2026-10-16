@@ -29,8 +29,8 @@ const KIND_ICON: Record<PlanKind, IconName> = {
 
 const ACCENT: Record<PlanKind, { bar: string; chip: string; text: string }> = {
   plan: { bar: 'bg-primary', chip: 'bg-primary/5', text: 'text-[var(--accent-deep)]' },
-  goal: { bar: 'bg-[#a88ab8]', chip: 'bg-[#f3edf9]', text: 'text-[#7a5a9a]' },
-  task: { bar: 'bg-[#7ea86a]', chip: 'bg-[#eef6e8]', text: 'text-[#5a8a4a]' },
+  goal: { bar: 'bg-primary', chip: 'bg-base-100', text: 'text-primary' },
+  task: { bar: 'bg-primary', chip: 'bg-base-100', text: 'text-primary' },
 }
 
 export function PlansView({ userId }: { userId: string | null }) {
@@ -82,7 +82,7 @@ export function PlansView({ userId }: { userId: string | null }) {
     <div className="mx-auto max-w-3xl">
       {/* 纸面 */}
       <div
-        className="relative overflow-hidden rounded-box border border-[#f0e0d0] shadow-sm"
+        className="relative overflow-hidden rounded-box border border-base-300 shadow-sm"
         style={{
           backgroundImage:
             'repeating-linear-gradient(to bottom, rgba(255,255,255,0) 0 33px, rgba(217,119,87,0.07) 33px 34px)',
@@ -90,7 +90,7 @@ export function PlansView({ userId }: { userId: string | null }) {
         }}
       >
         {/* 左侧装订线 */}
-        <div className="pointer-events-none absolute inset-y-0 left-10 w-px bg-[#f0c8b0]/70" />
+        <div className="pointer-events-none absolute inset-y-0 left-10 w-px bg-base-200/70" />
 
         <div className="relative pl-14 pr-6 py-7">
           {/* 抬头 */}
@@ -102,24 +102,24 @@ export function PlansView({ userId }: { userId: string | null }) {
               </p>
             </div>
             <div className="hidden text-right sm:block">
-              <p className="font-serif-cn text-[11px] text-[#c0a890]">今天要做的</p>
+              <p className="font-serif-cn text-[11px] text-base-content/70">今天要做的</p>
               <p className="text-2xl font-bold text-primary">{plans.stats.openTasks}</p>
             </div>
           </div>
 
           {/* 概览 */}
           <div className="mb-6 grid grid-cols-3 gap-3">
-            <div className="rounded-box border border-[#f2e4d6] bg-base-100/70 px-3 py-2.5">
+            <div className="rounded-box border border-base-300 bg-base-100/70 px-3 py-2.5">
               <p className="text-[11px] text-base-content/60">待完成</p>
               <p className="mt-0.5 text-lg font-semibold text-[var(--accent-deep)]">{plans.stats.openTasks}</p>
             </div>
-            <div className="rounded-box border border-[#f2e4d6] bg-base-100/70 px-3 py-2.5">
+            <div className="rounded-box border border-base-300 bg-base-100/70 px-3 py-2.5">
               <p className="text-[11px] text-base-content/60">已完成</p>
-              <p className="mt-0.5 text-lg font-semibold text-[#5a8a4a]">{plans.stats.doneTasks}</p>
+              <p className="mt-0.5 text-lg font-semibold text-primary">{plans.stats.doneTasks}</p>
             </div>
-            <div className="rounded-box border border-[#f2e4d6] bg-base-100/70 px-3 py-2.5">
+            <div className="rounded-box border border-base-300 bg-base-100/70 px-3 py-2.5">
               <p className="text-[11px] text-base-content/60">目标进度</p>
-              <p className="mt-0.5 text-lg font-semibold text-[#7a5a9a]">{plans.stats.goalProgress}%</p>
+              <p className="mt-0.5 text-lg font-semibold text-primary">{plans.stats.goalProgress}%</p>
             </div>
           </div>
 
@@ -136,7 +136,7 @@ export function PlansView({ userId }: { userId: string | null }) {
                   className={`flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs transition ${
                     active
                       ? `${ACCENT[k].chip} ${ACCENT[k].text} font-medium ring-1 ring-inset ring-current/20`
-                      : 'text-base-content/60 hover:bg-[#faf3ec]'
+                      : 'text-base-content/60 hover:bg-base-100'
                   }`}
                 >
                   <Icon name={KIND_ICON[k]} className="h-3.5 w-3.5" />
@@ -147,7 +147,7 @@ export function PlansView({ userId }: { userId: string | null }) {
             })}
           </div>
 
-          <p className="mb-3 font-serif-cn text-[11px] text-[#b8a89a]">{KIND_HINT[kind]}</p>
+          <p className="mb-3 font-serif-cn text-[11px] text-base-content/70">{KIND_HINT[kind]}</p>
 
           {/* 添加 */}
           <form onSubmit={handleAdd} className="mb-5">
@@ -160,13 +160,13 @@ export function PlansView({ userId }: { userId: string | null }) {
                   kind === 'task' ? '要做什么…' : kind === 'goal' ? '想达成什么…' : '在计划什么…'
                 }
                 maxLength={80}
-                className="min-w-0 flex-1 border-b border-dashed border-[#e0c8b4] bg-transparent px-1 py-2 font-serif-cn text-sm text-base-content placeholder:text-[#c8b8a8] focus:border-primary focus:outline-none transition"
+                className="min-w-0 flex-1 border-b border-dashed border-base-300 bg-transparent px-1 py-2 font-serif-cn text-sm text-base-content placeholder:text-base-content/40 focus:border-primary focus:outline-none transition"
               />
               <button
                 type="button"
                 onClick={() => setShowExtra((v) => !v)}
                 title="添加备注与日期"
-                className="rounded-full border border-[#e8d8c8] px-2.5 py-1.5 text-[11px] text-base-content/60 transition hover:border-primary hover:text-[var(--accent-deep)]"
+                className="rounded-full border border-base-300 px-2.5 py-1.5 text-[11px] text-base-content/60 transition hover:border-primary hover:text-[var(--accent-deep)]"
               >
                 {showExtra ? '收起' : '备注/日期'}
               </button>
@@ -188,13 +188,13 @@ export function PlansView({ userId }: { userId: string | null }) {
                   onChange={(e) => setNote(e.target.value)}
                   placeholder="补充一句（可留空）"
                   maxLength={200}
-                  className="min-w-0 flex-1 rounded-box border border-[#eee0d2] bg-base-100/70 px-3 py-1.5 text-xs text-[#4a423c] focus:border-primary focus:outline-none transition"
+                  className="min-w-0 flex-1 rounded-box border border-base-300 bg-base-100/70 px-3 py-1.5 text-xs text-base-content focus:border-primary focus:outline-none transition"
                 />
                 <input
                   type="date"
                   value={due}
                   onChange={(e) => setDue(e.target.value)}
-                  className="rounded-box border border-[#eee0d2] bg-base-100/70 px-3 py-1.5 text-xs text-[#4a423c] focus:border-primary focus:outline-none transition"
+                  className="rounded-box border border-base-300 bg-base-100/70 px-3 py-1.5 text-xs text-base-content focus:border-primary focus:outline-none transition"
                 />
               </div>
             )}
@@ -239,7 +239,7 @@ export function PlansView({ userId }: { userId: string | null }) {
               <button
                 type="button"
                 onClick={() => setShowDone((v) => !v)}
-                className="flex items-center gap-1.5 text-[11px] text-base-content/60 transition hover:text-[#8a7a6a]"
+                className="flex items-center gap-1.5 text-[11px] text-base-content/60 transition hover:text-base-content/70"
               >
                 <Icon name={showDone ? 'check' : 'arrow'} className="h-3 w-3" />
                 已完成 {current.done.length} 条
@@ -270,7 +270,7 @@ export function PlansView({ userId }: { userId: string | null }) {
         </div>
       </div>
 
-      <p className="mt-4 text-center font-serif-cn text-[11px] text-[#c0b0a0]">
+      <p className="mt-4 text-center font-serif-cn text-[11px] text-base-content/40">
         只有你自己看得到这本计划书。
       </p>
     </div>
@@ -303,7 +303,7 @@ function PlanRow({
   return (
     <div
       className={`group relative overflow-hidden rounded-box border bg-base-100/80 pl-4 pr-3 py-2.5 transition ${
-        item.done ? 'border-[#f2ece4] opacity-70' : 'border-[#f2e4d6] hover:shadow-sm'
+        item.done ? 'border-base-300 opacity-70' : 'border-base-300 hover:shadow-sm'
       }`}
     >
       {/* 左侧色条 */}
@@ -323,8 +323,8 @@ function PlanRow({
             aria-label={item.done ? '标记为未完成' : '标记为完成'}
             className={`mt-0.5 flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-md border transition disabled:opacity-50 ${
               item.done
-                ? 'border-[#7ea86a] bg-[#7ea86a] text-white'
-                : 'border-[#ddd0c2] text-transparent hover:border-[#7ea86a] hover:text-[#7ea86a]/40'
+                ? 'border-base-300 bg-primary text-white'
+                : 'border-base-300 text-transparent hover:border-base-300 hover:text-base-content/60/40'
             }`}
           >
             <Icon name="check" className="h-3 w-3" />
@@ -334,14 +334,14 @@ function PlanRow({
         <div className="min-w-0 flex-1">
           <p
             className={`font-serif-cn text-sm leading-relaxed ${
-              item.done ? 'text-[#a89888] line-through' : 'text-base-content'
+              item.done ? 'text-base-content/70 line-through' : 'text-base-content'
             }`}
           >
             {item.title}
           </p>
 
           {item.note && (
-            <p className="mt-0.5 font-serif-cn text-[11px] leading-relaxed text-[#a89888]">{item.note}</p>
+            <p className="mt-0.5 font-serif-cn text-[11px] leading-relaxed text-base-content/70">{item.note}</p>
           )}
 
           <div className="mt-1 flex flex-wrap items-center gap-2">
@@ -352,7 +352,7 @@ function PlanRow({
                     ? 'bg-red-50 text-red-500'
                     : due.tone === 'soon'
                       ? 'bg-primary/5 text-[var(--accent-deep)]'
-                      : 'bg-[#f6f2ec] text-[#a89888]'
+                      : 'bg-base-100 text-base-content/70'
                 }`}
               >
                 {due.text}
@@ -362,9 +362,9 @@ function PlanRow({
             {/* 目标进度 */}
             {item.kind === 'goal' && (
               <span className="flex items-center gap-2">
-                <span className="h-1.5 w-24 overflow-hidden rounded-full bg-[#f0e8f6]">
+                <span className="h-1.5 w-24 overflow-hidden rounded-full bg-base-100">
                   <span
-                    className="block h-full rounded-full bg-gradient-to-r from-[#c8b0dc] to-[#a88ab8] transition-all"
+                    className="block h-full rounded-full bg-gradient-to-r from-primary/20 to-primary/10 transition-all"
                     style={{ width: `${item.progress}%` }}
                   />
                 </span>
@@ -379,7 +379,7 @@ function PlanRow({
                   className="h-1 w-20 cursor-pointer accent-[#a88ab8]"
                   aria-label="目标进度"
                 />
-                <span className="text-[11px] text-[#a88ab8]">{item.progress}%</span>
+                <span className="text-[11px] text-primary">{item.progress}%</span>
               </span>
             )}
           </div>
@@ -393,7 +393,7 @@ function PlanRow({
               onClick={onToggle}
               disabled={busy}
               className={`rounded-full px-2 py-0.5 text-[11px] transition disabled:opacity-50 ${
-                item.done ? 'bg-[#eef6e8] text-[#5a8a4a]' : 'text-base-content/60 hover:text-[#7a5a9a]'
+                item.done ? 'bg-base-100 text-primary' : 'text-base-content/60 hover:text-primary'
               }`}
             >
               {item.done ? '已达成' : '达成'}
@@ -414,7 +414,7 @@ function PlanRow({
               type="button"
               onClick={onAskDelete}
               aria-label="删除"
-              className="rounded-full p-1 text-[#c8b8a8] opacity-0 transition group-hover:opacity-100 hover:text-red-500 focus:opacity-100"
+              className="rounded-full p-1 text-base-content/40 opacity-0 transition group-hover:opacity-100 hover:text-red-500 focus:opacity-100"
             >
               <Icon name="trash" className="h-3.5 w-3.5" />
             </button>

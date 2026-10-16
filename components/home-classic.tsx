@@ -198,7 +198,7 @@ export function HomeClassic() {
   return (
     <div className="min-h-screen">
       {/* 顶部 header */}
-      <header className="w-full bg-gradient-to-br from-[var(--accent-soft)] via-[#fae4d4] to-[var(--accent-line)] border-b border-base-300 relative overflow-hidden shadow-[0_2px_16px_rgba(217,119,87,0.06)]">
+      <header className="w-full bg-gradient-to-br from-[var(--accent-soft)] via-primary/15 to-[var(--accent-line)] border-b border-base-300 relative overflow-hidden shadow-[0_2px_16px_rgba(217,119,87,0.06)]">
         <div className="absolute -top-10 -right-10 w-48 h-48 bg-primary opacity-10 rounded-full blur-3xl pointer-events-none"></div>
         <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-primary opacity-[0.07] rounded-full blur-3xl pointer-events-none"></div>
 
@@ -336,7 +336,7 @@ export function HomeClassic() {
               <button
                 type="button"
                 onClick={() => setConfirmLogout(false)}
-                className="flex-1 rounded-box border border-base-300 px-4 py-2 text-sm text-[#6a6058] hover:bg-primary/5 transition"
+                className="flex-1 rounded-box border border-base-300 px-4 py-2 text-sm text-base-content hover:bg-primary/5 transition"
               >
                 再待会儿
               </button>

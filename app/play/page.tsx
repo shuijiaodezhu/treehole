@@ -609,7 +609,7 @@ export default function PlayPage() {
                           })
                         }
                         className={`absolute top-3 right-3 z-10 rounded-full p-1 transition disabled:opacity-50 ${
-                          isFav ? 'text-[#d97757]' : 'text-base-content/60 hover:text-[#d97757]'
+                          isFav ? 'text-primary' : 'text-base-content/60 hover:text-primary'
                         }`}
                       >
                         <Icon name={isFav ? 'heartfill' : 'heart'} className="w-4 h-4" />

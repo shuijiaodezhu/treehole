@@ -375,7 +375,7 @@ export function MailboxDialog({
             isOwner ? (
               /* 站主自己在前台点开：指个路，别让他以为要在前台写信 */
               <div className="px-1 py-8 text-center">
-                <p className="font-serif-cn text-[13px] leading-relaxed text-[#3a3229]">
+                <p className="font-serif-cn text-[13px] leading-relaxed text-base-content">
                   你是站主
                 </p>
                 <p className="mt-2 font-serif-cn text-[11px] leading-relaxed text-base-content/60">
@@ -394,7 +394,7 @@ export function MailboxDialog({
             ) : (
               /* 第一次打开：把「怎么用」讲清楚，措辞先安慰人 */
               <div className="px-1 py-4">
-                <p className="text-center font-serif-cn text-[13px] leading-relaxed text-[#3a3229]">
+                <p className="text-center font-serif-cn text-[13px] leading-relaxed text-base-content">
                   有什么不好开口的，
                   <br />
                   写在这里就好。
@@ -421,7 +421,7 @@ export function MailboxDialog({
                       {i + 1}
                     </span>
                     <span className="min-w-0">
-                      <span className="block font-serif-cn text-[12px] text-[#3a3229]">{step.t}</span>
+                      <span className="block font-serif-cn text-[12px] text-base-content">{step.t}</span>
                       <span className="mt-0.5 block font-serif-cn text-[11.5px] leading-relaxed text-base-content/60">
                         {step.d}
                       </span>
@@ -444,7 +444,7 @@ export function MailboxDialog({
                     className={`max-w-[78%] rounded-box px-3.5 py-2.5 font-serif-cn text-[12.5px] leading-relaxed ${
                       mine
                         ? 'bg-primary text-white'
-                        : 'border border-base-300 bg-primary/5 text-[#3a3229]'
+                        : 'border border-base-300 bg-primary/5 text-base-content'
                     }`}
                   >
                     <p className="whitespace-pre-wrap break-words">{m.content}</p>

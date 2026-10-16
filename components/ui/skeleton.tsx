@@ -5,5 +5,5 @@ import { cn } from '../../lib/utils'
  * 比一个转圈更"高级"的地方在于：页面不会跳。
  */
 export function Skeleton({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
-  return <div className={cn('animate-pulse rounded-md bg-[#ece3d4]', className)} {...props} />
+  return <div className={cn('animate-pulse rounded-md bg-base-200', className)} {...props} />
 }
