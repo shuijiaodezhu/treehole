@@ -5,6 +5,24 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { createClient } from '../app/lib/supabase'
 
+/**
+ * 初版的七色调色板 —— 只覆盖在这一棵子树里。
+ *
+ * 为什么需要它：经典版文件本身是从最初提交原样取回的，
+ * 但它里面部分颜色写的是 var(--accent-*)，而那些变量现在指向全站统一后的暖色。
+ * CSS 自定义属性在"使用处"才做替换，所以在这里覆盖 --page-home* ，
+ * 就能把这条分支里的 var(--accent*) 一起拉回初版配色，且不影响其它页面。
+ */
+const CLASSIC_PALETTE = {
+  '--page-home': '#d97757',
+  '--page-home-deep': '#b16349',
+  '--page-home-ink': '#5b392c',
+  '--page-home-light': '#e9b09e',
+  '--page-home-muted': '#b48b7e',
+  '--page-home-soft': '#fcf5f3',
+  '--page-home-line': '#f7e1da',
+} as React.CSSProperties
+
 import {
   DailyQuoteCard,
   FriendRequestBanner,
@@ -101,11 +119,10 @@ export function HomeClassic() {
     async function checkUser() {
       try {
         const { data, error } = await supabase.auth.getUser()
-        // 「没有会话」不是错误：未登录是正常状态，下面按未登录处理（跳登录页）
-        if (error && error.name !== 'AuthSessionMissingError') throw error
+        if (error) throw error
         if (!mountedRef.current) return
 
-        const user = data?.user ?? null
+        const user = data.user
         if (!user) {
           router.replace('/login')
           return
@@ -190,7 +207,7 @@ export function HomeClassic() {
 
   if (loading) {
     return (
-      <div className="page-theme min-h-screen" style={pageAccentVars('home')}>
+      <div className="page-theme min-h-screen" style={{ ...pageAccentVars('home'), ...CLASSIC_PALETTE }}>
         <SkeletonHome />
       </div>
     )
@@ -199,23 +216,23 @@ export function HomeClassic() {
   return (
     <div className="min-h-screen">
       {/* 顶部 header */}
-      <header className="w-full bg-gradient-to-br from-primary/5 via-primary/15 to-base-300 border-b border-base-300 relative overflow-hidden shadow-[0_2px_16px_rgba(217,119,87,0.06)]">
-        <div className="absolute -top-10 -right-10 w-48 h-48 bg-primary opacity-10 rounded-full blur-3xl pointer-events-none"></div>
-        <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-primary opacity-[0.07] rounded-full blur-3xl pointer-events-none"></div>
+      <header className="w-full bg-gradient-to-br from-[var(--accent-soft)] via-[#fae4d4] to-[var(--accent-line)] border-b border-[var(--accent-line)] relative overflow-hidden shadow-[0_2px_16px_rgba(217,119,87,0.06)]">
+        <div className="absolute -top-10 -right-10 w-48 h-48 bg-[var(--accent)] opacity-10 rounded-full blur-3xl pointer-events-none"></div>
+        <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-[var(--accent)] opacity-[0.07] rounded-full blur-3xl pointer-events-none"></div>
 
         <div className="max-w-5xl mx-auto px-8 py-10 flex justify-between items-center relative">
           <div>
-            <h1 className="text-3xl font-bold text-base-content">你的来信</h1>
-            <p className="mt-2 text-base-content/60 flex items-baseline gap-2">
-              <span className="font-art text-2xl text-primary">Dear You</span>
+            <h1 className="text-3xl font-bold text-[#2b2620]">你的来信</h1>
+            <p className="mt-2 text-[var(--accent-muted)] flex items-baseline gap-2">
+              <span className="font-art text-2xl text-[var(--accent-deep)]">Dear You</span>
               <span className="text-sm">· 这里有一封，你的来信</span>
             </p>
           </div>
 
           <div className="text-right">
             <p className="text-sm mb-2">
-              <span className="text-primary font-medium">欢迎回来，</span>
-              <span className="text-base-content/60">{email || '朋友'}</span>
+              <span className="text-[var(--accent-deep)] font-medium">欢迎回来，</span>
+              <span className="text-[var(--accent-muted)]">{email || '朋友'}</span>
             </p>
 
             <div className="flex items-center justify-end gap-3">
@@ -226,14 +243,14 @@ export function HomeClassic() {
               <Link
                 href="/search"
                 aria-label="搜索"
-                className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-base-300 bg-base-100/60 text-base-content/60 hover:bg-base-100/90 hover:text-primary transition"
+                className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-[var(--accent-line)] bg-white/60 text-[var(--accent-muted)] hover:bg-white/90 hover:text-[var(--accent-deep)] transition"
               >
                 <IconSearch className="w-[18px] h-[18px]" />
               </Link>
               <button
                 type="button"
                 onClick={() => setConfirmLogout(true)}
-                className="text-sm text-primary hover:underline font-medium"
+                className="text-sm text-[var(--accent-deep)] hover:underline font-medium"
               >
                 退出登录
               </button>
@@ -245,12 +262,12 @@ export function HomeClassic() {
       {/* 错误提示条 + 重试 */}
       {(authError || requestError) && (
         <div className="max-w-5xl mx-auto px-8 pt-6">
-          <div className="flex items-center justify-between gap-3 rounded-box bg-red-50 border border-red-100 px-4 py-3 text-sm text-red-600">
+          <div className="flex items-center justify-between gap-3 rounded-xl bg-red-50 border border-red-100 px-4 py-3 text-sm text-red-600">
             <span>{authError || requestError}</span>
             <button
               type="button"
               onClick={handleRetry}
-              className="inline-flex items-center gap-1.5 rounded-lg border border-red-200 bg-base-100 px-2.5 py-1 text-xs text-red-600 hover:bg-red-50 transition"
+              className="inline-flex items-center gap-1.5 rounded-lg border border-red-200 bg-white px-2.5 py-1 text-xs text-red-600 hover:bg-red-50 transition"
             >
               <IconRefresh className="w-3.5 h-3.5" />
               重试
@@ -288,7 +305,7 @@ export function HomeClassic() {
 
       {/* 页脚：条款与说明入口 */}
       <footer className="mx-auto max-w-5xl px-8 pb-10">
-        <div className="flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-base-300 pt-5">
+        <div className="flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-[var(--accent-line)] pt-5">
           {[
             { slug: 'community', label: '社区公约' },
             { slug: 'reporting', label: '举报与申诉' },
@@ -299,14 +316,14 @@ export function HomeClassic() {
             <Link
               key={item.slug}
               href={`/p/${item.slug}`}
-              className="text-[11px] text-base-content/60 transition hover:text-primary"
+              className="text-[11px] text-[var(--accent-muted)] transition hover:text-[var(--accent-deep)]"
             >
               {item.label}
             </Link>
           ))}
           <Link
             href="/p"
-            className="ml-auto text-[11px] text-base-content/60 transition hover:text-primary"
+            className="ml-auto text-[11px] text-[var(--accent-muted)] transition hover:text-[var(--accent-deep)]"
           >
             全部条款 →
           </Link>
@@ -323,28 +340,28 @@ export function HomeClassic() {
           onClick={() => setConfirmLogout(false)}
         >
           <div
-            className="w-full max-w-xs rounded-3xl bg-base-100 p-6 shadow-2xl text-center"
+            className="w-full max-w-xs rounded-3xl bg-white p-6 shadow-2xl text-center"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="mx-auto mb-3 w-11 h-11 rounded-full bg-primary/5 flex items-center justify-center">
-              <IconMail className="w-5 h-5 text-primary" />
+            <div className="mx-auto mb-3 w-11 h-11 rounded-full bg-[var(--accent-soft)] flex items-center justify-center">
+              <IconMail className="w-5 h-5 text-[var(--accent)]" />
             </div>
-            <h2 className="text-base font-semibold text-base-content">要走了吗？</h2>
-            <p className="mt-1 text-xs text-base-content/60 leading-relaxed">
+            <h2 className="text-base font-semibold text-[#2b2620]">要走了吗？</h2>
+            <p className="mt-1 text-xs text-[var(--accent-muted)] leading-relaxed">
               退出后需要重新登录才能看到你的来信。
             </p>
             <div className="mt-5 flex gap-2">
               <button
                 type="button"
                 onClick={() => setConfirmLogout(false)}
-                className="flex-1 rounded-box border border-base-300 px-4 py-2 text-sm text-base-content hover:bg-primary/5 transition"
+                className="flex-1 rounded-xl border border-[var(--accent-line)] px-4 py-2 text-sm text-[#6a6058] hover:bg-[var(--accent-soft)] transition"
               >
                 再待会儿
               </button>
               <button
                 type="button"
                 onClick={handleLogout}
-                className="flex-1 rounded-box bg-gradient-to-r from-primary/20 to-primary/10 px-4 py-2 text-sm font-medium text-white hover:shadow-[0_6px_20px_rgba(217,119,87,0.3)] transition-all"
+                className="flex-1 rounded-xl bg-gradient-to-r from-[var(--accent-light)] to-[var(--accent)] px-4 py-2 text-sm font-medium text-white hover:shadow-[0_6px_20px_rgba(217,119,87,0.3)] transition-all"
               >
                 退出登录
               </button>
