@@ -3,6 +3,7 @@
 /* eslint-disable @next/next/no-img-element -- 头像用原生 img 即可，尺寸固定 */
 
 import { useEffect, useState, useRef, Suspense } from 'react'
+import { peek, save } from '../../../../components/local-store'
 import { createClient } from '../../../lib/supabase'
 import { useRouter, useParams } from 'next/navigation'
 import Link from 'next/link'
@@ -52,6 +53,35 @@ function ChatInner() {
   const [friendName, setFriendName] = useState('好友')
   const [friendAvatar, setFriendAvatar] = useState<string | null>(null)
   const [conversationId, setConversationId] = useState<string | null>(null)
+
+  /*
+   * 聊天也「先给本机那份」
+   *
+   * 以前打开对话要等一次跨境请求（拉最近 200 条）才见到内容
+   * 现在：本机存过这个对话 → 立刻铺上（消息本身仍然照常去同步）
+   * 用 0 延迟铺数据：避开「effect 里同步 setState」的规则，也避免连锁渲染
+   */
+  useEffect(() => {
+    if (!conversationId) return
+    const paint = window.setTimeout(() => {
+      const cached = peek<Message[]>('chat:' + conversationId, 30 * 60 * 1000)
+      if (!cached || cached.length === 0) return
+      setMessages(cached)
+      setLoading(false)
+    }, 0)
+    // 兜底：最多 1.2 秒也撤掉等待（和首页/我的同一套思路）
+    const bail = window.setTimeout(() => setLoading(false), 1200)
+    return () => {
+      window.clearTimeout(paint)
+      window.clearTimeout(bail)
+    }
+  }, [conversationId])
+
+  /* 消息有变化就写回本机（包含实时收到的那条） */
+  useEffect(() => {
+    if (!conversationId || messages.length === 0) return
+    save('chat:' + conversationId, messages)
+  }, [conversationId, messages])
 
   /** 输入框的表情插入（插到光标处） */
   const { ref: inputRef, insert: insertEmoji } = useEmojiInsert<HTMLInputElement>(content, setContent)
@@ -173,6 +203,7 @@ function ChatInner() {
       .limit(200)
 
     if (data) setMessages([...(data as Message[])].reverse())
+    if (data && conversationId) save('chat:' + conversationId, [...(data as Message[])].reverse())
   }
 
   async function handleSend(e: React.FormEvent) {
