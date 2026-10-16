@@ -5,8 +5,9 @@ import type { RefObject } from 'react'
 /**
  * 聊天气泡 —— 用 daisyUI 的 chat 组件
  *
- * 结构：chat + chat-start/chat-end，里面是 chat-image / chat-header /
- * chat-bubble / chat-footer。自己的气泡用 chat-bubble-primary（主题的蜡封红），
+ * 结构：chat + chat-start/chat-end，里面是 chat-header / chat-bubble / chat-footer。
+ * 不用头像（用户要求：有头像时那条会被往右挤 28px，左边缘参差不齐）。
+ * 自己的气泡用 chat-bubble-primary（主题的蜡封红），
  * 对方的是 chat-bubble 默认色（主题的 base 系）。颜色一律不写死。
  *
  * 分组规则照旧（这部分和样式无关，只是"什么时候算一组"）：
@@ -57,16 +58,12 @@ function dayLabel(iso: string): string {
 export function ChatMessages({
   messages,
   meId,
-  friendName = '',
   bottomRef,
 }: {
   messages: ChatMessage[]
   meId: string | null
-  friendName?: string
   bottomRef?: RefObject<HTMLDivElement | null>
 }) {
-  const initial = friendName.trim()[0] ?? '友'
-
   return (
     <div>
       {messages.map((m, i) => {
@@ -101,29 +98,9 @@ export function ChatMessages({
                 firstOfGroup ? 'mt-3' : 'mt-0.5'
               }`}
             >
-              {/*
-                头像：只在组尾出现。
-                ⚠️ 必须 self-start ✗ 否则会"歪"：
-                  daisyUI 的 chat-image 默认是 grid-row: span 2
-                  → 它跨了"气泡 + 下面的时间"两行 ✓
-                  → 头像的垂直中心落在两者之间 → 看着就是往下歪了 ✓
-                  self-start 让它贴住气泡顶端（和微信一致 ✓）
-                  （更喜欢贴气泡**底**的话，把 self-start 换成 self-end ✓）
-              */}
-              {!mine && (
-                <div className="chat-image avatar placeholder self-start">
-                  {/* 圆圈必须写死正方形（h-7 w-7）：daisyUI 的 chat-image 默认跨两行
-                      （气泡 + 时间），只写 w-7 时高度会继承那两行 → 圆被拉成椭圆
-                      → 里头的字母看着就是"歪"的。再自己 flex 居中 + 字加 leading-none */}
-                  {lastOfGroup && (
-                    <div className="flex h-7 w-7 items-center justify-center rounded-full bg-accent/25 text-base-content">
-                      <span className="font-serif-cn text-[11px] font-semibold leading-none">
-                        {initial}
-                      </span>
-                    </div>
-                  )}
-                </div>
-              )}
+              {/* 不再显示头像（用户要求）：头像只在该组最后一条出现，
+                  会让那一条比上面几条往右挤 28px → 左边缘参差不齐，看着"位置乱"
+                  去掉后：对方全部靠左、自己全部靠右，边缘整齐 */}
 
               <div
                 className={`chat-bubble animate-fade-in text-[13.5px] leading-relaxed ${

@@ -288,7 +288,7 @@ function ChatInner() {
               <p className="text-xs text-base-content/60 mt-1.5">说点什么吧</p>
             </div>
           ) : (
-            <ChatMessages messages={messages} meId={meId} friendName={friendName} bottomRef={bottomRef} />
+            <ChatMessages messages={messages} meId={meId} bottomRef={bottomRef} />
           )}
         </div>
       </main>

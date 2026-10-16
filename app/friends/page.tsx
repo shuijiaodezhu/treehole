@@ -1211,7 +1211,6 @@ export default function FriendsPage() {
                     <ChatMessages
                       messages={shownMessages}
                       meId={meId}
-                      friendName={friendName}
                       bottomRef={bottomRef}
                     />
                   )}
