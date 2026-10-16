@@ -84,8 +84,18 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="zh-CN" className={`${cormorant.variable} ${notoSerif.variable} ${maShanZheng.variable}`}>
-      {/* 霞鹜文楷（开源楷体）：按需子集加载；拉不到会自动回退，不影响可用性 */}
-      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-webfont@1.7.0/lxgwwenkai-regular.css" />
+      {/*
+        霞鹜文楷（开源楷体）：按需子集加载；拉不到会自动回退，不影响可用性。
+        必须带 precedence —— React 19 只会把"声明了优先级"的 stylesheet **提升**到 <head>；
+        不带的话它会留在 <html> 里当场报两条错：
+          ① Cannot render a <link rel="stylesheet" /> outside the main document without knowing its precedence
+          ② In HTML, <link> cannot be a child of <html>（hydration error）
+      */}
+      <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-webfont@1.7.0/lxgwwenkai-regular.css"
+        precedence="default"
+      />
       <body>
       {/*
         首次加载才放 splash：这里用内联脚本在**首帧之前**写 html 属性，
