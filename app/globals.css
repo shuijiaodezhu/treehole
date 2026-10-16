@@ -805,7 +805,7 @@ body {
 .th-page-out { animation: th-page-out 0.34s ease-in both; }
 
 /* 信封：从左边斜着飞进来，落定时有一点回弹 */
-.th-envelope-in { animation: th-envelope-in 0.6s cubic-bezier(0.22, 0.9, 0.3, 1.08) 0.4s both; }
+.th-envelope-in { animation: th-envelope-in 0.45s cubic-bezier(0.22, 0.9, 0.3, 1.08) 0.2s both; }
 
 /* 信封盖绕顶边翻开 */
 .th-flap { transform-origin: top center; animation: th-flap-open 0.46s ease-in-out 1.05s both; }
@@ -863,7 +863,7 @@ html[data-first-load="1"] .dsh-splash {
   display: flex;
   flex-direction: column;
   align-items: center;
-  animation: dsh-splash-in 620ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation: dsh-splash-in 420ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 .dsh-splash-line {
   transform-origin: left center;

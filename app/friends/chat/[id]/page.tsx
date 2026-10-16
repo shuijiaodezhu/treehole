@@ -70,7 +70,7 @@ function ChatInner() {
       setLoading(false)
     }, 0)
     // 兜底：最多 1.2 秒也撤掉等待（和首页/我的同一套思路）
-    const bail = window.setTimeout(() => setLoading(false), 1200)
+    const bail = window.setTimeout(() => setLoading(false), 700)
     return () => {
       window.clearTimeout(paint)
       window.clearTimeout(bail)

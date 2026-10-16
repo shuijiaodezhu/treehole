@@ -83,7 +83,7 @@ export default function PlayPage() {
       if (cachedActs) setActivities(cachedActs)
       if (cachedTypes || cachedActs) setLoading(false)
     }, 0)
-    const bail = window.setTimeout(() => setLoading(false), 1200)
+    const bail = window.setTimeout(() => setLoading(false), 700)
     return () => {
       window.clearTimeout(paint)
       window.clearTimeout(bail)

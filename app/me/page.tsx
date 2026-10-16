@@ -116,7 +116,7 @@ export default function MePage() {
     }, 0)
 
     // 兜底：最多 1.2 秒一定撤掉等待页（和首页同一套思路）
-    const bail = window.setTimeout(() => setLoading(false), 1200)
+    const bail = window.setTimeout(() => setLoading(false), 700)
 
     return () => {
       window.clearTimeout(paint)

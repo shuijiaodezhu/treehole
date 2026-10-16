@@ -74,7 +74,7 @@ export default function RegisterPage() {
      */
     if (data?.session) {
       setMessage('注册成功！正在跳转...')
-      setTimeout(() => router.push('/login'), 1500)
+      setTimeout(() => router.push('/login'), 900)
     } else {
       setMessage(
         `确认邮件已发到 ${email}。点开邮件里的链接完成验证，再回来登录。\n（收件箱里没有的话，翻一下垃圾邮件）`,
