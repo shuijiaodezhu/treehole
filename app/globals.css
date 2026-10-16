@@ -700,13 +700,13 @@ body {
   100% { transform: translateX(100%); }
 }
 
-.animate-fade-up { animation: th-fade-up 0.38s cubic-bezier(0.22, 0.61, 0.36, 1) both; }
-.animate-fade-in { animation: th-fade-in 0.4s ease-out both; }
+.animate-fade-up { animation: th-fade-up 0.22s cubic-bezier(0.22, 0.61, 0.36, 1) both; }
+.animate-fade-in { animation: th-fade-in 0.22s ease-out both; }
 .animate-breathe { animation: th-breathe 2.6s ease-in-out infinite; }
 .animate-float   { animation: th-float 3.4s ease-in-out infinite; }
 
 /* 逐个淡入：给列表用 */
-.stagger > * { animation: th-fade-up 0.4s cubic-bezier(0.22, 0.61, 0.36, 1) both; }
+.stagger > * { animation: th-fade-up 0.24s cubic-bezier(0.22, 0.61, 0.36, 1) both; }
 .stagger > *:nth-child(1) { animation-delay: 0.02s; }
 .stagger > *:nth-child(2) { animation-delay: 0.06s; }
 .stagger > *:nth-child(3) { animation-delay: 0.10s; }
@@ -921,14 +921,25 @@ html[data-first-load="1"] .dsh-hero-title {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #f4ebdd;
+  /* 底色跟随主题（以前写死 #f4ebdd，在「墨夜」深色主题下会闪一块浅色）*/
+  background: var(--paper, #f4ebdd);
+  color: var(--ink, #3f332a);
   opacity: 0;
   pointer-events: none;
-  transition: opacity 160ms ease;
+  /* 揭开：短一点，别拖 */
+  transition: opacity 120ms ease;
+  /* 让浏览器提前准备好这一层，减少第一次揭开的抖动 */
+  will-change: opacity;
 }
 html.dsh-navigating .dsh-nav-mask {
   opacity: 1;
   pointer-events: auto;
+  /*
+   * 盖上：**等 150ms 才出现**（原生 App 的标准招数）
+   *   快路由（150ms 内就位）→ 遮罩来不及出现 → 切换感觉就是「瞬间」
+   *   慢路由 → 150ms 后才盖上，不会闪一下，也不会让人盯着一屏空白
+   */
+  transition: opacity 0ms linear 150ms;
 }
 @media (prefers-reduced-motion: reduce) {
   .dsh-nav-mask { transition: none; }
