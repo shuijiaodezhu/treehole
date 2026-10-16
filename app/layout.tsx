@@ -12,6 +12,7 @@ import { PaperGrain } from "../components/paper-pattern"
 import { Toaster } from "../components/ui/sonner";
 import { LoginTransitionOverlay } from "../components/login-transition";
 import { ThemeApplier } from '../components/theme-applier'
+import { BootSync } from '../components/boot-sync'
 
 const cormorant = Cormorant_Garamond({
   subsets: ["latin"],
@@ -129,6 +130,8 @@ export default function RootLayout({
 </noscript>
       <body>
         <ThemeApplier />
+        {/* 开屏同步：背后把常用数据拉到本机（只渲染 null，不影响结构）*/}
+        <BootSync />
       {/*
         首次加载才放 splash：这里用内联脚本在**首帧之前**写 html 属性，
         所以不会出现"先看到页面、再被盖住"的空窗。
