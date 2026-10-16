@@ -162,49 +162,49 @@ input:focus, textarea:focus {
 
 :root {
   /* 首页 */
-  --page-home: #d97757;
-  --page-home-deep: #b16349;
-  --page-home-ink: #5b392c;
-  --page-home-light: #e9b09e;
-  --page-home-muted: #b48b7e;
-  --page-home-soft: #fcf5f3;
-  --page-home-line: #f7e1da;
+  --page-home: #a8563a;
+  --page-home-deep: #8f4630;
+  --page-home-ink: #3f332a;
+  --page-home-light: #d99a4e;
+  --page-home-muted: #8a7a68;
+  --page-home-soft: #f4e5dc;
+  --page-home-line: #e0d3bd;
 
   /* 院子 */
-  --page-world: #7ea86a;
-  --page-world-deep: #6a8958;
-  --page-world-ink: #3e4932;
-  --page-world-light: #b4cda9;
-  --page-world-muted: #8ea086;
-  --page-world-soft: #f6f9f5;
-  --page-world-line: #e3ecde;
+  --page-world: #b8863c;
+  --page-world-deep: #96672c;
+  --page-world-ink: #4a3823;
+  --page-world-light: #d9b475;
+  --page-world-muted: #9c8a6c;
+  --page-world-soft: #fbf4e6;
+  --page-world-line: #ece0c9;
 
   /* 聚会 */
-  --page-play: #5a7a9a;
-  --page-play-deep: #4e657d;
-  --page-play-ink: #333a42;
-  --page-play-light: #9fb2c4;
-  --page-play-muted: #7f8d9a;
-  --page-play-soft: #f3f6f8;
-  --page-play-line: #dbe2e9;
+  --page-play: #a8605f;
+  --page-play-deep: #8c4a4a;
+  --page-play-ink: #4a3232;
+  --page-play-light: #d9a9a4;
+  --page-play-muted: #a08782;
+  --page-play-soft: #fbf0ee;
+  --page-play-line: #eed9d5;
 
   /* 小屋 */
-  --page-friends: #d97757;
-  --page-friends-deep: #b16349;
-  --page-friends-ink: #5b392c;
-  --page-friends-light: #e9b09e;
-  --page-friends-muted: #b48b7e;
-  --page-friends-soft: #fcf5f3;
-  --page-friends-line: #f7e1da;
+  --page-friends: #bf6a4a;
+  --page-friends-deep: #9d5338;
+  --page-friends-ink: #4d3327;
+  --page-friends-light: #e0ac93;
+  --page-friends-muted: #a8867a;
+  --page-friends-soft: #fbf1ec;
+  --page-friends-line: #eed9cd;
 
   /* 我的 */
-  --page-me: #a88ab8;
-  --page-me-deep: #8b7295;
-  --page-me-ink: #4c3f4b;
-  --page-me-light: #cdbbd6;
-  --page-me-muted: #a093a7;
-  --page-me-soft: #f9f7fa;
-  --page-me-line: #ece5ef;
+  --page-me: #8a6a4a;
+  --page-me-deep: #6f5439;
+  --page-me-ink: #40342a;
+  --page-me-light: #c0a684;
+  --page-me-muted: #9c8a74;
+  --page-me-soft: #f8f2e8;
+  --page-me-line: #e8dcc8;
 }
 
 /* 页面之外的兜底（比如挂在 body 上的元素） */
