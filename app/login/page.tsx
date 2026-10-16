@@ -1,11 +1,11 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { createClient } from '../lib/supabase'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { loginNavigateDelay, startLoginTransition } from '../../components/login-transition'
-import { markJustLoggedIn } from '../../components/login-handoff'
+import { markJustLoggedIn, clearRedirectingToLogin } from '../../components/login-handoff'
 import { logLogin } from '../../components/login-log'
 
 export default function LoginPage() {
@@ -17,6 +17,15 @@ export default function LoginPage() {
   const [entering, setEntering] = useState(false)
   const router = useRouter()
   const supabase = createClient()
+
+  /*
+   * 登录页一出现，就清掉「正在跳登录页」标记。
+   * 未登录打开首页 → 系统把你跳到登录页 —— 那一下**不再多闪一次加载动画** ✓
+   * 而之后你在站内普通切页时，「信封 + 正在打开…」照旧显示 ✓
+   */
+  useEffect(() => {
+    clearRedirectingToLogin()
+  }, [])
 
   async function handleLogin(e: React.FormEvent) {
     e.preventDefault()

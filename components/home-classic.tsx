@@ -46,6 +46,7 @@ import { NotificationBell } from './notifications'
 import { WelcomeLetter } from './welcome-letter'
 import type { FriendRequest, FriendshipRow, LoginStreak } from './types'
 import { pageAccentVars } from './theme'
+import { markRedirectingToLogin } from './login-handoff'
 import { SkeletonHome } from './skeleton'
 import { MailboxDialog, MailboxTrigger, useMailbox } from './mailbox'
 import { MailboxArt } from './mailbox-art'
@@ -124,6 +125,7 @@ export function HomeClassic() {
 
         const user = data.user
         if (!user) {
+          markRedirectingToLogin()
           router.replace('/login')
           return
         }
@@ -191,7 +193,8 @@ export function HomeClassic() {
     setConfirmLogout(false)
     try {
       await supabase.auth.signOut()
-      router.replace('/login')
+      markRedirectingToLogin()
+          router.replace('/login')
     } catch (err) {
       console.error('退出登录失败:', err)
       if (mountedRef.current) setAuthError('退出登录失败，请重试')

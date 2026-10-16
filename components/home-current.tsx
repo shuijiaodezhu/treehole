@@ -39,6 +39,7 @@ import {
 import { toast } from 'sonner'
 import type { FriendRequest, FriendshipRow, LoginStreak } from './types'
 import { pageAccentVars } from './theme'
+import { markRedirectingToLogin } from './login-handoff'
 import { MailboxDialog, useMailbox } from './mailbox'
 import { MailboxArt } from './mailbox-art'
 import { WinterScene } from './winter-scene'
@@ -235,6 +236,7 @@ export function HomeCurrent() {
 
         const user = data?.user ?? null
         if (!user) {
+          markRedirectingToLogin()
           router.replace('/login')
           return
         }
@@ -304,7 +306,8 @@ export function HomeCurrent() {
     setConfirmLogout(false)
     try {
       await supabase.auth.signOut()
-      router.replace('/login')
+      markRedirectingToLogin()
+          router.replace('/login')
     } catch (err) {
       console.error('退出登录失败:', err)
       if (mountedRef.current) setAuthError('退出登录失败，请重试')

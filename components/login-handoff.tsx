@@ -50,6 +50,48 @@ function peekJustLoggedIn(): boolean {
   }
 }
 
+/* ============================================================
+   「正在跳登录页」标记
+   未登录打开首页时，首页会 router.replace('/login') —— 那是**客户端跳转**，
+   Next 会再走一次路由加载 → 加载动画会在登录页出现前后**再闪一下** ✗
+   所以跳转前打这个标记：加载层命中它时只给纸色底、不出动画 ✓
+   进登录页后清掉 → 之后的普通切页照旧显示动画 ✓
+   ============================================================ */
+const REDIRECT_KEY = 'treehole:redirectingToLogin'
+
+/** 未登录跳登录页之前调用 */
+export function markRedirectingToLogin() {
+  try {
+    window.sessionStorage.setItem(REDIRECT_KEY, String(Date.now()))
+  } catch {
+    /* 忽略 */
+  }
+}
+
+function peekRedirectingToLogin(): boolean {
+  try {
+    const raw = window.sessionStorage.getItem(REDIRECT_KEY)
+    if (!raw) return false
+    const at = Number(raw)
+    if (!Number.isFinite(at) || Date.now() - at > TTL_MS) {
+      window.sessionStorage.removeItem(REDIRECT_KEY)
+      return false
+    }
+    return true
+  } catch {
+    return false
+  }
+}
+
+/** 登录页挂载后调用：之后普通切页恢复显示动画 */
+export function clearRedirectingToLogin() {
+  try {
+    window.sessionStorage.removeItem(REDIRECT_KEY)
+  } catch {
+    /* 忽略 */
+  }
+}
+
 /** 清掉标记（过场结束时调用：此后 loading 动画恢复正常） */
 export function clearJustLoggedIn() {
   try {
@@ -69,7 +111,7 @@ export function AppLoading() {
   useEffect(() => {
     // 只「看」不「消费」——标记要留给目标页播淡入
     // eslint-disable-next-line react-hooks/set-state-in-effect
-    if (peekJustLoggedIn()) setShow(false)
+    if (peekJustLoggedIn() || peekRedirectingToLogin()) setShow(false)
   }, [])
 
   if (!show) return null
