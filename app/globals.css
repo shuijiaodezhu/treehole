@@ -998,6 +998,28 @@ select:-webkit-autofill {
   to   { filter: blur(0);   opacity: 1; }
 }
 
+/* ============================================================
+   手机上：把"模糊"换成"淡入 + 微微放大"
+   （抖音/B站这类 App 都会在移动端简化特效，同一个道理）
+
+   为什么：filter: blur() 作用在**整页**上时是最贵的效果之一
+     手机 GPU 每一帧都要把整页重新光栅化 → 掉帧、发烫（体感就是"卡"）
+   换成 opacity + transform：这两个 GPU 最擅长，几乎不花代价
+   视觉几乎没差别（都是"朦胧 → 清晰"），桌面端仍然保留模糊 ✓
+   ============================================================ */
+@media (max-width: 640px) {
+  .dsh-wait-blur {
+    filter: none;
+    opacity: 0.45;
+    transform: scale(1.012);
+  }
+
+  @keyframes dsh-unblur {
+    from { filter: none; opacity: 0.45; transform: scale(1.012); }
+    to   { filter: none; opacity: 1;    transform: scale(1); }
+  }
+}
+
 /* 弹跳放慢、幅度收小：上一版 620ms + 12px/1.05 太快太夸张 */
 /*
  * 播放阶段（.dsh-open）：
