@@ -287,15 +287,56 @@ export default function WorldPage() {
     if (!postContent.trim() || !meId) return
     setPosting(true)
     const newAnonymousId = isAnonymous ? generateAnonymousId() : null
-    const { error } = await supabase.from('world_posts').insert({
-      author_id: meId, content: postContent.trim(), is_anonymous: isAnonymous,
-      anonymous_id: newAnonymousId, category_id: postCategoryId || null, status: 'published',
-      image_urls: postImages.length > 0 ? postImages : null,
-    })
+    // 让数据库把**新插入的那一行**回给我们 ✓ 乐观更新要用它的 id / 时间 ✓
+    const { data: inserted, error } = await supabase
+      .from('world_posts')
+      .insert({
+        author_id: meId, content: postContent.trim(), is_anonymous: isAnonymous,
+        anonymous_id: newAnonymousId, category_id: postCategoryId || null, status: 'published',
+        image_urls: postImages.length > 0 ? postImages : null,
+      })
+      .select('id, author_id, is_anonymous, anonymous_id, content, category_id, created_at, image_urls')
+      .single()
     if (error) { alert('发布失败：' + error.message) }
     else {
       setPostContent(''); setIsAnonymous(false); setShowPostModal(false); setPostImages([])
-      await loadPosts(currentCategory?.id || null)
+
+      /*
+       * 乐观：**立刻**把它插到列表最前面 ✓
+       * 以前这里要 await loadPosts() → 整页重拉（约 600-900ms）才看得到 ✗
+       *
+       * 作者名/头像用本机存过的"我的资料"（boot-sync 存的 ✓）拿不到就写"我"✓
+       * 如果发到了**别的分区**（不是当前看的这个）→ 不做乐观 ✓ 退回整页重拉兜底 ✓
+       */
+      const mine = peek<{ nickname?: string | null; username?: string | null; avatar_url?: string | null }>(
+        'me-profile',
+      )
+      const sameCategory = (postCategoryId || null) === (currentCategory?.id ?? null)
+      if (inserted && sameCategory) {
+        const optimistic: Post = {
+          id: inserted.id,
+          author_id: inserted.author_id,
+          is_anonymous: inserted.is_anonymous,
+          anonymous_id: inserted.anonymous_id,
+          content: inserted.content,
+          category_id: inserted.category_id,
+          created_at: inserted.created_at,
+          author_name: inserted.is_anonymous
+            ? `匿名用户${inserted.anonymous_id || '00000000'}`
+            : mine?.nickname || mine?.username || '我',
+          author_avatar: inserted.is_anonymous ? null : mine?.avatar_url || null,
+          like_count: 0,
+          liked_by_me: false,
+          comments: [],
+          image_urls: inserted.image_urls ?? null,
+        }
+        const next = [optimistic, ...posts]
+        setPosts(next)
+        // 顺手写回本机 ✓ 下次进这个分区立刻就有它 ✓
+        save('world-list:' + (currentCategory?.id ?? 'hall'), next)
+      } else {
+        await loadPosts(currentCategory?.id || null)
+      }
     }
     setPosting(false)
   }
