@@ -528,6 +528,12 @@ export default function FriendsPage() {
 
     if (conv) {
       setConversationId(conv.id)
+      /*
+       * 切换好友 → 重置"贴着底部"的标记
+       *   否则：在 A 里往上翻过历史（stick='0'）再切到 B
+       *   → B 也会停在顶部（该落在最新一条才对）
+       */
+      if (listRef.current) delete listRef.current.dataset.stick
       // 打开即视为已读：清掉这个好友的未读角标
       unread.markConversationRead(conv.id, friend.friend_id)
       await loadMessages(conv.id)

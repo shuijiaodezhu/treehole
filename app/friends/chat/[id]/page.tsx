@@ -89,6 +89,8 @@ function ChatInner() {
   const router = useRouter()
   const supabase = createClient()
   const bottomRef = useRef<HTMLDivElement>(null)
+  /** 消息滚动容器（唯一可滚区域）：只滚它，绝不碰窗口 */
+  const listRef = useRef<HTMLElement | null>(null)
 
   useEffect(() => {
     // init 定义在组件内部，每次渲染都是新函数。把它写进依赖数组，
@@ -100,12 +102,13 @@ function ChatInner() {
 
   useEffect(() => {
     /*
-     * 这里**不再自动滚动** —— 这一页是"整页原生滚动"（消息区没有固定高度），
-     * 所以任何自动滚动都等于**滚动整个窗口** ✗：
-     *   · 打开就跳到底部 → 用户报"一打开就下滑"
-     *   · 每次消息变化又跳 → 用户报"划不动"（其实是老被拽走）
-     * 交给用户自己滑：进来看到最早的消息，往下滑就是最新的（和微信一致）
+     * 滚**消息区自己**（现在它是唯一可滚区域 → 不会碰窗口 ✓）
+     *   · 首次铺消息 / 切换好友：dataset.stick 还是空的 → 落到**最新一条** ✓
+     *   · 用户正往上翻历史：stick='0' → **绝不打扰** ✓
+     * 所以进来就能看到最新，往上翻也稳 ✓✓
      */
+    const box = listRef.current
+    if (box && box.dataset.stick !== '0') box.scrollTop = box.scrollHeight
   }, [messages])
 
   // 好感度（互动值）
@@ -246,11 +249,21 @@ function ChatInner() {
   }
 
   return (
-    <div className="min-h-screen bg-base-content/5 relative" style={pageAccentVars('friends')}>
+    /*
+  聊天页的正确结构（用户建议的、也是聊天软件的标准做法）：
+    整页锁成**一屏高**、flex 竖排 → 页面本身**不滚动**
+    只有中间的**消息区**自己滚 ✓
+    → 进来能落在**最新一条** ✓ 又不会把整个页面拽下去 ✓
+    → 往上翻历史也不会被拉回来 ✓
+*/
+    <div
+      className="flex h-[100dvh] flex-col overflow-hidden bg-base-content/5 relative"
+      style={pageAccentVars('friends')}
+    >
       {/* 背景光晕 */}
 
       {/* 顶部 */}
-      <header className="fixed top-0 left-0 right-0 z-20  bg-base-100/95 backdrop-blur-lg shadow-sm">
+      <header className="z-20 flex-shrink-0 bg-base-100/95 backdrop-blur-lg shadow-sm">
         <div className="max-w-xl mx-auto px-5 py-4 flex items-center gap-3">
           <Link
             href="/friends"
@@ -281,7 +294,18 @@ function ChatInner() {
       </header>
 
       {/* 消息列表 */}
-      <main className="relative z-10 px-5 pt-24 pb-32">
+      {/*
+          消息区：**唯一可滚动的区域**
+          onScroll 记下"用户是不是贴着底部"（dataset，不触发重渲染）
+        */}
+        <main
+          ref={listRef}
+          onScroll={(e) => {
+            const el = e.currentTarget
+            el.dataset.stick = el.scrollHeight - el.scrollTop - el.clientHeight < 120 ? '1' : '0'
+          }}
+          className="relative z-10 min-h-0 flex-1 overflow-y-auto px-5 py-4"
+        >
         <div className="max-w-xl mx-auto space-y-3">
           {messages.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-20 text-center">
@@ -300,7 +324,7 @@ function ChatInner() {
       </main>
 
       {/* 底部 */}
-      <footer className="fixed bottom-0 left-0 right-0 z-20  bg-base-100/95 backdrop-blur-lg shadow-sm">
+      <footer className="z-20 flex-shrink-0 bg-base-100/95 backdrop-blur-lg shadow-sm">
         <form onSubmit={handleSend} className="max-w-xl mx-auto px-5 py-4 flex items-center gap-2">
           <input
             ref={inputRef}
