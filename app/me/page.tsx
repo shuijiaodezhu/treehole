@@ -138,8 +138,8 @@ export default function MePage() {
           <p className="text-sm text-base-content/60 mt-1">我的口袋有糖，你吃吗？</p>
         </header>
 
-        <main className="space-y-4 lg:grid lg:grid-cols-2 lg:items-start lg:gap-4 lg:space-y-0">
-          <div className="card rounded-box border border-base-300 bg-base-100 p-6 shadow-sm relative overflow-hidden lg:col-span-2">
+        <main className="space-y-4 lg:columns-2 lg:gap-5">
+          <div className="card rounded-box border border-base-300 bg-base-100 p-6 shadow-sm relative overflow-hidden lg:[column-span:all] lg:mb-4">
 
             <div className="relative flex items-start gap-4">
               <div className="w-16 h-16 rounded-box bg-base-content/5 flex items-center justify-center text-2xl overflow-hidden flex-shrink-0 shadow-sm">
