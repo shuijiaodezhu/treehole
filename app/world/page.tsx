@@ -1175,7 +1175,7 @@ export default function WorldPage() {
                         <button
                           type="button"
                           onClick={() => editor.start('world_post', post.id, post.content)}
-                          className="flex items-center gap-1 text-xs text-base-content/60 hover:text-primary transition"
+                          className="flex items-center gap-1 whitespace-nowrap text-xs text-base-content/60 hover:text-primary transition"
                         >
                           <Icon name="pen" className="w-3.5 h-3.5" />
                           编辑
@@ -1202,30 +1202,33 @@ export default function WorldPage() {
                                 4000,
                               )
                             }}
-                            className="flex items-center gap-1 text-xs text-base-content/60 hover:text-red-500 transition"
+                            className="flex items-center gap-1 whitespace-nowrap text-xs text-base-content/60 hover:text-red-500 transition"
                           >
                             <Icon name="trash" className="w-3.5 h-3.5" />
                             删除
                           </button>
                         )
                       )}
-                      <button
-                        type="button"
-                        onClick={() =>
-                          reportedPosts.has(post.id)
-                            ? void handleWithdrawPostReport(post.id)
-                            : void handleReportPost(post.id)
-                        }
-                        title={reportedPosts.has(post.id) ? '撤回举报' : '举报'}
-                        className={`flex items-center gap-1 text-xs transition ${
-                          reportedPosts.has(post.id)
-                            ? 'text-base-content/70 hover:text-base-content/70'
-                            : 'text-base-content/60 hover:text-red-500'
-                        }`}
-                      >
-                        <Icon name="alert" className="w-3.5 h-3.5" />
-                        {reportedPosts.has(post.id) ? '已举报' : '举报'}
-                      </button>
+                      {/* 不能举报自己（作者就是自己时不显示举报） */}
+                      {post.author_id !== meId && (
+                        <button
+                          type="button"
+                          onClick={() =>
+                            reportedPosts.has(post.id)
+                              ? void handleWithdrawPostReport(post.id)
+                              : void handleReportPost(post.id)
+                          }
+                          title={reportedPosts.has(post.id) ? '撤回举报' : '举报'}
+                          className={`flex items-center gap-1 text-xs transition ${
+                            reportedPosts.has(post.id)
+                              ? 'text-base-content/70 hover:text-base-content/70'
+                              : 'text-base-content/60 hover:text-red-500'
+                          }`}
+                        >
+                          <Icon name="alert" className="w-3.5 h-3.5" />
+                          {reportedPosts.has(post.id) ? '已举报' : '举报'}
+                        </button>
+                      )}
                     </div>
 
                     {openCommentPost === post.id && (
@@ -1384,19 +1387,19 @@ export default function WorldPage() {
                                             <div className="flex items-center justify-between mt-1 gap-2">
                                               <div className="flex items-center gap-2">
                                                 <button onClick={() => setReplyingTo(c)} className="text-[11px] text-base-content/60 hover:text-primary">回复</button>
-                              {c.author_id !== meId && (
-                                <button
-                                  onClick={() =>
-                                    reportedComments.has(c.id)
-                                      ? void handleWithdrawCommentReport(c.id)
-                                      : void handleReportComment(c.id)
-                                  }
-                                  className="text-[11px] text-base-content/60 transition hover:text-primary"
-                                  title={reportedComments.has(c.id) ? '撤回举报' : '举报'}
-                                >
-                                  {reportedComments.has(c.id) ? '已举报' : '举报'}
-                                </button>
-                              )}
+                                                {c.author_id !== meId && (
+                                                  <button
+                                                    onClick={() =>
+                                                      reportedComments.has(c.id)
+                                                        ? void handleWithdrawCommentReport(c.id)
+                                                        : void handleReportComment(c.id)
+                                                    }
+                                                    className="text-[11px] text-base-content/60 transition hover:text-primary"
+                                                    title={reportedComments.has(c.id) ? '撤回举报' : '举报'}
+                                                  >
+                                                    {reportedComments.has(c.id) ? '已举报' : '举报'}
+                                                  </button>
+                                                )}
                                                 {editor.canEdit(c.author_id) && !editor.isEditing('world_comment', c.id) && (
                                                   <button
                                                     onClick={() => editor.start('world_comment', c.id, c.content)}

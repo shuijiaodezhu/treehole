@@ -380,11 +380,15 @@
    写法：跟着当前主题的强调色走（很浅的一层），字仍然是墨色
    ============================================================ */
 ::selection {
+  /* 老内核兜底（iQOO 这类机器上 WebView 可能很旧，不支持 color-mix）：
+     先给一个纯色，再让支持的内核用 color-mix 覆盖 —— 顺序不能反 */
+  background: rgba(168, 86, 58, 0.25);
   background: color-mix(in oklab, var(--wax) 25%, transparent);
   color: var(--ink);
 }
 
 ::-moz-selection {
+  background: rgba(168, 86, 58, 0.25);
   background: color-mix(in oklab, var(--wax) 25%, transparent);
   color: var(--ink);
 }
