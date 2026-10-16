@@ -61,8 +61,14 @@ export function ImageWall({
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img loading="lazy" decoding="async" src={url}
                   alt=""
+                  /*
+                   * single 时原来是 max-h-80 —— 那只是"最高"✗ 图片没加载前高度是 0
+                   * → 图片一到，下面的内容整块往下跳（列表跳动的主要来源）
+                   * 给它一个 4:3 的**宽高比**✓ 高度在加载前就预留好了 ✓
+                   * （再用 max-h-80 封顶，观感和以前一致）
+                   */
                   className={`w-full object-cover transition duration-200 group-hover:brightness-95 ${
-                    single ? 'max-h-80' : 'h-24'
+                    single ? 'aspect-[4/3] max-h-80' : 'h-24'
                   }`}
                 />
               </button>
