@@ -82,10 +82,10 @@ export function VaultView({ userId }: { userId: string | null }) {
           </div>
 
           <label
-            className={`cursor-pointer rounded-box bg-primary px-4 py-2 text-sm font-medium text-primary-content transition hover:shadow-sm ${
-              vault.uploading ? 'pointer-events-none opacity-60' : ''
-            }`}
-          >
+        className={`btn btn-primary ${vault.uploading ? 'loading' : ''} ${
+          vault.uploading ? 'pointer-events-none' : ''
+        }`}
+      >
             {vault.uploading ? '上传中…' : '＋ 存入文件'}
             <input
               type="file"
@@ -104,16 +104,17 @@ export function VaultView({ userId }: { userId: string | null }) {
         {vault.error && <p className="mt-3 text-[11px] text-red-500">{vault.error}</p>}
       </div>
 
-      {/* 分类筛选 */}
-      <div className="mb-3 flex flex-wrap gap-2">
+      {/* 分类筛选：daisyUI tabs（tabs-boxed + tab / tab-active） */}
+      <div
+        role="tablist"
+        className="tabs tabs-boxed mb-3 max-w-full overflow-x-auto"
+        style={{ width: 'fit-content' }}
+      >
         <button
           type="button"
+          role="tab"
           onClick={() => setFilter('all')}
-          className={`rounded-full px-3 py-1 text-[11px] transition ${
-            filter === 'all'
-              ? 'bg-primary text-primary-content'
-              : 'border border-base-300 bg-base-100 text-base-content/60 hover:border-accent'
-          }`}
+          className={`tab whitespace-nowrap ${filter === 'all' ? 'tab-active' : ''}`}
         >
           全部 {vault.files.length}
         </button>
@@ -121,12 +122,9 @@ export function VaultView({ userId }: { userId: string | null }) {
           <button
             key={c}
             type="button"
+            role="tab"
             onClick={() => setFilter(c)}
-            className={`rounded-full px-3 py-1 text-[11px] transition ${
-              filter === c
-                ? 'bg-primary text-primary-content'
-                : 'border border-base-300 bg-base-100 text-base-content/60 hover:border-accent'
-            }`}
+            className={`tab whitespace-nowrap ${filter === c ? 'tab-active' : ''}`}
           >
             {CATEGORY_LABEL[c]} {vault.counts[c]}
           </button>
