@@ -60,6 +60,17 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
+  /* PWA：iPhone「添加到主屏幕」后全屏显示、状态栏用纸色 */
+  appleWebApp: {
+    capable: true,
+    title: '你的来信',
+    statusBarStyle: 'default',
+  },
+  icons: {
+    icon: '/icon-192.png',
+    apple: '/apple-touch-icon.png',
+  },
+
   metadataBase: new URL(SITE_URL),
   title: "你的来信 · Dear You",
   description: "这里有一封，你的来信",
