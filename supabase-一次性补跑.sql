@@ -20,6 +20,17 @@ create table if not exists public.notifications (
   read_at    timestamptz,
   created_at timestamptz not null default now()
 );
+
+-- 若这张表是早期版本建的（列不全），在这里补齐缺的列（幂等）
+alter table public.notifications add column if not exists id         uuid default gen_random_uuid();
+alter table public.notifications add column if not exists user_id    uuid;
+alter table public.notifications add column if not exists kind       text;
+alter table public.notifications add column if not exists title      text;
+alter table public.notifications add column if not exists body       text;
+alter table public.notifications add column if not exists link       text;
+alter table public.notifications add column if not exists actor_id   uuid;
+alter table public.notifications add column if not exists read_at    timestamptz;
+alter table public.notifications add column if not exists created_at timestamptz default now();
 create index if not exists notifications_user_idx
   on public.notifications (user_id, created_at desc);
 create index if not exists notifications_unread_idx
@@ -339,6 +350,14 @@ create table if not exists public.affinity (
   primary key (from_id, to_id),
   check (from_id <> to_id)
 );
+
+-- 旧表缺列时补齐（主键与 check 不动，旧表一般已有）
+alter table public.affinity add column if not exists from_id     uuid;
+alter table public.affinity add column if not exists to_id       uuid;
+alter table public.affinity add column if not exists score       int default 0;
+alter table public.affinity add column if not exists today_score int default 0;
+alter table public.affinity add column if not exists today       date;
+alter table public.affinity add column if not exists updated_at  timestamptz default now();
 create index if not exists affinity_to_idx on public.affinity (to_id, score desc);
 alter table public.affinity enable row level security;
 grant select on public.affinity to authenticated;
@@ -593,6 +612,16 @@ create table if not exists public.music_tracks (
   duration_sec int,                       -- 前端读到时长后回填，可为空
   created_at   timestamptz not null default now()
 );
+
+-- 若这张表是早期版本建的，补齐缺的列（幂等）
+alter table public.music_tracks add column if not exists id           uuid default gen_random_uuid();
+alter table public.music_tracks add column if not exists uploader_id  uuid;
+alter table public.music_tracks add column if not exists title        text;
+alter table public.music_tracks add column if not exists artist       text;
+alter table public.music_tracks add column if not exists url          text;
+alter table public.music_tracks add column if not exists size_bytes   bigint default 0;
+alter table public.music_tracks add column if not exists duration_sec int;
+alter table public.music_tracks add column if not exists created_at   timestamptz default now();
 create index if not exists music_tracks_created_idx
   on public.music_tracks (created_at desc);
 alter table public.music_tracks enable row level security;
@@ -627,6 +656,15 @@ create table if not exists public.music_messages (
   content      text not null,
   created_at   timestamptz not null default now()
 );
+
+-- 若这张表是早期版本建的，补齐缺的列（幂等）
+alter table public.music_messages add column if not exists id           uuid default gen_random_uuid();
+alter table public.music_messages add column if not exists track_id     uuid;
+alter table public.music_messages add column if not exists sender_id    uuid;
+alter table public.music_messages add column if not exists is_anonymous boolean default false;
+alter table public.music_messages add column if not exists anonymous_id text;
+alter table public.music_messages add column if not exists content      text;
+alter table public.music_messages add column if not exists created_at   timestamptz default now();
 create index if not exists music_messages_track_idx
   on public.music_messages (track_id, created_at);
 alter table public.music_messages enable row level security;
