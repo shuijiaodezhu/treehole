@@ -187,13 +187,38 @@ export default function WorldPage() {
       setLoading(false)
 
       /*
-       * 「少问」：本机这份**刚刚才拉过**（30 秒内）→ 这一轮连服务器都不问
-       *   来回复切分区时就不会每次都跑一趟跨境请求
-       *   超过 30 秒才照常去对齐（保证点赞/评论/新帖最终会对上）
-       * 这是"增量同步"里风险最低的一半：只判断"刚拉过没有"
+       * ③ 增量同步（标准折中：中间走增量 + 每 5 分钟完整对齐）
+       *
+       * 为什么不做"真正只拉新增并拼接"：新帖要显示作者名/头像/评论，
+       *   拼接等于要再查一轮资料 ✗ 做半成品反而会出现"新帖没头像"这种毛病
+       * 所以这里选**结果一样、但请求少得多**的做法：
+       *   · 5 分钟内 → 只问一句「有没有比我缓存更新的帖子」
+       *       只取 id、limit 1 → **极小的请求** ✓
+       *       没有 → 直接结束（这就是省下来的大头：0 次大请求）
+       *       有   → 老老实实走完整对齐（保证质量）
+       *   · 超过 5 分钟 → 直接完整对齐（把别人的点赞/评论/删除都拉回来）
        */
-      const FRESH_MS = 30 * 1000
-      if (age(listKey) < FRESH_MS) return
+      const FULL_ALIGN_MS = 5 * 60 * 1000
+      if (age(listKey) < FULL_ALIGN_MS) {
+        const newest = cachedList[0]?.created_at
+        if (newest) {
+          try {
+            let probe = supabase
+              .from('world_posts')
+              .select('id')
+              .eq('status', 'published')
+              .eq('is_hidden', false)
+              .gt('created_at', newest)
+              .limit(1)
+            probe = categoryId ? probe.eq('category_id', categoryId) : probe.is('category_id', null)
+            const { data: newer } = await probe
+            // 没有更新的帖子 → 这一轮到此为止（省掉一次完整对齐的跨境往返）
+            if (!newer || newer.length === 0) return
+          } catch {
+            /* 探测失败 → 当作"可能有新的"，往下走完整对齐（宁可多查，不少显示） */
+          }
+        }
+      }
     }
 
     let query = supabase.from('world_posts').select('id, author_id, is_anonymous, anonymous_id, content, category_id, created_at, image_urls').eq('status', 'published').eq('is_hidden', false).order('created_at', { ascending: false }).limit(50)
