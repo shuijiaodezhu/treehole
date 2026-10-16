@@ -476,7 +476,7 @@ export default function AdminPage() {
                         </div>
                       </div>
 
-                      <div className="rounded-box bg-primary/5 p-4 mb-4">
+                      <div className="rounded-box bg-base-content/5 p-4 mb-4">
                         <p className="text-[11px] text-base-content/60 mb-1.5">被举报内容</p>
                         <p className="text-sm text-base-content whitespace-pre-wrap break-words">{report.target_content}</p>
                       </div>
@@ -513,7 +513,7 @@ export default function AdminPage() {
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2 flex-wrap">
                             <h3 className="text-base font-semibold text-base-content">{a.title}</h3>
-                            <span className="text-[11px] bg-primary/5 text-base-content/60 px-2 py-0.5 rounded-full font-medium">
+                            <span className="text-[11px] bg-base-content/5 text-base-content/60 px-2 py-0.5 rounded-full font-medium">
                               被举报 {a.report_count} 次
                             </span>
                           </div>
@@ -524,7 +524,7 @@ export default function AdminPage() {
                       </div>
 
                       {a.content && (
-                        <div className="rounded-box bg-primary/5 p-4 mb-3">
+                        <div className="rounded-box bg-base-content/5 p-4 mb-3">
                           <p className="text-[11px] text-base-content/60 mb-1.5">活动内容</p>
                           <p className="text-sm text-base-content whitespace-pre-wrap break-words">{a.content}</p>
                         </div>

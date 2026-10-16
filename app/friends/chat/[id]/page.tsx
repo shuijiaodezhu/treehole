@@ -209,7 +209,7 @@ function ChatInner() {
   }
 
   return (
-    <div className="min-h-screen bg-primary/5 relative" style={pageAccentVars('friends')}>
+    <div className="min-h-screen bg-base-content/5 relative" style={pageAccentVars('friends')}>
       {/* 背景光晕 */}
 
       {/* 顶部 */}
@@ -217,7 +217,7 @@ function ChatInner() {
         <div className="max-w-xl mx-auto px-5 py-4 flex items-center gap-3">
           <Link
             href="/friends"
-            className="text-base-content/60 hover:text-primary transition p-1.5 rounded-lg hover:bg-primary/5"
+            className="text-base-content/60 hover:text-primary transition p-1.5 rounded-lg hover:bg-base-content/5"
           >
             <IconArrow className="w-5 h-5" />
           </Link>
@@ -248,7 +248,7 @@ function ChatInner() {
         <div className="max-w-xl mx-auto space-y-3">
           {messages.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-20 text-center">
-              <div className="w-16 h-16 rounded-full bg-primary/5 flex items-center justify-center mb-4">
+              <div className="w-16 h-16 rounded-full bg-base-content/5 flex items-center justify-center mb-4">
                 <svg className="w-7 h-7 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
                 </svg>
@@ -274,7 +274,7 @@ function ChatInner() {
               reportTyping()
             }}
             placeholder="说点什么... 也可以发个表情"
-            className="flex-1 px-4 py-2.5 rounded-full border border-base-300 bg-primary/5 text-sm text-base-content focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition placeholder:text-base-content/60"
+            className="flex-1 px-4 py-2.5 rounded-full border border-base-300 bg-base-content/5 text-sm text-base-content focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition placeholder:text-base-content/60"
             maxLength={500}
           />
           <EmojiPicker onPick={insertEmoji} align="right" size="md" />

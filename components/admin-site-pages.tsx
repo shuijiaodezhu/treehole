@@ -211,7 +211,7 @@ export function AdminSitePages() {
   return (
     <section className="card rounded-box border border-base-300 bg-base-100/80 p-6 backdrop-blur shadow-sm">
       <div className="mb-5 flex items-center gap-3">
-        <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary/5">
+        <div className="flex h-9 w-9 items-center justify-center rounded-full bg-base-content/5">
           <Icon name="file" className="h-4 w-4 text-base-content/60" />
         </div>
         <div className="flex-1">
@@ -236,7 +236,7 @@ export function AdminSitePages() {
       )}
 
       {missingCount > 0 && !error && (
-        <div className="mb-4 flex flex-wrap items-center gap-3 rounded-box border border-base-300 bg-primary/5 px-4 py-3">
+        <div className="mb-4 flex flex-wrap items-center gap-3 rounded-box border border-base-300 bg-base-content/5 px-4 py-3">
           <p className="flex-1 text-[11px] text-primary">
             有 {missingCount} 页还没存进数据库，前台现在显示的是内置初稿。
             写入之后就能在这里随意改。
@@ -268,8 +268,8 @@ export function AdminSitePages() {
                 }}
                 className={`flex items-center gap-1.5 rounded-box px-3 py-2 text-left text-xs transition ${
                   r.slug === active?.slug
-                    ? 'bg-primary/5 font-medium text-primary'
-                    : 'text-base-content/60 hover:bg-primary/5'
+                    ? 'bg-base-content/5 font-medium text-primary'
+                    : 'text-base-content/60 hover:bg-base-content/5'
                 }`}
               >
                 <span className="min-w-0 flex-1 truncate">{r.title}</span>
@@ -317,7 +317,7 @@ export function AdminSitePages() {
                   type="button"
                   disabled={!dirty}
                   onClick={() => setDraft(originalBody)}
-                  className="rounded-box border border-base-300 px-4 py-2 text-xs text-base-content/60 transition hover:bg-primary/5 disabled:opacity-40"
+                  className="rounded-box border border-base-300 px-4 py-2 text-xs text-base-content/60 transition hover:bg-base-content/5 disabled:opacity-40"
                 >
                   放弃改动
                 </button>

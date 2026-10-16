@@ -175,7 +175,7 @@ export function WelcomeLetter({ userId }: { userId: string | null }) {
       aria-label={letter.title}
     >
       {/* 信头 */}
-      <div className="flex flex-shrink-0 items-start gap-3 border-b border-base-300 bg-primary/5 px-6 py-5">
+      <div className="flex flex-shrink-0 items-start gap-3 border-b border-base-300 bg-base-content/5 px-6 py-5">
         <span className="mt-0.5 flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full bg-base-100/80">
           <Icon name="mail" className="h-4 w-4 text-primary" />
         </span>

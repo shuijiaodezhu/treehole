@@ -273,7 +273,7 @@ export function MusicRoom() {
                       setFile(picked)
                       if (picked && !title) setTitle(picked.name.replace(/\.[^.]+$/, ''))
                     }}
-                    className="block w-full text-[11px] text-base-content/60 file:mr-3 file:rounded-box file:border-0 file:bg-primary/5 file:px-3 file:py-2 file:text-[11px] file:text-primary"
+                    className="block w-full text-[11px] text-base-content/60 file:mr-3 file:rounded-box file:border-0 file:bg-base-content/5 file:px-3 file:py-2 file:text-[11px] file:text-primary"
                   />
                   <input
                     type="text"
@@ -281,7 +281,7 @@ export function MusicRoom() {
                     onChange={(e) => setTitle(e.target.value)}
                     placeholder="曲名"
                     maxLength={60}
-                    className="w-full rounded-box border border-base-300 bg-primary/5 px-3 py-2 text-xs text-base-content placeholder:text-accent focus:border-primary focus:outline-none"
+                    className="w-full rounded-box border border-base-300 bg-base-content/5 px-3 py-2 text-xs text-base-content placeholder:text-accent focus:border-primary focus:outline-none"
                   />
                   <input
                     type="text"
@@ -289,7 +289,7 @@ export function MusicRoom() {
                     onChange={(e) => setArtist(e.target.value)}
                     placeholder="歌手 / 来源（可空）"
                     maxLength={60}
-                    className="w-full rounded-box border border-base-300 bg-primary/5 px-3 py-2 text-xs text-base-content placeholder:text-accent focus:border-primary focus:outline-none"
+                    className="w-full rounded-box border border-base-300 bg-base-content/5 px-3 py-2 text-xs text-base-content placeholder:text-accent focus:border-primary focus:outline-none"
                   />
                 </div>
 
@@ -328,7 +328,7 @@ export function MusicRoom() {
                           <div
                             className={`card flex items-center gap-2 rounded-box border px-3 py-2.5 transition ${
                               active
-                                ? 'border-primary bg-primary/5'
+                                ? 'border-primary bg-base-content/5'
                                 : 'border-base-300 bg-base-100/60 hover:border-accent'
                             }`}
                           >
@@ -375,7 +375,7 @@ export function MusicRoom() {
             {/* ============ 右：播放 + 在场 + 聊天 ============ */}
             <div className={`w-full space-y-4 md:flex-1 ${showRoomOnMobile ? '' : 'hidden md:block'}`}>
               {!current ? (
-                <div className="flex h-64 flex-col items-center justify-center rounded-box border border-dashed border-base-300 bg-primary/5/40 px-6 text-center">
+                <div className="flex h-64 flex-col items-center justify-center rounded-box border border-dashed border-base-300 bg-base-content/5/40 px-6 text-center">
                   <div className="flex h-14 w-14 items-center justify-center rounded-full bg-base-100/80">
                     <Icon name="music" className="h-6 w-6 text-primary" />
                   </div>
@@ -410,7 +410,7 @@ export function MusicRoom() {
                         {/* 几个人在听 */}
                         <span
                           title="正在听这首歌的人（实时）"
-                          className="flex items-center gap-1 rounded-full bg-primary/5 px-2.5 py-1 text-[11px] text-primary"
+                          className="flex items-center gap-1 rounded-full bg-base-content/5 px-2.5 py-1 text-[11px] text-primary"
                         >
                           <span className="h-1.5 w-1.5 rounded-full bg-primary" />
                           {listeners} 人在听
@@ -477,7 +477,7 @@ export function MusicRoom() {
                                   className={`whitespace-pre-wrap rounded-box px-3 py-2 text-xs leading-relaxed ${
                                     mine
                                       ? 'bg-primary text-primary-content'
-                                      : 'bg-primary/5 text-base-content'
+                                      : 'bg-base-content/5 text-base-content'
                                   }`}
                                 >
                                   {row.content}
@@ -500,7 +500,7 @@ export function MusicRoom() {
                         onChange={(e) => setDraft(e.target.value)}
                         maxLength={200}
                         placeholder={anonymous ? '匿名说点什么…' : `以「${nickname}」的身份说点什么…`}
-                        className="min-w-0 flex-1 rounded-full border border-base-300 bg-primary/5 px-4 py-2 text-xs text-base-content placeholder:text-accent focus:border-primary focus:outline-none"
+                        className="min-w-0 flex-1 rounded-full border border-base-300 bg-base-content/5 px-4 py-2 text-xs text-base-content placeholder:text-accent focus:border-primary focus:outline-none"
                       />
                       <button
                         type="submit"

@@ -109,7 +109,7 @@ export function LoginTransitionOverlay() {
       {/* 长信封：简笔画，只有粗描边外框 + 一个 V 形封盖 */}
       <div className="th-envelope-in relative" style={{ perspective: '1200px' }}>
         <div className="relative h-[200px] w-[340px]">
-          <div className="absolute inset-0 rounded-[26px] border-[5px] border-primary bg-primary/5" />
+          <div className="absolute inset-0 rounded-[26px] border-[5px] border-primary bg-base-content/5" />
 
           <div className="th-flap absolute inset-x-0 top-0 z-10 origin-top">
             <svg viewBox="0 0 340 100" className="block h-[100px] w-full" fill="none">

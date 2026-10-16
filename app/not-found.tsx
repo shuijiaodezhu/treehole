@@ -52,7 +52,7 @@ export default function NotFound() {
           </Link>
           <Link
             href="/p"
-            className="rounded-box border border-base-300 px-5 py-2.5 text-sm text-primary transition hover:bg-primary/5"
+            className="rounded-box border border-base-300 px-5 py-2.5 text-sm text-primary transition hover:bg-base-content/5"
           >
             看看条款与说明
           </Link>

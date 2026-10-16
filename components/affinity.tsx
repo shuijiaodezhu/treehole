@@ -232,7 +232,7 @@ export function AffinitySettingsSection({ userId }: { userId: string | null }) {
   return (
     <section className="card rounded-box border border-base-300 bg-base-100 p-6 shadow-sm">
       <div className="flex items-center gap-3">
-        <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary/5">
+        <div className="flex h-9 w-9 items-center justify-center rounded-full bg-base-content/5">
           <Icon name="heart" className="h-4 w-4 text-primary" />
         </div>
         <div className="min-w-0 flex-1">
@@ -287,7 +287,7 @@ export function AffinitySettingsSection({ userId }: { userId: string | null }) {
         </label>
 
         {missing && (
-          <p className="rounded-box border border-base-300 bg-primary/5 px-3 py-2 text-[11.5px] leading-relaxed text-base-content/60">
+          <p className="rounded-box border border-base-300 bg-base-content/5 px-3 py-2 text-[11.5px] leading-relaxed text-base-content/60">
             好感度还没开通：先在 Supabase 里执行 <code>supabase-affinity.sql</code>。
             （没跑也不影响别的功能，只是不显示这个数）
           </p>

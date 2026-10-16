@@ -330,7 +330,7 @@ export function MailboxDialog({
         onClick={(e) => e.stopPropagation()}
       >
         {/* 抬头 */}
-        <div className="flex items-start gap-3 border-b border-base-300 bg-primary/5 px-5 py-4">
+        <div className="flex items-start gap-3 border-b border-base-300 bg-base-content/5 px-5 py-4">
           <span className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-box bg-base-100/70">
             <svg
               className="h-5 w-5 text-primary"
@@ -385,7 +385,7 @@ export function MailboxDialog({
                 </p>
                 <Link
                   href="/admin"
-                  className="mt-5 inline-flex items-center gap-1.5 rounded-full border border-base-300 bg-primary/5 px-4 py-2 font-serif-cn text-[11.5px] text-primary transition hover:bg-base-300"
+                  className="mt-5 inline-flex items-center gap-1.5 rounded-full border border-base-300 bg-base-content/5 px-4 py-2 font-serif-cn text-[11.5px] text-primary transition hover:bg-base-300"
                 >
                   去后台看信
                   <Icon name="arrow" className="h-3 w-3" />
@@ -404,7 +404,7 @@ export function MailboxDialog({
                 </p>
 
                 <div className="mt-4 text-center">
-                  <span className="inline-flex items-center gap-1.5 rounded-full bg-primary/5 px-3 py-1.5 font-serif-cn text-[11px] text-primary">
+                  <span className="inline-flex items-center gap-1.5 rounded-full bg-base-content/5 px-3 py-1.5 font-serif-cn text-[11px] text-primary">
                     <Icon name="lock" className="h-3 w-3" />
                     匿名 · 站主看不到你的名字
                   </span>
@@ -417,7 +417,7 @@ export function MailboxDialog({
                   { t: '匿名，只给你和他看', d: '他没有你的名字；不公开、不进动态' },
                 ].map((step, i) => (
                   <li key={step.t} className="flex items-start gap-3">
-                    <span className="mt-0.5 flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-primary/5 font-serif-cn text-[11px] text-primary">
+                    <span className="mt-0.5 flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-base-content/5 font-serif-cn text-[11px] text-primary">
                       {i + 1}
                     </span>
                     <span className="min-w-0">
@@ -444,7 +444,7 @@ export function MailboxDialog({
                     className={`max-w-[78%] rounded-box px-3.5 py-2.5 font-serif-cn text-[12.5px] leading-relaxed ${
                       mine
                         ? 'bg-primary text-primary-content'
-                        : 'border border-base-300 bg-primary/5 text-base-content'
+                        : 'border border-base-300 bg-base-content/5 text-base-content'
                     }`}
                   >
                     <p className="whitespace-pre-wrap break-words">{m.content}</p>
@@ -482,7 +482,7 @@ export function MailboxDialog({
                 rows={2}
                 maxLength={500}
                 placeholder="写点想说的…"
-                className="min-w-0 flex-1 resize-none rounded-box border border-base-300 bg-primary/5 px-3.5 py-2.5 font-serif-cn text-[12.5px] text-base-content placeholder:text-base-content/60 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/10"
+                className="min-w-0 flex-1 resize-none rounded-box border border-base-300 bg-base-content/5 px-3.5 py-2.5 font-serif-cn text-[12.5px] text-base-content placeholder:text-base-content/60 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/10"
               />
             <EmojiPicker onPick={insertEmoji} align="right" />
               <button

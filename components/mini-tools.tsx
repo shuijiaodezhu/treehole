@@ -200,7 +200,7 @@ export function MiniTools() {
               onClick={() => setActive(tool.key)}
               className={`card rounded-box border p-4 text-left transition-all ${
                 on
-                  ? 'border-primary bg-primary/5 shadow-sm'
+                  ? 'border-primary bg-base-content/5 shadow-sm'
                   : 'border-base-300 bg-base-100/90 hover:-translate-y-0.5 hover:shadow-sm'
               }`}
             >
@@ -248,7 +248,7 @@ export function MiniTools() {
                     key={i}
                     className={`card flex h-14 w-14 items-center justify-center rounded-box border text-2xl font-semibold transition ${
                       rolling
-                        ? 'border-base-300 bg-primary/5 text-accent'
+                        ? 'border-base-300 bg-base-content/5 text-accent'
                         : 'border-primary bg-base-100 text-primary shadow-sm'
                     }`}
                   >
@@ -298,10 +298,10 @@ export function MiniTools() {
                     key={i}
                     className={`flex h-11 w-11 items-center justify-center rounded-full border text-[11px] transition ${
                       rolling
-                        ? 'border-base-300 bg-primary/5 text-accent'
+                        ? 'border-base-300 bg-base-content/5 text-accent'
                         : isHead
                           ? 'border-primary bg-base-100 text-primary'
-                          : 'border-base-300 bg-primary/5 text-base-content/60'
+                          : 'border-base-300 bg-base-content/5 text-base-content/60'
                     }`}
                   >
                     {isHead ? '正' : '反'}
@@ -328,7 +328,7 @@ export function MiniTools() {
               value={optionsText}
               onChange={(e) => setOptionsText(e.target.value)}
               rows={5}
-              className="mt-3 w-full rounded-box border border-base-300 bg-primary/5 px-3 py-2 text-xs leading-relaxed text-base-content focus:border-primary focus:outline-none"
+              className="mt-3 w-full rounded-box border border-base-300 bg-base-content/5 px-3 py-2 text-xs leading-relaxed text-base-content focus:border-primary focus:outline-none"
             />
             <div className="mt-3 flex flex-wrap items-center gap-3">
               <label className="flex cursor-pointer items-center gap-1.5 text-[11px] text-base-content/60">
@@ -373,14 +373,14 @@ export function MiniTools() {
                 type="number"
                 value={rangeMin}
                 onChange={(e) => setRangeMin(Number(e.target.value))}
-                className="w-20 rounded-box border border-base-300 bg-primary/5 px-3 py-1.5 text-xs text-base-content focus:border-primary focus:outline-none"
+                className="w-20 rounded-box border border-base-300 bg-base-content/5 px-3 py-1.5 text-xs text-base-content focus:border-primary focus:outline-none"
               />
               <label className="text-xs text-base-content/60">到</label>
               <input
                 type="number"
                 value={rangeMax}
                 onChange={(e) => setRangeMax(Number(e.target.value))}
-                className="w-20 rounded-box border border-base-300 bg-primary/5 px-3 py-1.5 text-xs text-base-content focus:border-primary focus:outline-none"
+                className="w-20 rounded-box border border-base-300 bg-base-content/5 px-3 py-1.5 text-xs text-base-content focus:border-primary focus:outline-none"
               />
               <label className="text-xs text-base-content/60">取</label>
               <input
@@ -388,7 +388,7 @@ export function MiniTools() {
                 min={1}
                 value={numberCount}
                 onChange={(e) => setNumberCount(Number(e.target.value))}
-                className="w-16 rounded-box border border-base-300 bg-primary/5 px-3 py-1.5 text-xs text-base-content focus:border-primary focus:outline-none"
+                className="w-16 rounded-box border border-base-300 bg-base-content/5 px-3 py-1.5 text-xs text-base-content focus:border-primary focus:outline-none"
               />
               <span className="text-xs text-base-content/60">个</span>
               <button

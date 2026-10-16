@@ -23,11 +23,11 @@ export function MailboxSetup({ onRetry, accent = 'warm' }: { onRetry: () => void
           panel: 'border-base-300 bg-base-100',
           title: 'text-base-content',
           body: 'text-base-content/60',
-          btn: 'border-base-300 bg-base-100 text-base-content/60 hover:bg-primary/5',
+          btn: 'border-base-300 bg-base-100 text-base-content/60 hover:bg-base-content/5',
           primary: 'bg-gradient-to-r from-primary/20 to-primary/10 text-white',
         }
       : {
-          panel: 'border-base-300 bg-primary/5',
+          panel: 'border-base-300 bg-base-content/5',
           title: 'text-base-content',
           body: 'text-base-content/60',
           btn: 'border-base-300 bg-base-100 text-primary hover:bg-base-100/80',

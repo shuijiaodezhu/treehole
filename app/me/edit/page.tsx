@@ -104,29 +104,29 @@ export default function EditProfilePage() {
           <div className="relative space-y-5">
             <div>
               <label className="block text-xs text-base-content/60 mb-1.5 tracking-wide">昵称</label>
-              <input type="text" value={nickname} onChange={(e) => setNickname(e.target.value)} placeholder="给自己起个名字" maxLength={20} className="w-full px-4 py-2.5 rounded-box border border-base-300 bg-primary/5 text-sm text-base-content focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition" />
+              <input type="text" value={nickname} onChange={(e) => setNickname(e.target.value)} placeholder="给自己起个名字" maxLength={20} className="w-full px-4 py-2.5 rounded-box border border-base-300 bg-base-content/5 text-sm text-base-content focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition" />
             </div>
 
             <div>
               <label className="block text-xs text-base-content/60 mb-1.5 tracking-wide">签名</label>
-              <input type="text" value={signature} onChange={(e) => setSignature(e.target.value)} placeholder="一句话介绍自己" maxLength={50} className="w-full px-4 py-2.5 rounded-box border border-base-300 bg-primary/5 text-sm text-base-content focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition" />
+              <input type="text" value={signature} onChange={(e) => setSignature(e.target.value)} placeholder="一句话介绍自己" maxLength={50} className="w-full px-4 py-2.5 rounded-box border border-base-300 bg-base-content/5 text-sm text-base-content focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition" />
             </div>
 
             <div>
               <label className="block text-xs text-base-content/60 mb-1.5 tracking-wide">所在地</label>
-              <input type="text" value={location} onChange={(e) => setLocation(e.target.value)} placeholder="比如：徐州" maxLength={30} className="w-full px-4 py-2.5 rounded-box border border-base-300 bg-primary/5 text-sm text-base-content focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition" />
+              <input type="text" value={location} onChange={(e) => setLocation(e.target.value)} placeholder="比如：徐州" maxLength={30} className="w-full px-4 py-2.5 rounded-box border border-base-300 bg-base-content/5 text-sm text-base-content focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition" />
             </div>
 
             <div>
               <label className="block text-xs text-base-content/60 mb-1.5 tracking-wide">生日</label>
-              <input type="date" value={birthday} onChange={(e) => setBirthday(e.target.value)} className="w-full px-4 py-2.5 rounded-box border border-base-300 bg-primary/5 text-sm text-base-content focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition" />
+              <input type="date" value={birthday} onChange={(e) => setBirthday(e.target.value)} className="w-full px-4 py-2.5 rounded-box border border-base-300 bg-base-content/5 text-sm text-base-content focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition" />
             </div>
 
             <div>
               <label className="block text-xs text-base-content/60 mb-1.5 tracking-wide">头像图片链接</label>
-              <input type="url" value={avatarUrl} onChange={(e) => setAvatarUrl(e.target.value)} placeholder="https://..." className="w-full px-4 py-2.5 rounded-box border border-base-300 bg-primary/5 text-sm text-base-content focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition" />
+              <input type="url" value={avatarUrl} onChange={(e) => setAvatarUrl(e.target.value)} placeholder="https://..." className="w-full px-4 py-2.5 rounded-box border border-base-300 bg-base-content/5 text-sm text-base-content focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition" />
               <p className="text-[11px] text-accent mt-1.5">可以粘贴链接，也可以直接上传。</p>
-              <label className="card mt-2 inline-flex cursor-pointer items-center gap-1.5 rounded-box border border-base-300 bg-base-100 px-3 py-1.5 text-xs text-primary transition hover:bg-primary/5">
+              <label className="card mt-2 inline-flex cursor-pointer items-center gap-1.5 rounded-box border border-base-300 bg-base-100 px-3 py-1.5 text-xs text-primary transition hover:bg-base-content/5">
                 {uploadingAvatar ? '上传中…' : '＋ 上传头像'}
                 <input
                   type="file"

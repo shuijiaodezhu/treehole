@@ -115,7 +115,7 @@ export function ShowcaseSettingsSection({ userId }: { userId: string | null }) {
       </label>
 
       {missing && (
-        <p className="mt-3 rounded-box border border-base-300 bg-primary/5 px-3 py-2 text-[11.5px] leading-relaxed text-base-content/60">
+        <p className="mt-3 rounded-box border border-base-300 bg-base-content/5 px-3 py-2 text-[11.5px] leading-relaxed text-base-content/60">
           展示页还没开通：先在 Supabase 里执行 <code>supabase-profile-page.sql</code>。
           （没跑也能看展示页，只是少那个开关）
         </p>

@@ -859,7 +859,7 @@ export default function FriendsPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-primary/5 px-6 pt-24" style={pageAccentVars('friends')}>
+      <div className="min-h-screen bg-base-content/5 px-6 pt-24" style={pageAccentVars('friends')}>
         <div className="mx-auto max-w-5xl">
           <SkeletonSplit />
         </div>
@@ -868,7 +868,7 @@ export default function FriendsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-primary/5 relative overflow-hidden">
+    <div className="min-h-screen bg-base-content/5 relative overflow-hidden">
 
       {/* pt-24：顶部空间更大，返回键不会被浏览器顶栏挡住 */}
       <div className="relative max-w-6xl mx-auto px-6 pt-24 pb-8">
@@ -957,7 +957,7 @@ export default function FriendsPage() {
                       onChange={(e) => setSearchInput(e.target.value)}
                       onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
                       placeholder="用户名或昵称"
-                      className="flex-1 px-3 py-2 rounded-box border border-base-300 bg-primary/5 text-xs focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition"
+                      className="flex-1 px-3 py-2 rounded-box border border-base-300 bg-base-content/5 text-xs focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition"
                     />
                     <button
                       onClick={handleSearch}
@@ -973,7 +973,7 @@ export default function FriendsPage() {
                   )}
 
                   {searchResult && (
-                    <div className="mt-3 flex items-center justify-between p-2 rounded-box bg-primary/5">
+                    <div className="mt-3 flex items-center justify-between p-2 rounded-box bg-base-content/5">
                       <div className="flex items-center gap-2 min-w-0">
                         <div className="w-7 h-7 rounded-full bg-accent flex items-center justify-center overflow-hidden flex-shrink-0">
                           {searchResult.avatar_url ? (
@@ -1000,7 +1000,7 @@ export default function FriendsPage() {
               )}
 
               {shownRequests.length > 0 && (
-                <div className="rounded-box border border-base-300 bg-primary/5 p-3 flex-shrink-0">
+                <div className="rounded-box border border-base-300 bg-base-content/5 p-3 flex-shrink-0">
                   <p className="text-[11px] text-primary font-medium mb-2 tracking-wide">
                     新的招呼 · {shownRequests.length}
                   </p>
@@ -1051,8 +1051,8 @@ export default function FriendsPage() {
                       return (
                         <div key={f.friendship_id} className="relative">
                           <div
-                            className={`w-full px-4 py-3 flex items-center gap-3 hover:bg-primary/5 transition border-b border-base-300 last:border-b-0 ${
-                              currentFriend?.friend_id === f.friend_id ? 'bg-primary/5' : ''
+                            className={`w-full px-4 py-3 flex items-center gap-3 hover:bg-base-content/5 transition border-b border-base-300 last:border-b-0 ${
+                              currentFriend?.friend_id === f.friend_id ? 'bg-base-content/5' : ''
                             }`}
                           >
                             {/* 点头像 → 他的展示页（点别处仍然进聊天，免得聊天入口被占掉） */}
@@ -1116,7 +1116,7 @@ export default function FriendsPage() {
                   currentFriend
                     ? 'border-base-300 bg-base-100/80 shadow-sm'
                     : /* 没选人时整块淡下去，一眼看出「这里还没开始」 */
-                      'border-dashed border-base-300 bg-primary/5/40'
+                      'border-dashed border-base-300 bg-base-content/5/40'
                 }`}
               >
                 <div className="px-5 py-3 border-b border-base-300 flex items-center gap-3 flex-shrink-0">
@@ -1211,7 +1211,7 @@ export default function FriendsPage() {
                         reportTyping()
                       }}
                       placeholder="说点什么... 也可以发个表情"
-                      className="flex-1 px-4 py-2.5 rounded-full border border-base-300 bg-primary/5 text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition"
+                      className="flex-1 px-4 py-2.5 rounded-full border border-base-300 bg-base-content/5 text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition"
                       maxLength={500}
                     />
                     <EmojiPicker onPick={(emoji) => setContent((cur) => cur + emoji)} align="right" size="md" />
@@ -1239,7 +1239,7 @@ export default function FriendsPage() {
                 onChange={(e) => setMomentContent(e.target.value)}
                 placeholder="今天有什么想说的？用 #话题# 加标签，也可以发个表情"
                 rows={3}
-                className="w-full px-4 py-3 rounded-box border border-base-300 bg-primary/5 text-sm resize-none focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition"
+                className="w-full px-4 py-3 rounded-box border border-base-300 bg-base-content/5 text-sm resize-none focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition"
                 maxLength={500}
               />
 
@@ -1276,7 +1276,7 @@ export default function FriendsPage() {
                 <p className="mt-2 text-[11px] text-base-content/60">{VISIBILITY_HINT[visibility]}</p>
 
                 {showPicker && visibility === 'friends' && (
-                  <div data-lenis-prevent className="mt-2 max-h-40 overflow-y-auto rounded-box border border-base-300 bg-primary/5 p-3">
+                  <div data-lenis-prevent className="mt-2 max-h-40 overflow-y-auto rounded-box border border-base-300 bg-base-content/5 p-3">
                     {visFriends.length === 0 ? (
                       <p className="text-[11px] text-base-content/60">还没有好友</p>
                     ) : (
@@ -1300,7 +1300,7 @@ export default function FriendsPage() {
                 )}
 
                 {showPicker && visibility === 'groups' && (
-                  <div className="mt-2 rounded-box border border-base-300 bg-primary/5 p-3">
+                  <div className="mt-2 rounded-box border border-base-300 bg-base-content/5 p-3">
                     {visGroups.length === 0 ? (
                       <p className="text-[11px] leading-relaxed text-base-content/60">
                         还没有分组。去{' '}
@@ -1385,7 +1385,7 @@ export default function FriendsPage() {
                           rows={3}
                           maxLength={momentEditor.maxLength.moment}
                           autoFocus
-                          className="w-full rounded-box border border-base-300 bg-primary/5 px-3 py-2 text-sm text-base-content resize-none focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition"
+                          className="w-full rounded-box border border-base-300 bg-base-content/5 px-3 py-2 text-sm text-base-content resize-none focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition"
                         />
                         <div className="mt-2 flex items-center gap-3">
                           <button
@@ -1427,7 +1427,7 @@ export default function FriendsPage() {
                     <HashtagList
                       content={post.content}
                       className="mb-3 pl-1"
-                      chipClassName="rounded-full bg-primary/5 px-2 py-0.5 text-[11px] text-primary hover:bg-primary/5 transition"
+                      chipClassName="rounded-full bg-base-content/5 px-2 py-0.5 text-[11px] text-primary hover:bg-base-content/5 transition"
                     />
 
                     <div className="flex items-center gap-4 pl-1 pt-3 border-t border-base-300">
@@ -1455,7 +1455,7 @@ export default function FriendsPage() {
 
                       {/* 自己的动态：可见范围标签 + 编辑 + 删除 */}
                       {post.author_id === meId && post.visibility !== 'public' && (
-                        <span className="rounded-full bg-primary/5 px-2 py-0.5 text-[11px] text-primary">
+                        <span className="rounded-full bg-base-content/5 px-2 py-0.5 text-[11px] text-primary">
                           {VISIBILITY_SHORT[(post.visibility ?? 'public') as Visibility]}
                         </span>
                       )}
@@ -1523,7 +1523,7 @@ export default function FriendsPage() {
                                       </span>
                                     )}
                                   </div>
-                                  <div className="flex-1 min-w-0 bg-primary/5 rounded-box px-3 py-2">
+                                  <div className="flex-1 min-w-0 bg-base-content/5 rounded-box px-3 py-2">
                                     <p className="text-[11px] font-medium text-primary">
                                       {parent.author_name}
                                     </p>
@@ -1564,7 +1564,7 @@ export default function FriendsPage() {
                                             </span>
                                           )}
                                         </div>
-                                        <div className="flex-1 min-w-0 bg-primary/5 rounded-box px-3 py-1.5">
+                                        <div className="flex-1 min-w-0 bg-base-content/5 rounded-box px-3 py-1.5">
                                           <p className="text-[11px] text-base-content leading-relaxed">
                                             <span className="font-medium text-primary">
                                               {c.author_name}
@@ -1634,7 +1634,7 @@ export default function FriendsPage() {
                             }
                             maxLength={200}
                             withEmoji
-                            className="w-full px-4 py-2 rounded-full border border-base-300 bg-primary/5 text-xs focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition"
+                            className="w-full px-4 py-2 rounded-full border border-base-300 bg-base-content/5 text-xs focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition"
                           />
                           <button
                             onClick={() => handlePostComment(post.id)}

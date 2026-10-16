@@ -149,7 +149,7 @@ export function VaultView({ userId }: { userId: string | null }) {
               key={f.id}
               className="card flex items-center gap-3 rounded-box border border-base-300 bg-base-100/80 p-3.5 backdrop-blur"
             >
-              <span className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-box bg-primary/5 text-primary">
+              <span className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-box bg-base-content/5 text-primary">
                 <Icon name={CATEGORY_ICON[f.category]} className="h-4 w-4" />
               </span>
 

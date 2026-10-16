@@ -232,7 +232,7 @@ export function AdminMailbox({ adminId }: { adminId: string }) {
   return (
     <section className="card rounded-box border border-base-300 bg-base-100/80 p-6 backdrop-blur shadow-sm">
       <div className="mb-5 flex items-start gap-3">
-        <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full bg-primary/5">
+        <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full bg-base-content/5">
           <Icon name="mail" className="h-4 w-4 text-base-content/60" />
         </div>
         <div className="min-w-0 flex-1">
@@ -257,7 +257,7 @@ export function AdminMailbox({ adminId }: { adminId: string }) {
         <button
           type="button"
           onClick={() => void load()}
-          className="card inline-flex items-center gap-1 rounded-box border border-base-300 bg-base-100 px-3 py-1.5 text-xs text-base-content/60 transition hover:bg-primary/5"
+          className="card inline-flex items-center gap-1 rounded-box border border-base-300 bg-base-100 px-3 py-1.5 text-xs text-base-content/60 transition hover:bg-base-content/5"
         >
           <Icon name="refresh" className="h-3.5 w-3.5" />
           刷新
@@ -290,7 +290,7 @@ export function AdminMailbox({ adminId }: { adminId: string }) {
                 type="button"
                 onClick={() => void openThread(r)}
                 className={`w-full rounded-box px-3 py-2.5 text-left transition ${
-                  active?.threadUserId === r.threadUserId ? 'bg-primary/5' : 'hover:bg-primary/5'
+                  active?.threadUserId === r.threadUserId ? 'bg-base-content/5' : 'hover:bg-base-content/5'
                 }`}
               >
                 <span className="flex items-center gap-2">

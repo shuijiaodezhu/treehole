@@ -122,7 +122,7 @@ function SitePageInner() {
                 <Link
                   key={p.slug}
                   href={`/p/${p.slug}`}
-                  className="rounded-full border border-base-300 bg-base-100/70 px-3 py-1.5 text-[11px] text-primary transition hover:bg-primary/5"
+                  className="rounded-full border border-base-300 bg-base-100/70 px-3 py-1.5 text-[11px] text-primary transition hover:bg-base-content/5"
                 >
                   {p.title}
                 </Link>

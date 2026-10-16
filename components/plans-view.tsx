@@ -28,7 +28,7 @@ const KIND_ICON: Record<PlanKind, IconName> = {
 }
 
 const ACCENT: Record<PlanKind, { bar: string; chip: string; text: string }> = {
-  plan: { bar: 'bg-primary', chip: 'bg-primary/5', text: 'text-primary' },
+  plan: { bar: 'bg-primary', chip: 'bg-base-content/5', text: 'text-primary' },
   goal: { bar: 'bg-primary', chip: 'bg-base-100', text: 'text-primary' },
   task: { bar: 'bg-primary', chip: 'bg-base-100', text: 'text-primary' },
 }
@@ -351,7 +351,7 @@ function PlanRow({
                   due.tone === 'overdue'
                     ? 'bg-red-50 text-red-500'
                     : due.tone === 'soon'
-                      ? 'bg-primary/5 text-primary'
+                      ? 'bg-base-content/5 text-primary'
                       : 'bg-base-100 text-base-content/70'
                 }`}
               >

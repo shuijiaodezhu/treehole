@@ -119,7 +119,7 @@ export function LoginDevicesSection({ userId }: { userId: string | null }) {
   return (
     <section className="card rounded-box border border-base-300 bg-base-100 p-6 shadow-sm">
       <div className="flex items-center gap-3">
-        <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary/5">
+        <div className="flex h-9 w-9 items-center justify-center rounded-full bg-base-content/5">
           <Icon name="shield" className="h-4 w-4 text-primary" />
         </div>
         <div>
@@ -134,7 +134,7 @@ export function LoginDevicesSection({ userId }: { userId: string | null }) {
         {loading ? (
           <p className="py-6 text-center text-xs text-base-content/60">读取中…</p>
         ) : missing ? (
-          <p className="rounded-box border border-base-300 bg-primary/5 px-4 py-3 text-[11px] leading-relaxed text-base-content/60">
+          <p className="rounded-box border border-base-300 bg-base-content/5 px-4 py-3 text-[11px] leading-relaxed text-base-content/60">
             登录记录还没开通：先在 Supabase 里执行 <code>supabase-security.sql</code>，
             之后每次登录都会自动记下来。
           </p>
@@ -146,14 +146,14 @@ export function LoginDevicesSection({ userId }: { userId: string | null }) {
           <ul className="divide-y divide-[var(--accent-line)]">
             {records.map((r, i) => (
               <li key={r.id} className="flex items-center gap-3 py-3">
-                <span className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-primary/5">
+                <span className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-base-content/5">
                   <Icon name={/iPhone|iPad|Android/i.test(r.user_agent ?? '') ? 'user' : 'box'} className="h-3.5 w-3.5 text-base-content/60" />
                 </span>
                 <span className="min-w-0 flex-1">
                   <span className="flex items-center gap-2">
                     <span className="truncate text-xs font-medium text-base-content">{describeDevice(r.user_agent)}</span>
                     {i === 0 && (
-                      <span className="rounded-full bg-primary/5 px-2 py-0.5 text-[11px] text-primary">
+                      <span className="rounded-full bg-base-content/5 px-2 py-0.5 text-[11px] text-primary">
                         本次
                       </span>
                     )}

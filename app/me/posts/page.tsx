@@ -79,7 +79,7 @@ export default function MyPostsPage() {
         <main className="space-y-3">
           {posts.length === 0 ? (
             <div className="card rounded-box border border-base-300 bg-base-100/60 backdrop-blur p-10 text-center">
-              <div className="w-12 h-12 rounded-full bg-primary/5 flex items-center justify-center mx-auto mb-3">
+              <div className="w-12 h-12 rounded-full bg-base-content/5 flex items-center justify-center mx-auto mb-3">
                 <IconDoc className="w-5 h-5 text-base-content/60" />
               </div>
               <p className="text-sm text-base-content/60">你还没发过帖子。</p>
@@ -93,7 +93,7 @@ export default function MyPostsPage() {
                     {new Date(post.created_at).toLocaleString('zh-CN', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' })}
                   </span>
                   <div className="flex gap-2 items-center flex-shrink-0">
-                    {post.is_anonymous && (<span className="text-[11px] bg-primary/5 text-base-content/60 px-2 py-0.5 rounded-full font-medium">匿名</span>)}
+                    {post.is_anonymous && (<span className="text-[11px] bg-base-content/5 text-base-content/60 px-2 py-0.5 rounded-full font-medium">匿名</span>)}
                     {post.is_hidden && (<span className="text-[11px] bg-red-50 text-red-500 px-2 py-0.5 rounded-full font-medium">已隐藏</span>)}
                     <button onClick={() => handleDelete(post.id)} className="text-base-content/40 hover:text-red-500 transition p-1 rounded-md hover:bg-red-50" title="删除">
                       <IconTrash className="w-3.5 h-3.5" />

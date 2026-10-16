@@ -90,7 +90,7 @@ export function ExportDataSection({ userId, email }: { userId: string | null; em
   return (
     <section className="card rounded-box border border-base-300 bg-base-100 p-6 shadow-sm">
       <div className="flex items-center gap-3">
-        <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary/5">
+        <div className="flex h-9 w-9 items-center justify-center rounded-full bg-base-content/5">
           <Icon name="download" className="h-4 w-4 text-primary" />
         </div>
         <div className="min-w-0 flex-1">
@@ -120,7 +120,7 @@ export function ExportDataSection({ userId, email }: { userId: string | null; em
         <div className="mt-3">
           <p className={`text-[11px] ${result.ok ? 'text-base-content' : 'text-red-500'}`}>{result.message}</p>
           {result.failures && result.failures.length > 0 && (
-            <ul className="mt-2 space-y-1 rounded-box border border-base-300 bg-primary/5 px-3 py-2">
+            <ul className="mt-2 space-y-1 rounded-box border border-base-300 bg-base-content/5 px-3 py-2">
               {result.failures.map((f) => (
                 <li key={f} className="text-[11px] leading-relaxed text-base-content/60">
                   {f}
@@ -237,7 +237,7 @@ export function DeleteAccountSection({ userId }: { userId: string | null }) {
       )}
 
       {step === 'done' && (
-        <p className="mt-4 rounded-box border border-base-300 bg-primary/5 px-4 py-3 text-[11.5px] leading-relaxed text-base-content/60">
+        <p className="mt-4 rounded-box border border-base-300 bg-base-content/5 px-4 py-3 text-[11.5px] leading-relaxed text-base-content/60">
           申请已提交。站主看到后会处理，删完会告诉你一声。
           <br />
           在那之前，账号照常可用——想留下的话，跟站主说一声就行。
@@ -393,7 +393,7 @@ export function DeletionRequestsSection({ adminId }: { adminId: string }) {
                 <button
                   type="button"
                   onClick={() => void markDone(r.id)}
-                  className="ml-auto rounded-full border border-base-300 bg-base-100 px-3 py-1.5 text-[11px] text-primary transition hover:bg-primary/5"
+                  className="ml-auto rounded-full border border-base-300 bg-base-100 px-3 py-1.5 text-[11px] text-primary transition hover:bg-base-content/5"
                 >
                   已处理
                 </button>

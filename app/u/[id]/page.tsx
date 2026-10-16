@@ -174,7 +174,7 @@ function UserShowcase() {
           {/* 资料 */}
           <section className="card rounded-box border border-base-300 bg-base-100/80 p-6 backdrop-blur shadow-sm">
             <div className="flex items-start gap-4">
-              <div className="flex h-16 w-16 flex-shrink-0 items-center justify-center overflow-hidden rounded-box bg-primary/5 text-2xl shadow-sm">
+              <div className="flex h-16 w-16 flex-shrink-0 items-center justify-center overflow-hidden rounded-box bg-base-content/5 text-2xl shadow-sm">
                 {profile?.avatar_url ? (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img src={profile.avatar_url} alt="" className="h-full w-full object-cover" />
@@ -283,7 +283,7 @@ function UserShowcase() {
 export default function UserShowcasePage() {
   // useParams 需要包一层 Suspense（构建时会预渲染这个路由）
   return (
-    <Suspense fallback={<div className="min-h-screen bg-primary/5" />}>
+    <Suspense fallback={<div className="min-h-screen bg-base-content/5" />}>
       <UserShowcase />
     </Suspense>
   )

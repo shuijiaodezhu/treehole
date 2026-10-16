@@ -242,7 +242,7 @@ export default function SettingsPage() {
 
             <div className="relative">
               <div className="flex items-center gap-3 mb-5">
-                <div className="w-9 h-9 rounded-full bg-primary/5 flex items-center justify-center">
+                <div className="w-9 h-9 rounded-full bg-base-content/5 flex items-center justify-center">
                   <Icon name="lock" className="w-4 h-4 text-primary" />
                 </div>
                 <div>
@@ -258,7 +258,7 @@ export default function SettingsPage() {
                     setPwStep('editing')
                     setPwMessage('')
                   }}
-                  className="w-full py-2.5 rounded-box border border-base-300 bg-primary/5 text-sm text-primary font-medium hover:bg-primary/5 transition"
+                  className="w-full py-2.5 rounded-box border border-base-300 bg-base-content/5 text-sm text-primary font-medium hover:bg-base-content/5 transition"
                 >
                   重设密码
                 </button>
@@ -267,7 +267,7 @@ export default function SettingsPage() {
               {pwStep === 'editing' && (
                 <form onSubmit={handlePasswordNext}>
                   {/* 在这个时刻才出现：正好在想新密码 */}
-                  <div className="mb-4 flex gap-2.5 rounded-box border border-base-300 bg-primary/5 px-4 py-3">
+                  <div className="mb-4 flex gap-2.5 rounded-box border border-base-300 bg-base-content/5 px-4 py-3">
                     <span className="mt-0.5 select-none font-art text-2xl leading-none text-[var(--accent-line)]">
                       &ldquo;
                     </span>
@@ -287,7 +287,7 @@ export default function SettingsPage() {
                     minLength={8}
                     required
                     autoFocus
-                    className="w-full px-4 py-2.5 rounded-box border border-base-300 bg-primary/5 text-sm text-base-content focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition mb-4"
+                    className="w-full px-4 py-2.5 rounded-box border border-base-300 bg-base-content/5 text-sm text-base-content focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition mb-4"
                   />
                   <div className="flex gap-2">
                     <button
@@ -297,7 +297,7 @@ export default function SettingsPage() {
                         setPassword('')
                         setPwMessage('')
                       }}
-                      className="flex-1 py-2.5 rounded-box border border-base-300 text-sm text-base-content/60 hover:bg-primary/5 transition"
+                      className="flex-1 py-2.5 rounded-box border border-base-300 text-sm text-base-content/60 hover:bg-base-content/5 transition"
                     >
                       取消
                     </button>
@@ -312,7 +312,7 @@ export default function SettingsPage() {
               )}
 
               {pwStep === 'confirm' && (
-                <div className="rounded-box border border-base-300 bg-primary/5 p-4">
+                <div className="rounded-box border border-base-300 bg-base-content/5 p-4">
                   <p className="text-xs text-base-content leading-relaxed">
                     确认把密码改成这个吗？改完要记牢，忘了就得走邮箱找回。
                   </p>
@@ -347,7 +347,7 @@ export default function SettingsPage() {
           {/* ==================== 拉黑 / 屏蔽 ==================== */}
           <section className="card rounded-box border border-base-300 bg-base-100 p-6 shadow-sm">
             <div className="flex items-center gap-3 mb-5">
-              <div className="w-9 h-9 rounded-full bg-primary/5 flex items-center justify-center">
+              <div className="w-9 h-9 rounded-full bg-base-content/5 flex items-center justify-center">
                 <Icon name="shield" className="w-4 h-4 text-primary" />
               </div>
               <div>
@@ -365,7 +365,7 @@ export default function SettingsPage() {
                 value={keyword}
                 onChange={(e) => setKeyword(e.target.value)}
                 placeholder="输入完整用户名或昵称"
-                className="flex-1 px-4 py-2.5 rounded-box border border-base-300 bg-primary/5 text-sm text-base-content focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition"
+                className="flex-1 px-4 py-2.5 rounded-box border border-base-300 bg-base-content/5 text-sm text-base-content focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition"
               />
               <button
                 type="submit"
@@ -379,8 +379,8 @@ export default function SettingsPage() {
             {searchMessage && <p className="text-xs text-accent mb-3">{searchMessage}</p>}
 
             {searchHit && (
-              <div className="flex items-center gap-3 rounded-box border border-base-300 bg-primary/5 p-3 mb-4">
-                <span className="w-9 h-9 rounded-full bg-primary/5 flex items-center justify-center overflow-hidden flex-shrink-0 text-xs text-primary font-semibold">
+              <div className="flex items-center gap-3 rounded-box border border-base-300 bg-base-content/5 p-3 mb-4">
+                <span className="w-9 h-9 rounded-full bg-base-content/5 flex items-center justify-center overflow-hidden flex-shrink-0 text-xs text-primary font-semibold">
                   {searchHit.avatar_url ? (
                     // eslint-disable-next-line @next/next/no-img-element
                     <img src={searchHit.avatar_url} alt="" className="w-full h-full object-cover" />
@@ -422,7 +422,7 @@ export default function SettingsPage() {
               <div className="space-y-2">
                 {blocks.blockedUsers.map((b) => (
                   <div key={b.id} className="flex items-center gap-3">
-                    <span className="w-8 h-8 rounded-full bg-primary/5 flex items-center justify-center overflow-hidden flex-shrink-0 text-[11px] text-primary font-semibold">
+                    <span className="w-8 h-8 rounded-full bg-base-content/5 flex items-center justify-center overflow-hidden flex-shrink-0 text-[11px] text-primary font-semibold">
                       {b.avatar_url ? (
                         // eslint-disable-next-line @next/next/no-img-element
                         <img src={b.avatar_url} alt="" className="w-full h-full object-cover" />
@@ -437,7 +437,7 @@ export default function SettingsPage() {
                       type="button"
                       disabled={blocks.busyId === b.user_id}
                       onClick={() => void handleUnblock(b.user_id)}
-                      className="flex-shrink-0 rounded-full border border-base-300 px-3 py-1 text-[11px] text-base-content/60 hover:bg-primary/5 transition disabled:opacity-50"
+                      className="flex-shrink-0 rounded-full border border-base-300 px-3 py-1 text-[11px] text-base-content/60 hover:bg-base-content/5 transition disabled:opacity-50"
                     >
                       {blocks.busyId === b.user_id ? '处理中…' : '解除'}
                     </button>
@@ -454,7 +454,7 @@ export default function SettingsPage() {
           {/* ==================== 好友分组 ==================== */}
           <section className="card rounded-box border border-base-300 bg-base-100 p-6 shadow-sm">
             <div className="flex items-center gap-3 mb-5">
-              <div className="w-9 h-9 rounded-full bg-primary/5 flex items-center justify-center">
+              <div className="w-9 h-9 rounded-full bg-base-content/5 flex items-center justify-center">
                 <Icon name="users" className="w-4 h-4 text-primary" />
               </div>
               <div>
@@ -472,7 +472,7 @@ export default function SettingsPage() {
                 onChange={(e) => setNewGroupName(e.target.value)}
                 placeholder="新分组名，比如：家人 / 同事"
                 maxLength={20}
-                className="flex-1 px-4 py-2.5 rounded-box border border-base-300 bg-primary/5 text-sm text-base-content focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition"
+                className="flex-1 px-4 py-2.5 rounded-box border border-base-300 bg-base-content/5 text-sm text-base-content focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition"
               />
               <button
                 type="submit"
@@ -493,7 +493,7 @@ export default function SettingsPage() {
               {groupApi.groups.map((g) => {
                 const open = expandedGroup === g.id
                 return (
-                  <div key={g.id} className="rounded-box border border-base-300 bg-primary/5 p-3">
+                  <div key={g.id} className="rounded-box border border-base-300 bg-base-content/5 p-3">
                     <div className="flex items-center gap-2">
                       <button
                         type="button"
@@ -551,7 +551,7 @@ export default function SettingsPage() {
           {/* 页面配色 */}
           <section className="card rounded-box border border-base-300 bg-base-100 p-6 shadow-sm">
             <div className="flex items-center gap-3 mb-5">
-              <div className="w-9 h-9 rounded-full bg-primary/5 flex items-center justify-center">
+              <div className="w-9 h-9 rounded-full bg-base-content/5 flex items-center justify-center">
                 <Icon name="sparkle" className="w-4 h-4 text-primary" />
               </div>
               <div className="flex-1">
@@ -561,7 +561,7 @@ export default function SettingsPage() {
                 </p>
               </div>
               {themeApi.dirty && (
-                <span className="rounded-full bg-primary/5 px-2 py-0.5 text-[11px] text-primary">
+                <span className="rounded-full bg-base-content/5 px-2 py-0.5 text-[11px] text-primary">
                   未保存
                 </span>
               )}
@@ -569,7 +569,7 @@ export default function SettingsPage() {
 
             <div className="space-y-4">
               {PAGE_ORDER.map((page) => (
-                <div key={page} className="rounded-box border border-base-300 bg-primary/5/60 p-3.5">
+                <div key={page} className="rounded-box border border-base-300 bg-base-content/5/60 p-3.5">
                   <div className="mb-2.5 flex items-center gap-2">
                     <span
                       className="h-5 w-5 flex-shrink-0 rounded-full border border-white shadow-sm"
@@ -638,7 +638,7 @@ export default function SettingsPage() {
           {/* 关于与条款 */}
           <section className="card rounded-box border border-base-300 bg-base-100 p-6 shadow-sm">
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-9 h-9 rounded-full bg-primary/5 flex items-center justify-center">
+              <div className="w-9 h-9 rounded-full bg-base-content/5 flex items-center justify-center">
                 <Icon name="file" className="w-4 h-4 text-primary" />
               </div>
               <div>
@@ -662,7 +662,7 @@ export default function SettingsPage() {
                 <Link
                   key={item.slug}
                   href={`/p/${item.slug}`}
-                  className="flex items-center justify-between rounded-box border border-base-300 px-3.5 py-2.5 text-xs text-base-content transition hover:bg-primary/5"
+                  className="flex items-center justify-between rounded-box border border-base-300 px-3.5 py-2.5 text-xs text-base-content transition hover:bg-base-content/5"
                 >
                   {item.label}
                   <Icon name="arrow" className="w-3.5 h-3.5 text-accent" />

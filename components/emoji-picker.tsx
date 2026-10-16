@@ -112,7 +112,7 @@ export function EmojiPicker({
         className={`flex ${t.box} items-center justify-center rounded-full border transition-all duration-200 ${
           open
             ? 'border-primary bg-primary text-primary-content shadow-sm'
-            : 'border-base-300 bg-primary/5 text-primary hover:-translate-y-0.5 hover:border-accent hover:shadow-sm'
+            : 'border-base-300 bg-base-content/5 text-primary hover:-translate-y-0.5 hover:border-accent hover:shadow-sm'
         }`}
       >
         <CuteFace className={`${t.icon} transition-transform duration-200 ${open ? 'scale-110' : ''}`} />
@@ -131,7 +131,7 @@ export function EmojiPicker({
             }`}
           />
 
-          <div className="flex gap-1 border-b border-base-300 bg-primary/5 px-2.5 py-2">
+          <div className="flex gap-1 border-b border-base-300 bg-base-content/5 px-2.5 py-2">
             {GROUPS.map((g, i) => (
               <button
                 key={g.name}
@@ -154,7 +154,7 @@ export function EmojiPicker({
                 key={emoji}
                 type="button"
                 onClick={() => onPick(emoji)}
-                className="flex h-7 w-7 items-center justify-center rounded-full text-lg leading-none transition duration-150 hover:scale-125 hover:bg-primary/5"
+                className="flex h-7 w-7 items-center justify-center rounded-full text-lg leading-none transition duration-150 hover:scale-125 hover:bg-base-content/5"
               >
                 {emoji}
               </button>

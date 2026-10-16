@@ -222,7 +222,7 @@ export function StatusPicker({ userId }: { userId: string | null }) {
               onClick={() => void save(active ? '' : preset)}
               className={`rounded-full border px-2.5 py-1 font-serif-cn text-[11px] transition disabled:opacity-50 ${
                 active
-                  ? 'border-primary bg-primary/5 text-primary'
+                  ? 'border-primary bg-base-content/5 text-primary'
                   : 'border-base-300 text-base-content/60 hover:border-accent hover:text-primary'
               }`}
             >
@@ -240,7 +240,7 @@ export function StatusPicker({ userId }: { userId: string | null }) {
           onChange={(e) => setText(cleanStatus(e.target.value))}
           maxLength={STATUS_MAX}
           placeholder="自己写，最多三个字"
-          className="min-w-0 flex-1 rounded-box border border-base-300 bg-primary/5 px-3 py-2 text-xs text-base-content placeholder:text-accent focus:border-primary focus:outline-none"
+          className="min-w-0 flex-1 rounded-box border border-base-300 bg-base-content/5 px-3 py-2 text-xs text-base-content placeholder:text-accent focus:border-primary focus:outline-none"
         />
         <button
           type="button"

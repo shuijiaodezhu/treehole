@@ -76,7 +76,7 @@ export default function ResetPasswordPage() {
         {checking ? (
           <p className="mt-6 font-serif-cn text-[11.5px] text-base-content/60">正在确认链接…</p>
         ) : done ? (
-          <div className="mt-6 rounded-box border border-base-300 bg-primary/5 px-4 py-4">
+          <div className="mt-6 rounded-box border border-base-300 bg-base-content/5 px-4 py-4">
             <p className="font-serif-cn text-[12px] leading-relaxed text-base-content">改好了。</p>
             <p className="mt-1.5 font-serif-cn text-[11px] text-base-content/60">正在带你去登录…</p>
           </div>
@@ -104,7 +104,7 @@ export default function ResetPasswordPage() {
               onChange={(e) => setPassword(e.target.value)}
               placeholder="新密码（至少 8 位，含字母和数字）"
               autoComplete="new-password"
-              className="w-full rounded-box border border-base-300 bg-primary/5 px-4 py-3 font-serif-cn text-[13px] text-base-content placeholder:text-base-content/60 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/10"
+              className="w-full rounded-box border border-base-300 bg-base-content/5 px-4 py-3 font-serif-cn text-[13px] text-base-content placeholder:text-base-content/60 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/10"
             />
             <input
               type="password"
@@ -113,7 +113,7 @@ export default function ResetPasswordPage() {
               onChange={(e) => setConfirm(e.target.value)}
               placeholder="再输一次"
               autoComplete="new-password"
-              className="w-full rounded-box border border-base-300 bg-primary/5 px-4 py-3 font-serif-cn text-[13px] text-base-content placeholder:text-base-content/60 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/10"
+              className="w-full rounded-box border border-base-300 bg-base-content/5 px-4 py-3 font-serif-cn text-[13px] text-base-content placeholder:text-base-content/60 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/10"
             />
             {message && <p className="text-[11px] text-red-500">{message}</p>}
             <button

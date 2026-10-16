@@ -94,7 +94,7 @@ export default function FavoritesPage() {
   const loading = !authChecked || favorites.loading
 
   return (
-    <div className="min-h-screen bg-primary/5" style={pageAccentVars('me')}>
+    <div className="min-h-screen bg-base-content/5" style={pageAccentVars('me')}>
       <div className="relative max-w-3xl mx-auto px-6 pt-10 pb-16">
         <Link
           href="/me"
@@ -182,7 +182,7 @@ export default function FavoritesPage() {
                 className="card rounded-box border border-base-300 bg-base-100 p-4 shadow-sm"
               >
                 <div className="flex items-center gap-2 mb-2">
-                  <span className="rounded-full bg-primary/5 px-2 py-0.5 text-[11px] text-primary">
+                  <span className="rounded-full bg-base-content/5 px-2 py-0.5 text-[11px] text-primary">
                     {FAVORITE_KIND_LABEL[f.kind]}
                   </span>
                   {f.author_name && (

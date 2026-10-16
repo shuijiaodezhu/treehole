@@ -168,7 +168,7 @@ export function AdminStats() {
   return (
     <section className="card mb-5 rounded-box border border-base-300 bg-base-100/80 p-6 backdrop-blur shadow-sm">
       <div className="mb-5 flex items-center gap-3">
-        <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary/5">
+        <div className="flex h-9 w-9 items-center justify-center rounded-full bg-base-content/5">
           <Icon name="users" className="h-4 w-4 text-base-content/60" />
         </div>
         <div className="flex-1">
@@ -180,7 +180,7 @@ export function AdminStats() {
         <button
           type="button"
           onClick={() => setReloadKey((k) => k + 1)}
-          className="card inline-flex items-center gap-1 rounded-box border border-base-300 bg-base-100 px-3 py-1.5 text-xs text-base-content/60 transition hover:bg-primary/5"
+          className="card inline-flex items-center gap-1 rounded-box border border-base-300 bg-base-100 px-3 py-1.5 text-xs text-base-content/60 transition hover:bg-base-content/5"
         >
           <Icon name="refresh" className="h-3.5 w-3.5" />
           刷新

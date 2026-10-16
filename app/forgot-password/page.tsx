@@ -68,7 +68,7 @@ export default function ForgotPasswordPage() {
         </p>
 
         {sent ? (
-          <div className="mt-6 rounded-box border border-base-300 bg-primary/5 px-4 py-4">
+          <div className="mt-6 rounded-box border border-base-300 bg-base-content/5 px-4 py-4">
             <p className="font-serif-cn text-[12px] leading-relaxed text-base-content">
               重置链接已经发出去了（如果这个邮箱注册过的话）。
             </p>
@@ -87,7 +87,7 @@ export default function ForgotPasswordPage() {
               onChange={(e) => setEmail(e.target.value)}
               placeholder="你的邮箱"
               autoComplete="email"
-              className="w-full rounded-box border border-base-300 bg-primary/5 px-4 py-3 font-serif-cn text-[13px] text-base-content placeholder:text-base-content/60 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/10"
+              className="w-full rounded-box border border-base-300 bg-base-content/5 px-4 py-3 font-serif-cn text-[13px] text-base-content placeholder:text-base-content/60 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/10"
             />
             {message && <p className="text-[11px] text-red-500">{message}</p>}
             <button

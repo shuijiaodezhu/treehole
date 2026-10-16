@@ -242,7 +242,7 @@ export function NotificationsList({ userId }: { userId: string | null }) {
           没跑也不影响别的功能，只是收不到提醒。
         </p>
         {errorText && (
-          <p className="mt-2.5 whitespace-pre-wrap rounded-box bg-primary/5 px-3 py-2 text-[11.5px] text-primary">
+          <p className="mt-2.5 whitespace-pre-wrap rounded-box bg-base-content/5 px-3 py-2 text-[11.5px] text-primary">
             数据库的原话：{errorText}
           </p>
         )}
@@ -290,7 +290,7 @@ export function NotificationsList({ userId }: { userId: string | null }) {
           {items.map((notice) => {
             const inner = (
               <>
-                <span className="mt-0.5 flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-primary/5">
+                <span className="mt-0.5 flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-base-content/5">
                   <Icon name={iconOf(notice.kind)} className="h-3.5 w-3.5 text-primary" />
                 </span>
                 <span className="min-w-0 flex-1">

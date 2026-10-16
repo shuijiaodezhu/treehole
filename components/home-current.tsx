@@ -439,7 +439,7 @@ export function HomeCurrent() {
                   onClick={() => markModuleSeen(card.key as Parameters<typeof markModuleSeen>[0])}
                   /* 套上这张卡所属模块的调色板：primary / accent 于是变成那个模块的颜色 */
                   style={pageAccentVars(card.key as Parameters<typeof pageAccentVars>[0])}
-                  className="card card-border group h-full overflow-hidden bg-primary/5 transition-all duration-200 [--radius-box:1rem] hover:-translate-y-0.5 hover:shadow-xl"
+                  className="card card-border group h-full overflow-hidden bg-base-content/5 transition-all duration-200 [--radius-box:1rem]"
                 >
                   <div className="card-body flex-row items-center gap-5 py-6">
                     <span

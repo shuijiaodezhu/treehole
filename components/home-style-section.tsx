@@ -58,7 +58,7 @@ export function HomeStyleSection() {
                 className={
                   'flex cursor-pointer items-start gap-3 rounded-box border p-3 transition ' +
                   (active
-                    ? 'border-primary bg-primary/5'
+                    ? 'border-primary bg-base-content/5'
                     : 'border-base-300 hover:border-primary/60')
                 }
               >

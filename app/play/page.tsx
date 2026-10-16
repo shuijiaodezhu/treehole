@@ -469,7 +469,7 @@ export default function PlayPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-primary/5" style={pageAccentVars('play')}>
+      <div className="min-h-screen bg-base-content/5" style={pageAccentVars('play')}>
         <div className="mx-auto max-w-6xl px-6 pt-24 pb-8">
           <SkeletonList count={3} lines={2} />
         </div>
@@ -478,7 +478,7 @@ export default function PlayPage() {
   }
 
   return (
-    <div className="min-h-screen bg-primary/5 relative overflow-hidden" style={pageAccentVars('play')}>
+    <div className="min-h-screen bg-base-content/5 relative overflow-hidden" style={pageAccentVars('play')}>
 
       <div className="relative max-w-6xl mx-auto px-6 pt-24 pb-8">
         <header className="mb-6">
@@ -489,7 +489,7 @@ export default function PlayPage() {
           <p className="text-sm text-base-content/60 mt-1">找搭子，一起玩</p>
 
           {focusActivityId && focusMissing && (
-            <div className="mt-4 flex items-center justify-between rounded-box border border-base-300 bg-primary/5 px-4 py-2.5">
+            <div className="mt-4 flex items-center justify-between rounded-box border border-base-300 bg-base-content/5 px-4 py-2.5">
               <span className="text-xs text-primary">这条活动不见了（可能已被删除或下架）</span>
               <Link href="/play" className="text-xs text-primary hover:underline">
                 ← 回到列表
@@ -519,7 +519,7 @@ export default function PlayPage() {
               <div className="flex gap-2 flex-wrap">
                 <button
                   onClick={() => setCurrentType(null)}
-                  className={`px-4 py-1.5 rounded-full text-xs transition ${!currentType ? 'bg-primary text-primary-content' : 'bg-base-100 text-base-content/60 hover:bg-primary/5 border border-base-300'}`}
+                  className={`px-4 py-1.5 rounded-full text-xs transition ${!currentType ? 'bg-primary text-primary-content' : 'bg-base-100 text-base-content/60 hover:bg-base-content/5 border border-base-300'}`}
                 >
                   全部
                 </button>
@@ -530,7 +530,7 @@ export default function PlayPage() {
                     <div key={t.id} className="relative group">
                       <button
                         onClick={() => setCurrentType(t)}
-                        className={`px-4 py-1.5 rounded-full text-xs transition flex items-center gap-1.5 ${canDelete ? 'pr-7' : ''} ${currentType?.id === t.id ? 'bg-primary text-primary-content' : 'bg-base-100 text-base-content/60 hover:bg-primary/5 border border-base-300'}`}
+                        className={`px-4 py-1.5 rounded-full text-xs transition flex items-center gap-1.5 ${canDelete ? 'pr-7' : ''} ${currentType?.id === t.id ? 'bg-primary text-primary-content' : 'bg-base-100 text-base-content/60 hover:bg-base-content/5 border border-base-300'}`}
                       >
                         {t.icon && <span>{t.icon}</span>}
                         {t.name}
@@ -551,7 +551,7 @@ export default function PlayPage() {
 
                 <button
                   onClick={() => setShowNewTypeModal(true)}
-                  className="px-4 py-1.5 rounded-full text-xs text-base-content/60 hover:bg-primary/5 transition border border-dashed border-base-300 flex items-center gap-1"
+                  className="px-4 py-1.5 rounded-full text-xs text-base-content/60 hover:bg-base-content/5 transition border border-dashed border-base-300 flex items-center gap-1"
                 >
                   <Icon name="plus" className="w-3 h-3" />新建类型
                 </button>
@@ -618,7 +618,7 @@ export default function PlayPage() {
                       <div className="flex flex-col flex-1">
                       <div className="flex items-start gap-2 mb-3">
                         {act.type_icon && (
-                          <div className="w-9 h-9 rounded-box bg-primary/5 flex items-center justify-center text-base flex-shrink-0">
+                          <div className="w-9 h-9 rounded-box bg-base-content/5 flex items-center justify-center text-base flex-shrink-0">
                             {act.type_icon}
                           </div>
                         )}
@@ -703,7 +703,7 @@ export default function PlayPage() {
             <div className="flex items-start justify-between gap-3 mb-4">
               <div className="flex items-start gap-3 flex-1 min-w-0">
                 {detailActivity.type_icon && (
-                  <div className="w-10 h-10 rounded-box bg-primary/5 flex items-center justify-center text-lg flex-shrink-0">
+                  <div className="w-10 h-10 rounded-box bg-base-content/5 flex items-center justify-center text-lg flex-shrink-0">
                     {detailActivity.type_icon}
                   </div>
                 )}
@@ -731,7 +731,7 @@ export default function PlayPage() {
             <div className="mb-5">
               <p className="text-xs text-base-content/60 mb-2">发起人</p>
               <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-full bg-primary/5 flex items-center justify-center overflow-hidden flex-shrink-0">
+                <div className="w-8 h-8 rounded-full bg-base-content/5 flex items-center justify-center overflow-hidden flex-shrink-0">
                   {detailActivity.author_avatar ? <img src={detailActivity.author_avatar} alt="" className="w-full h-full object-cover" /> : <span className="text-xs text-primary">{detailActivity.author_name[0]}</span>}
                 </div>
                 <span className="text-sm text-base-content">{detailActivity.author_name}</span>
@@ -746,7 +746,7 @@ export default function PlayPage() {
                 <div className="space-y-2">
                   {detailActivity.signups.map((s) => (
                     <div key={s.user_id} className="flex items-center gap-2">
-                      <div className="w-6 h-6 rounded-full bg-primary/5 flex items-center justify-center overflow-hidden flex-shrink-0">
+                      <div className="w-6 h-6 rounded-full bg-base-content/5 flex items-center justify-center overflow-hidden flex-shrink-0">
                         {s.user_avatar ? <img src={s.user_avatar} alt="" className="w-full h-full object-cover" /> : <span className="text-[11px] text-primary">{s.user_name[0]}</span>}
                       </div>
                       <span className="text-xs text-base-content">
@@ -790,12 +790,12 @@ export default function PlayPage() {
                 <button
                   onClick={() => handleSignup(detailActivity)}
                   disabled={signingUp === detailActivity.id}
-                  className="flex-1 py-2.5 rounded-box border border-primary text-primary text-sm font-medium hover:bg-primary/5 transition"
+                  className="flex-1 py-2.5 rounded-box border border-primary text-primary text-sm font-medium hover:bg-base-content/5 transition"
                 >
                   {signingUp === detailActivity.id ? '...' : '取消报名'}
                 </button>
               ) : detailActivity.signups.length >= detailActivity.max_people ? (
-                <div className="flex-1 text-center py-2.5 rounded-box bg-primary/5 text-xs text-base-content/60">已满</div>
+                <div className="flex-1 text-center py-2.5 rounded-box bg-base-content/5 text-xs text-base-content/60">已满</div>
               ) : (
                 <button
                   onClick={() => handleSignup(detailActivity)}
@@ -811,7 +811,7 @@ export default function PlayPage() {
                   type="button"
                   disabled={withdrawing}
                   onClick={() => void handleWithdrawReport()}
-                  className="px-4 py-2.5 rounded-box border border-base-300 text-base-content/60 text-sm hover:bg-primary/5 transition flex items-center gap-1.5 disabled:opacity-50"
+                  className="px-4 py-2.5 rounded-box border border-base-300 text-base-content/60 text-sm hover:bg-base-content/5 transition flex items-center gap-1.5 disabled:opacity-50"
                 >
                   <Icon name="x" className="w-3.5 h-3.5" />
                   {withdrawing ? '撤回中…' : '撤回举报'}
@@ -820,7 +820,7 @@ export default function PlayPage() {
                 <button
                   type="button"
                   onClick={() => setShowReportModal(true)}
-                  className="px-4 py-2.5 rounded-box border border-base-300 text-base-content/60 text-sm hover:bg-primary/5 transition flex items-center gap-1.5"
+                  className="px-4 py-2.5 rounded-box border border-base-300 text-base-content/60 text-sm hover:bg-base-content/5 transition flex items-center gap-1.5"
                 >
                   <Icon name="alert" className="w-3.5 h-3.5" />举报
                 </button>
@@ -843,7 +843,7 @@ export default function PlayPage() {
               rows={3}
               maxLength={200}
               autoFocus
-              className="w-full px-4 py-3 rounded-box border border-base-300 bg-primary/5 text-sm resize-none focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition mb-4"
+              className="w-full px-4 py-3 rounded-box border border-base-300 bg-base-content/5 text-sm resize-none focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition mb-4"
             />
 
             {reportMessage && (
@@ -851,7 +851,7 @@ export default function PlayPage() {
             )}
 
             <div className="flex gap-2 justify-end">
-              <button type="button" onClick={() => { setShowReportModal(false); setReportReason(''); setReportMessage('') }} className="px-5 py-2 rounded-box text-sm text-base-content/60 hover:bg-primary/5 transition">取消</button>
+              <button type="button" onClick={() => { setShowReportModal(false); setReportReason(''); setReportMessage('') }} className="px-5 py-2 rounded-box text-sm text-base-content/60 hover:bg-base-content/5 transition">取消</button>
               <button type="submit" disabled={reporting || !reportReason.trim()} className="btn btn-primary hover:shadow-sm transition-all disabled:opacity-50">
                 {reporting ? '提交中...' : '提交'}
               </button>
@@ -874,7 +874,7 @@ export default function PlayPage() {
                 placeholder="比如：今晚打 CS"
                 maxLength={30}
                 autoFocus
-                className="w-full px-4 py-2.5 rounded-box border border-base-300 bg-primary/5 text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition"
+                className="w-full px-4 py-2.5 rounded-box border border-base-300 bg-base-content/5 text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition"
               />
             </div>
 
@@ -887,7 +887,7 @@ export default function PlayPage() {
                 placeholder="说清楚要做什么，缺几个人，也可以发个表情"
                 rows={3}
                 maxLength={200}
-                className="w-full px-4 py-2.5 rounded-box border border-base-300 bg-primary/5 text-sm resize-none focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition"
+                className="w-full px-4 py-2.5 rounded-box border border-base-300 bg-base-content/5 text-sm resize-none focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition"
               />
               <div className="mt-1.5 flex items-center justify-between">
                 <EmojiPicker onPick={insertActivityEmoji} />
@@ -898,24 +898,24 @@ export default function PlayPage() {
             <div className="grid grid-cols-2 gap-3 mb-3">
               <div>
                 <label className="block text-xs text-base-content/60 mb-1.5 tracking-wide">时间</label>
-                <input type="datetime-local" value={newTime} onChange={(e) => setNewTime(e.target.value)} className="w-full px-4 py-2.5 rounded-box border border-base-300 bg-primary/5 text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition" />
+                <input type="datetime-local" value={newTime} onChange={(e) => setNewTime(e.target.value)} className="w-full px-4 py-2.5 rounded-box border border-base-300 bg-base-content/5 text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition" />
               </div>
               <div>
                 <label className="block text-xs text-base-content/60 mb-1.5 tracking-wide">人数上限</label>
-                <input type="number" value={newMaxPeople} onChange={(e) => setNewMaxPeople(parseInt(e.target.value) || 5)} min={2} max={50} className="w-full px-4 py-2.5 rounded-box border border-base-300 bg-primary/5 text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition" />
+                <input type="number" value={newMaxPeople} onChange={(e) => setNewMaxPeople(parseInt(e.target.value) || 5)} min={2} max={50} className="w-full px-4 py-2.5 rounded-box border border-base-300 bg-base-content/5 text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition" />
               </div>
             </div>
 
             <div className="mb-5">
               <label className="block text-xs text-base-content/60 mb-1.5 tracking-wide">类型（可不选）</label>
-              <select value={newTypeId} onChange={(e) => setNewTypeId(e.target.value)} className="w-full px-4 py-2.5 rounded-box border border-base-300 bg-primary/5 text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition">
+              <select value={newTypeId} onChange={(e) => setNewTypeId(e.target.value)} className="w-full px-4 py-2.5 rounded-box border border-base-300 bg-base-content/5 text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition">
                 <option value="">无</option>
                 {types.map((t) => (<option key={t.id} value={t.id}>{t.icon} {t.name}</option>))}
               </select>
             </div>
 
             <div className="flex gap-2 justify-end">
-              <button type="button" onClick={() => setShowPostModal(false)} className="px-5 py-2 rounded-box text-sm text-base-content/60 hover:bg-primary/5 transition">取消</button>
+              <button type="button" onClick={() => setShowPostModal(false)} className="px-5 py-2 rounded-box text-sm text-base-content/60 hover:bg-base-content/5 transition">取消</button>
               <button type="submit" disabled={posting || !newTitle.trim()} className="btn btn-primary hover:shadow-sm transition-all disabled:opacity-50">
                 {posting ? '发布中...' : '发布'}
               </button>
@@ -937,7 +937,7 @@ export default function PlayPage() {
               placeholder="类型名字"
               maxLength={10}
               autoFocus
-              className="w-full px-4 py-2.5 rounded-box border border-base-300 bg-primary/5 text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition mb-4"
+              className="w-full px-4 py-2.5 rounded-box border border-base-300 bg-base-content/5 text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition mb-4"
             />
 
             {createTypeMessage && (
@@ -945,7 +945,7 @@ export default function PlayPage() {
             )}
 
             <div className="flex gap-2 justify-end">
-              <button type="button" onClick={() => { setShowNewTypeModal(false); setNewTypeName(''); setCreateTypeMessage('') }} className="px-5 py-2 rounded-box text-sm text-base-content/60 hover:bg-primary/5 transition">取消</button>
+              <button type="button" onClick={() => { setShowNewTypeModal(false); setNewTypeName(''); setCreateTypeMessage('') }} className="px-5 py-2 rounded-box text-sm text-base-content/60 hover:bg-base-content/5 transition">取消</button>
               <button type="submit" disabled={creatingType || !newTypeName.trim()} className="btn btn-primary hover:shadow-sm transition-all disabled:opacity-50">
                 {creatingType ? '提交中...' : '添加'}
               </button>

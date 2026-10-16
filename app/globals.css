@@ -238,6 +238,26 @@
 .theme-swatch-ink { background: var(--ink); }
 .theme-swatch-accent { background: var(--wax); }
 
+
+/* ============================================================
+   卡片：不用阴影、不用细线 —— 靠"明度差"分开
+   taste-skill 的 tells 清单把这两条都列成 banned：
+     · 每张卡下面一层柔和灰阴影 ✗（soft grey drop shadow under every card）
+     · 3 个以上的 1px 细线框 ✗（thin rules / 1px outlined boxes）
+   它的替代是：面与面之间只靠**明度**分开（差 2~6 个明度点就够）✓
+   我们本来就是 base-200 的底 + base-100 的卡 ✓ 明度差已经在了 ✓
+   → 所以阴影和边框都可以直接去掉 ✓ 视觉上反而更干净 ✓
+   !important 是故意的：这是全站的一条"家规" ✓
+     （不然各处写的 shadow-sm / hover:shadow-xl 会各自为政 ✗）
+   ============================================================ */
+.card {
+  box-shadow: none !important;
+}
+
+.card-border {
+  border: 0;
+}
+
 /* ============================================================
    交互基线
    之前整站只统一了颜色与圆角，"点上去有没有反馈"各页不一：
@@ -515,10 +535,7 @@ body {
    各页自己写的 hover 样式仍然优先。
    ------------------------------------------------------------ */
 @media (hover: hover) and (pointer: fine) {
-  :where(.card):hover {
-    transform: translateY(-2px);
-  }
-  :where(.card) {
+    :where(.card) {
     transition:
       transform 180ms ease,
       box-shadow 180ms ease,
@@ -527,10 +544,7 @@ body {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  :where(.card):hover {
-    transform: none;
   }
-}
 
 /* ============================================================
    动效与骨架屏

@@ -142,7 +142,7 @@ export default function MePage() {
           <div className="card rounded-box border border-base-300 bg-base-100 p-6 shadow-sm relative overflow-hidden">
 
             <div className="relative flex items-start gap-4">
-              <div className="w-16 h-16 rounded-box bg-primary/5 flex items-center justify-center text-2xl overflow-hidden flex-shrink-0 shadow-sm">
+              <div className="w-16 h-16 rounded-box bg-base-content/5 flex items-center justify-center text-2xl overflow-hidden flex-shrink-0 shadow-sm">
                 {profile?.avatar_url ? (
                   <img src={profile.avatar_url} alt="avatar" className="w-full h-full object-cover" />
                 ) : (
@@ -183,7 +183,7 @@ export default function MePage() {
           <ShowcaseSettingsSection userId={profile?.id ?? null} />
 
           <div className="grid grid-cols-2 gap-4">
-            <div className="rounded-box border border-base-300 bg-primary/5 p-5 text-center relative overflow-hidden">
+            <div className="rounded-box border border-base-300 bg-base-content/5 p-5 text-center relative overflow-hidden">
               <div className="absolute -top-4 -right-4 w-16 h-16 bg-accent opacity-[0.15] rounded-full blur-xl pointer-events-none"></div>
               <p className="relative text-3xl font-bold text-primary">{postCount}</p>
               <p className="relative text-[11px] text-base-content/60 mt-1.5 tracking-wide">已发帖</p>
@@ -195,9 +195,9 @@ export default function MePage() {
           </div>
 
           <div className="card rounded-box border border-base-300 bg-base-100 overflow-hidden">
-            <Link href="/me/posts" className="flex items-center justify-between p-4 hover:bg-primary/5 transition group">
+            <Link href="/me/posts" className="flex items-center justify-between p-4 hover:bg-base-content/5 transition group">
               <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-full bg-primary/5 flex items-center justify-center"><IconDoc className="w-4 h-4 text-primary" /></div>
+                <div className="w-8 h-8 rounded-full bg-base-content/5 flex items-center justify-center"><IconDoc className="w-4 h-4 text-primary" /></div>
                 <span className="text-sm text-base-content">我的帖子</span>
               </div>
               <IconArrow className="w-4 h-4 text-accent group-hover:translate-x-0.5 transition-transform" />
@@ -205,9 +205,9 @@ export default function MePage() {
 
             <div className="border-t border-base-300"></div>
 
-            <Link href="/me/favorites" className="flex items-center justify-between p-4 hover:bg-primary/5 transition group">
+            <Link href="/me/favorites" className="flex items-center justify-between p-4 hover:bg-base-content/5 transition group">
               <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-full bg-primary/5 flex items-center justify-center"><IconStar className="w-4 h-4 text-primary" /></div>
+                <div className="w-8 h-8 rounded-full bg-base-content/5 flex items-center justify-center"><IconStar className="w-4 h-4 text-primary" /></div>
                 <span className="text-sm text-base-content">我的收藏</span>
               </div>
               <IconArrow className="w-4 h-4 text-accent group-hover:translate-x-0.5 transition-transform" />
@@ -215,9 +215,9 @@ export default function MePage() {
 
             <div className="border-t border-base-300"></div>
 
-            <Link href="/me/notifications" className="flex items-center justify-between p-4 hover:bg-primary/5 transition group">
+            <Link href="/me/notifications" className="flex items-center justify-between p-4 hover:bg-base-content/5 transition group">
               <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-full bg-primary/5 flex items-center justify-center"><IconBell className="w-4 h-4 text-primary" /></div>
+                <div className="w-8 h-8 rounded-full bg-base-content/5 flex items-center justify-center"><IconBell className="w-4 h-4 text-primary" /></div>
                 <span className="text-sm text-base-content">通知</span>
               </div>
               <IconArrow className="w-4 h-4 text-accent group-hover:translate-x-0.5 transition-transform" />
@@ -225,9 +225,9 @@ export default function MePage() {
 
             <div className="border-t border-base-300"></div>
 
-            <Link href="/me/settings" className="flex items-center justify-between p-4 hover:bg-primary/5 transition group">
+            <Link href="/me/settings" className="flex items-center justify-between p-4 hover:bg-base-content/5 transition group">
               <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-full bg-primary/5 flex items-center justify-center"><IconGear className="w-4 h-4 text-primary" /></div>
+                <div className="w-8 h-8 rounded-full bg-base-content/5 flex items-center justify-center"><IconGear className="w-4 h-4 text-primary" /></div>
                 <span className="text-sm text-base-content">设置</span>
               </div>
               <IconArrow className="w-4 h-4 text-accent group-hover:translate-x-0.5 transition-transform" />
@@ -236,7 +236,7 @@ export default function MePage() {
             {isAdmin && (
               <>
                 <div className="border-t border-base-300"></div>
-                <Link href="/admin" className="flex items-center justify-between p-4 hover:bg-primary/5 transition group">
+                <Link href="/admin" className="flex items-center justify-between p-4 hover:bg-base-content/5 transition group">
                   <div className="flex items-center gap-3">
                     <div className="w-8 h-8 rounded-full bg-gradient-to-br from-primary/20 to-primary/10 flex items-center justify-center">
                       <IconShield className="w-4 h-4 text-white" />

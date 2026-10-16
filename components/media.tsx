@@ -264,7 +264,7 @@ export function ImagePicker({
               }
             }}
             placeholder="也可以粘贴图片链接"
-            className="min-w-0 flex-1 rounded-box border border-base-300 bg-primary/5 px-3 py-1.5 text-xs text-base-content focus:outline-none focus:border-primary transition"
+            className="min-w-0 flex-1 rounded-box border border-base-300 bg-base-content/5 px-3 py-1.5 text-xs text-base-content focus:outline-none focus:border-primary transition"
           />
           <button
             type="button"
