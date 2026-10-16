@@ -145,7 +145,8 @@ input:focus, textarea:focus {
 }
 
 .font-serif-cn {
-  font-family: var(--font-noto-serif), "Songti SC", serif;
+  /* 霞鹜文楷优先（开源楷体，最像"读一封信"）；拉不到就回退到思源宋体 / 系统宋体 */
+  font-family: "LXGW WenKai", var(--font-noto-serif), "Songti SC", serif;
   font-weight: 400;
   letter-spacing: 0.04em;
 }

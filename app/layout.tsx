@@ -84,6 +84,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="zh-CN" className={`${cormorant.variable} ${notoSerif.variable} ${maShanZheng.variable}`}>
+      {/* 霞鹜文楷（开源楷体）：按需子集加载；拉不到会自动回退，不影响可用性 */}
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-webfont@1.7.0/lxgwwenkai-regular.css" />
       <body>
       {/*
         首次加载才放 splash：这里用内联脚本在**首帧之前**写 html 属性，
