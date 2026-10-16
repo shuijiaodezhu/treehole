@@ -104,6 +104,47 @@ export default function RootLayout({
           ② In HTML, <link> cannot be a child of <html>（hydration error）
       */}
               {/* 字体从 jsDelivr 拉：提前把域名连上，省掉一次 DNS + TLS 握手（约 100-300ms）*/}
+        {/*
+  内核太旧时的友好提示（放在最前，且**不依赖 React / 新语法**）
+
+  为什么：这个站是 Next.js 16 + React 19，官方要求 Chrome 111+。
+    iQOO / vivo 国行机没有 Google Play → 系统 WebView 常年不更新，
+    很多还停在 Chrome 60~90 → 打开就是空白或布局挤成一团。
+  这段脚本只用 var / function / indexOf / innerHTML（老到不能再老），
+  在 React 之前就能判断并直接写出一张**纯行内样式**的提示页。
+  判据：color-mix（Chrome 111+）与 :has（105+）都不支持 → 基本可以断定太旧。
+*/}
+<script
+  dangerouslySetInnerHTML={{
+    __html: `(function(){try{
+      var d=document;
+      var sup=(d.defaultView&&d.defaultView.CSS&&CSS.supports)?CSS.supports:null;
+      if(!sup){return;}
+      var hasColorMix=sup("color","color-mix(in oklab, red, blue)");
+      var hasHas=sup("selector(:has(*))");
+      if(hasColorMix&&hasHas){return;}
+      function notice(){
+        if(d.getElementById("old-engine-notice")){return;}
+        var box=d.createElement("div");
+        box.id="old-engine-notice";
+        box.setAttribute("style","position:fixed;top:0;right:0;bottom:0;left:0;z-index:2147483647;background:#f4ebdd;color:#3f332a;font-family:system-ui,-apple-system,sans-serif;padding:28px 22px;overflow:auto;line-height:1.75");
+        box.innerHTML='<div style="max-width:520px;margin:8vh auto 0">'
+          +'<div style="font-size:26px;font-weight:700;letter-spacing:1px">你的来信</div>'
+          +'<p style="margin:20px 0 10px;font-size:16px">这台手机的内核版本太旧，暂时打不开这个页面。</p>'
+          +'<p style="margin:0 0 18px;font-size:14px;color:#6b5c4d">不是你的网络问题，也不用重装 App —— 更新一下系统组件就好。</p>'
+          +'<p style="margin:0 0 8px;font-size:15px;font-weight:600">怎么修（1 分钟）：</p>'
+          +'<p style="margin:0 0 6px;font-size:14px">1. 打开手机自带的应用商店（vivo/iQOO 就是「应用商店」）</p>'
+          +'<p style="margin:0 0 6px;font-size:14px">2. 搜「Android System WebView」（有的显示「WebView」）</p>'
+          +'<p style="margin:0 0 18px;font-size:14px">3. 点更新，装完重新打开这个 App</p>'
+          +'<p style="margin:0;font-size:13px;color:#8a7a6a">也可以在 设置 → 应用 → 显示系统程序 里查看 WebView 的版本号，低于 111 就是它。</p>'
+          +'<p style="margin:22px 0 0;font-size:13px;color:#8a7a6a">（当前内核：WebView 版本偏低）</p>'
+          +'</div>';
+        d.body.appendChild(box);
+      }
+      if(d.body){notice();}else{d.addEventListener("DOMContentLoaded",notice);}
+    }catch(e){}})()`
+  }}
+/>
         <link rel="preconnect" href="https://cdn.jsdelivr.net" crossOrigin="anonymous" />
         {/* 数据库域名也提前连上（每个页面第一次查数据都能省一次握手 ✓
             注意：这个地址和 app/lib/supabase.ts 里的是同一个 ✓ 换项目要一起改 ✓）*/}
