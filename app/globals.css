@@ -151,6 +151,20 @@
   --line: #e3d6bf;
   --wax: #a8563a;
   --wax-soft: #f4e5dc;
+
+  /* 页面真正读的是这几个 daisyUI 角色变量（1259 处），不是 --paper 那 22 处 */
+  --color-base-100: var(--sheet);
+  --color-base-200: var(--paper);
+  --color-base-300: var(--line);
+  --color-base-content: var(--ink);
+  --color-primary: var(--wax);
+  --color-secondary: var(--muted);
+  --color-accent: var(--wax);
+  --color-neutral: var(--ink);
+  --color-primary-content: #fdf8f0;
+  --color-secondary-content: var(--sheet);
+  --color-accent-content: var(--sheet);
+  --color-neutral-content: var(--sheet);
 }
 
 [data-theme="xuan"] {
@@ -162,6 +176,20 @@
   --line: #e6e1d8;
   --wax: #2f4a3c;
   --wax-soft: #e4ece7;
+
+  /* 页面真正读的是这几个 daisyUI 角色变量（1259 处），不是 --paper 那 22 处 */
+  --color-base-100: var(--sheet);
+  --color-base-200: var(--paper);
+  --color-base-300: var(--line);
+  --color-base-content: var(--ink);
+  --color-primary: var(--wax);
+  --color-secondary: var(--muted);
+  --color-accent: var(--wax);
+  --color-neutral: var(--ink);
+  --color-primary-content: #fdf8f0;
+  --color-secondary-content: var(--sheet);
+  --color-accent-content: var(--sheet);
+  --color-neutral-content: var(--sheet);
 }
 
 [data-theme="stone"] {
@@ -173,6 +201,20 @@
   --line: #d5dad6;
   --wax: #5c7a63;
   --wax-soft: #e2ebe5;
+
+  /* 页面真正读的是这几个 daisyUI 角色变量（1259 处），不是 --paper 那 22 处 */
+  --color-base-100: var(--sheet);
+  --color-base-200: var(--paper);
+  --color-base-300: var(--line);
+  --color-base-content: var(--ink);
+  --color-primary: var(--wax);
+  --color-secondary: var(--muted);
+  --color-accent: var(--wax);
+  --color-neutral: var(--ink);
+  --color-primary-content: #fdf8f0;
+  --color-secondary-content: var(--sheet);
+  --color-accent-content: var(--sheet);
+  --color-neutral-content: var(--sheet);
 }
 
 [data-theme="ink"] {
@@ -185,6 +227,20 @@
   --wax: #c98a5e;
   --wax-soft: #3a2f28;
   color-scheme: dark;
+
+  /* 页面真正读的是这几个 daisyUI 角色变量（1259 处），不是 --paper 那 22 处 */
+  --color-base-100: var(--sheet);
+  --color-base-200: var(--paper);
+  --color-base-300: var(--line);
+  --color-base-content: var(--ink);
+  --color-primary: var(--wax);
+  --color-secondary: var(--muted);
+  --color-accent: var(--wax);
+  --color-neutral: var(--ink);
+  --color-primary-content: #fdf8f0;
+  --color-secondary-content: var(--sheet);
+  --color-accent-content: var(--sheet);
+  --color-neutral-content: var(--sheet);
 }
 
 [data-theme="moss"] {
@@ -196,6 +252,20 @@
   --line: #d6dac9;
   --wax: #8a6a3a;
   --wax-soft: #ece5d3;
+
+  /* 页面真正读的是这几个 daisyUI 角色变量（1259 处），不是 --paper 那 22 处 */
+  --color-base-100: var(--sheet);
+  --color-base-200: var(--paper);
+  --color-base-300: var(--line);
+  --color-base-content: var(--ink);
+  --color-primary: var(--wax);
+  --color-secondary: var(--muted);
+  --color-accent: var(--wax);
+  --color-neutral: var(--ink);
+  --color-primary-content: #fdf8f0;
+  --color-secondary-content: var(--sheet);
+  --color-accent-content: var(--sheet);
+  --color-neutral-content: var(--sheet);
 }
 
 [data-theme="dusk"] {
@@ -207,6 +277,20 @@
   --line: #ded0cd;
   --wax: #8f4a44;
   --wax-soft: #f0e0dd;
+
+  /* 页面真正读的是这几个 daisyUI 角色变量（1259 处），不是 --paper 那 22 处 */
+  --color-base-100: var(--sheet);
+  --color-base-200: var(--paper);
+  --color-base-300: var(--line);
+  --color-base-content: var(--ink);
+  --color-primary: var(--wax);
+  --color-secondary: var(--muted);
+  --color-accent: var(--wax);
+  --color-neutral: var(--ink);
+  --color-primary-content: #fdf8f0;
+  --color-secondary-content: var(--sheet);
+  --color-accent-content: var(--sheet);
+  --color-neutral-content: var(--sheet);
 }
 
 [data-theme="rain"] {
@@ -218,6 +302,20 @@
   --line: #d3dae0;
   --wax: #40607a;
   --wax-soft: #e0e9ef;
+
+  /* 页面真正读的是这几个 daisyUI 角色变量（1259 处），不是 --paper 那 22 处 */
+  --color-base-100: var(--sheet);
+  --color-base-200: var(--paper);
+  --color-base-300: var(--line);
+  --color-base-content: var(--ink);
+  --color-primary: var(--wax);
+  --color-secondary: var(--muted);
+  --color-accent: var(--wax);
+  --color-neutral: var(--ink);
+  --color-primary-content: #fdf8f0;
+  --color-secondary-content: var(--sheet);
+  --color-accent-content: var(--sheet);
+  --color-neutral-content: var(--sheet);
 }
 
 [data-theme="plain"] {
@@ -229,6 +327,20 @@
   --line: #e5e5e5;
   --wax: #111111;
   --wax-soft: #eeeeee;
+
+  /* 页面真正读的是这几个 daisyUI 角色变量（1259 处），不是 --paper 那 22 处 */
+  --color-base-100: var(--sheet);
+  --color-base-200: var(--paper);
+  --color-base-300: var(--line);
+  --color-base-content: var(--ink);
+  --color-primary: var(--wax);
+  --color-secondary: var(--muted);
+  --color-accent: var(--wax);
+  --color-neutral: var(--ink);
+  --color-primary-content: #111111;
+  --color-secondary-content: var(--sheet);
+  --color-accent-content: var(--sheet);
+  --color-neutral-content: var(--sheet);
 }
 
 /* 预览卡里的色块：跟着它自己那套主题的变量走（不是画出来的假图）*/
