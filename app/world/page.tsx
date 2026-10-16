@@ -904,19 +904,26 @@ export default function WorldPage() {
         </span>
         <span className="text-base-content/60">{showCats ? '▴' : '▾'}</span>
       </button>
+      {/*
+        永远可见的发帖按钮
+        （原来它在"分区"侧栏里 ✗ 而侧栏在手机上默认隐藏 →
+          必须先点「分区」才能发帖 ✓ 用户报的"发帖键消失，按分组才显示"）
+        现在放在两栏之上：手机/桌面、开不开分区，都看得见
+      */}
+      <button
+        onClick={() => { setPostCategoryId(currentCategory?.id || ''); setShowPostModal(true) }}
+        className="mb-4 bg-primary w-full py-2.5 rounded-box text-primary-content text-sm font-medium hover:shadow-sm transition-all flex flex-col items-center justify-center gap-0.5"
+      >
+        <span className="flex items-center gap-2"><Icon name="pen" className="w-4 h-4" />发帖</span>
+        <span className="text-[11px] text-white/80 font-normal">发到「{currentLocationName}」</span>
+      </button>
+
       <div className="flex flex-col gap-5 lg:flex-row lg:min-h-[600px]">
           <aside
           className={
             'w-full flex-shrink-0 flex-col gap-3 lg:flex lg:w-56 ' + (showCats ? 'flex' : 'hidden')
           }
         >
-            <button
-              onClick={() => { setPostCategoryId(currentCategory?.id || ''); setShowPostModal(true) }}
-              className="bg-primary w-full py-2.5 rounded-box from-base-300 text-primary-content text-sm font-medium hover:shadow-sm transition-all flex flex-col items-center justify-center gap-0.5"
-            >
-              <span className="flex items-center gap-2"><Icon name="pen" className="w-4 h-4" />发帖</span>
-              <span className="text-[11px] text-white/80 font-normal">发到「{currentLocationName}」</span>
-            </button>
 
             <div className="card rounded-box border border-base-300 bg-base-100 shadow-sm overflow-hidden">
               <div className="px-4 py-3 ">
