@@ -59,7 +59,7 @@ export function BootSync() {
         if (!uid || cancelled) return
 
         // ── 并行拉（每条各自兜底 ✓）──
-        const [cats, me, friends, conversations, messages, unread, posts] = await Promise.all([
+        const [cats, me, friends, conversations, messages, unread, convReads, posts] = await Promise.all([
           q(supabase.from('categories').select('id, name, icon, parent_id, sort_order').eq('status', 'approved').order('sort_order', { ascending: true }), []),
 
           q(supabase.from('profiles').select('id, username, nickname, avatar_url, signature').eq('id', uid).maybeSingle(), null),
@@ -71,6 +71,10 @@ export function BootSync() {
           q(supabase.from('messages').select('id, conversation_id, sender_id, content, created_at').order('created_at', { ascending: false }).limit(60), []),
 
           q(supabase.from('notifications').select('id', { count: 'exact', head: true }).eq('user_id', uid).is('read_at', null), null),
+
+          // 服务端记的"我在每个会话读到哪一刻"（多端同步用）
+          // 表还没建 → 这里会返回空数组 ✓ 前端自动退回本机方式 ✓ 不影响任何功能
+          q(supabase.from('conversation_reads').select('conversation_id, read_at').eq('user_id', uid), []),
 
           q(supabase.from('world_posts').select('id, author_id, is_anonymous, content, category_id, created_at, image_urls').eq('status', 'published').eq('is_hidden', false).is('category_id', null).order('created_at', { ascending: false }).limit(20), []),
         ])
@@ -84,6 +88,15 @@ export function BootSync() {
         save('conversations', conversations)
         save('recent-messages', messages)
         save('world-posts-hall', posts)
+        try {
+          const map: Record<string, string> = {}
+          for (const r of (convReads ?? []) as { conversation_id: string; read_at: string }[]) {
+            if (r && r.conversation_id && r.read_at) map[r.conversation_id] = r.read_at
+          }
+          save('conversation-reads', map)
+        } catch {
+          /* 忽略 */
+        }
         if (typeof unread === 'number') save('notifications-unread', unread)
 
         // 记一笔"什么时候同步过"✓（最后写 ✓ 失败了下次还会重试 ✓）

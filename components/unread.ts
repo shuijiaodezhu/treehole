@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import { createClient } from '../app/lib/supabase'
 import { markModuleSeen, writeSeenAt } from './module-badges'
+import { peek } from './local-store'
 
 /**
  * 页内未读：好友私信 / 朋友圈 / 院子的"有人回我"
@@ -138,6 +139,8 @@ export function useUnreadMessages(userId: string | null): UnreadMessages {
 
     const run = async () => {
       try {
+        // 服务端已读位置（开屏同步存的 ✓ 表没建时就是空对象 ✓）
+        const serverReads = peek<Record<string, string>>('conversation-reads', 7 * 24 * 60 * 60 * 1000) ?? {}
         /*
          * 会话列表：优先读 last_message_at（数据库维护的「最后一条消息时间」，
          * 有了它排序就不受消息条数限制）。
@@ -234,7 +237,20 @@ export function useUnreadMessages(userId: string | null): UnreadMessages {
 
           // 未读：只算别人发来的
           if (msg.sender_id === userId) continue
-          const seenAt = readKey(`${CONV_SEEN_PREFIX}${userId}:${msg.conversation_id}`)
+          /*
+       * 「读到哪儿」取**本机标记**与**服务端标记**里较新的那个
+       *   · 服务端那份由开屏同步拉下来存在本机（0 额外请求）
+       *   · 手机上读完了 → 电脑下次开屏拿到服务端标记 → 红点也跟着消 ✓
+       *   · 表还没建 → serverReads 是空的 → 行为与以前完全一致 ✓
+       */
+      const localSeenAt = readKey(`${CONV_SEEN_PREFIX}${userId}:${msg.conversation_id}`)
+      const serverSeenAt = serverReads[msg.conversation_id] ?? null
+      const seenAt =
+        localSeenAt && serverSeenAt
+          ? localSeenAt > serverSeenAt
+            ? localSeenAt
+            : serverSeenAt
+          : localSeenAt || serverSeenAt
           if (!isNewer(msg.created_at, seenAt)) continue
           counts[msg.conversation_id] = (counts[msg.conversation_id] ?? 0) + 1
         }
@@ -324,6 +340,27 @@ export function useUnreadMessages(userId: string | null): UnreadMessages {
        *   → 角标重新冒出来，得再进一次小屋才消。
        * markModuleSeen 会同时广播事件，主页那边（如果还挂着）也会立刻重算。
        */
+      /*
+       * 同时往数据库写一份（多端同步用）
+       * fire-and-forget：不 await ✓ 不影响点击手感 ✓
+       * 表不存在 / 没网 → 静默失败 ✓ 本机那份已经生效了 ✓
+       */
+      void (async () => {
+        try {
+          await supabase.from('conversation_reads').upsert(
+            {
+              user_id: userId,
+              conversation_id: conversationId,
+              read_at: seenUpTo,
+              updated_at: new Date().toISOString(),
+            },
+            { onConflict: 'user_id,conversation_id' },
+          )
+        } catch {
+          /* 忽略：表还没建，或者此刻没网 */
+        }
+      })()
+
       markModuleSeen('friends')
       void friendId
     },
