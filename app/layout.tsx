@@ -106,11 +106,27 @@ export default function RootLayout({
               {/* 字体从 jsDelivr 拉：提前把域名连上，省掉一次 DNS + TLS 握手（约 100-300ms）*/}
         <link rel="preconnect" href="https://cdn.jsdelivr.net" crossOrigin="anonymous" />
         <link rel="dns-prefetch" href="https://cdn.jsdelivr.net" />
-<link
-        rel="stylesheet"
-        href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-lite-webfont@1.7.0/lxgwwenkai-lite-regular.css"
-        precedence="default"
-      />
+{/* 字体：懒加载（见下方说明）—— font-lazy-ok */}
+{/*
+  霞鹜文楷（正文字体）
+
+  ⚠️ 故意**不用**普通的 <link rel="stylesheet">：
+    那个 CSS 有 106KB（里面是 595 段 @font-face 子集声明）
+    放在 head 里就是阻塞式样式表 → 首屏白等它 700-900ms
+
+  改成：页面解析完之后再挂上去
+    · 首屏立刻画出来（先用后备字体）
+    · 字体随后补上（swap，只是字形晚一点切换）
+  <noscript> 里保留普通写法，万一没 JS 也还能用
+*/}
+<script
+  dangerouslySetInnerHTML={{
+    __html: `(function(){try{var l=document.createElement('link');l.rel='stylesheet';l.href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-lite-webfont@1.7.0/lxgwwenkailite-regular.css";document.head.appendChild(l);}catch(e){}})()`,
+  }}
+/>
+<noscript>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-lite-webfont@1.7.0/lxgwwenkailite-regular.css" />
+</noscript>
       <body>
         <ThemeApplier />
       {/*
