@@ -31,6 +31,18 @@ import { isLoginTransitioning, subscribeLoginTransition } from './login-transiti
  */
 
 const SEEN_KEY = (uid: string) => `treehole:letter:seen:${uid}`
+/*
+ * 「这封信我已经看过一次了」—— 跟版本无关的标记
+ *
+ * 为什么必须有它：
+ *   上面那个 SEEN_KEY 存的是**指纹**，而指纹有两个来源：
+ *   "内置初稿" 和 "数据库里的内容"，两者算出来**不一样**
+ *   数据库那次取数一旦慢/超时，这次算出的指纹就和上次不同
+ *   → 每次都判定"没看过" → **反复弹**（用户报的"每次返回都显示"）
+ *   代价：站主以后改了这封信，老用户也不会再看到 ✗
+ *        这是有意取舍：反复弹比错过一次更新更烦人
+ */
+const SEEN_EVER_KEY = (uid: string) => `treehole:letter:seen-ever:${uid}`
 
 const supabase = createClient()
 
@@ -131,6 +143,22 @@ export function WelcomeLetter({ userId }: { userId: string | null }) {
     }
 
     /*
+     * 「只要看过一次就永不再弹」✓ —— 修掉"每次返回都显示"
+     * 看上面 SEEN_EVER_KEY 的注释：指纹会因为"数据库取数慢/超时"而抖动，
+     * 光比对指纹不够稳，必须有一个跟版本无关的标记兜底
+     */
+    let seenEver = false
+    try {
+      seenEver = window.localStorage.getItem(SEEN_EVER_KEY(userId)) === '1'
+    } catch {
+      seenEver = false
+    }
+    if (seenEver) {
+      if (typeof window !== 'undefined') window.dispatchEvent(new Event('dsh:letter-done'))
+      return
+    }
+
+    /*
      * 它现在是一道**门**，所以不留 400ms 的余地：
      *   · 过场还在播 → 等它结束，结束就立刻出现（过场本来就把屏幕盖住了，不会露馅）
      *   · 没有过场（刷新、或本来就在站里）→ 立刻出现
@@ -178,6 +206,7 @@ export function WelcomeLetter({ userId }: { userId: string | null }) {
     try {
       // 存指纹，不是存 '1'：下次内容变了就会不一样
       window.localStorage.setItem(SEEN_KEY(userId), letter.sig)
+      window.localStorage.setItem(SEEN_EVER_KEY(userId), '1')
     } catch {
       /* 忽略 */
     }
