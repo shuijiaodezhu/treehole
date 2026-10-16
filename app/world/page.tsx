@@ -781,18 +781,60 @@ export default function WorldPage() {
     if (!text || !meId) return
     setPostingComment(postId)
     const anon = commentAnonymous[postId] || false
-    const { error } = await supabase.from('world_comments').insert({
-      post_id: postId, author_id: meId, content: text,
-      is_anonymous: anon,
-      anonymous_id: anon ? generateAnonymousId() : null,
-      parent_id: replyingTo?.parent_id || replyingTo?.id || null,
-    })
+    // 先把「回复谁」抓住——下面紧接着就要把它清掉
+    const replyTarget = replyingTo
+    const parentId = replyTarget?.parent_id || replyTarget?.id || null
+
+    // 让数据库把新插入的评论行回给我们（乐观更新要用它的 id / 时间）
+    const { data: inserted, error } = await supabase
+      .from('world_comments')
+      .insert({
+        post_id: postId, author_id: meId, content: text,
+        is_anonymous: anon,
+        anonymous_id: anon ? generateAnonymousId() : null,
+        parent_id: parentId,
+      })
+      .select('id, post_id, author_id, content, created_at, is_anonymous, anonymous_id, parent_id')
+      .single()
+
     if (error) { alert('评论失败：' + error.message) }
     else {
       setCommentInputs({ ...commentInputs, [postId]: '' })
       setCommentAnonymous({ ...commentAnonymous, [postId]: false })
       setReplyingTo(null)
-      await loadPosts(currentCategory?.id || null)
+
+      /*
+       * 乐观：立刻把这条评论挂上去
+       * 以前这里 await loadPosts() → 整页重拉（约 600-900ms）才看得到自己的评论
+       */
+      const mine = peek<{ nickname?: string | null; username?: string | null; avatar_url?: string | null }>(
+        'me-profile',
+      )
+      if (inserted) {
+        const optimistic: Comment = {
+          id: inserted.id,
+          post_id: inserted.post_id,
+          author_id: inserted.author_id,
+          content: inserted.content,
+          created_at: inserted.created_at,
+          is_anonymous: inserted.is_anonymous,
+          anonymous_id: inserted.anonymous_id,
+          parent_id: inserted.parent_id,
+          author_name: inserted.is_anonymous
+            ? `匿名用户${inserted.anonymous_id || '00000000'}`
+            : mine?.nickname || mine?.username || '我',
+          author_avatar: inserted.is_anonymous ? null : mine?.avatar_url || null,
+          parent_name: replyTarget ? replyTarget.author_name : null,
+        }
+        const next = posts.map((p) =>
+          p.id === postId ? { ...p, comments: [...p.comments, optimistic] } : p,
+        )
+        setPosts(next)
+        save('world-list:' + (currentCategory?.id ?? 'hall'), next)
+      } else {
+        // 拿不到新行（老数据库没开 return=representation 等）→ 退回整页重拉兜底
+        await loadPosts(currentCategory?.id || null)
+      }
     }
     setPostingComment(null)
   }
