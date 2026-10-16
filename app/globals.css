@@ -5,8 +5,62 @@
  * 选 caramellatte（焦糖拿铁）：奶油底 + 焦糖棕，跟"来信"这个调子最合。
  * 它是一张"皮"，所以只加组件类与主题变量，不改我们的布局逻辑。
  */
+/* ============================================================
+   daisyUI 主题：treehole
+   把我们的色板交给 daisyUI 管 —— 这样 btn / card / badge / input / alert
+   这些组件**自动**用我们的颜色，页面里就不用再写死 hex。
+   色值直接写 hex：daisyUI 5 接受任意合法颜色，内部用 color-mix 派生深浅。
+   ============================================================ */
+@plugin "daisyui/theme" {
+  name: "treehole";
+  default: true;
+  prefersdark: false;
+  color-scheme: light;
+
+  /* 纸面：base-100 最亮（信纸）、base-200 次之（桌面）、base-300 再深（分隔） */
+  --color-base-100: #fdf9f2;
+  --color-base-200: #f2e8d8;
+  --color-base-300: #e3d6bf;
+  --color-base-content: #3a2f26;
+
+  /* 主色 = 蜡封红 */
+  --color-primary: #a8563a;
+  --color-primary-content: #fdf8f0;
+
+  /* 次色 = 可可 */
+  --color-secondary: #8a6a4a;
+  --color-secondary-content: #fdf8f0;
+
+  /* 点缀 = 蜜金 */
+  --color-accent: #d99a4e;
+  --color-accent-content: #3a2f26;
+
+  /* 中性 = 墨 */
+  --color-neutral: #5a4034;
+  --color-neutral-content: #fdf8f0;
+
+  --color-info: #5a7a9a;
+  --color-info-content: #fdf8f0;
+  --color-success: #6f8a5a;
+  --color-success-content: #fdf8f0;
+  --color-warning: #b8863c;
+  --color-warning-content: #3a2f26;
+  --color-error: #a8563a;
+  --color-error-content: #fdf8f0;
+
+  /* 圆角：信纸感 —— 不要大圆角 */
+  --radius-selector: 0.5rem;
+  --radius-field: 0.5rem;
+  --radius-box: 0.75rem;
+  --size-selector: 0.25rem;
+  --size-field: 0.25rem;
+  --border: 1px;
+  --depth: 0;
+  --noise: 0;
+}
+
 @plugin "daisyui" {
-  themes: caramellatte --default;
+  themes: treehole --default, caramellatte;
 }
 
 /* ============================================================

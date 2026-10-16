@@ -10,13 +10,17 @@ import {
 } from './home-style'
 
 /**
- * 个性化 · 首页样式
+ * 个性化 · 首页样式（模板页 —— 整站统一的写法示例）
  *
- * 为什么放这里：这是"每个人自己喜欢什么"，不是账号资料 ——
- * 所以只存在浏览器本地，不进数据库（换设备会回到默认，这是有意的）。
+ * 这一块**一个色值都没写死**：只用 daisyUI 的语义类
+ *   card card-border      卡片与细边（边色来自主题的 base-300）
+ *   bg-base-100           卡面 = 主题的"信纸色"
+ *   text-base-content/60  次要文字（自动按主题派生）
+ *   radio radio-primary   单选（主色 = 主题的蜡封红）
+ * → 以后要换整站配色，只改主题里那几行，这里一个字都不用动。
  *
- * 用 useSyncExternalStore 读：写的时候 home-style.ts 会广播事件，
- * 于是设置页这里**立刻**显示选中状态，首页那边也**立刻**换版。
+ * 用 useSyncExternalStore 读偏好：写的时候 home-style.ts 会广播事件，
+ * 所以设置页这里立刻显示选中状态，首页那边也立刻换版。
  */
 function subscribe(onChange: () => void): () => void {
   const onStorage = (e: StorageEvent) => {
@@ -38,44 +42,44 @@ export function HomeStyleSection() {
   )
 
   return (
-    <section className="rounded-2xl border border-[var(--accent-line)] bg-white p-6 shadow-sm">
-      <h2 className="text-sm font-semibold text-[#2b2430]">个性化 · 首页样式</h2>
-      <p className="mt-1 text-xs text-[var(--accent-muted)]">
-        换一版首页的样子。只存在这台设备上，别人看不到。
-      </p>
+    <section className="card card-border bg-base-100">
+      <div className="card-body gap-3">
+        <h2 className="card-title text-base">个性化 · 首页样式</h2>
+        <p className="text-xs text-base-content/60">
+          换一版首页的样子。只存在这台设备上，别人看不到。
+        </p>
 
-      <div className="mt-4 space-y-2">
-        {HOME_STYLES.map((item) => {
-          const active = item.value === current
-          return (
-            <button
-              key={item.value}
-              type="button"
-              onClick={() => writeHomeStyle(item.value)}
-              aria-pressed={active}
-              className={
-                'flex w-full items-start gap-3 rounded-xl border p-3 text-left transition ' +
-                (active
-                  ? 'border-[var(--accent)] bg-[var(--accent-soft)]'
-                  : 'border-[var(--accent-line)] hover:border-[var(--accent)]')
-              }
-            >
-              {/* 单选点 */}
-              <span
+        <div className="mt-1 space-y-2">
+          {HOME_STYLES.map((item) => {
+            const active = item.value === current
+            return (
+              <label
+                key={item.value}
                 className={
-                  'mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full border ' +
-                  (active ? 'border-[var(--accent)]' : 'border-[var(--accent-line)]')
+                  'flex cursor-pointer items-start gap-3 rounded-box border p-3 transition ' +
+                  (active
+                    ? 'border-primary bg-primary/5'
+                    : 'border-base-300 hover:border-primary/60')
                 }
               >
-                {active && <span className="h-2 w-2 rounded-full bg-[var(--accent)]" />}
-              </span>
-              <span className="min-w-0">
-                <span className="block text-sm text-[#2b2430]">{item.label}</span>
-                <span className="mt-0.5 block text-xs text-[var(--accent-muted)]">{item.desc}</span>
-              </span>
-            </button>
-          )
-        })}
+                <input
+                  type="radio"
+                  name="treehole-home-style"
+                  className="radio radio-sm radio-primary mt-0.5"
+                  checked={active}
+                  onChange={() => writeHomeStyle(item.value)}
+                />
+                <span className="min-w-0">
+                  <span className="flex items-baseline gap-2">
+                    <span className="text-sm">{item.label}</span>
+                    {active && <span className="badge badge-primary badge-xs">当前</span>}
+                  </span>
+                  <span className="mt-0.5 block text-xs text-base-content/60">{item.desc}</span>
+                </span>
+              </label>
+            )
+          })}
+        </div>
       </div>
     </section>
   )
