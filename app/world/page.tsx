@@ -99,6 +99,9 @@ function generateAnonymousId() {
 }
 
 export default function WorldPage() {
+  // 手机上：分区列表是「二级面板」，点按钮才展开，平时不占屏
+  const [showCats, setShowCats] = useState(false)
+
   const [categories, setCategories] = useState<Category[]>([])
   const [posts, setPosts] = useState<Post[]>([])
   const [loading, setLoading] = useState(true)
@@ -645,8 +648,25 @@ export default function WorldPage() {
           <p className="text-sm text-base-content/60 mt-1">瞧瞧Ta们在干啥</p>
         </header>
 
-        <div className="flex gap-5 min-h-[600px]">
-          <aside className="w-56 flex-shrink-0 flex flex-col gap-3">
+              {/* 手机上：分区列表收进二级面板，点这里展开/收起（电脑上隐藏，侧栏常显）*/}
+      <button
+        type="button"
+        onClick={() => setShowCats((v) => !v)}
+        aria-expanded={showCats}
+        className="mb-3 flex w-full items-center justify-between rounded-box bg-base-100 px-4 py-2.5 text-sm text-base-content transition-colors hover:bg-base-content/5 lg:hidden"
+      >
+        <span className="flex items-center gap-2">
+          <Icon name="spiral" className="h-4 w-4 text-base-content/60" />
+          分区 · {currentLocationName}
+        </span>
+        <span className="text-base-content/60">{showCats ? '▴' : '▾'}</span>
+      </button>
+      <div className="flex flex-col gap-5 lg:flex-row lg:min-h-[600px]">
+          <aside
+          className={
+            'w-full flex-shrink-0 flex-col gap-3 lg:flex lg:w-56 ' + (showCats ? 'flex' : 'hidden')
+          }
+        >
             <button
               onClick={() => { setPostCategoryId(currentCategory?.id || ''); setShowPostModal(true) }}
               className="bg-primary w-full py-2.5 rounded-box from-base-300 text-primary-content text-sm font-medium hover:shadow-sm transition-all flex flex-col items-center justify-center gap-0.5"
@@ -661,7 +681,7 @@ export default function WorldPage() {
               </div>
               <div className="p-2">
                 <button
-                  onClick={() => { setCurrentCategory(null); setExpandedCategory(null) }}
+                  onClick={() => { setCurrentCategory(null); setExpandedCategory(null); setShowCats(false) }}
                   className={`w-full text-left px-3 py-2 rounded-box text-sm transition flex items-center gap-2 ${!currentCategory ? 'bg-base-content/5 text-primary font-medium' : 'text-base-content hover:bg-base-content/5'}`}
                 >
                   <Icon name="home" className="w-4 h-4" />大厅
@@ -674,7 +694,7 @@ export default function WorldPage() {
                   return (
                     <div key={cat.id}>
                       <button
-                        onClick={() => handleCategoryClick(cat)}
+                        onClick={() => { handleCategoryClick(cat); setShowCats(false) }}
                         className={`w-full text-left px-3 py-2 rounded-box text-sm transition flex items-center justify-between ${isActive ? 'bg-base-content/5 text-primary font-medium' : 'text-base-content hover:bg-base-content/5'}`}
                       >
                         <span className="flex items-center gap-2">
@@ -690,7 +710,7 @@ export default function WorldPage() {
                           {children.map((sub) => (
                             <button
                               key={sub.id}
-                              onClick={() => setCurrentCategory(sub)}
+                              onClick={() => { setCurrentCategory(sub); setShowCats(false) }}
                               className={`w-full text-left px-3 py-1.5 rounded-lg text-xs transition ${currentCategory?.id === sub.id ? 'bg-base-content/5 text-primary font-medium' : 'text-base-content/60 hover:bg-base-content/5'}`}
                             >
                               {sub.name}

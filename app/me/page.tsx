@@ -131,14 +131,14 @@ export default function MePage() {
   return (
     <div className="min-h-screen relative overflow-hidden" style={pageAccentVars('me')}>
 
-      <div className="relative max-w-xl mx-auto px-6 py-10">
+      <div className="relative max-w-xl lg:max-w-4xl mx-auto px-6 py-10">
         <header className="mb-6">
           <Link href="/" className="text-sm text-base-content/60 hover:text-primary transition">← 返回</Link>
           <h1 className="text-3xl font-bold text-base-content mt-2">我的</h1>
           <p className="text-sm text-base-content/60 mt-1">我的口袋有糖，你吃吗？</p>
         </header>
 
-        <main className="space-y-4">
+        <main className="space-y-4 lg:grid lg:grid-cols-2 lg:items-start lg:gap-4 lg:space-y-0">
           <div className="card rounded-box border border-base-300 bg-base-100 p-6 shadow-sm relative overflow-hidden">
 
             <div className="relative flex items-start gap-4">
