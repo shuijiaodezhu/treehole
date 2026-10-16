@@ -1256,7 +1256,7 @@ export default function FriendsPage() {
                       }}
                       className={`rounded-full px-3 py-1 text-[11px] transition ${
                         visibility === v
-                          ? 'bg-primary text-white'
+                          ? 'bg-primary text-primary-content'
                           : 'border border-base-300 bg-base-100 text-base-content/60 hover:border-accent'
                       }`}
                     >

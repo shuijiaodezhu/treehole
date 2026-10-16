@@ -5,11 +5,14 @@ import Link from 'next/link'
 /**
  * 空状态：一张小插画 + 一句话 + 可选的去处
  *
- * 现在是 daisyUI 的 empty 组件（empty / empty-icon / empty-title /
- * empty-description / empty-content），颜色全部走 treehole 主题：
+ * 颜色全部走 treehole 主题（不写死任何色值）：
  *   · 插画用 text-accent（主题的蜜金）
- *   · 文字用 empty-title / empty-description 的默认色（base-content 系）
- *   · 去处用 btn btn-primary
+ *   · 标题 text-base-content、说明 text-base-content/60
+ *   · 去处用 btn btn-sm btn-primary
+ *
+ * 居中**自己写**（flex + items-center + text-center），不用 daisyUI 的 empty 布局类：
+ * 上一版图省事直接套 `empty`，结果插画与文字变成左对齐 —— 储物箱那一屏就是"歪的"。
+ * 我看不到渲染，所以布局只用确定性的类，不赌别人组件的默认值。
  * 所以这里也没有任何写死色值；换主题时它自己会跟着变。
  *
  * 对外 API 没变（art / title / hint / action / compact），
@@ -119,25 +122,32 @@ export function EmptyState({
   compact?: boolean
 }) {
   return (
-    <div className={`empty ${compact ? 'py-8' : 'py-14'} ${className}`}>
-      <div className="empty-icon">
-        <Art
-          art={art}
-          className={`${compact ? 'h-12 w-12' : 'h-16 w-16'} animate-float text-accent`}
-        />
-      </div>
-      <p className={`empty-title font-serif-cn ${compact ? 'text-xs' : 'text-sm'}`}>{title}</p>
+    /*
+     * 居中**自己写死**（flex + items-center + text-center），不用 daisyUI 的 empty 布局类：
+     * 上一版图省事直接套 `empty`，结果插画和文字变成左对齐 —— 储物箱那一屏就是"歪的"。
+     * empty 的布局不是我能肉眼验证的（我看不到渲染），所以这里只用确定性的类。
+     */
+    <div
+      className={`flex flex-col items-center justify-center text-center ${
+        compact ? 'py-8' : 'py-14'
+      } ${className}`}
+    >
+      <Art
+        art={art}
+        className={`${compact ? 'h-12 w-12' : 'h-16 w-16'} animate-float text-accent`}
+      />
+      <p className={`font-serif-cn mt-4 ${compact ? 'text-xs' : 'text-sm'} text-base-content`}>
+        {title}
+      </p>
       {hint && (
-        <p className="empty-description font-serif-cn max-w-xs text-[11px] leading-relaxed">
+        <p className="font-serif-cn mt-1.5 max-w-xs text-[11px] leading-relaxed text-base-content/60">
           {hint}
         </p>
       )}
       {action && (
-        <div className="empty-content">
-          <Link href={action.href} className="btn btn-sm btn-primary">
-            {action.label}
-          </Link>
-        </div>
+        <Link href={action.href} className="btn btn-sm btn-primary mt-4">
+          {action.label}
+        </Link>
       )}
     </div>
   )

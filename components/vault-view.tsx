@@ -82,7 +82,7 @@ export function VaultView({ userId }: { userId: string | null }) {
           </div>
 
           <label
-            className={`cursor-pointer rounded-box bg-primary px-4 py-2 text-sm font-medium text-white transition hover:shadow-sm ${
+            className={`cursor-pointer rounded-box bg-primary px-4 py-2 text-sm font-medium text-primary-content transition hover:shadow-sm ${
               vault.uploading ? 'pointer-events-none opacity-60' : ''
             }`}
           >
@@ -111,7 +111,7 @@ export function VaultView({ userId }: { userId: string | null }) {
           onClick={() => setFilter('all')}
           className={`rounded-full px-3 py-1 text-[11px] transition ${
             filter === 'all'
-              ? 'bg-primary text-white'
+              ? 'bg-primary text-primary-content'
               : 'border border-base-300 bg-base-100 text-base-content/60 hover:border-accent'
           }`}
         >
@@ -124,7 +124,7 @@ export function VaultView({ userId }: { userId: string | null }) {
             onClick={() => setFilter(c)}
             className={`rounded-full px-3 py-1 text-[11px] transition ${
               filter === c
-                ? 'bg-primary text-white'
+                ? 'bg-primary text-primary-content'
                 : 'border border-base-300 bg-base-100 text-base-content/60 hover:border-accent'
             }`}
           >

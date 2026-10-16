@@ -519,7 +519,7 @@ export default function PlayPage() {
               <div className="flex gap-2 flex-wrap">
                 <button
                   onClick={() => setCurrentType(null)}
-                  className={`px-4 py-1.5 rounded-full text-xs transition ${!currentType ? 'bg-primary text-white' : 'bg-base-100 text-base-content/60 hover:bg-primary/5 border border-base-300'}`}
+                  className={`px-4 py-1.5 rounded-full text-xs transition ${!currentType ? 'bg-primary text-primary-content' : 'bg-base-100 text-base-content/60 hover:bg-primary/5 border border-base-300'}`}
                 >
                   全部
                 </button>
@@ -530,7 +530,7 @@ export default function PlayPage() {
                     <div key={t.id} className="relative group">
                       <button
                         onClick={() => setCurrentType(t)}
-                        className={`px-4 py-1.5 rounded-full text-xs transition flex items-center gap-1.5 ${canDelete ? 'pr-7' : ''} ${currentType?.id === t.id ? 'bg-primary text-white' : 'bg-base-100 text-base-content/60 hover:bg-primary/5 border border-base-300'}`}
+                        className={`px-4 py-1.5 rounded-full text-xs transition flex items-center gap-1.5 ${canDelete ? 'pr-7' : ''} ${currentType?.id === t.id ? 'bg-primary text-primary-content' : 'bg-base-100 text-base-content/60 hover:bg-primary/5 border border-base-300'}`}
                       >
                         {t.icon && <span>{t.icon}</span>}
                         {t.name}

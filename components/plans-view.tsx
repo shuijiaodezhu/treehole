@@ -323,7 +323,7 @@ function PlanRow({
             aria-label={item.done ? '标记为未完成' : '标记为完成'}
             className={`mt-0.5 flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-md border transition disabled:opacity-50 ${
               item.done
-                ? 'border-base-300 bg-primary text-white'
+                ? 'border-base-300 bg-primary text-primary-content'
                 : 'border-base-300 text-transparent hover:border-base-300 hover:text-base-content/60/40'
             }`}
           >

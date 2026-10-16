@@ -443,7 +443,7 @@ export function MailboxDialog({
                   <div
                     className={`max-w-[78%] rounded-box px-3.5 py-2.5 font-serif-cn text-[12.5px] leading-relaxed ${
                       mine
-                        ? 'bg-primary text-white'
+                        ? 'bg-primary text-primary-content'
                         : 'border border-base-300 bg-primary/5 text-base-content'
                     }`}
                   >

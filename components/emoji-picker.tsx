@@ -111,7 +111,7 @@ export function EmojiPicker({
         aria-expanded={open}
         className={`flex ${t.box} items-center justify-center rounded-full border transition-all duration-200 ${
           open
-            ? 'border-primary bg-primary text-white shadow-sm'
+            ? 'border-primary bg-primary text-primary-content shadow-sm'
             : 'border-base-300 bg-primary/5 text-primary hover:-translate-y-0.5 hover:border-accent hover:shadow-sm'
         }`}
       >

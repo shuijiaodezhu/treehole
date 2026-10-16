@@ -392,7 +392,7 @@ export default function MomentsPage() {
                         }}
                         className={`rounded-full px-3 py-1 text-[11px] transition ${
                           active
-                            ? 'bg-primary text-white'
+                            ? 'bg-primary text-primary-content'
                             : 'border border-base-300 bg-base-100 text-base-content/60 hover:border-base-300'
                         }`}
                       >

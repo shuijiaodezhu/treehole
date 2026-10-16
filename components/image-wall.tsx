@@ -107,8 +107,8 @@ export function ImageWall({
               }}
               className={`flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs transition disabled:opacity-50 ${
                 favorites.isFavorited('image', preview)
-                  ? 'bg-primary text-white'
-                  : 'bg-base-100/15 text-white hover:bg-base-100/25'
+                  ? 'bg-primary text-primary-content'
+                  : 'bg-base-100/15 text-primary-content hover:bg-base-100/25'
               }`}
             >
               <Icon
