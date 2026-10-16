@@ -346,7 +346,7 @@ export function HomeCurrent() {
       style={pageAccentVars('home')}
     >
       {/* 顶栏：daisyUI navbar；站名用毛笔字 */}
-      <div className="navbar mx-auto w-full max-w-6xl px-4">
+      <div className="navbar mx-auto w-full max-w-6xl px-4 pt-8">
         <div className="navbar-start">
           <Link href="/" className="font-brush text-2xl tracking-[0.04em] sm:text-3xl">
             你的来信

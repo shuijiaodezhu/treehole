@@ -62,6 +62,50 @@
 @plugin "daisyui" {
   themes: treehole --default, caramellatte;
 }
+/* ============================================================
+   交互基线
+   之前整站只统一了颜色与圆角，"点上去有没有反馈"各页不一：
+   有的只有 hover 变色、有的什么都没有、键盘 Tab 过去看不见焦点。
+   这一段用 CSS 一次覆盖所有页面，颜色全部走主题变量：
+     · 过渡：颜色/背景/边框/位移，160ms
+     · 按下：轻微下沉 0.5px（有触感，但不跳动）
+     · 键盘焦点：主色 25% 的环（鼠标点击不出现，只有 Tab 时出现）
+     · 尊重 prefers-reduced-motion
+   ============================================================ */
+@layer base {
+  :where(button, [role="button"], a, summary, label[for]) {
+    transition:
+      color 160ms ease,
+      background-color 160ms ease,
+      border-color 160ms ease,
+      transform 160ms ease;
+  }
+
+  :where(button, [role="button"], a):active {
+    transform: translateY(0.5px);
+  }
+
+  :where(button, [role="button"], a, input, textarea, select):focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px color-mix(in oklab, var(--color-primary) 25%, transparent);
+    border-radius: var(--radius-field);
+  }
+
+  :where(button, [role="button"]):disabled,
+  :where(button, [role="button"])[aria-disabled="true"] {
+    cursor: not-allowed;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    :where(button, [role="button"], a, summary, label[for]) {
+      transition: none;
+    }
+    :where(button, [role="button"], a):active {
+      transform: none;
+    }
+  }
+}
+
 
 /* ============================================================
    手机适配的基础几件（都在这里集中说明，免得散落各处）
