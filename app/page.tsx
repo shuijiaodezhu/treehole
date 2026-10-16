@@ -303,8 +303,8 @@ export default function HomePage() {
 
       {/* ── 出错提示（保留重试）── */}
       {(authError || requestError) && (
-        <div className="mx-auto w-full max-w-6xl px-5 pt-4 sm:px-8">
-          <div className="alert alert-error">
+        <div className="mx-auto w-full max-w-3xl px-5 pt-4 sm:px-8">
+          <div className="alert alert-error max-w-md py-2 text-[12.5px]">
             <span>{authError || requestError}</span>
             <button type="button" className="btn btn-sm" onClick={handleRetry}>重试</button>
           </div>
@@ -354,8 +354,8 @@ export default function HomePage() {
           </section>
 
           {/* 冬日信箱：小照片，靠右，压住信纸右下角 */}
-          <section className="rounded-2xl border border-[#ece0cd] bg-white p-3 pb-3 shadow-[0_26px_58px_-40px_rgba(90,64,52,0.5)] lg:-mt-[72px] lg:ml-auto lg:mr-9 lg:w-[34%] lg:rotate-[3.4deg]">
-            <div className="rounded-lg bg-[#f8f0e4] px-2 pt-1">
+          <section className="rounded-2xl border border-[#ece0cd] bg-white p-3 pb-3 shadow-[0_26px_58px_-40px_rgba(90,64,52,0.5)] lg:-mt-[64px] lg:ml-auto lg:mr-9 lg:w-[30%] lg:rotate-[3deg]">
+            <div className="max-h-[210px] overflow-hidden rounded-lg bg-[#f8f0e4] px-2 pt-1">
               <MailboxArt onOpen={() => setMailboxOpen(true)} />
             </div>
             <div className="mt-1 flex items-baseline justify-between px-1">
@@ -373,7 +373,7 @@ export default function HomePage() {
           <Link
             href="/friends"
             onClick={() => markModuleSeen('friends')}
-            className="group relative rounded-2xl border border-[#e3d4bd] bg-[#f8eee2] px-7 pb-8 pt-11 shadow-[0_24px_54px_-38px_rgba(90,64,52,0.55)] transition hover:-translate-y-0.5 sm:px-9 lg:-mt-[58px] lg:mr-auto lg:ml-2.5 lg:w-[88%] lg:-rotate-[2.6deg]"
+            className="group relative rounded-2xl border border-[#e3d4bd] bg-[#f8eee2] px-7 pb-8 pt-11 shadow-[0_24px_54px_-38px_rgba(90,64,52,0.55)] transition hover:-translate-y-0.5 sm:px-9 lg:-mt-[40px] lg:mr-auto lg:ml-2.5 lg:w-[88%] lg:-rotate-[2.2deg]"
           >
             <svg viewBox="0 0 100 30" preserveAspectRatio="none" aria-hidden="true"
                  className="absolute inset-x-0 top-0 h-8 w-full">
@@ -398,7 +398,7 @@ export default function HomePage() {
           <Link
             href="/play"
             onClick={() => markModuleSeen('play')}
-            className="relative rounded-xl border border-[#e6c3ae] bg-[#fbeae3] px-6 py-5 shadow-[0_20px_44px_-30px_rgba(168,86,58,0.5)] transition hover:-translate-y-0.5 lg:-mt-[66px] lg:ml-auto lg:mr-[30px] lg:w-[46%] lg:rotate-[5.5deg]"
+            className="relative rounded-xl border border-[#e6c3ae] bg-[#fbeae3] px-6 py-5 shadow-[0_20px_44px_-30px_rgba(168,86,58,0.5)] transition hover:-translate-y-0.5 lg:-mt-[44px] lg:ml-auto lg:mr-[34px] lg:w-[46%] lg:rotate-[4deg]"
           >
             <span className="text-[9px] tracking-[0.2em] text-[#a98a78]">NO. 0031 · ADMIT ONE</span>
             <span className="mt-1.5 flex items-baseline gap-2.5">
@@ -416,7 +416,7 @@ export default function HomePage() {
           <Link
             href="/world"
             onClick={() => markModuleSeen('world')}
-            className="relative rounded-lg border border-[#e4d6b8] bg-[#f7efdc] px-5 py-4 shadow-[0_16px_36px_-26px_rgba(90,64,52,0.5)] transition hover:-translate-y-0.5 lg:-mt-[74px] lg:mr-auto lg:ml-[22px] lg:w-[38%] lg:-rotate-[4.2deg]"
+            className="relative rounded-lg border border-[#e4d6b8] bg-[#f7efdc] px-5 py-4 shadow-[0_16px_36px_-26px_rgba(90,64,52,0.5)] transition hover:-translate-y-0.5 lg:-mt-[40px] lg:mr-auto lg:ml-[22px] lg:w-[40%] lg:-rotate-[3.2deg]"
           >
             <span className="flex items-baseline gap-2.5">
               <span className="font-brush text-[20px] leading-none">院子</span>
@@ -432,7 +432,7 @@ export default function HomePage() {
           {/* 本子：我的 */}
           <Link
             href="/me"
-            className="relative rounded-xl border border-[#d3bfa0] bg-[linear-gradient(155deg,#e7d8c0,#d8c6a8)] px-7 py-6 pl-9 shadow-[0_24px_52px_-34px_rgba(90,64,52,0.55)] transition hover:-translate-y-0.5 lg:-mt-[62px] lg:ml-auto lg:mr-3 lg:w-[34%] lg:rotate-[6.5deg]"
+            className="relative rounded-xl border border-[#d3bfa0] bg-[linear-gradient(155deg,#e7d8c0,#d8c6a8)] px-7 py-6 pl-9 shadow-[0_24px_52px_-34px_rgba(90,64,52,0.55)] transition hover:-translate-y-0.5 lg:-mt-[44px] lg:ml-auto lg:mr-6 lg:w-[36%] lg:rotate-[4.5deg]"
           >
             <span className="absolute left-3.5 top-2 bottom-2 w-[2px] rounded bg-[#c3ab86]" />
             <span className="absolute right-4 top-0 bottom-0 w-[2px] rounded bg-[#a87f56]/40" />
