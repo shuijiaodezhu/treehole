@@ -368,6 +368,15 @@ export default function WorldPage() {
     setCreatingCategory(false)
   }
 
+
+  /** 点「⋯」菜单里的任何按钮后，把那个菜单收起来（原生 details，不需要状态） */
+  function closePostMenu(e: React.MouseEvent<HTMLDivElement>) {
+    const t = e.target as HTMLElement | null
+    if (!t || !t.closest('button')) return
+    const d = t.closest('details')
+    if (d) d.open = false
+  }
+
   async function handleLike(postId: string, liked: boolean) {
     if (!meId) return
 
@@ -1146,89 +1155,110 @@ export default function WorldPage() {
                         <Icon name="comment" className="w-4 h-4" />
                         <span>{post.comments.length > 0 ? post.comments.length : '评论'}</span>
                       </button>
-                      <button
-                        type="button"
-                        onClick={() =>
-                          void favorites.toggle({
-                            kind: 'world_post',
-                            targetId: post.id,
-                            content: post.content,
-                            authorName: post.author_name,
-                          })
-                        }
-                        disabled={favorites.busyKey === `world_post:${post.id}`}
-                        title={favorites.isFavorited('world_post', post.id) ? '取消收藏' : '收藏'}
-                        className={`ml-auto flex items-center gap-1.5 text-xs transition disabled:opacity-50 ${
-                          favorites.isFavorited('world_post', post.id)
-                            ? 'text-primary'
-                            : 'text-base-content/60 hover:text-primary'
-                        }`}
-                      >
-                        <Icon
-                          name={favorites.isFavorited('world_post', post.id) ? 'heartfill' : 'heart'}
-                          className="w-3.5 h-3.5"
-                        />
-                        {favorites.isFavorited('world_post', post.id) ? '已收藏' : '收藏'}
-                      </button>
-                      {/* 自己发的帖子：编辑 / 删除 */}
-                      {editor.canEdit(post.author_id) && !editor.isEditing('world_post', post.id) && (
-                        <button
-                          type="button"
-                          onClick={() => editor.start('world_post', post.id, post.content)}
-                          className="flex items-center gap-1 whitespace-nowrap text-xs text-base-content/60 hover:text-primary transition"
-                        >
-                          <Icon name="pen" className="w-3.5 h-3.5" />
-                          编辑
-                        </button>
-                      )}
-                      {deleter.canDelete(post.author_id) && (
-                        confirmDeletePost === post.id ? (
-                          <button
-                            type="button"
-                            disabled={deleter.busyId === post.id}
-                            onClick={() => void handleDeletePost(post.id, post.author_id)}
-                            className="flex items-center gap-1 text-xs text-red-500 hover:underline disabled:opacity-50"
+
+                      {/*
+                        其余都收进「⋯」菜单
+                        为什么：收藏 + 编辑 + 删除 + 举报 一起挤在这一排时，
+                        手机上标签会被压成两行（「评」「论」各占一行），很难看
+                        用原生 <details> 折叠：不需要 React 状态，最不容易出问题
+                        点菜单里任何按钮后会自动收起（见 closePostMenu）
+                      */}
+                      <div className="relative ml-auto" onClick={closePostMenu}>
+                        <details className="th-post-menu">
+                          <summary
+                            className="flex h-7 w-8 cursor-pointer list-none items-center justify-center rounded-full text-base-content/55 transition hover:bg-base-content/5 hover:text-base-content"
+                            aria-label="更多操作"
                           >
-                            <Icon name="trash" className="w-3.5 h-3.5" />
-                            {deleter.busyId === post.id ? '删除中…' : '确认删除'}
-                          </button>
-                        ) : (
-                          <button
-                            type="button"
-                            onClick={() => {
-                              setConfirmDeletePost(post.id)
-                              window.setTimeout(
-                                () => setConfirmDeletePost((cur) => (cur === post.id ? null : cur)),
-                                4000,
+                            {/* Icon 里没有 more 图标，直接用文字 ⋯（任何字体都有，最稳） */}
+                            <span className="text-base leading-none tracking-widest">⋯</span>
+                          </summary>
+                          <div className="absolute right-0 bottom-full z-20 mb-1 w-36 overflow-hidden rounded-box border border-base-300 bg-base-100 py-1 shadow-sm">
+                            <button
+                              type="button"
+                              onClick={() =>
+                                void favorites.toggle({
+                                  kind: 'world_post',
+                                  targetId: post.id,
+                                  content: post.content,
+                                  authorName: post.author_name,
+                                })
+                              }
+                              disabled={favorites.busyKey === `world_post:${post.id}`}
+                              className={`flex w-full items-center gap-2 px-3 py-2 text-left text-xs transition disabled:opacity-50 ${
+                                favorites.isFavorited('world_post', post.id)
+                                  ? 'text-primary'
+                                  : 'text-base-content/70 hover:bg-base-content/5 hover:text-primary'
+                              }`}
+                            >
+                              <Icon
+                                name={favorites.isFavorited('world_post', post.id) ? 'heartfill' : 'heart'}
+                                className="w-3.5 h-3.5"
+                              />
+                              {favorites.isFavorited('world_post', post.id) ? '已收藏' : '收藏'}
+                            </button>
+
+                            {editor.canEdit(post.author_id) && !editor.isEditing('world_post', post.id) && (
+                              <button
+                                type="button"
+                                onClick={() => editor.start('world_post', post.id, post.content)}
+                                className={`flex w-full items-center gap-2 px-3 py-2 text-left text-xs transition text-base-content/70 hover:bg-base-content/5 hover:text-primary`}
+                              >
+                                <Icon name="pen" className="w-3.5 h-3.5" />
+                                编辑
+                              </button>
+                            )}
+
+                            {deleter.canDelete(post.author_id) && (
+                              confirmDeletePost === post.id ? (
+                                <button
+                                  type="button"
+                                  disabled={deleter.busyId === post.id}
+                                  onClick={() => void handleDeletePost(post.id, post.author_id)}
+                                  className={`flex w-full items-center gap-2 px-3 py-2 text-left text-xs transition text-red-500 hover:bg-red-500/5 disabled:opacity-50`}
+                                >
+                                  <Icon name="trash" className="w-3.5 h-3.5" />
+                                  {deleter.busyId === post.id ? '删除中…' : '确认删除'}
+                                </button>
+                              ) : (
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    setConfirmDeletePost(post.id)
+                                    window.setTimeout(
+                                      () => setConfirmDeletePost((cur) => (cur === post.id ? null : cur)),
+                                      4000,
+                                    )
+                                  }}
+                                  className={`flex w-full items-center gap-2 px-3 py-2 text-left text-xs transition text-base-content/70 hover:bg-base-content/5 hover:text-red-500`}
+                                >
+                                  <Icon name="trash" className="w-3.5 h-3.5" />
+                                  删除
+                                </button>
                               )
-                            }}
-                            className="flex items-center gap-1 whitespace-nowrap text-xs text-base-content/60 hover:text-red-500 transition"
-                          >
-                            <Icon name="trash" className="w-3.5 h-3.5" />
-                            删除
-                          </button>
-                        )
-                      )}
-                      {/* 不能举报自己（作者就是自己时不显示举报） */}
-                      {post.author_id !== meId && (
-                        <button
-                          type="button"
-                          onClick={() =>
-                            reportedPosts.has(post.id)
-                              ? void handleWithdrawPostReport(post.id)
-                              : void handleReportPost(post.id)
-                          }
-                          title={reportedPosts.has(post.id) ? '撤回举报' : '举报'}
-                          className={`flex items-center gap-1 text-xs transition ${
-                            reportedPosts.has(post.id)
-                              ? 'text-base-content/70 hover:text-base-content/70'
-                              : 'text-base-content/60 hover:text-red-500'
-                          }`}
-                        >
-                          <Icon name="alert" className="w-3.5 h-3.5" />
-                          {reportedPosts.has(post.id) ? '已举报' : '举报'}
-                        </button>
-                      )}
+                            )}
+
+                            {/* 不能举报自己（作者就是自己时不显示） */}
+                            {post.author_id !== meId && (
+                              <button
+                                type="button"
+                                onClick={() =>
+                                  reportedPosts.has(post.id)
+                                    ? void handleWithdrawPostReport(post.id)
+                                    : void handleReportPost(post.id)
+                                }
+                                className={`flex w-full items-center gap-2 px-3 py-2 text-left text-xs transition ${
+                                  reportedPosts.has(post.id)
+                                    ? 'text-base-content/60 hover:bg-base-content/5'
+                                    : 'text-base-content/70 hover:bg-base-content/5 hover:text-red-500'
+                                }`}
+                              >
+                                <Icon name="alert" className="w-3.5 h-3.5" />
+                                {reportedPosts.has(post.id) ? '撤回举报' : '举报'}
+                              </button>
+                            )}
+                          </div>
+                        </details>
+                      </div>
                     </div>
 
                     {openCommentPost === post.id && (
