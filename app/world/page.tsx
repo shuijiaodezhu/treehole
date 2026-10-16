@@ -305,9 +305,39 @@ export default function WorldPage() {
 
   async function handleLike(postId: string, liked: boolean) {
     if (!meId) return
-    if (liked) { await supabase.from('world_likes').delete().eq('post_id', postId).eq('user_id', meId) }
-    else { await supabase.from('world_likes').insert({ post_id: postId, user_id: meId }) }
-    await loadPosts(currentCategory?.id || null)
+
+    /*
+     * 乐观更新（学抖音点赞）✓
+     *
+     * 以前：先写数据库 → **等回来** → 还顺手把整页重拉一遍 ✗
+     *       （4 次跨境查询约 600ms ✗ 所以你点了半天才变 ✓）
+     * 现在：**先把界面改掉** ✓ 立刻变红/变灰 ✓ 数字立刻加减 ✓
+     *       再去写数据库 ✓ 写失败才回滚 ✓
+     *       **完全不再重拉整页** ✗
+     */
+    const before = posts
+    setPosts((prev) =>
+      prev.map((p) =>
+        p.id === postId
+          ? {
+              ...p,
+              liked_by_me: !liked,
+              like_count: Math.max(0, (p.like_count ?? 0) + (liked ? -1 : 1)),
+            }
+          : p,
+      ),
+    )
+
+    try {
+      const { error } = liked
+        ? await supabase.from('world_likes').delete().eq('post_id', postId).eq('user_id', meId)
+        : await supabase.from('world_likes').insert({ post_id: postId, user_id: meId })
+      if (error) throw error
+    } catch (err) {
+      // 写失败 → 把界面**还原**（不能让用户看到假的点赞状态 ✗）
+      console.error('点赞失败，已还原:', err)
+      setPosts(before)
+    }
   }
 
   /* ---------- 上次看到这里 ---------- */
