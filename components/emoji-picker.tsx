@@ -120,7 +120,15 @@ export function EmojiPicker({
 
       {open && (
         <div
-          className={`card absolute bottom-full z-40 mb-3 w-72 overflow-hidden rounded-box border border-base-300 bg-base-100 shadow-sm ${
+          /*
+  宽度**不能写死**（原来是 w-72 = 288px 固定）✗
+    在窄屏或窄容器里它会往左溢出 → 被裁掉一半（用户报"表情展开后位置不对"）
+  改成"最多不超过屏幕"：min(18rem, 100vw - 2rem)
+    · 宽屏还是 288px（观感不变 ✓）
+    · 窄屏自动收窄 ✓ 永远不会超出屏幕 ✓
+  高度也封一下（最多屏幕的 45%），免得面板把输入框顶出视野
+*/
+className={`card absolute bottom-full z-40 mb-3 w-[min(18rem,calc(100vw-2rem))] max-h-[45vh] overflow-y-auto rounded-box border border-base-300 bg-base-100 shadow-sm ${
             align === 'right' ? 'right-0' : 'left-0'
           }`}
         >
