@@ -84,7 +84,7 @@ export function WelcomeLetter({ userId }: { userId: string | null }) {
      */
     const fallbackTimer = window.setTimeout(() => {
       if (!cancelled) setReady(true)
-    }, 1500)
+    }, 700)
 
     void (async () => {
       const { data, error } = await supabase
@@ -156,7 +156,7 @@ export function WelcomeLetter({ userId }: { userId: string | null }) {
 
     /** 万一没收到过场结束的通知，也别一直不出现 */
     function scheduleFallback() {
-      timer = window.setTimeout(show, 2600)
+      timer = window.setTimeout(show, 1400)
     }
   }, [userId, letter, ready])
 

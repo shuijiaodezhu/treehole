@@ -152,7 +152,7 @@ export function HomeCurrent() {
       window.setTimeout(() => {
         setOpening(false)
         setWaiting(false)
-      }, 900)
+      }, 360)
     }
     window.addEventListener('dsh:letter-done', onDone)
     return () => window.removeEventListener('dsh:letter-done', onDone)
@@ -177,7 +177,7 @@ export function HomeCurrent() {
       window.setTimeout(() => {
         setOpening(false)
         setWaiting(false)
-      }, 900)
+      }, 360)
     }
 
     if (isLoginTransitioning()) {

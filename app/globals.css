@@ -1043,11 +1043,11 @@ select:-webkit-autofill {
 /* 弹跳放慢、幅度收小：上一版 620ms + 12px/1.05 太快太夸张 */
 /*
  * 播放阶段（.dsh-open）：
- *   只有一件事：整页从模糊化开变清晰（620ms）。不再有动作。
+ *   只有一件事：整页从模糊化开变清晰（320ms，压短过）。不再有动作。
  */
 .dsh-open.dsh-wait-blur,
 .dsh-open .dsh-wait-blur {
-  animation: dsh-unblur 620ms ease-out 0ms both;
+  animation: dsh-unblur 320ms ease-out 0ms both;
 }
 
 @media (prefers-reduced-motion: reduce) {
