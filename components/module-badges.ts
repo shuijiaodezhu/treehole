@@ -1,6 +1,7 @@
 'use client'
 
 import { useCallback, useEffect, useState } from 'react'
+import { peek } from './local-store'
 import { createClient } from '../app/lib/supabase'
 
 /**
@@ -54,14 +55,58 @@ export function markModuleSeen(key: keyof typeof SEEN_KEY): void {
 }
 
 export function readSeenAt(key: keyof typeof SEEN_KEY): string | null {
+  let local: string | null = null
   try {
-    return window.localStorage.getItem(SEEN_KEY[key])
+    local = window.localStorage.getItem(SEEN_KEY[key])
   } catch {
-    return null
+    local = null
   }
+
+  /*
+   * 多端同步：数据库里也记了一份「我读到哪一刻」
+   *   · 由开屏同步拉下来存在本机（module-reads）→ 0 额外请求
+   *   · 取本机与服务端里**较新**的那个 →
+   *     手机上读过，电脑上就不算未读（用户报的"多端不同步"）
+   *   · 表还没建时 server 为空 → 行为与以前完全一致（只看本机）
+   */
+  let server: string | null = null
+  try {
+    const map = peek<Record<string, string>>('module-reads', 7 * 24 * 60 * 60 * 1000)
+    server = map ? (map[key as string] ?? null) : null
+  } catch {
+    server = null
+  }
+
+  if (local && server) return local > server ? local : server
+  return local || server
 }
 
 export function writeSeenAt(key: keyof typeof SEEN_KEY, iso: string): void {
+  /*
+   * 顺手往数据库写一份（多端同步用）
+   *   fire-and-forget：不 await ✓ 不影响任何手感
+   *   表不存在 / 没网 → 静默失败 ✓ 本机那份已经生效了 ✓
+   *   用户 id 从开屏同步存的 me-uid 取（省得改一堆调用点）
+   */
+  try {
+    const uid = peek<string>('me-uid', 30 * 24 * 60 * 60 * 1000)
+    if (uid) {
+      void (async () => {
+        try {
+          const supabase = createClient()
+          await supabase.from('module_reads').upsert(
+            { user_id: uid, module: key as string, read_at: iso, updated_at: new Date().toISOString() },
+            { onConflict: 'user_id,module' },
+          )
+        } catch {
+          /* 忽略：表还没建，或此刻没网 */
+        }
+      })()
+    }
+  } catch {
+    /* 忽略 */
+  }
+
   try {
     window.localStorage.setItem(SEEN_KEY[key], iso)
   } catch {

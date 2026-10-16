@@ -59,7 +59,7 @@ export function BootSync() {
         if (!uid || cancelled) return
 
         // ── 并行拉（每条各自兜底 ✓）──
-        const [cats, me, friends, conversations, messages, unread, convReads, posts] = await Promise.all([
+        const [cats, me, friends, conversations, messages, unread, convReads, moduleReads, posts] = await Promise.all([
           q(supabase.from('categories').select('id, name, icon, parent_id, sort_order').eq('status', 'approved').order('sort_order', { ascending: true }), []),
 
           q(supabase.from('profiles').select('id, username, nickname, avatar_url, signature').eq('id', uid).maybeSingle(), null),
@@ -76,6 +76,10 @@ export function BootSync() {
           // 表还没建 → 这里会返回空数组 ✓ 前端自动退回本机方式 ✓ 不影响任何功能
           q(supabase.from('conversation_reads').select('conversation_id, read_at').eq('user_id', uid), []),
 
+          // 各模块（院子/小屋/朋友圈…）的已读位置（多端同步 · 第二部分）
+          // 表还没建 → 返回空数组 → 前端自动退回本机方式 ✓
+          q(supabase.from('module_reads').select('module, read_at').eq('user_id', uid), []),
+
           q(supabase.from('world_posts').select('id, author_id, is_anonymous, content, category_id, created_at, image_urls').eq('status', 'published').eq('is_hidden', false).is('category_id', null).order('created_at', { ascending: false }).limit(20), []),
         ])
 
@@ -88,6 +92,17 @@ export function BootSync() {
         save('conversations', conversations)
         save('recent-messages', messages)
         save('world-posts-hall', posts)
+        // 顺手把自己的 uid 存下来（别处写"已读"时要用，省得改一堆调用点）
+        save('me-uid', uid)
+        try {
+          const m: Record<string, string> = {}
+          for (const r of (moduleReads ?? []) as { module: string; read_at: string }[]) {
+            if (r && r.module && r.read_at) m[r.module] = r.read_at
+          }
+          save('module-reads', m)
+        } catch {
+          /* 忽略 */
+        }
         try {
           const map: Record<string, string> = {}
           for (const r of (convReads ?? []) as { conversation_id: string; read_at: string }[]) {
