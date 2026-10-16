@@ -176,6 +176,13 @@ export default function FriendsPage() {
   const [friendName, setFriendName] = useState('')
   const [currentFriend, setCurrentFriend] = useState<Friend | null>(null)
   const [messages, setMessages] = useState<Message[]>([])
+  /**
+   * 切换好友时的"幕布"
+   *   为什么需要：我们有"本地先画"，点另一个人时聊天框里会先出现**上一个人的记录** ✗
+   *   然后新数据到了才刷掉 → 视觉上"窜位"✓
+   *   → 点下去**立刻**盖上（同步，在第一个 await 之前），新消息拉完再揭开
+   */
+  const [chatCurtain, setChatCurtain] = useState(false)
   const [content, setContent] = useState('')
   const [sending, setSending] = useState(false)
   const [conversationId, setConversationId] = useState<string | null>(null)
@@ -500,6 +507,8 @@ export default function FriendsPage() {
   async function openFriend(friend: Friend, uid?: string) {
     const myId = uid || meId
     if (!myId) return
+    // 同步盖上幕布（在任何 await 之前）→ 用户看不到上一个人的聊天记录
+    setChatCurtain(true)
     setCurrentFriend(friend)
     setFriendName(friend.nickname || friend.username)
     setShowChatOnMobile(true)
@@ -526,6 +535,7 @@ export default function FriendsPage() {
       conv = created
     }
 
+    try {
     if (conv) {
       setConversationId(conv.id)
       /*
@@ -537,6 +547,10 @@ export default function FriendsPage() {
       // 打开即视为已读：清掉这个好友的未读角标
       unread.markConversationRead(conv.id, friend.friend_id)
       await loadMessages(conv.id)
+    }
+    } finally {
+      // 新消息已就位 → 揭开幕布（200ms 淡出，不闪）
+      setChatCurtain(false)
     }
   }
 
@@ -1172,7 +1186,7 @@ export default function FriendsPage() {
 
             <main className={`flex-1 min-h-0 flex-col min-w-0 ${showChatOnMobile ? 'flex' : 'hidden md:flex'}`}>
               <div
-                className={`card rounded-box border backdrop-blur overflow-hidden min-h-0 flex-1 flex flex-col ${
+                className={`card relative rounded-box border backdrop-blur overflow-hidden min-h-0 flex-1 flex flex-col ${
                   currentFriend
                     ? 'border-base-300 bg-base-100/80 shadow-sm'
                     : /* 没选人时整块淡下去，一眼看出「这里还没开始」 */
@@ -1218,6 +1232,14 @@ export default function FriendsPage() {
                     </>
                   )}
                 </div>
+
+                {/* 切换好友的幕布：盖住消息区（只到数据就位，好友名字不受影响） */}
+                <div
+                  aria-hidden={!chatCurtain}
+                  className={`pointer-events-none absolute inset-x-0 top-0 bottom-0 z-30 bg-base-100 transition-opacity duration-200 ${
+                    chatCurtain ? 'opacity-100' : 'opacity-0'
+                  }`}
+                />
 
                 <div
                   data-lenis-prevent
