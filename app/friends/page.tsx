@@ -203,6 +203,8 @@ export default function FriendsPage() {
   const router = useRouter()
   const supabase = createClient()
   const bottomRef = useRef<HTMLDivElement>(null)
+  /** 上一次的消息条数：用来判断"是不是真的来了新消息"（首次铺缓存不算） */
+  const prevMsgCount = useRef(0)
 
   // 未读私信（按会话统计）+ 朋友圈是否有新动态
   const unread = useUnreadMessages(meId)
@@ -312,8 +314,19 @@ export default function FriendsPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dataVersion])
 
+  /*
+   * 自动滚到最新一条 —— 但要满足两个条件（用户报"一打开小屋就下滑"）：
+   *   ① **只在真的来了新消息时**滚：
+   *      打开小屋时本地缓存会先铺一遍 ✗ 如果那时也滚，
+   *      就会把整个窗口**拽到聊天框底部** → 一进来就"下滑" ✓✓ 就是那个现象
+   *   ② 只滚聊天框自己：block:'nearest' 把滚动距离限制在最近的容器里 ✓
+   *      不再用默认的 'start'（那会连带滚动整个页面）
+   */
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
+    const grew = messages.length > prevMsgCount.current
+    prevMsgCount.current = messages.length
+    if (!grew) return
+    bottomRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
   }, [messages])
 
   /*
