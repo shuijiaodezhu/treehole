@@ -2,6 +2,7 @@
 /* eslint-disable @next/next/no-img-element -- 头像/背景图用原生 img 即可，尺寸固定 */
 
 import { useEffect, useState } from 'react'
+import { VersionInfo } from '../../components/version-info'
 import { BackLink } from '../../components/back-link'
 import { peek, save } from '../../components/local-store'
 import { createClient } from '../lib/supabase'
@@ -286,6 +287,9 @@ export default function MePage() {
           <button onClick={handleLogout} className="btn btn-primary w-full border hover: /5 transition">
             退出登录
           </button>
+
+          {/* 版本信息：报问题时截这一块就行（含内核版本，用来判断是不是内核太旧） */}
+          <VersionInfo />
         </main>
       </div>
     </div>
