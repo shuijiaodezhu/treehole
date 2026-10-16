@@ -357,13 +357,13 @@ export function markMomentsSeen(userId: string): void {
  */
 export function useWorldRepliesBadge(userId: string | null): {
   count: number
-  /** 新回复所在的位置（按时间倒序）：给它帖子 id，界面就能跳过去 ✓ */
-  targets: { postId: string; commentId: string }[]
+  /** 哪些帖子被回了（按最新时间倒序）：界面拿它做悬浮列表 ✓ 点哪条跳哪条 ✓ */
+  items: { postId: string; snippet: string; count: number }[]
   markRead: () => void
   refresh: () => void
 } {
   const [count, setCount] = useState(0)
-  const [targets, setTargets] = useState<{ postId: string; commentId: string }[]>([])
+  const [items, setItems] = useState<{ postId: string; snippet: string; count: number }[]>([])
   const [refreshKey, setRefreshKey] = useState(0)
 
   useEffect(() => {
@@ -375,13 +375,14 @@ export function useWorldRepliesBadge(userId: string | null): {
         const seenAt = readKey(`${WORLD_REPLIES_SEEN_PREFIX}${userId}`)
 
         const [postsRes, commentsRes] = await Promise.all([
-          supabase.from('world_posts').select('id').eq('author_id', userId).limit(500),
+          supabase.from('world_posts').select('id, content').eq('author_id', userId).limit(500),
           supabase.from('world_comments').select('id').eq('author_id', userId).limit(500),
         ])
         if (postsRes.error) throw postsRes.error
         if (commentsRes.error) throw commentsRes.error
         if (cancelled) return
 
+        const contentById = new Map((postsRes.data ?? []).map((p) => [p.id, p.content ?? '']))
         const postIds = (postsRes.data ?? []).map((p) => p.id)
         const commentIds = (commentsRes.data ?? []).map((c) => c.id)
         if (postIds.length === 0 && commentIds.length === 0) {
@@ -410,7 +411,17 @@ export function useWorldRepliesBadge(userId: string | null): {
         const fresh = ((incoming ?? []) as { id: string; post_id: string; created_at: string }[])
           .filter((c) => isNewer(c.created_at, seenAt))
         setCount(fresh.length)
-        setTargets(fresh.map((c) => ({ postId: c.post_id, commentId: c.id })))
+
+        // 按**帖子**归并（同一帖多条回复只占一行），顺序按最新那条回复的时间 ✓
+        const grouped = new Map<string, { postId: string; snippet: string; count: number }>()
+        for (const c of fresh) {
+          const text = (contentById.get(c.post_id) ?? '').replace(/\s+/g, ' ').trim()
+          const snippet = text.length > 18 ? text.slice(0, 18) + '…' : text || '（没有正文）'
+          const hit = grouped.get(c.post_id)
+          if (hit) hit.count += 1
+          else grouped.set(c.post_id, { postId: c.post_id, snippet, count: 1 })
+        }
+        setItems([...grouped.values()])
       } catch (err) {
         if (!cancelled) console.error('院子回复统计失败:', err)
       }
@@ -429,12 +440,12 @@ export function useWorldRepliesBadge(userId: string | null): {
     // 主页的院子提示也一起推进，否则返回主页还会显示"有新内容"
     writeSeenAt('world', now)
     setCount(0)
-    setTargets([])
+    setItems([])
   }, [userId])
 
   const refresh = useCallback(() => setRefreshKey((k) => k + 1), [])
 
-  return { count, targets, markRead, refresh }
+  return { count, items, markRead, refresh }
 }
 
 /** 供主页计算院子徽标：新帖点 + 回复数 */

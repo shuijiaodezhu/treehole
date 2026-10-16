@@ -277,37 +277,48 @@ export default function WorldPage() {
   // （整包 replies 每次渲染都是新对象 ✗ 放进依赖会死循环 ✓）
   const {
     count: repliesCount,
-    targets: repliesTargets,
+    items: repliesItems,
     markRead: markRepliesRead,
     refresh: refreshReplies,
   } = useWorldRepliesBadge(meId)
 
-  /** 点「有人回了你」→ 跳到那条帖子并高亮 2 秒；跳完就把红点清掉 ✓ */
-  const jumpToReply = useCallback(() => {
-    const target = repliesTargets[0]
-    markRepliesRead()
-    if (!target) return
+  // 悬浮列表：开关 + 已经点过（跳过去了）的帖子
+  const [showReplies, setShowReplies] = useState(false)
+  const [handledPosts, setHandledPosts] = useState<string[]>([])
+  const pendingReplies = repliesItems.filter((it) => !handledPosts.includes(it.postId))
 
-    const find = () => document.querySelector(`[data-post-id="${target.postId}"]`)
-    const go = (el: Element) => {
-      el.scrollIntoView({ behavior: 'smooth', block: 'center' })
-      el.classList.add('ring-2', 'ring-primary')
-      window.setTimeout(() => el.classList.remove('ring-2', 'ring-primary'), 2000)
-    }
+  // 列表里都处理完了 → 这时才算"都看过了"，清掉红点 ✓
+  useEffect(() => {
+    if (repliesItems.length > 0 && pendingReplies.length === 0) markRepliesRead()
+  }, [repliesItems.length, pendingReplies.length, markRepliesRead])
 
-    const el = find()
-    if (el) {
-      go(el)
-      return
-    }
-    // 不在当前分区（比如你在别的分区看）→ 先切回大厅，再跳一次
-    setCurrentCategory(null)
-    setExpandedCategory(null)
-    window.setTimeout(() => {
-      const again = find()
-      if (again) go(again)
-    }, 600)
-  }, [repliesTargets, markRepliesRead])
+  /** 跳到某条帖子并高亮 2 秒（悬浮列表里点哪条就传哪条 ✓）*/
+  const jumpToPost = useCallback(
+    (postId: string) => {
+      setHandledPosts((prev) => (prev.includes(postId) ? prev : [...prev, postId]))
+      setShowReplies(false)
+
+      const find = () => document.querySelector(`[data-post-id="${postId}"]`)
+      const go = (el: Element) => {
+        el.scrollIntoView({ behavior: 'smooth', block: 'center' })
+        el.classList.add('ring-2', 'ring-primary')
+        window.setTimeout(() => el.classList.remove('ring-2', 'ring-primary'), 2000)
+      }
+      const el = find()
+      if (el) {
+        go(el)
+        return
+      }
+      // 不在当前分区（比如你在别的分区看）→ 先切回大厅，再跳一次
+      setCurrentCategory(null)
+      setExpandedCategory(null)
+      window.setTimeout(() => {
+        const again = find()
+        if (again) go(again)
+      }, 600)
+    },
+    [setCurrentCategory, setExpandedCategory],
+  )
 
   /*
    * 打开院子 = 看过"有人回了你"了 → 清掉那个提示。
@@ -317,7 +328,7 @@ export default function WorldPage() {
    */
   useEffect(() => {
     if (repliesCount <= 0) return
-    const timer = window.setTimeout(() => markRepliesRead(), 20000)
+    const timer = window.setTimeout(() => markRepliesRead(), 60000)
     return () => window.clearTimeout(timer)
   }, [repliesCount, markRepliesRead])
 
@@ -798,18 +809,48 @@ export default function WorldPage() {
           <main className="flex-1 min-w-0">
             <div className="mb-3 flex items-center gap-2 text-xs text-base-content/60">
               <span>正在看：</span><span className="text-primary font-medium">{currentLocationName}</span>
-              {repliesCount > 0 && (
-                <button
-                  type="button"
-                  onClick={jumpToReply}
-                  title="点一下跳到被回复的帖子"
-                  className="ml-1 flex items-center gap-1.5 rounded-full bg-primary/10 px-2 py-0.5 text-primary transition-colors hover:bg-primary/20"
-                >
-                  <span className="min-w-[16px] h-4 px-1 rounded-full bg-primary text-primary-content text-[11px] leading-4 text-center font-medium">
-                    {repliesCount > 99 ? '99+' : repliesCount}
-                  </span>
-                  <span>有人回了你</span>
-                </button>
+              {pendingReplies.length > 0 && (
+                <div className="relative">
+                  <button
+                    type="button"
+                    onClick={() => setShowReplies((v) => !v)}
+                    title="点开看看是哪几条帖子被回了"
+                    className="ml-1 flex items-center gap-1.5 rounded-full bg-primary/10 px-2 py-0.5 text-primary transition-colors hover:bg-primary/20"
+                  >
+                    <span className="min-w-[16px] h-4 px-1 rounded-full bg-primary text-primary-content text-[11px] leading-4 text-center font-medium">
+                      {repliesCount > 99 ? '99+' : repliesCount}
+                    </span>
+                    <span>有人回了你</span>
+                    <span className="text-[10px]">{showReplies ? '▴' : '▾'}</span>
+                  </button>
+
+                  {showReplies && (
+                    <>
+                      {/* 点空白处关掉 */}
+                      <div className="fixed inset-0 z-40" onClick={() => setShowReplies(false)} />
+                      <div className="absolute left-0 top-full z-50 mt-2 w-64 overflow-hidden rounded-box border border-base-300 bg-base-100 shadow-lg">
+                        <p className="px-3 py-2 text-[11px] text-base-content/60">
+                          被回复的帖子（{pendingReplies.length}）
+                        </p>
+                        {pendingReplies.map((it) => (
+                          <button
+                            key={it.postId}
+                            type="button"
+                            onClick={() => jumpToPost(it.postId)}
+                            className="flex w-full items-center justify-between gap-2 px-3 py-2 text-left text-xs transition-colors hover:bg-base-content/5"
+                          >
+                            <span className="min-w-0 flex-1 truncate text-base-content">
+                              「{it.snippet}」
+                            </span>
+                            <span className="flex-shrink-0 text-[11px] text-primary">
+                              {it.count} 条 ›
+                            </span>
+                          </button>
+                        ))}
+                      </div>
+                    </>
+                  )}
+                </div>
               )}
             </div>
 
