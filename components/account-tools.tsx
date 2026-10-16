@@ -91,7 +91,7 @@ export function ExportDataSection({ userId, email }: { userId: string | null; em
     <section className="card rounded-box border border-base-300 bg-base-100 p-6 shadow-sm">
       <div className="flex items-center gap-3">
         <div className="flex h-9 w-9 items-center justify-center rounded-full bg-base-content/5">
-          <Icon name="download" className="h-4 w-4 text-primary" />
+          <Icon name="download" className="h-4 w-4 text-base-content/70" />
         </div>
         <div className="min-w-0 flex-1">
           <h2 className="text-sm font-semibold text-base-content">导出我的数据</h2>

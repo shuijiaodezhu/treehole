@@ -299,7 +299,7 @@ export default function SearchPage() {
         </div>
 
         {/* 页签 */}
-        <div className="mt-5 flex flex-wrap gap-x-6 gap-y-2 border-b border-base-300">
+        <div className="mt-5 flex flex-wrap gap-x-6 gap-y-2 ">
           <button
             type="button"
             onClick={() => setTab('posts')}

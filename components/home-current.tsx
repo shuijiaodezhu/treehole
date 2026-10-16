@@ -350,7 +350,7 @@ export function HomeCurrent() {
       style={pageAccentVars('home')}
     >
       {/* 顶部色带：navbar 与 hero 合成一整块（同色，避免"浅条 + 深条"） */}
-      <div className="bg-base-200 border-b border-base-300">
+      <div className="bg-base-200 ">
       {/* 顶栏：daisyUI navbar；站名用毛笔字 */}
       <div className="navbar mx-auto w-full max-w-6xl px-4 pt-8">
         <div className="navbar-start">
@@ -526,7 +526,7 @@ export function HomeCurrent() {
 
       {/* 页脚：daisyUI footer */}
       <footer className="mx-auto mt-auto flex w-full max-w-6xl flex-wrap items-end gap-x-6 gap-y-3 px-4 pb-8 pt-6 text-xs opacity-75">
-        <nav className="flex flex-wrap gap-x-6 gap-y-2 border-t border-base-300 pt-4">
+        <nav className="flex flex-wrap gap-x-6 gap-y-2  pt-4">
           {[
             { slug: 'community', label: '社区公约' },
             { slug: 'reporting', label: '举报与申诉' },
@@ -539,7 +539,7 @@ export function HomeCurrent() {
             </Link>
           ))}
         </nav>
-        <Link href="/p" className="link link-hover ml-auto border-t border-base-300 pt-4">
+        <Link href="/p" className="link link-hover ml-auto  pt-4">
           全部条款 →
         </Link>
       </footer>

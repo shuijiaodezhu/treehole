@@ -330,7 +330,7 @@ export function MailboxDialog({
         onClick={(e) => e.stopPropagation()}
       >
         {/* 抬头 */}
-        <div className="flex items-start gap-3 border-b border-base-300 bg-base-content/5 px-5 py-4">
+        <div className="flex items-start gap-3  bg-base-content/5 px-5 py-4">
           <span className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-box bg-base-100/70">
             <svg
               className="h-5 w-5 text-primary"
@@ -460,7 +460,7 @@ export function MailboxDialog({
 
         {/* 写信：站主不在前台写，他回信在后台 */}
         {!isOwner && (
-          <div className="border-t border-base-300 px-4 py-3">
+          <div className="px-4 py-3">
             {hint && (
               <p
                 className={'mb-2 text-[11px] ' + (hintTone === 'error' ? 'text-red-500' : 'text-base-content/60')}

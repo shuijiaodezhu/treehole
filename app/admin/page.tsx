@@ -390,7 +390,7 @@ export default function AdminPage() {
         {/* 停用账号：调 admin_set_ban（supabase-admin-ban.sql），真封禁，不用去后台手动 Ban */}
         <UserBanSection adminId={ADMIN_UUID} />
 
-        <div className="flex gap-6 mb-6 border-b border-base-300">
+        <div className="flex gap-6 mb-6 ">
           <button
             onClick={() => setTab('categories')}
             className={`pb-2.5 text-sm transition ${tab === 'categories' ? 'border-b-2 border-primary/40 text-base-content/60 font-medium' : 'text-base-content/60 hover:text-base-content'}`}
@@ -466,7 +466,7 @@ export default function AdminPage() {
                   reports.map((report) => (
                     <div key={report.id} className="card rounded-box border border-base-300 bg-base-100 p-5 shadow-sm">
                       <div className="flex items-start gap-3 mb-3">
-                        <Icon name="alert" className="w-4 h-4 text-primary flex-shrink-0 mt-1" />
+                        <Icon name="alert" className="w-4 h-4 text-base-content/70 flex-shrink-0 mt-1" />
                         <div className="flex-1 min-w-0">
                           <p className="text-xs text-base-content/60">
                             由 <span className="text-base-content/60">{report.reporter_name}</span> 举报
@@ -509,7 +509,7 @@ export default function AdminPage() {
                   activityReports.map((a) => (
                     <div key={a.activity_id} className="card rounded-box border border-base-300 bg-base-100 p-5 shadow-sm">
                       <div className="flex items-start gap-3 mb-3">
-                        <Icon name="alert" className="w-4 h-4 text-primary flex-shrink-0 mt-1" />
+                        <Icon name="alert" className="w-4 h-4 text-base-content/70 flex-shrink-0 mt-1" />
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2 flex-wrap">
                             <h3 className="text-base font-semibold text-base-content">{a.title}</h3>

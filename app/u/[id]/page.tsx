@@ -252,7 +252,7 @@ function UserShowcase() {
             ) : (
               <ul className="mt-3 space-y-3">
                 {posts.map((post) => (
-                  <li key={post.id} className="border-b border-base-300 pb-3 last:border-b-0 last:pb-0">
+                  <li key={post.id} className="pb-3 last:border-b-0 last:pb-0">
                     <p className="line-clamp-3 whitespace-pre-wrap text-xs leading-relaxed text-base-content">
                       {post.content}
                     </p>

@@ -194,7 +194,7 @@ export function MentionInput({
 
       {open && candidates.length > 0 && (
         <div className="card absolute bottom-full left-0 z-30 mb-1 w-56 overflow-hidden rounded-box border border-base-300 bg-base-100 shadow-lg">
-          <p className="border-b border-base-300 px-3 py-1.5 text-[11px] text-base-content/70">
+          <p className="px-3 py-1.5 text-[11px] text-base-content/70">
             选一个人 @ 一下
           </p>
           {candidates.map((f, i) => (

@@ -123,7 +123,7 @@ export default function FavoritesPage() {
         </div>
 
         {/* 分类页签 */}
-        <div className="mt-6 flex flex-wrap gap-x-5 gap-y-2 border-b border-base-300">
+        <div className="mt-6 flex flex-wrap gap-x-5 gap-y-2 ">
           {TABS.map((t) => {
             const label = t === 'all' ? '全部' : FAVORITE_KIND_LABEL[t]
             const active = tab === t

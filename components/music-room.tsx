@@ -339,7 +339,7 @@ export function MusicRoom() {
                             >
                               <span className="block truncate text-xs text-base-content">
                                 {active && (
-                                  <Icon name="music" className="mr-1 inline h-3 w-3 text-primary" />
+                                  <Icon name="music" className="mr-1 inline h-3 w-3 text-base-content/70" />
                                 )}
                                 {track.title}
                               </span>
@@ -377,7 +377,7 @@ export function MusicRoom() {
               {!current ? (
                 <div className="flex h-64 flex-col items-center justify-center rounded-box border border-dashed border-base-300 bg-base-content/5/40 px-6 text-center">
                   <div className="flex h-14 w-14 items-center justify-center rounded-full bg-base-100/80">
-                    <Icon name="music" className="h-6 w-6 text-primary" />
+                    <Icon name="music" className="h-6 w-6 text-base-content/70" />
                   </div>
                   <p className="mt-4 text-sm text-base-content">选一首歌</p>
                   <p className="mt-1 text-[11px] leading-relaxed text-base-content/60">
@@ -435,7 +435,7 @@ export function MusicRoom() {
 
                   {/* 聊天 */}
                   <div className="card rounded-box border border-base-300 bg-base-100">
-                    <div className="flex items-center justify-between gap-3 border-b border-base-300 px-5 py-3">
+                    <div className="flex items-center justify-between gap-3  px-5 py-3">
                       <h2 className="text-xs font-semibold text-base-content">边听边说</h2>
                       <label className="flex cursor-pointer items-center gap-1.5 text-[11.5px] text-base-content/60">
                         <input
@@ -492,7 +492,7 @@ export function MusicRoom() {
 
                     <form
                       onSubmit={handleSend}
-                      className="flex items-center gap-2 border-t border-base-300 px-5 py-3"
+                      className="flex items-center gap-2  px-5 py-3"
                     >
                       <input
                         type="text"

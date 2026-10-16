@@ -126,12 +126,12 @@ export function EmojiPicker({
         >
           {/* 小尖角，视觉上连回按钮 */}
           <span
-            className={`absolute -bottom-1.5 h-3 w-3 rotate-45 border-b border-r border-base-300 bg-base-100 ${
+            className={`absolute -bottom-1.5 h-3 w-3 rotate-45 border-b  bg-base-100 ${
               align === 'right' ? 'right-3' : 'left-3'
             }`}
           />
 
-          <div className="flex gap-1 border-b border-base-300 bg-base-content/5 px-2.5 py-2">
+          <div className="flex gap-1  bg-base-content/5 px-2.5 py-2">
             {GROUPS.map((g, i) => (
               <button
                 key={g.name}
@@ -161,7 +161,7 @@ export function EmojiPicker({
             ))}
           </div>
 
-          <p className="border-t border-base-300 px-3.5 py-2 text-[11px] text-base-content/60">
+          <p className="px-3.5 py-2 text-[11px] text-base-content/60">
             点一下就插到光标处
           </p>
         </div>

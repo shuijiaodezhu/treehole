@@ -175,9 +175,9 @@ export function WelcomeLetter({ userId }: { userId: string | null }) {
       aria-label={letter.title}
     >
       {/* 信头 */}
-      <div className="flex flex-shrink-0 items-start gap-3 border-b border-base-300 bg-base-content/5 px-6 py-5">
+      <div className="flex flex-shrink-0 items-start gap-3  bg-base-content/5 px-6 py-5">
         <span className="mt-0.5 flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full bg-base-100/80">
-          <Icon name="mail" className="h-4 w-4 text-primary" />
+          <Icon name="mail" className="h-4 w-4 text-base-content/70" />
         </span>
         <div className="mx-auto min-w-0 max-w-xl flex-1">
           <h2 className="font-serif-cn text-sm font-semibold text-base-content">{letter.title}</h2>
@@ -197,7 +197,7 @@ export function WelcomeLetter({ userId }: { userId: string | null }) {
       </div>
 
       {/* 底部：确认 */}
-      <div className="flex-shrink-0 border-t border-base-300 bg-base-100/70 px-6 py-4">
+      <div className="flex-shrink-0  bg-base-100/70 px-6 py-4">
         <div className="mx-auto flex max-w-xl flex-wrap items-center justify-between gap-3">
           <Link
             href="/p/community"

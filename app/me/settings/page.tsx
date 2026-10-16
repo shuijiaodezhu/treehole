@@ -243,7 +243,7 @@ export default function SettingsPage() {
             <div className="relative">
               <div className="flex items-center gap-3 mb-5">
                 <div className="w-9 h-9 rounded-full bg-base-content/5 flex items-center justify-center">
-                  <Icon name="lock" className="w-4 h-4 text-primary" />
+                  <Icon name="lock" className="w-4 h-4 text-base-content/70" />
                 </div>
                 <div>
                   <h2 className="text-sm font-semibold text-base-content">修改密码</h2>
@@ -348,7 +348,7 @@ export default function SettingsPage() {
           <section className="card rounded-box border border-base-300 bg-base-100 p-6 shadow-sm">
             <div className="flex items-center gap-3 mb-5">
               <div className="w-9 h-9 rounded-full bg-base-content/5 flex items-center justify-center">
-                <Icon name="shield" className="w-4 h-4 text-primary" />
+                <Icon name="shield" className="w-4 h-4 text-base-content/70" />
               </div>
               <div>
                 <h2 className="text-sm font-semibold text-base-content">拉黑与屏蔽</h2>
@@ -408,7 +408,7 @@ export default function SettingsPage() {
             )}
 
             {/* 已拉黑列表 */}
-            <div className="border-t border-base-300 pt-4">
+            <div className="pt-4">
               <p className="text-[11px] text-accent tracking-wide mb-2">
                 已拉黑 · {blocks.blockedUsers.length}
               </p>
@@ -455,7 +455,7 @@ export default function SettingsPage() {
           <section className="card rounded-box border border-base-300 bg-base-100 p-6 shadow-sm">
             <div className="flex items-center gap-3 mb-5">
               <div className="w-9 h-9 rounded-full bg-base-content/5 flex items-center justify-center">
-                <Icon name="users" className="w-4 h-4 text-primary" />
+                <Icon name="users" className="w-4 h-4 text-base-content/70" />
               </div>
               <div>
                 <h2 className="text-sm font-semibold text-base-content">好友分组</h2>
@@ -518,7 +518,7 @@ export default function SettingsPage() {
                     </div>
 
                     {open && (
-                      <div data-lenis-prevent className="mt-3 max-h-48 overflow-y-auto border-t border-base-300 pt-2">
+                      <div data-lenis-prevent className="mt-3 max-h-48 overflow-y-auto  pt-2">
                         {friendList.friends.length === 0 ? (
                           <p className="text-[11px] text-accent">还没有好友</p>
                         ) : (
@@ -552,7 +552,7 @@ export default function SettingsPage() {
           <section className="card rounded-box border border-base-300 bg-base-100 p-6 shadow-sm">
             <div className="flex items-center gap-3 mb-5">
               <div className="w-9 h-9 rounded-full bg-base-content/5 flex items-center justify-center">
-                <Icon name="sparkle" className="w-4 h-4 text-primary" />
+                <Icon name="sparkle" className="w-4 h-4 text-base-content/70" />
               </div>
               <div className="flex-1">
                 <h2 className="text-sm font-semibold text-base-content">页面配色</h2>
@@ -639,7 +639,7 @@ export default function SettingsPage() {
           <section className="card rounded-box border border-base-300 bg-base-100 p-6 shadow-sm">
             <div className="flex items-center gap-3 mb-4">
               <div className="w-9 h-9 rounded-full bg-base-content/5 flex items-center justify-center">
-                <Icon name="file" className="w-4 h-4 text-primary" />
+                <Icon name="file" className="w-4 h-4 text-base-content/70" />
               </div>
               <div>
                 <h2 className="text-sm font-semibold text-base-content">关于与条款</h2>

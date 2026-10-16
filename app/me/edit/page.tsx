@@ -142,7 +142,7 @@ export default function EditProfilePage() {
             </div>
 
             {avatarUrl && (
-              <div className="flex items-center gap-3 pt-2 border-t border-base-300">
+              <div className="flex items-center gap-3 pt-2 ">
                 <div className="w-12 h-12 rounded-box overflow-hidden bg-base-300">
                   <img src={avatarUrl} alt="预览" className="w-full h-full object-cover" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none' }} />
                 </div>

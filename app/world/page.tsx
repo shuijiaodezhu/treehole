@@ -676,7 +676,7 @@ export default function WorldPage() {
             </button>
 
             <div className="card rounded-box border border-base-300 bg-base-100 shadow-sm overflow-hidden">
-              <div className="px-4 py-3 border-b border-base-300">
+              <div className="px-4 py-3 ">
                 <p className="text-[11px] text-base-content/60 tracking-wide">分区 · 看哪儿的帖子</p>
               </div>
               <div className="p-2">
@@ -738,10 +738,10 @@ export default function WorldPage() {
             </div>
 
             <div className="card rounded-box border border-base-300 bg-base-100 shadow-sm overflow-hidden">
-              <Link href="/friends" className="flex items-center gap-2 px-4 py-3 text-sm text-base-content hover:bg-base-content/5 transition border-b border-base-300">
+              <Link href="/friends" className="flex items-center gap-2 px-4 py-3 text-sm text-base-content hover:bg-base-content/5 transition ">
                 <Icon name="home" className="w-4 h-4 text-base-content/60" />小屋
               </Link>
-              <Link href="/play" className="flex items-center gap-2 px-4 py-3 text-sm text-base-content hover:bg-base-content/5 transition border-b border-base-300">
+              <Link href="/play" className="flex items-center gap-2 px-4 py-3 text-sm text-base-content hover:bg-base-content/5 transition ">
                 <Icon name="sparkle" className="w-4 h-4 text-base-content/60" />派对
               </Link>
               <Link href="/me" className="flex items-center gap-2 px-4 py-3 text-sm text-base-content hover:bg-base-content/5 transition">
@@ -860,7 +860,7 @@ export default function WorldPage() {
                     {/* 正文里的话题标签 */}
                     <HashtagList content={post.content} className="mt-2 pl-1" />
 
-                    <div className="flex items-center gap-4 pl-1 pt-3 mt-3 border-t border-base-300">
+                    <div className="flex items-center gap-4 pl-1 pt-3 mt-3 ">
                       <button
                         onClick={() => handleLike(post.id, post.liked_by_me)}
                         className={`flex items-center gap-1.5 text-xs transition ${post.liked_by_me ? 'text-primary' : 'text-base-content/60 hover:text-primary'}`}
@@ -1283,7 +1283,7 @@ export default function WorldPage() {
         <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center px-4" onClick={() => { setShowDepressedWarning(false); setDepressedCategory(null) }}>
           <div className="bg-base-100 rounded-box w-full max-w-md p-7 shadow-2xl" onClick={(e) => e.stopPropagation()}>
             <div className="flex items-center gap-2 mb-4">
-              <Icon name="alert" className="w-5 h-5 text-primary" />
+              <Icon name="alert" className="w-5 h-5 text-base-content/70" />
               <h2 className="text-lg font-semibold text-base-content">进区前，请先看一眼</h2>
             </div>
             <div className="space-y-3 text-sm text-base-content leading-relaxed mb-6">

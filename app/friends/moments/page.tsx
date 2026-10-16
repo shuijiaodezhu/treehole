@@ -339,7 +339,7 @@ export default function MomentsPage() {
           <p className="text-sm text-base-content/60 mt-1">只有好友看得到</p>
 
           {/* 标签切换 */}
-          <div className="flex gap-6 mt-5 border-b border-base-300">
+          <div className="flex gap-6 mt-5 ">
             <Link
               href="/friends"
               className="pb-2.5 text-base-content/60 hover:text-base-content text-sm transition"
@@ -582,7 +582,7 @@ export default function MomentsPage() {
                   <ImageGrid urls={post.image_urls} className="mt-3 pl-1" />
 
                   {/* 收藏 / 删除自己发的 */}
-                  <div className="mt-3 pt-3 border-t border-base-300 flex items-center justify-end gap-4">
+                  <div className="mt-3 pt-3  flex items-center justify-end gap-4">
                     {editor.canEdit(post.author_id) && !editor.isEditing('moment', post.id) && (
                       <button
                         type="button"

@@ -312,7 +312,7 @@ export function AdminMailbox({ adminId }: { adminId: string }) {
               <p className="m-auto py-10 text-center text-xs text-base-content/40">左边选一个人，看看他写了什么</p>
             ) : (
               <>
-                <div className="flex flex-wrap items-center gap-x-2 gap-y-1 border-b border-base-300 px-4 py-3">
+                <div className="flex flex-wrap items-center gap-x-2 gap-y-1  px-4 py-3">
                   <span className="text-xs font-medium text-base-content">{active.label}</span>
                   <span className="text-[11px] text-base-content/40">写来的</span>
                   <span className="ml-auto text-[11px] text-base-content/40">只有你和对方看得到</span>
@@ -343,7 +343,7 @@ export function AdminMailbox({ adminId }: { adminId: string }) {
                   )}
                 </div>
 
-                <div className="border-t border-base-300 px-3 py-3">
+                <div className="px-3 py-3">
                   <div className="flex items-end gap-2">
                     <textarea
                       value={draft}

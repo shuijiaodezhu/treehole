@@ -882,7 +882,7 @@ export default function FriendsPage() {
           <h1 className="text-3xl font-bold text-base-content mt-4">小屋</h1>
           <p className="text-sm text-base-content/60 mt-1">小屋里，慢慢说</p>
 
-          <div className="flex gap-6 mt-5 border-b border-base-300">
+          <div className="flex gap-6 mt-5 ">
             <button
               onClick={() => setMode('friends')}
               className={`pb-2.5 text-sm transition flex items-center gap-1.5 ${
@@ -1036,7 +1036,7 @@ export default function FriendsPage() {
               )}
 
               <div data-lenis-prevent className="card rounded-box border border-base-300 bg-base-100 shadow-sm overflow-hidden flex-1 overflow-y-auto">
-                <div className="px-4 py-3 border-b border-base-300">
+                <div className="px-4 py-3 ">
                   <p className="text-[11px] text-base-content/60 tracking-wide">
                     我的好友 · {shownFriends.length}
                   </p>
@@ -1051,7 +1051,7 @@ export default function FriendsPage() {
                       return (
                         <div key={f.friendship_id} className="relative">
                           <div
-                            className={`w-full px-4 py-3 flex items-center gap-3 hover:bg-base-content/5 transition border-b border-base-300 last:border-b-0 ${
+                            className={`w-full px-4 py-3 flex items-center gap-3 hover:bg-base-content/5 transition  last:border-b-0 ${
                               currentFriend?.friend_id === f.friend_id ? 'bg-base-content/5' : ''
                             }`}
                           >
@@ -1119,7 +1119,7 @@ export default function FriendsPage() {
                       'border-dashed border-base-300 bg-base-content/5/40'
                 }`}
               >
-                <div className="px-5 py-3 border-b border-base-300 flex items-center gap-3 flex-shrink-0">
+                <div className="px-5 py-3  flex items-center gap-3 flex-shrink-0">
                   {currentFriend && (
                     <>
                       <button
@@ -1201,7 +1201,7 @@ export default function FriendsPage() {
                 {currentFriend && (
                   <form
                     onSubmit={handleSend}
-                    className="border-t border-base-300 px-5 py-3 flex gap-2 flex-shrink-0"
+                    className="px-5 py-3 flex gap-2 flex-shrink-0"
                   >
                     <input
                       type="text"
@@ -1430,7 +1430,7 @@ export default function FriendsPage() {
                       chipClassName="rounded-full bg-base-content/5 px-2 py-0.5 text-[11px] text-primary hover:bg-base-content/5 transition"
                     />
 
-                    <div className="flex items-center gap-4 pl-1 pt-3 border-t border-base-300">
+                    <div className="flex items-center gap-4 pl-1 pt-3 ">
                       <button
                         onClick={() => handleLike(post.id, post.liked_by_me)}
                         className={`flex items-center gap-1.5 text-xs transition ${

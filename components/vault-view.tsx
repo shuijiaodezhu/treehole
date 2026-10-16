@@ -71,7 +71,7 @@ export function VaultView({ userId }: { userId: string | null }) {
       <div className="card mb-4 rounded-box border border-base-300 bg-base-100/80 p-5 shadow-sm backdrop-blur">
         <div className="flex flex-wrap items-center gap-3">
           <div className="flex h-10 w-10 items-center justify-center rounded-box bg-gradient-to-br from-primary/20 to-primary/10">
-            <Icon name="box" className="h-5 w-5 text-primary" />
+            <Icon name="box" className="h-5 w-5 text-base-content/70" />
           </div>
           <div className="min-w-0 flex-1">
             <p className="text-sm font-semibold text-base-content">储物箱</p>

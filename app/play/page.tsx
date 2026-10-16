@@ -497,7 +497,7 @@ export default function PlayPage() {
             </div>
           )}
 
-          <div className="flex gap-6 mt-5 border-b border-base-300">
+          <div className="flex gap-6 mt-5 ">
             <button
               onClick={() => setTab('activities')}
               className={`pb-2.5 text-sm transition ${tab === 'activities' ? 'border-b-2 border-primary text-primary font-medium' : 'text-base-content/60 hover:text-base-content'}`}
@@ -641,7 +641,7 @@ export default function PlayPage() {
                         <span className="flex items-center gap-1"><Icon name="users" className="w-3 h-3" />{act.signups.length}/{act.max_people} 人</span>
                       </div>
 
-                      <div className="mt-auto pt-3 border-t border-base-300 flex items-center justify-between gap-3">
+                      <div className="mt-auto pt-3  flex items-center justify-between gap-3">
                         <span className="text-[11px] text-base-content/60 truncate">{act.author_name} 发起</span>
                         {isMine ? (
                           confirmDeleteActivity === act.id ? (

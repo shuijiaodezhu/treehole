@@ -213,7 +213,7 @@ function ChatInner() {
       {/* 背景光晕 */}
 
       {/* 顶部 */}
-      <header className="fixed top-0 left-0 right-0 z-20 border-b border-base-300 bg-base-100/95 backdrop-blur-lg shadow-sm">
+      <header className="fixed top-0 left-0 right-0 z-20  bg-base-100/95 backdrop-blur-lg shadow-sm">
         <div className="max-w-xl mx-auto px-5 py-4 flex items-center gap-3">
           <Link
             href="/friends"
@@ -263,7 +263,7 @@ function ChatInner() {
       </main>
 
       {/* 底部 */}
-      <footer className="fixed bottom-0 left-0 right-0 z-20 border-t border-base-300 bg-base-100/95 backdrop-blur-lg shadow-sm">
+      <footer className="fixed bottom-0 left-0 right-0 z-20  bg-base-100/95 backdrop-blur-lg shadow-sm">
         <form onSubmit={handleSend} className="max-w-xl mx-auto px-5 py-4 flex items-center gap-2">
           <input
             ref={inputRef}

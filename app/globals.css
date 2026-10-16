@@ -511,7 +511,8 @@ input:focus, textarea:focus {
   break-inside: avoid;
   /* 靠"明度差"分面，不用阴影、不用 1px 细线（见文件前面的说明）*/
   background-color: var(--card);
-  border-radius: 14px;
+  /* 全站只留一个圆角：跟着 daisyUI 的 --radius-box（0.75rem）*/
+  border-radius: var(--radius-box, 0.75rem);
 }
 
 
