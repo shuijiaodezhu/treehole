@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import Link from 'next/link'
 import { createClient } from '../app/lib/supabase'
+import { MODULE_SEEN_EVENT } from './module-badges'
 import { Icon } from './icons'
 
 /**
@@ -160,6 +161,10 @@ function useNotifications(userId: string | null) {
     const now = new Date().toISOString()
     setItems((prev) => prev.map((n) => (n.read_at ? n : { ...n, read_at: now })))
     setUnread(0)
+    /* 顺带通知别处的角标立刻刷新（不然首页那个红点要等下次重算才消） */
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new CustomEvent<string>(MODULE_SEEN_EVENT, { detail: 'notifications' }))
+    }
     await supabase.from('notifications').update({ read_at: now }).eq('user_id', userId).is('read_at', null)
   }, [userId])
 
@@ -176,6 +181,10 @@ function useNotifications(userId: string | null) {
     if (!confirm('清空所有通知？清掉之后就找不回来了。')) return
     setItems([])
     setUnread(0)
+    /* 顺带通知别处的角标立刻刷新（不然首页那个红点要等下次重算才消） */
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new CustomEvent<string>(MODULE_SEEN_EVENT, { detail: 'notifications' }))
+    }
     const { error } = await supabase.from('notifications').delete().eq('user_id', userId)
     if (error) console.error('清空通知失败:', error)
   }, [userId])

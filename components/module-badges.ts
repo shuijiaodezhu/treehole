@@ -37,7 +37,8 @@ export type ModuleBadges = Record<ModuleKey, ModuleBadge>
 /* ==================== 本地时间戳读写（页面与主页共用） ==================== */
 
 /** 页面标记已看时广播，主页角标立刻跟着更新（不用整页刷新） */
-const MODULE_SEEN_EVENT = 'treehole:module-seen'
+/* 导出：别处（比如读完通知）也能触发一次「角标立即刷新」 */
+export const MODULE_SEEN_EVENT = 'treehole:module-seen'
 
 /**
  * 页面进入时调用：把这个模块标记为已看。
