@@ -256,8 +256,15 @@ function ChatInner() {
     → 进来能落在**最新一条** ✓ 又不会把整个页面拽下去 ✓
     → 往上翻历史也不会被拉回来 ✓
 */
+    /*
+      用 **fixed inset-0** 而不是 h-screen / h-[100dvh]：
+        · 视口单位（vh/dvh）在不同 WebView 里表现不一致 ✗
+          手机上经常出现"底部被顶出屏幕"→ 消息滑不到底（用户报"滑动不下去"）
+        · fixed inset-0 = **正好等于可视区域** ✓ 不依赖任何单位 ✓ 最可靠
+        · 配合壳子的 adjustResize：键盘弹出时可视区缩小 → 这里自动跟着缩 ✓
+    */
     <div
-      className="flex h-[100dvh] flex-col overflow-hidden bg-base-content/5 relative"
+      className="fixed inset-0 flex flex-col overflow-hidden bg-base-content/5"
       style={pageAccentVars('friends')}
     >
       {/* 背景光晕 */}
