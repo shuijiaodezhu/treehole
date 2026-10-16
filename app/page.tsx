@@ -14,6 +14,7 @@ import {
   QUOTE_SLOT_MS,
   calcLoginStreak,
   formatDateText,
+  getQuoteByTime,
   msUntilNextQuoteSlot,
   pickProfile,
   resolveDisplayName,
@@ -35,7 +36,6 @@ import {
 import { toast } from 'sonner'
 import type { FriendRequest, FriendshipRow, LoginStreak } from '../components/types'
 import { pageAccentVars } from '../components/theme'
-import { getDailyPoem } from '../components/little-poems'
 import { SkeletonHome } from '../components/skeleton'
 import { MailboxDialog, useMailbox } from '../components/mailbox'
 import { MailboxArt } from '../components/mailbox-art'
@@ -60,7 +60,7 @@ export default function HomePage() {
   const [reloadKey, setReloadKey] = useState(0)
 
   // 时间相关内容全部放到 hydration 之后再取：Next 16 不允许在预渲染阶段读 Date.now()
-  const [poem, setPoem] = useState<string[]>([])
+  const [quote, setQuote] = useState('')
   const [dateText, setDateText] = useState('')
 
   /* ---------- ③ 连续滚动（视差） ----------
@@ -161,20 +161,20 @@ export default function HomePage() {
 
     // 用 rAF 推迟到首帧之后：既避开预渲染限制，也不在 effect 里同步 setState
     const firstFrame = window.requestAnimationFrame(() => {
-      setPoem(getDailyPoem())
+      setQuote(getQuoteByTime())
       setDateText(formatDateText(new Date()))
     })
 
     const timeoutId = window.setTimeout(() => {
-      setPoem(getDailyPoem())
+      setQuote(getQuoteByTime())
       intervalId = window.setInterval(() => {
         if (!mountedRef.current) return
-        setPoem(getDailyPoem())
+        setQuote(getQuoteByTime())
       }, QUOTE_SLOT_MS)
     }, msUntilNextQuoteSlot())
 
     const handleVisible = () => {
-      if (document.visibilityState === 'visible') setPoem(getDailyPoem())
+      if (document.visibilityState === 'visible') setQuote(getQuoteByTime())
     }
     document.addEventListener('visibilitychange', handleVisible)
 
@@ -315,7 +315,7 @@ export default function HomePage() {
             <NavCardGrid badges={badges} />
           </nav>
 
-          {poem.length > 0 && (
+          {quote && (
             <>
               <Ornament />
             <div className="mt-14 grid gap-12 sm:grid-cols-2 sm:items-start">
@@ -328,11 +328,7 @@ export default function HomePage() {
                   transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
                   className="border-l-2 border-[#ece3d4] pl-5"
                 >
-                  <div className="space-y-2 font-serif-cn text-[16px] leading-[1.95] text-[#3f332a]">
-                    {poem.map((line) => (
-                      <p key={line}>{line}</p>
-                    ))}
-                  </div>
+                  <p className="font-serif-cn text-[16px] leading-[2.1] text-[#3f332a]">「{quote}」</p>
                   <p className="mt-3 text-[12px] tracking-[0.08em] text-[#9c8f7d]">
                     来自陌生人的问候 · <span className="text-[#a8563a]">睡觉的猪</span>
                   </p>
