@@ -505,7 +505,7 @@ export default function MomentsPage() {
                       {post.author_avatar ? (
                         // 头像尺寸固定、来自 Supabase 存储，不值得为它引 next/image 的远程域名配置
                         // eslint-disable-next-line @next/next/no-img-element
-                        <img src={post.author_avatar} alt="" className="w-full h-full object-cover" />
+                        <img loading="lazy" decoding="async" src={post.author_avatar} alt="" className="w-full h-full object-cover" />
                       ) : (
                         <span className="text-sm text-primary font-semibold">
                           {post.author_name[0]}

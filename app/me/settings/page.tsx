@@ -383,7 +383,7 @@ export default function SettingsPage() {
                 <span className="w-9 h-9 rounded-full bg-base-content/5 flex items-center justify-center overflow-hidden flex-shrink-0 text-xs text-primary font-semibold">
                   {searchHit.avatar_url ? (
                     // eslint-disable-next-line @next/next/no-img-element
-                    <img src={searchHit.avatar_url} alt="" className="w-full h-full object-cover" />
+                    <img loading="lazy" decoding="async" src={searchHit.avatar_url} alt="" className="w-full h-full object-cover" />
                   ) : (
                     (searchHit.nickname || searchHit.username || '某').slice(0, 1)
                   )}
@@ -425,7 +425,7 @@ export default function SettingsPage() {
                     <span className="w-8 h-8 rounded-full bg-base-content/5 flex items-center justify-center overflow-hidden flex-shrink-0 text-[11px] text-primary font-semibold">
                       {b.avatar_url ? (
                         // eslint-disable-next-line @next/next/no-img-element
-                        <img src={b.avatar_url} alt="" className="w-full h-full object-cover" />
+                        <img loading="lazy" decoding="async" src={b.avatar_url} alt="" className="w-full h-full object-cover" />
                       ) : (
                         (b.nickname || b.username || '某').slice(0, 1)
                       )}

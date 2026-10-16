@@ -177,7 +177,7 @@ function UserShowcase() {
               <div className="flex h-16 w-16 flex-shrink-0 items-center justify-center overflow-hidden rounded-box bg-base-content/5 text-2xl shadow-sm">
                 {profile?.avatar_url ? (
                   // eslint-disable-next-line @next/next/no-img-element
-                  <img src={profile.avatar_url} alt="" className="h-full w-full object-cover" />
+                  <img loading="lazy" decoding="async" src={profile.avatar_url} alt="" className="h-full w-full object-cover" />
                 ) : (
                   <span className="font-semibold text-primary">{name[0]}</span>
                 )}

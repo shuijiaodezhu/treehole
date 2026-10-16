@@ -143,8 +143,7 @@ export function ImageGrid({
       {list.map((url) => (
         <div key={url} className="relative">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={url}
+          <img loading="lazy" decoding="async" src={url}
             alt=""
             className={`w-full rounded-box border border-base-300 object-cover ${
               single ? 'max-h-80' : 'h-24'

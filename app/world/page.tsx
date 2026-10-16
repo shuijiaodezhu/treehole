@@ -1020,7 +1020,7 @@ export default function WorldPage() {
                         </div>
                       ) : (
                         <div className="w-10 h-10 rounded-box bg-gradient-to-br from-base-300 to-base-300 flex items-center justify-center overflow-hidden flex-shrink-0">
-                          {post.author_avatar ? <img src={post.author_avatar} alt="" className="w-full h-full object-cover" /> : <span className="text-sm text-primary font-semibold">{post.author_name[0]}</span>}
+                          {post.author_avatar ? <img loading="lazy" decoding="async" src={post.author_avatar} alt="" className="w-full h-full object-cover" /> : <span className="text-sm text-primary font-semibold">{post.author_name[0]}</span>}
                         </div>
                       )}
                       <div className="flex-1 min-w-0">
@@ -1201,7 +1201,7 @@ export default function WorldPage() {
                                       </div>
                                     ) : (
                                       <div className="w-6 h-6 rounded-full bg-base-300 flex items-center justify-center overflow-hidden flex-shrink-0 mt-0.5">
-                                        {parent.author_avatar ? <img src={parent.author_avatar} alt="" className="w-full h-full object-cover" /> : <span className="text-[11px] text-primary">{parent.author_name[0]}</span>}
+                                        {parent.author_avatar ? <img loading="lazy" decoding="async" src={parent.author_avatar} alt="" className="w-full h-full object-cover" /> : <span className="text-[11px] text-primary">{parent.author_name[0]}</span>}
                                       </div>
                                     )}
                                     <div className="flex-1 min-w-0 bg-base-content/5 rounded-box px-3 py-2">
@@ -1292,7 +1292,7 @@ export default function WorldPage() {
                                             </div>
                                           ) : (
                                             <div className="w-5 h-5 rounded-full bg-base-300 flex items-center justify-center overflow-hidden flex-shrink-0 mt-0.5">
-                                              {c.author_avatar ? <img src={c.author_avatar} alt="" className="w-full h-full object-cover" /> : <span className="text-[11px] text-primary">{c.author_name[0]}</span>}
+                                              {c.author_avatar ? <img loading="lazy" decoding="async" src={c.author_avatar} alt="" className="w-full h-full object-cover" /> : <span className="text-[11px] text-primary">{c.author_name[0]}</span>}
                                             </div>
                                           )}
                                           <div className="flex-1 min-w-0 bg-base-content/5 rounded-box px-3 py-1.5">

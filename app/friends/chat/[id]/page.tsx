@@ -228,7 +228,7 @@ function ChatInner() {
           >
             <div className="w-8 h-8 rounded-full bg-gradient-to-br from-base-300 to-base-300 flex items-center justify-center flex-shrink-0 overflow-hidden">
               {friendAvatar ? (
-                <img src={friendAvatar} alt="" className="w-full h-full object-cover" />
+                <img loading="lazy" decoding="async" src={friendAvatar} alt="" className="w-full h-full object-cover" />
               ) : (
                 <span className="text-sm text-primary font-semibold">{friendName[0]}</span>
               )}

@@ -59,8 +59,7 @@ export function ImageWall({
                 aria-label="查看大图"
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={url}
+                <img loading="lazy" decoding="async" src={url}
                   alt=""
                   className={`w-full object-cover transition duration-200 group-hover:brightness-95 ${
                     single ? 'max-h-80' : 'h-24'
@@ -138,8 +137,7 @@ export function ImageWall({
           </div>
 
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={preview}
+          <img loading="lazy" decoding="async" src={preview}
             alt=""
             onClick={(e) => e.stopPropagation()}
             className="max-h-[75vh] max-w-full rounded-box object-contain shadow-2xl"

@@ -1000,7 +1000,7 @@ export default function FriendsPage() {
                       <div className="flex items-center gap-2 min-w-0">
                         <div className="w-7 h-7 rounded-full bg-accent flex items-center justify-center overflow-hidden flex-shrink-0">
                           {searchResult.avatar_url ? (
-                            <img src={searchResult.avatar_url} alt="" className="w-full h-full object-cover" />
+                            <img loading="lazy" decoding="async" src={searchResult.avatar_url} alt="" className="w-full h-full object-cover" />
                           ) : (
                             <span className="text-[11px] text-primary">
                               {(searchResult.nickname || searchResult.username)[0]}
@@ -1032,7 +1032,7 @@ export default function FriendsPage() {
                       <div key={r.friendship_id} className="flex items-center gap-2">
                         <div className="w-7 h-7 rounded-full bg-accent flex items-center justify-center overflow-hidden flex-shrink-0">
                           {r.avatar_url ? (
-                            <img src={r.avatar_url} alt="" className="w-full h-full object-cover" />
+                            <img loading="lazy" decoding="async" src={r.avatar_url} alt="" className="w-full h-full object-cover" />
                           ) : (
                             <span className="text-[11px] text-primary">
                               {(r.nickname || r.username)[0]}
@@ -1082,7 +1082,7 @@ export default function FriendsPage() {
                             <Link href={`/u/${f.friend_id}`} className="flex-shrink-0">
                               <div className="w-9 h-9 rounded-full bg-gradient-to-br from-primary/20 to-primary/10 flex items-center justify-center overflow-hidden">
                                 {f.avatar_url ? (
-                                  <img src={f.avatar_url} alt="" className="w-full h-full object-cover" />
+                                  <img loading="lazy" decoding="async" src={f.avatar_url} alt="" className="w-full h-full object-cover" />
                                 ) : (
                                   <span className="text-xs text-primary font-semibold">
                                     {(f.nickname || f.username)[0]}
@@ -1158,7 +1158,7 @@ export default function FriendsPage() {
                       >
                         <div className="w-8 h-8 rounded-full bg-gradient-to-br from-primary/20 to-primary/10 flex items-center justify-center overflow-hidden flex-shrink-0">
                           {currentFriend.avatar_url ? (
-                            <img src={currentFriend.avatar_url} alt="" className="w-full h-full object-cover" />
+                            <img loading="lazy" decoding="async" src={currentFriend.avatar_url} alt="" className="w-full h-full object-cover" />
                           ) : (
                             <span className="text-sm text-primary font-semibold">
                               {friendName[0]}
@@ -1379,7 +1379,7 @@ export default function FriendsPage() {
                     <div className="flex items-center gap-3 mb-3">
                       <div className="w-10 h-10 rounded-box bg-gradient-to-br from-primary/20 to-primary/10 flex items-center justify-center overflow-hidden flex-shrink-0">
                         {post.author_avatar ? (
-                          <img src={post.author_avatar} alt="" className="w-full h-full object-cover" />
+                          <img loading="lazy" decoding="async" src={post.author_avatar} alt="" className="w-full h-full object-cover" />
                         ) : (
                           <span className="text-sm text-primary font-semibold">
                             {post.author_name[0]}
@@ -1535,8 +1535,7 @@ export default function FriendsPage() {
                                 <div className="flex gap-2">
                                   <div className="w-6 h-6 rounded-full bg-accent flex items-center justify-center overflow-hidden flex-shrink-0 mt-0.5">
                                     {parent.author_avatar ? (
-                                      <img
-                                        src={parent.author_avatar}
+                                      <img loading="lazy" decoding="async" src={parent.author_avatar}
                                         alt=""
                                         className="w-full h-full object-cover"
                                       />
@@ -1576,8 +1575,7 @@ export default function FriendsPage() {
                                       <div key={c.id} className="flex gap-2">
                                         <div className="w-5 h-5 rounded-full bg-accent flex items-center justify-center overflow-hidden flex-shrink-0 mt-0.5">
                                           {c.author_avatar ? (
-                                            <img
-                                              src={c.author_avatar}
+                                            <img loading="lazy" decoding="async" src={c.author_avatar}
                                               alt=""
                                               className="w-full h-full object-cover"
                                             />

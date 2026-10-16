@@ -107,7 +107,7 @@ export function FriendRequestBanner({ requests }: { requests: FriendRequest[] })
               >
                 {r.avatar_url ? (
                   // eslint-disable-next-line @next/next/no-img-element
-                  <img src={r.avatar_url} alt="" className="w-full h-full object-cover" />
+                  <img loading="lazy" decoding="async" src={r.avatar_url} alt="" className="w-full h-full object-cover" />
                 ) : (
                   avatarFallback({ username: r.username, nickname: r.nickname, avatar_url: r.avatar_url })
                 )}

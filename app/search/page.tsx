@@ -383,7 +383,7 @@ export default function SearchPage() {
                     <span className="w-7 h-7 rounded-full bg-base-200 flex items-center justify-center overflow-hidden flex-shrink-0 text-[11px] text-primary">
                       {p.authorAvatar ? (
                         // eslint-disable-next-line @next/next/no-img-element
-                        <img src={p.authorAvatar} alt="" className="w-full h-full object-cover" />
+                        <img loading="lazy" decoding="async" src={p.authorAvatar} alt="" className="w-full h-full object-cover" />
                       ) : (
                         avatarFallback({ username: p.authorName, nickname: null, avatar_url: null }, '友')
                       )}
@@ -474,7 +474,7 @@ export default function SearchPage() {
                     <span className="w-10 h-10 rounded-full bg-gradient-to-br from-primary/20 to-primary/10 flex items-center justify-center overflow-hidden flex-shrink-0 text-sm text-primary font-semibold">
                       {u.avatar_url ? (
                         // eslint-disable-next-line @next/next/no-img-element
-                        <img src={u.avatar_url} alt="" className="w-full h-full object-cover" />
+                        <img loading="lazy" decoding="async" src={u.avatar_url} alt="" className="w-full h-full object-cover" />
                       ) : (
                         name.slice(0, 1)
                       )}

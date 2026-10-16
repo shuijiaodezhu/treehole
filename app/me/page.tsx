@@ -144,7 +144,7 @@ export default function MePage() {
             <div className="relative flex items-start gap-4">
               <div className="w-16 h-16 rounded-box bg-base-content/5 flex items-center justify-center text-2xl overflow-hidden flex-shrink-0 shadow-sm">
                 {profile?.avatar_url ? (
-                  <img src={profile.avatar_url} alt="avatar" className="w-full h-full object-cover" />
+                  <img loading="lazy" decoding="async" src={profile.avatar_url} alt="avatar" className="w-full h-full object-cover" />
                 ) : (
                   <span className="text-primary font-semibold">{displayName[0]}</span>
                 )}

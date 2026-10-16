@@ -213,7 +213,7 @@ export function MentionInput({
               <span className="h-5 w-5 flex-shrink-0 overflow-hidden rounded-full bg-base-200 flex items-center justify-center text-[11px] text-primary">
                 {f.avatar_url ? (
                   // eslint-disable-next-line @next/next/no-img-element
-                  <img src={f.avatar_url} alt="" className="h-full w-full object-cover" />
+                  <img loading="lazy" decoding="async" src={f.avatar_url} alt="" className="h-full w-full object-cover" />
                 ) : (
                   f.name.slice(0, 1)
                 )}

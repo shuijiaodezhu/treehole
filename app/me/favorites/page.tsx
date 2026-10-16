@@ -202,7 +202,7 @@ export default function FavoritesPage() {
                     className="mt-1 mb-3 block overflow-hidden rounded-box border border-base-300"
                   >
                     {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={f.target_id} alt="" className="max-h-64 w-full object-cover" />
+                    <img loading="lazy" decoding="async" src={f.target_id} alt="" className="max-h-64 w-full object-cover" />
                   </a>
                 )}
 

@@ -732,7 +732,7 @@ export default function PlayPage() {
               <p className="text-xs text-base-content/60 mb-2">发起人</p>
               <div className="flex items-center gap-2">
                 <div className="w-8 h-8 rounded-full bg-base-content/5 flex items-center justify-center overflow-hidden flex-shrink-0">
-                  {detailActivity.author_avatar ? <img src={detailActivity.author_avatar} alt="" className="w-full h-full object-cover" /> : <span className="text-xs text-primary">{detailActivity.author_name[0]}</span>}
+                  {detailActivity.author_avatar ? <img loading="lazy" decoding="async" src={detailActivity.author_avatar} alt="" className="w-full h-full object-cover" /> : <span className="text-xs text-primary">{detailActivity.author_name[0]}</span>}
                 </div>
                 <span className="text-sm text-base-content">{detailActivity.author_name}</span>
               </div>
@@ -747,7 +747,7 @@ export default function PlayPage() {
                   {detailActivity.signups.map((s) => (
                     <div key={s.user_id} className="flex items-center gap-2">
                       <div className="w-6 h-6 rounded-full bg-base-content/5 flex items-center justify-center overflow-hidden flex-shrink-0">
-                        {s.user_avatar ? <img src={s.user_avatar} alt="" className="w-full h-full object-cover" /> : <span className="text-[11px] text-primary">{s.user_name[0]}</span>}
+                        {s.user_avatar ? <img loading="lazy" decoding="async" src={s.user_avatar} alt="" className="w-full h-full object-cover" /> : <span className="text-[11px] text-primary">{s.user_name[0]}</span>}
                       </div>
                       <span className="text-xs text-base-content">
                         {s.user_name}
