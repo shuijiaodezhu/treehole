@@ -105,7 +105,7 @@ export default function RootLayout({
       */}
       <link
         rel="stylesheet"
-        href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-webfont@1.7.0/lxgwwenkai-regular.css"
+        href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-lite-webfont@1.7.0/lxgwwenkai-lite-regular.css"
         precedence="default"
       />
       <body>

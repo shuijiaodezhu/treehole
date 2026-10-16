@@ -198,13 +198,3 @@ export function useBlocks(userId: string | null): BlocksState {
   )
 }
 
-/** 通用过滤：把被拉黑者的内容剔除（作者字段名可能是 author_id / user_id / requester_id） */
-export function filterHidden<T extends Record<string, unknown>>(list: T[], hiddenIds: Set<string>): T[] {
-  if (hiddenIds.size === 0) return list
-  return list.filter((item) => {
-    const author = (item.author_id ?? item.user_id ?? item.requester_id ?? item.blocked_id) as
-      | string
-      | undefined
-    return !author || !hiddenIds.has(author)
-  })
-}

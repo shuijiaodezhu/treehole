@@ -10,6 +10,9 @@ on:
       - 'android/**'
       - '.github/workflows/android.yml'
 
+permissions:
+  contents: write
+
 jobs:
   apk:
     runs-on: ubuntu-latest
@@ -36,3 +39,23 @@ jobs:
           name: yourletters-apk
           path: android/app/build/outputs/apk/debug/*.apk
           if-no-files-found: error
+
+      # 起个好看的名字，方便直接分享（apk 里自带的名字是 app-debug.apk ✓ 太丑 ✗）
+      - name: Rename APK
+        working-directory: android
+        run: cp app/build/outputs/apk/debug/app-debug.apk yourletters.apk
+
+      # 发布到 Release：得到一个**永久直链** ✓ 朋友点开就能下 ✓ 不用登录 ✓ 不用解压 ✓
+      # 标签固定为 apk-latest ✓ 所以链接永远是这个：
+      #   https://github.com/shuijiaodezhu/treehole/releases/download/apk-latest/yourletters.apk
+      - name: Publish to Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: apk-latest
+          name: 你的来信 · 安卓安装包（最新）
+          body: |
+            自动构建的安卓安装包。
+
+            下载下面的 **yourletters.apk** 直接安装即可（不需要解压）。
+            装之前如果提示"未知来源/纯净模式"，允许一下就行。
+          files: android/yourletters.apk

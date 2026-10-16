@@ -183,11 +183,6 @@ function insertAtCursor(
   return { next, caret: start + text.length }
 }
 
-/** 一个不依赖 DOM 的简单版本：直接追加（评论框用这个就够） */
-export function appendText(value: string, text: string): string {
-  return value + text
-}
-
 /**
  * 给输入框用的便捷 hook：把表情插到光标处，并保持焦点
  *

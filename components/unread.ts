@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from 'react'
 import { createClient } from '../app/lib/supabase'
-import { markModuleSeen, readSeenAt, writeSeenAt } from './module-badges'
+import { markModuleSeen, writeSeenAt } from './module-badges'
 
 /**
  * 页内未读：好友私信 / 朋友圈 / 院子的"有人回我"
@@ -448,7 +448,3 @@ export function useWorldRepliesBadge(userId: string | null): {
   return { count, items, markRead, refresh }
 }
 
-/** 供主页计算院子徽标：新帖点 + 回复数 */
-export function worldRepliesSeenAt(userId: string): string | null {
-  return readSeenAt('world') ?? readKey(`${WORLD_REPLIES_SEEN_PREFIX}${userId}`)
-}
