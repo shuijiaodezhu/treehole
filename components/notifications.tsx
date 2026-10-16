@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 import { createClient } from '../app/lib/supabase'
 import { MODULE_SEEN_EVENT } from './module-badges'
@@ -167,6 +167,24 @@ function useNotifications(userId: string | null) {
     }
     await supabase.from('notifications').update({ read_at: now }).eq('user_id', userId).is('read_at', null)
   }, [userId])
+
+  /*
+   * 「看到了就算已读」✓ 不用一条一条点 ✓
+   *
+   * 打开通知页、列表显示出来之后，停 1.2 秒（让人真的看见内容 ✓）
+   * 就自动把未读全部标成已读 ✓
+   * 用 ref 挡住"只做一次" ✓ 免得和用户手动点打架 ✗
+   */
+  const autoReadDone = useRef(false)
+  useEffect(() => {
+    if (autoReadDone.current) return
+    if (!userId || unread <= 0) return
+    const timer = window.setTimeout(() => {
+      autoReadDone.current = true
+      void markAllRead()
+    }, 1200)
+    return () => window.clearTimeout(timer)
+  }, [userId, unread, markAllRead])
 
   const markRead = useCallback(async (id: string) => {
     setItems((prev) =>
