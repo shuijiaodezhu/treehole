@@ -103,7 +103,10 @@ export default function RootLayout({
           ① Cannot render a <link rel="stylesheet" /> outside the main document without knowing its precedence
           ② In HTML, <link> cannot be a child of <html>（hydration error）
       */}
-      <link
+              {/* 字体从 jsDelivr 拉：提前把域名连上，省掉一次 DNS + TLS 握手（约 100-300ms）*/}
+        <link rel="preconnect" href="https://cdn.jsdelivr.net" crossOrigin="anonymous" />
+        <link rel="dns-prefetch" href="https://cdn.jsdelivr.net" />
+<link
         rel="stylesheet"
         href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-lite-webfont@1.7.0/lxgwwenkai-lite-regular.css"
         precedence="default"
