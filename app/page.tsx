@@ -334,13 +334,23 @@ export default function HomePage() {
               </div>
             )}
 
-            <p className="mt-7 text-[13px] text-[#6f5d4c]">
-              {weather.city ? `${weather.city} · ` : ''}
-              {weather.condition}{' '}
-              <span className="text-[#3a2f26]">{weather.temp}°</span>
-              <span className="text-[#a2937f]"> / {weather.tempMin}°</span>
-            </p>
-            <p className="mt-1.5 text-[12.5px] text-[#8a6a4a]">{weatherAdvice(weather)}</p>
+            {weather.isLive ? (
+              <>
+                <p className="mt-7 text-[13px] text-[#6f5d4c]">
+                  {weather.city ? `${weather.city} · ` : ''}
+                  {weather.condition}{' '}
+                  <span className="text-[#3a2f26]">{weather.temp}°</span>
+                  <span className="text-[#a2937f]"> / {weather.tempMin}°</span>
+                </p>
+                <p className="mt-1.5 text-[12.5px] text-[#8a6a4a]">{weatherAdvice(weather)}</p>
+              </>
+            ) : (
+              /* 没有定位就拿不到"你那儿的"天气：宁可不显示，也不显示别人的城市与温度 */
+              <p className="mt-7 text-[13px] text-[#6f5d4c]">
+                天气要开了定位才看得见
+                <span className="ml-2 text-[#a2937f]">（不授权也没关系，别的一样都在）</span>
+              </p>
+            )}
 
             <p className="mt-2.5 text-[12px] tracking-[0.1em] text-[#a2937f]">
               陪你走过 {streak.days} 天
