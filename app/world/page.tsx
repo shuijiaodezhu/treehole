@@ -273,8 +273,21 @@ export default function WorldPage() {
   const [seenAt, setSeenAt] = useState<string | null>(null)
 
   // 有人回我（评论我的帖 / 回复我的评论）的未读数
-  const replies = useWorldRepliesBadge(meId)
-  const refreshReplies = replies.refresh
+  // 只解构出稳定的值：count 是数字 ✓ markRead / refresh 是 useCallback ✓
+  // （整包 replies 每次渲染都是新对象 ✗ 放进依赖会死循环 ✓）
+  const { count: repliesCount, markRead: markRepliesRead, refresh: refreshReplies } = useWorldRepliesBadge(meId)
+
+  /*
+   * 打开院子 = 看过"有人回了你"了 → 清掉那个提示。
+   * 原来这里**只显示、不清** ✗（markRead 从来没被调用过）
+   * → 于是红点永远消不掉 ✓ 这就是"回复的红点消不掉" ✓
+   * 延 1.5 秒再清：至少让人**看见**它一下，不然一闪就没了反而像没提示 ✓
+   */
+  useEffect(() => {
+    if (repliesCount <= 0) return
+    const timer = window.setTimeout(() => markRepliesRead(), 1500)
+    return () => window.clearTimeout(timer)
+  }, [repliesCount, markRepliesRead])
 
   // 收藏
   const favorites = useFavorites(meId)
@@ -753,12 +766,12 @@ export default function WorldPage() {
           <main className="flex-1 min-w-0">
             <div className="mb-3 flex items-center gap-2 text-xs text-base-content/60">
               <span>正在看：</span><span className="text-primary font-medium">{currentLocationName}</span>
-              {replies.count > 0 && (
+              {repliesCount > 0 && (
                 <span className="ml-1 min-w-[16px] h-4 px-1 rounded-full bg-primary text-primary-content text-[11px] leading-4 text-center font-medium">
-                  {replies.count > 99 ? '99+' : replies.count}
+                  {repliesCount > 99 ? '99+' : repliesCount}
                 </span>
               )}
-              {replies.count > 0 && <span>有人回了你</span>}
+              {repliesCount > 0 && <span>有人回了你</span>}
             </div>
 
             <div className="space-y-3">
