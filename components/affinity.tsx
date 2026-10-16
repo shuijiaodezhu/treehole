@@ -156,7 +156,7 @@ export function readAffinityHidden(uid: string): boolean {
   }
 }
 
-export function writeAffinityHidden(uid: string, hidden: boolean): void {
+function writeAffinityHidden(uid: string, hidden: boolean): void {
   try {
     window.localStorage.setItem(HIDE_KEY(uid), hidden ? '1' : '0')
   } catch {

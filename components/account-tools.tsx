@@ -257,7 +257,7 @@ export type DeletionRequest = {
   created_at: string
 }
 
-export function useDeletionRequests(adminId: string) {
+function useDeletionRequests(adminId: string) {
   const [rows, setRows] = useState<DeletionRequest[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')

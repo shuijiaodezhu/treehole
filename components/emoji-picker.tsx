@@ -171,7 +171,7 @@ export function EmojiPicker({
 }
 
 /** 给聊天输入框用的小工具：把表情插到光标位置（拿不到光标就追加到末尾） */
-export function insertAtCursor(
+function insertAtCursor(
   el: HTMLInputElement | HTMLTextAreaElement | null,
   value: string,
   text: string,

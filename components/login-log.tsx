@@ -23,7 +23,7 @@ export type LoginRecord = {
 }
 
 /** 把 UA 说成人话 */
-export function describeDevice(ua: string | null | undefined): string {
+function describeDevice(ua: string | null | undefined): string {
   if (!ua) return '未知设备'
   const s = ua
 
@@ -79,7 +79,7 @@ export async function logLogin(userId: string): Promise<void> {
   }
 }
 
-export async function loadLogins(userId: string, limit = 8): Promise<{ records: LoginRecord[]; missing: boolean }> {
+async function loadLogins(userId: string, limit = 8): Promise<{ records: LoginRecord[]; missing: boolean }> {
   const { data, error } = await supabase
     .from('login_logs')
     .select('id, user_agent, created_at')

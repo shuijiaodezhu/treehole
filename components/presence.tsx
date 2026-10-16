@@ -84,7 +84,7 @@ function releaseChannel() {
 }
 
 /** 订阅在线人数变化（会立刻回调一次当前值） */
-export function subscribeOnlineCount(fn: (s: OnlineSnapshot) => void): () => void {
+function subscribeOnlineCount(fn: (s: OnlineSnapshot) => void): () => void {
   listeners.add(fn)
   fn(snapshot)
   return () => {

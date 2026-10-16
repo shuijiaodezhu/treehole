@@ -20,7 +20,7 @@ import { createClient } from '../app/lib/supabase'
  *    这一点和院子的匿名帖口径一致，不藏着。
  */
 
-export const MUSIC_BUCKET = 'music'
+const MUSIC_BUCKET = 'music'
 
 /** 单首上限：15MB（约 3-6 分钟 128-320kbps） */
 export const MAX_AUDIO_BYTES = 15 * 1024 * 1024

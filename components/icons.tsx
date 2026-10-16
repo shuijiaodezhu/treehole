@@ -107,7 +107,6 @@ export const IconBox = ({ className = '' }: IconProps) => <svg {...thin} classNa
 export const IconMail = ({ className = '' }: IconProps) => <svg {...thin} className={className}>{iconPath('mail')}</svg>
 export const IconSearch = ({ className = '' }: IconProps) => <svg {...base} className={className}>{iconPath('search')}</svg>
 export const IconRefresh = ({ className = '' }: IconProps) => <svg {...base} className={className}>{iconPath('refresh')}</svg>
-export const IconSun = ({ className = '' }: IconProps) => <svg {...thin} className={className}>{iconPath('sun')}</svg>
 export const IconFlame = ({ className = '' }: IconProps) => <svg {...thin} className={className}>{iconPath('flame')}</svg>
 export const IconArrow = ({ className = '' }: IconProps) => <svg {...base} className={className}>{iconPath('arrow')}</svg>
 

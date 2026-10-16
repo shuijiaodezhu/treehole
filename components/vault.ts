@@ -15,7 +15,7 @@ import { createClient } from '../app/lib/supabase'
 
 const supabase = createClient()
 
-export const VAULT_BUCKET = 'vault'
+const VAULT_BUCKET = 'vault'
 export const MAX_FILE_BYTES = 10 * 1024 * 1024 // 10MB
 
 export type FileCategory = 'image' | 'video' | 'audio' | 'doc' | 'archive' | 'other'
@@ -50,7 +50,7 @@ function errText(err: unknown): string {
 }
 
 /** 按 MIME 与扩展名判断分类 */
-export function detectCategory(file: { type?: string; name: string }): FileCategory {
+function detectCategory(file: { type?: string; name: string }): FileCategory {
   const mime = (file.type ?? '').toLowerCase()
   if (mime.startsWith('image/')) return 'image'
   if (mime.startsWith('video/')) return 'video'

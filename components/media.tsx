@@ -15,9 +15,9 @@ import { createClient } from '../app/lib/supabase'
 const supabase = createClient()
 
 export const MEDIA_BUCKET = 'media'
-export const MAX_IMAGES = 9
+const MAX_IMAGES = 9
 /** 压缩**之后**的大小上限 */
-export const MAX_IMAGE_BYTES = 5 * 1024 * 1024
+const MAX_IMAGE_BYTES = 5 * 1024 * 1024
 /** 原图超过这个大小就不试了：浏览器解码超大图会卡死 */
 const MAX_SOURCE_BYTES = 25 * 1024 * 1024
 

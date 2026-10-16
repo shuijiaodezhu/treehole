@@ -57,7 +57,7 @@ function relativeTime(iso: string): string {
 }
 
 /** 读通知 + 未读数，带兜底轮询 */
-export function useNotifications(userId: string | null) {
+function useNotifications(userId: string | null) {
   const [items, setItems] = useState<Notice[]>([])
   const [unread, setUnread] = useState(0)
   const [loading, setLoading] = useState(true)

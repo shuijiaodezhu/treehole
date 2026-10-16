@@ -14,7 +14,7 @@ import Link from 'next/link'
 const HASHTAG_RE = /#([^#\s]{1,20})#/g
 
 /** 解析出正文里的所有话题（去重，保持出现顺序） */
-export function parseHashtags(content: string | null | undefined): string[] {
+function parseHashtags(content: string | null | undefined): string[] {
   if (!content) return []
   const seen = new Set<string>()
   const result: string[] = []
@@ -28,7 +28,7 @@ export function parseHashtags(content: string | null | undefined): string[] {
 }
 
 /** 点标签后跳到搜索页（搜 #标签# 这段原文） */
-export function hashtagHref(tag: string): string {
+function hashtagHref(tag: string): string {
   return `/search?q=${encodeURIComponent(`#${tag}#`)}`
 }
 

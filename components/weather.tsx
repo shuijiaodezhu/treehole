@@ -36,7 +36,7 @@ function describeWeather(code: number): { condition: string; icon: IconName } {
 }
 
 /** 首屏 / 降级用占位数据，避免接口未返回时布局跳动 */
-export function fallbackWeather(): WeatherState {
+function fallbackWeather(): WeatherState {
   return {
     city: '',
     temp: 18,

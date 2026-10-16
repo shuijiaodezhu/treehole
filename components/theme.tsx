@@ -36,7 +36,7 @@ export const PAGE_DESC: Record<PageKey, string> = {
 export const PAGE_ORDER: PageKey[] = ['home', 'world', 'play', 'friends', 'me']
 
 /** 默认配色 = 各页面原本的颜色 */
-export const DEFAULT_THEME: Record<PageKey, string> = {
+const DEFAULT_THEME: Record<PageKey, string> = {
   home: '#d97757',
   world: '#7ea86a',
   play: '#5a7a9a',
@@ -77,7 +77,7 @@ function normalize(raw: unknown): ThemeMap {
 }
 
 /** 解析 profiles.theme 字段：兼容 'default' 这种旧值 */
-export function parseStoredTheme(stored: string | null | undefined): ThemeMap {
+function parseStoredTheme(stored: string | null | undefined): ThemeMap {
   if (!stored || stored === 'default') return { ...DEFAULT_THEME }
   try {
     return normalize(JSON.parse(stored))
@@ -87,7 +87,7 @@ export function parseStoredTheme(stored: string | null | undefined): ThemeMap {
 }
 
 /** 把配色写到 :root 上（CSS 变量） */
-export function applyTheme(theme: ThemeMap) {
+function applyTheme(theme: ThemeMap) {
   if (typeof document === 'undefined') return
   const root = document.documentElement
   for (const key of PAGE_ORDER) {
@@ -141,7 +141,7 @@ function mix(hexA: string, ratioA: number, hexB: string): string {
  *   soft  极淡底
  *   line  淡边框
  */
-export function deriveShades(accent: string): {
+function deriveShades(accent: string): {
   deep: string
   ink: string
   light: string

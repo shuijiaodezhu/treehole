@@ -20,10 +20,10 @@ import { createClient } from '../app/lib/supabase'
 const supabase = createClient()
 
 /** 最多三个字，按"字"算（'学习中' = 3 个字） */
-export const STATUS_MAX = 3
+const STATUS_MAX = 3
 
 /** 现成的几个；想加就加，都是三个字以内 */
-export const STATUS_PRESETS = [
+const STATUS_PRESETS = [
   '在线',
   '学习中',
   '摸鱼中',
@@ -36,7 +36,7 @@ export const STATUS_PRESETS = [
   'emo',
 ] as const
 
-export function cleanStatus(raw: string): string {
+function cleanStatus(raw: string): string {
   // 去空格、去换行，再按"字"截断（Array.from 才能正确切中文与 emoji）
   const trimmed = raw.replace(/\s+/g, '').trim()
   return Array.from(trimmed).slice(0, STATUS_MAX).join('')
@@ -73,7 +73,7 @@ export function useStatusText(userId: string | null): string | null {
 }
 
 /** 保存 / 清除自己的状态 */
-export function useStatusEditor(userId: string | null) {
+function useStatusEditor(userId: string | null) {
   const [text, setText] = useState('')
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
