@@ -13,7 +13,7 @@ import { cn } from '../../lib/utils'
  *   一处一处对不齐就显出"手工味"。有了变体表，全站按钮只有这四种形态。
  */
 const buttonVariants = cva(
-  'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#a8563a]/30 focus-visible:ring-offset-2 focus-visible:ring-offset-[#f4ebdd] disabled:pointer-events-none disabled:opacity-50',
+  'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30 focus-visible:ring-offset-2 focus-visible:ring-offset-[#f4ebdd] disabled:pointer-events-none disabled:opacity-50',
   {
     variants: {
       variant: {

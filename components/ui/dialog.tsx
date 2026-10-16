@@ -41,14 +41,14 @@ export const DialogContent = React.forwardRef<
       ref={ref}
       className={cn(
         'dsh-content fixed left-1/2 top-1/2 z-50 w-[calc(100%-2rem)] max-w-md',
-        '-translate-x-1/2 -translate-y-1/2 rounded-box border border-base-300 bg-base-100 p-6',
+        '-translate-x-1/2 -translate-y-1/2 rounded-box border border-base-300 bg-base-100 p-6 shadow-2xl',
         className,
       )}
       {...props}
     >
       {children}
       <DialogPrimitive.Close
-        className="absolute right-4 top-4 rounded-md p-1 text-base-content/60 transition hover:bg-base-200 hover:text-base-content focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#a8563a]/30"
+        className="btn btn-ghost btn-sm btn-circle absolute right-3 top-3"
         aria-label="关闭"
       >
         <X className="h-4 w-4" strokeWidth={1.8} />

@@ -141,7 +141,7 @@ export default function RegisterPage() {
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="you@example.com"
                 required
-                className="w-full px-4 py-2.5 rounded-box border border-base-300 bg-base-100 text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-[#d97757]/10 transition"
+                className="w-full px-4 py-2.5 rounded-box border border-base-300 bg-base-100 text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition"
               />
             </div>
 
@@ -154,7 +154,7 @@ export default function RegisterPage() {
                 placeholder="至少 8 位，包含字母和数字"
                 required
                 minLength={8}
-                className="w-full px-4 py-2.5 rounded-box border border-base-300 bg-base-100 text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-[#d97757]/10 transition"
+                className="w-full px-4 py-2.5 rounded-box border border-base-300 bg-base-100 text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition"
               />
               <p className="text-[11px] text-base-content/40 mt-1.5">
                 至少 8 位，含字母和数字

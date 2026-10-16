@@ -366,7 +366,7 @@ export default function MomentsPage() {
                 onChange={(e) => setContent(e.target.value)}
                 placeholder="说点什么… 用 #话题# 加标签，也可以发个表情"
                 rows={3}
-                className="w-full px-4 py-3 rounded-box border border-base-300 bg-base-100 text-sm text-base-content resize-none focus:outline-none focus:border-primary focus:ring-2 focus:ring-[#d97757]/10 transition placeholder:text-base-content/40"
+                className="w-full px-4 py-3 rounded-box border border-base-300 bg-base-100 text-sm text-base-content resize-none focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition placeholder:text-base-content/40"
                 maxLength={500}
               />
               {/* 图片：本地上传或粘贴链接 */}
@@ -496,7 +496,7 @@ export default function MomentsPage() {
                   data-moment-id={post.id}
                   className={`rounded-box border bg-base-100 p-5 shadow-sm relative overflow-hidden transition ${
                     focusPostId === post.id
-                      ? 'border-primary ring-2 ring-[#d97757]/25'
+                      ? 'border-primary ring-2 ring-primary/25'
                       : 'border-base-300'
                   }`}
                 >
@@ -540,7 +540,7 @@ export default function MomentsPage() {
                         rows={3}
                         maxLength={editor.maxLength.moment}
                         autoFocus
-                        className="w-full rounded-box border border-base-300 bg-base-100 px-3 py-2 text-sm text-base-content resize-none focus:outline-none focus:border-primary focus:ring-2 focus:ring-[#d97757]/10 transition"
+                        className="w-full rounded-box border border-base-300 bg-base-100 px-3 py-2 text-sm text-base-content resize-none focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition"
                       />
                       <div className="mt-2 flex items-center gap-3">
                         <button

@@ -198,7 +198,7 @@ export function NavCardGrid({ badges }: { badges?: Partial<Record<string, { coun
               className={cn(
                 'group relative flex min-h-[136px] items-center gap-5 overflow-hidden rounded-box border border-base-300 bg-base-100 p-6',
                 'transition-all duration-200 hover:-translate-y-1 hover:border-base-300',
-                'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#a8563a]/30',
+                'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30',
               )}
             >
               <div className="min-w-0 flex-1">

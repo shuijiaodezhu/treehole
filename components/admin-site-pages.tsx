@@ -301,7 +301,7 @@ export function AdminSitePages() {
                 onChange={(e) => setDraft(e.target.value)}
                 rows={18}
                 spellCheck={false}
-                className="w-full rounded-box border border-base-300 bg-base-100 px-4 py-3 font-mono text-[12px] leading-relaxed text-base-content focus:outline-none focus:border-primary/40 focus:ring-2 focus:ring-[#a88ab8]/10 transition"
+                className="w-full rounded-box border border-base-300 bg-base-100 px-4 py-3 font-mono text-[12px] leading-relaxed text-base-content focus:outline-none focus:border-primary/40 focus:ring-2 focus:ring-primary/10 transition"
               />
 
               <div className="mt-3 flex flex-wrap items-center gap-3">
