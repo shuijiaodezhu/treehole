@@ -559,7 +559,7 @@ export default function PlayPage() {
 
               <button
                 onClick={() => setShowPostModal(true)}
-                className="px-5 py-2 rounded-full bg-primary text-white text-sm font-medium hover:shadow-sm transition-all flex items-center gap-1.5 flex-shrink-0"
+                className="px-5 py-2 rounded-full bg-primary text-primary-content text-sm font-medium hover:shadow-sm transition-all flex items-center gap-1.5 flex-shrink-0"
               >
                 <Icon name="plus" className="w-4 h-4" />发活动
               </button>
@@ -592,7 +592,7 @@ export default function PlayPage() {
                           setDetailActivity(act)
                         }
                       }}
-                      className="relative cursor-pointer rounded-box border border-base-300 bg-base-100 p-5 shadow-sm hover:shadow-sm hover:-translate-y-0.5 transition-all text-left flex flex-col focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/30"
+                      className="relative cursor-pointer rounded-box border border-base-300 bg-base-100 p-5 shadow-sm hover:shadow-sm hover:-translate-y-0.5 transition-all text-left flex flex-col focus:outline-none focus:ring-2 focus:ring-primary/30"
                     >
                       {/* 收藏（放在卡片右上角，与"打开详情"的点击区分开） */}
                       <button
@@ -641,7 +641,7 @@ export default function PlayPage() {
                         <span className="flex items-center gap-1"><Icon name="users" className="w-3 h-3" />{act.signups.length}/{act.max_people} 人</span>
                       </div>
 
-                      <div className="mt-auto pt-3 border-t border-[var(--accent-soft)] flex items-center justify-between gap-3">
+                      <div className="mt-auto pt-3 border-t border-base-300 flex items-center justify-between gap-3">
                         <span className="text-[11px] text-base-content/60 truncate">{act.author_name} 发起</span>
                         {isMine ? (
                           confirmDeleteActivity === act.id ? (
@@ -800,7 +800,7 @@ export default function PlayPage() {
                 <button
                   onClick={() => handleSignup(detailActivity)}
                   disabled={signingUp === detailActivity.id}
-                  className="flex-1 py-2.5 rounded-box bg-primary text-white text-sm font-medium hover:shadow-sm transition"
+                  className="flex-1 py-2.5 rounded-box bg-primary text-primary-content text-sm font-medium hover:shadow-sm transition"
                 >
                   {signingUp === detailActivity.id ? '...' : '我要参加'}
                 </button>
@@ -843,7 +843,7 @@ export default function PlayPage() {
               rows={3}
               maxLength={200}
               autoFocus
-              className="w-full px-4 py-3 rounded-box border border-base-300 bg-primary/5 text-sm resize-none focus:outline-none focus:border-primary focus:ring-2 focus:ring-[var(--accent)]/10 transition mb-4"
+              className="w-full px-4 py-3 rounded-box border border-base-300 bg-primary/5 text-sm resize-none focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition mb-4"
             />
 
             {reportMessage && (
@@ -852,7 +852,7 @@ export default function PlayPage() {
 
             <div className="flex gap-2 justify-end">
               <button type="button" onClick={() => { setShowReportModal(false); setReportReason(''); setReportMessage('') }} className="px-5 py-2 rounded-box text-sm text-base-content/60 hover:bg-primary/5 transition">取消</button>
-              <button type="submit" disabled={reporting || !reportReason.trim()} className="px-5 py-2 rounded-box bg-primary text-white text-sm font-medium hover:shadow-sm transition-all disabled:opacity-50">
+              <button type="submit" disabled={reporting || !reportReason.trim()} className="px-5 py-2 rounded-box bg-primary text-primary-content text-sm font-medium hover:shadow-sm transition-all disabled:opacity-50">
                 {reporting ? '提交中...' : '提交'}
               </button>
             </div>
@@ -874,7 +874,7 @@ export default function PlayPage() {
                 placeholder="比如：今晚打 CS"
                 maxLength={30}
                 autoFocus
-                className="w-full px-4 py-2.5 rounded-box border border-base-300 bg-primary/5 text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-[var(--accent)]/10 transition"
+                className="w-full px-4 py-2.5 rounded-box border border-base-300 bg-primary/5 text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition"
               />
             </div>
 
@@ -887,7 +887,7 @@ export default function PlayPage() {
                 placeholder="说清楚要做什么，缺几个人，也可以发个表情"
                 rows={3}
                 maxLength={200}
-                className="w-full px-4 py-2.5 rounded-box border border-base-300 bg-primary/5 text-sm resize-none focus:outline-none focus:border-primary focus:ring-2 focus:ring-[var(--accent)]/10 transition"
+                className="w-full px-4 py-2.5 rounded-box border border-base-300 bg-primary/5 text-sm resize-none focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition"
               />
               <div className="mt-1.5 flex items-center justify-between">
                 <EmojiPicker onPick={insertActivityEmoji} />
@@ -898,17 +898,17 @@ export default function PlayPage() {
             <div className="grid grid-cols-2 gap-3 mb-3">
               <div>
                 <label className="block text-xs text-base-content/60 mb-1.5 tracking-wide">时间</label>
-                <input type="datetime-local" value={newTime} onChange={(e) => setNewTime(e.target.value)} className="w-full px-4 py-2.5 rounded-box border border-base-300 bg-primary/5 text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-[var(--accent)]/10 transition" />
+                <input type="datetime-local" value={newTime} onChange={(e) => setNewTime(e.target.value)} className="w-full px-4 py-2.5 rounded-box border border-base-300 bg-primary/5 text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition" />
               </div>
               <div>
                 <label className="block text-xs text-base-content/60 mb-1.5 tracking-wide">人数上限</label>
-                <input type="number" value={newMaxPeople} onChange={(e) => setNewMaxPeople(parseInt(e.target.value) || 5)} min={2} max={50} className="w-full px-4 py-2.5 rounded-box border border-base-300 bg-primary/5 text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-[var(--accent)]/10 transition" />
+                <input type="number" value={newMaxPeople} onChange={(e) => setNewMaxPeople(parseInt(e.target.value) || 5)} min={2} max={50} className="w-full px-4 py-2.5 rounded-box border border-base-300 bg-primary/5 text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition" />
               </div>
             </div>
 
             <div className="mb-5">
               <label className="block text-xs text-base-content/60 mb-1.5 tracking-wide">类型（可不选）</label>
-              <select value={newTypeId} onChange={(e) => setNewTypeId(e.target.value)} className="w-full px-4 py-2.5 rounded-box border border-base-300 bg-primary/5 text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-[var(--accent)]/10 transition">
+              <select value={newTypeId} onChange={(e) => setNewTypeId(e.target.value)} className="w-full px-4 py-2.5 rounded-box border border-base-300 bg-primary/5 text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition">
                 <option value="">无</option>
                 {types.map((t) => (<option key={t.id} value={t.id}>{t.icon} {t.name}</option>))}
               </select>
@@ -916,7 +916,7 @@ export default function PlayPage() {
 
             <div className="flex gap-2 justify-end">
               <button type="button" onClick={() => setShowPostModal(false)} className="px-5 py-2 rounded-box text-sm text-base-content/60 hover:bg-primary/5 transition">取消</button>
-              <button type="submit" disabled={posting || !newTitle.trim()} className="px-5 py-2 rounded-box bg-primary text-white text-sm font-medium hover:shadow-sm transition-all disabled:opacity-50">
+              <button type="submit" disabled={posting || !newTitle.trim()} className="px-5 py-2 rounded-box bg-primary text-primary-content text-sm font-medium hover:shadow-sm transition-all disabled:opacity-50">
                 {posting ? '发布中...' : '发布'}
               </button>
             </div>
@@ -937,7 +937,7 @@ export default function PlayPage() {
               placeholder="类型名字"
               maxLength={10}
               autoFocus
-              className="w-full px-4 py-2.5 rounded-box border border-base-300 bg-primary/5 text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-[var(--accent)]/10 transition mb-4"
+              className="w-full px-4 py-2.5 rounded-box border border-base-300 bg-primary/5 text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition mb-4"
             />
 
             {createTypeMessage && (
@@ -946,7 +946,7 @@ export default function PlayPage() {
 
             <div className="flex gap-2 justify-end">
               <button type="button" onClick={() => { setShowNewTypeModal(false); setNewTypeName(''); setCreateTypeMessage('') }} className="px-5 py-2 rounded-box text-sm text-base-content/60 hover:bg-primary/5 transition">取消</button>
-              <button type="submit" disabled={creatingType || !newTypeName.trim()} className="px-5 py-2 rounded-box bg-primary text-white text-sm font-medium hover:shadow-sm transition-all disabled:opacity-50">
+              <button type="submit" disabled={creatingType || !newTypeName.trim()} className="px-5 py-2 rounded-box bg-primary text-primary-content text-sm font-medium hover:shadow-sm transition-all disabled:opacity-50">
                 {creatingType ? '提交中...' : '添加'}
               </button>
             </div>

@@ -28,7 +28,7 @@ const KIND_ICON: Record<PlanKind, IconName> = {
 }
 
 const ACCENT: Record<PlanKind, { bar: string; chip: string; text: string }> = {
-  plan: { bar: 'bg-primary', chip: 'bg-primary/5', text: 'text-[var(--accent-deep)]' },
+  plan: { bar: 'bg-primary', chip: 'bg-primary/5', text: 'text-primary' },
   goal: { bar: 'bg-primary', chip: 'bg-base-100', text: 'text-primary' },
   task: { bar: 'bg-primary', chip: 'bg-base-100', text: 'text-primary' },
 }
@@ -111,7 +111,7 @@ export function PlansView({ userId }: { userId: string | null }) {
           <div className="mb-6 grid grid-cols-3 gap-3">
             <div className="rounded-box border border-base-300 bg-base-100/70 px-3 py-2.5">
               <p className="text-[11px] text-base-content/60">待完成</p>
-              <p className="mt-0.5 text-lg font-semibold text-[var(--accent-deep)]">{plans.stats.openTasks}</p>
+              <p className="mt-0.5 text-lg font-semibold text-primary">{plans.stats.openTasks}</p>
             </div>
             <div className="rounded-box border border-base-300 bg-base-100/70 px-3 py-2.5">
               <p className="text-[11px] text-base-content/60">已完成</p>
@@ -166,14 +166,14 @@ export function PlansView({ userId }: { userId: string | null }) {
                 type="button"
                 onClick={() => setShowExtra((v) => !v)}
                 title="添加备注与日期"
-                className="rounded-full border border-base-300 px-2.5 py-1.5 text-[11px] text-base-content/60 transition hover:border-primary hover:text-[var(--accent-deep)]"
+                className="rounded-full border border-base-300 px-2.5 py-1.5 text-[11px] text-base-content/60 transition hover:border-primary hover:text-primary"
               >
                 {showExtra ? '收起' : '备注/日期'}
               </button>
               <button
                 type="submit"
                 disabled={plans.busy || !title.trim()}
-                className="flex items-center gap-1 rounded-full bg-primary px-4 py-1.5 text-xs font-medium text-white transition hover:shadow-sm disabled:opacity-50"
+                className="flex items-center gap-1 rounded-full bg-primary px-4 py-1.5 text-xs font-medium text-primary-content transition hover:shadow-sm disabled:opacity-50"
               >
                 <Icon name="plus" className="h-3.5 w-3.5" />
                 记下来
@@ -200,7 +200,7 @@ export function PlansView({ userId }: { userId: string | null }) {
             )}
           </form>
 
-          {message && <p className="mb-3 text-[11px] text-[var(--accent-deep)]">{message}</p>}
+          {message && <p className="mb-3 text-[11px] text-primary">{message}</p>}
           {plans.error && <p className="mb-3 text-[11px] text-red-500">{plans.error}</p>}
 
           {plans.loading && plans.items.length === 0 ? (
@@ -351,7 +351,7 @@ function PlanRow({
                   due.tone === 'overdue'
                     ? 'bg-red-50 text-red-500'
                     : due.tone === 'soon'
-                      ? 'bg-primary/5 text-[var(--accent-deep)]'
+                      ? 'bg-primary/5 text-primary'
                       : 'bg-base-100 text-base-content/70'
                 }`}
               >

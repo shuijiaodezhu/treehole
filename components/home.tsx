@@ -16,11 +16,11 @@ import type { FriendRequest, LoginStreak } from './types'
 
 export function WeatherCard({ weather, dateText }: { weather: WeatherState; dateText: string }) {
   return (
-    <div className="rounded-box border border-base-300 bg-gradient-to-br from-[var(--accent-soft)] via-[var(--accent-soft)] to-[var(--accent-line)] p-5 relative overflow-hidden shadow-sm">
+    <div className="rounded-box border border-base-300 bg-gradient-to-br from-primary/5 via-[var(--accent-soft)] to-base-300 p-5 relative overflow-hidden shadow-sm">
 
       <div className="relative">
         <div className="flex items-center justify-between mb-3">
-          <WeatherIcon name={weather.icon} className="w-7 h-7 text-[var(--accent-light)]" />
+          <WeatherIcon name={weather.icon} className="w-7 h-7 text-accent" />
           <span className="text-[11px] text-base-content/60 tracking-wider">今日天气</span>
         </div>
 
@@ -30,7 +30,7 @@ export function WeatherCard({ weather, dateText }: { weather: WeatherState; date
         </p>
 
         <div className="flex items-baseline gap-2 mt-2">
-          <span className="text-2xl font-bold text-[var(--accent-deep)]">{weather.temp}°</span>
+          <span className="text-2xl font-bold text-primary">{weather.temp}°</span>
           <span className="text-xs text-base-content/60">/ {weather.tempMin}°</span>
         </div>
 
@@ -44,11 +44,11 @@ export function LoginStreakCard({ streak }: { streak: LoginStreak }) {
   return (
     <div className="rounded-box border border-base-300 bg-base-100 p-5 relative overflow-hidden shadow-sm">
       <div className="flex items-center gap-2 mb-3">
-        <IconFlame className="w-4 h-4 text-[var(--accent-light)]" />
+        <IconFlame className="w-4 h-4 text-accent" />
         <span className="text-[11px] text-base-content/60 tracking-wider">已经陪你走过</span>
       </div>
 
-      <p className="text-[var(--accent-deep)]">
+      <p className="text-primary">
         <span className="text-3xl font-bold">{streak.days}</span>
         <span className="text-xs ml-1 text-base-content/60">天</span>
       </p>
@@ -86,14 +86,14 @@ export function FriendRequestBanner({ requests }: { requests: FriendRequest[] })
   return (
     <Link
       href="/friends"
-      className="group flex items-center justify-between rounded-box border border-base-300 bg-gradient-to-r from-[var(--accent-soft)] to-[var(--accent-soft)] px-5 py-3 transition-all hover:shadow-sm hover:-translate-y-0.5 shadow-sm"
+      className="group flex items-center justify-between rounded-box border border-base-300 bg-gradient-to-r from-primary/5 to-primary/5 px-5 py-3 transition-all hover:shadow-sm hover:-translate-y-0.5 shadow-sm"
     >
       <div className="flex items-center gap-3 min-w-0">
         <div className="relative flex-shrink-0">
           <div className="w-9 h-9 rounded-full bg-base-100/70 backdrop-blur flex items-center justify-center">
-            <IconMail className="w-4 h-4 text-[var(--accent-deep)]" />
+            <IconMail className="w-4 h-4 text-primary" />
           </div>
-          <span className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 bg-primary rounded-full ring-2 ring-[var(--accent-soft)]"></span>
+          <span className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 bg-primary rounded-full ring-2 ring-primary/10"></span>
         </div>
 
         <div className="min-w-0">
@@ -104,7 +104,7 @@ export function FriendRequestBanner({ requests }: { requests: FriendRequest[] })
             {preview.map((r) => (
               <span
                 key={r.friendship_id}
-                className="w-5 h-5 rounded-full overflow-hidden bg-[var(--accent-line)] flex items-center justify-center text-[11px] text-[var(--accent-deep)] flex-shrink-0"
+                className="w-5 h-5 rounded-full overflow-hidden bg-base-300 flex items-center justify-center text-[11px] text-primary flex-shrink-0"
                 title={r.nickname || r.username}
               >
                 {r.avatar_url ? (

@@ -16,7 +16,7 @@ export default function SitePageIndex() {
       <div className="mx-auto max-w-2xl px-6 py-10">
         <Link
           href="/"
-          className="inline-flex items-center gap-1.5 text-sm text-base-content/60 transition hover:text-[var(--accent-deep)]"
+          className="inline-flex items-center gap-1.5 text-sm text-base-content/60 transition hover:text-primary"
         >
           <Icon name="back" className="h-4 w-4" />
           回首页
@@ -49,7 +49,7 @@ export default function SitePageIndex() {
                     </span>
                   )}
                 </span>
-                <Icon name="arrow" className="h-4 w-4 flex-shrink-0 text-[var(--accent-light)]" />
+                <Icon name="arrow" className="h-4 w-4 flex-shrink-0 text-accent" />
               </Link>
             ))}
           </div>

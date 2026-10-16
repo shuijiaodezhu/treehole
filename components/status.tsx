@@ -202,7 +202,7 @@ export function StatusPicker({ userId }: { userId: string | null }) {
     <section className="rounded-box border border-base-300 bg-base-100/80 p-4">
       <div className="flex items-baseline justify-between gap-3">
         <p className="text-xs font-medium text-base-content">状态</p>
-        <p className="text-[11px] text-[var(--accent-light)]">
+        <p className="text-[11px] text-accent">
           {text ? `当前：${text}` : '默认不显示'}
         </p>
       </div>
@@ -222,8 +222,8 @@ export function StatusPicker({ userId }: { userId: string | null }) {
               onClick={() => void save(active ? '' : preset)}
               className={`rounded-full border px-2.5 py-1 font-serif-cn text-[11px] transition disabled:opacity-50 ${
                 active
-                  ? 'border-primary bg-primary/5 text-[var(--accent-deep)]'
-                  : 'border-base-300 text-base-content/60 hover:border-[var(--accent-light)] hover:text-[var(--accent-deep)]'
+                  ? 'border-primary bg-primary/5 text-primary'
+                  : 'border-base-300 text-base-content/60 hover:border-accent hover:text-primary'
               }`}
             >
               {preset}
@@ -240,13 +240,13 @@ export function StatusPicker({ userId }: { userId: string | null }) {
           onChange={(e) => setText(cleanStatus(e.target.value))}
           maxLength={STATUS_MAX}
           placeholder="自己写，最多三个字"
-          className="min-w-0 flex-1 rounded-box border border-base-300 bg-primary/5 px-3 py-2 text-xs text-base-content placeholder:text-[var(--accent-light)] focus:border-primary focus:outline-none"
+          className="min-w-0 flex-1 rounded-box border border-base-300 bg-primary/5 px-3 py-2 text-xs text-base-content placeholder:text-accent focus:border-primary focus:outline-none"
         />
         <button
           type="button"
           disabled={loading || saving}
           onClick={() => void save(text)}
-          className="rounded-box bg-primary px-3 py-2 text-xs text-white transition hover:opacity-90 disabled:opacity-50"
+          className="rounded-box bg-primary px-3 py-2 text-xs text-primary-content transition hover:opacity-90 disabled:opacity-50"
         >
           保存
         </button>
@@ -255,7 +255,7 @@ export function StatusPicker({ userId }: { userId: string | null }) {
             type="button"
             disabled={loading || saving}
             onClick={() => void save('')}
-            className="rounded-box border border-base-300 px-3 py-2 text-xs text-base-content/60 transition hover:text-[var(--accent-deep)] disabled:opacity-50"
+            className="rounded-box border border-base-300 px-3 py-2 text-xs text-base-content/60 transition hover:text-primary disabled:opacity-50"
           >
             清除
           </button>

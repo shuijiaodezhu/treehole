@@ -212,11 +212,11 @@ export function NotificationBell({
     <Link
       href="/me/notifications"
       title={missing ? '通知（还没开通）' : '通知'}
-      className={`relative inline-flex h-9 w-9 items-center justify-center rounded-full border border-base-300 bg-base-100/70 text-base-content/60 transition hover:text-[var(--accent-deep)] ${className}`}
+      className={`relative inline-flex h-9 w-9 items-center justify-center rounded-full border border-base-300 bg-base-100/70 text-base-content/60 transition hover:text-primary ${className}`}
     >
       <Icon name="bell" className="h-4 w-4" />
       {unread > 0 && (
-        <span className="absolute -right-0.5 -top-0.5 min-w-[16px] rounded-full bg-primary px-1 text-[11px] font-medium leading-4 text-white">
+        <span className="absolute -right-0.5 -top-0.5 min-w-[16px] rounded-full bg-primary px-1 text-[11px] font-medium leading-4 text-primary-content">
           {unread > 99 ? '99+' : unread}
         </span>
       )}
@@ -235,14 +235,14 @@ export function NotificationsList({ userId }: { userId: string | null }) {
         <p>
           通知还没开通。需要在 Supabase 的 SQL Editor 里，执行{' '}
           <code>supabase-notifications.sql</code> 这个文件的
-          <span className="font-medium text-[var(--accent-deep)]">内容</span>
+          <span className="font-medium text-primary">内容</span>
           （打开那个文件复制全文，不是把这行字打进去）。
         </p>
-        <p className="mt-1.5 text-[11.5px] text-[var(--accent-light)]">
+        <p className="mt-1.5 text-[11.5px] text-accent">
           没跑也不影响别的功能，只是收不到提醒。
         </p>
         {errorText && (
-          <p className="mt-2.5 whitespace-pre-wrap rounded-box bg-primary/5 px-3 py-2 text-[11.5px] text-[var(--accent-deep)]">
+          <p className="mt-2.5 whitespace-pre-wrap rounded-box bg-primary/5 px-3 py-2 text-[11.5px] text-primary">
             数据库的原话：{errorText}
           </p>
         )}
@@ -261,7 +261,7 @@ export function NotificationsList({ userId }: { userId: string | null }) {
             <button
               type="button"
               onClick={() => void markAllRead()}
-              className="text-[11px] text-base-content/60 transition hover:text-[var(--accent-deep)]"
+              className="text-[11px] text-base-content/60 transition hover:text-primary"
             >
               全部已读
             </button>
@@ -270,7 +270,7 @@ export function NotificationsList({ userId }: { userId: string | null }) {
             <button
               type="button"
               onClick={() => void clearAll()}
-              className="text-[11px] text-[var(--accent-light)] transition hover:text-red-500"
+              className="text-[11px] text-accent transition hover:text-red-500"
             >
               清空
             </button>
@@ -281,7 +281,7 @@ export function NotificationsList({ userId }: { userId: string | null }) {
       {!loading && items.length === 0 ? (
         <div className="rounded-box border border-dashed border-base-300 bg-base-100/60 px-4 py-10 text-center">
           <p className="text-xs text-base-content/60">还没有通知</p>
-          <p className="mt-1 text-[11.5px] text-[var(--accent-light)]">
+          <p className="mt-1 text-[11.5px] text-accent">
             有人提到你、回了你的信、处理了你的举报，都会出现在这里。
           </p>
         </div>
@@ -291,7 +291,7 @@ export function NotificationsList({ userId }: { userId: string | null }) {
             const inner = (
               <>
                 <span className="mt-0.5 flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-primary/5">
-                  <Icon name={iconOf(notice.kind)} className="h-3.5 w-3.5 text-[var(--accent-deep)]" />
+                  <Icon name={iconOf(notice.kind)} className="h-3.5 w-3.5 text-primary" />
                 </span>
                 <span className="min-w-0 flex-1">
                   <span className="flex items-baseline justify-between gap-2">
@@ -302,7 +302,7 @@ export function NotificationsList({ userId }: { userId: string | null }) {
                     >
                       {notice.title}
                     </span>
-                    <span className="flex-shrink-0 text-[11px] text-[var(--accent-light)]">
+                    <span className="flex-shrink-0 text-[11px] text-accent">
                       {relativeTime(notice.created_at)}
                     </span>
                   </span>
@@ -331,7 +331,7 @@ export function NotificationsList({ userId }: { userId: string | null }) {
                   <Link
                     href={notice.link}
                     onClick={() => void markRead(notice.id)}
-                    className={`${rowClass} hover:border-[var(--accent-light)]`}
+                    className={`${rowClass} hover:border-accent`}
                   >
                     {inner}
                   </Link>
@@ -339,7 +339,7 @@ export function NotificationsList({ userId }: { userId: string | null }) {
                   <button
                     type="button"
                     onClick={() => void markRead(notice.id)}
-                    className={`${rowClass} w-full text-left hover:border-[var(--accent-light)]`}
+                    className={`${rowClass} w-full text-left hover:border-accent`}
                   >
                     {inner}
                   </button>

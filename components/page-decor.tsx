@@ -117,11 +117,11 @@ export function PageDecor() {
 
       {/* 左下：当前页面的图案（首页没有） */}
       {page !== 'home' && (
-        <Motif page={page} className="absolute bottom-9 left-10 h-10 w-10 text-[var(--accent-light)]" />
+        <Motif page={page} className="absolute bottom-9 left-10 h-10 w-10 text-accent" />
       )}
 
       {/* 右下：三颗小点 */}
-      <Dots className="absolute bottom-9 right-10 h-9 w-9 text-[var(--accent-light)]" />
+      <Dots className="absolute bottom-9 right-10 h-9 w-9 text-accent" />
     </div>
   )
 }

@@ -120,7 +120,7 @@ export function LoginDevicesSection({ userId }: { userId: string | null }) {
     <section className="rounded-box border border-base-300 bg-base-100 p-6 shadow-sm">
       <div className="flex items-center gap-3">
         <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary/5">
-          <Icon name="shield" className="h-4 w-4 text-[var(--accent-deep)]" />
+          <Icon name="shield" className="h-4 w-4 text-primary" />
         </div>
         <div>
           <h2 className="text-sm font-semibold text-base-content">登录设备</h2>
@@ -153,7 +153,7 @@ export function LoginDevicesSection({ userId }: { userId: string | null }) {
                   <span className="flex items-center gap-2">
                     <span className="truncate text-xs font-medium text-base-content">{describeDevice(r.user_agent)}</span>
                     {i === 0 && (
-                      <span className="rounded-full bg-primary/5 px-2 py-0.5 text-[11px] text-[var(--accent-deep)]">
+                      <span className="rounded-full bg-primary/5 px-2 py-0.5 text-[11px] text-primary">
                         本次
                       </span>
                     )}

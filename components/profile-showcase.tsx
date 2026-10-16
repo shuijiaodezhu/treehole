@@ -87,7 +87,7 @@ export function ShowcaseSettingsSection({ userId }: { userId: string | null }) {
         {userId && (
           <Link
             href={`/u/${userId}`}
-            className="flex flex-shrink-0 items-center gap-1 rounded-box border border-base-300 px-3 py-1.5 text-[11px] text-base-content/60 transition hover:border-[var(--accent-light)] hover:text-[var(--accent-deep)]"
+            className="flex flex-shrink-0 items-center gap-1 rounded-box border border-base-300 px-3 py-1.5 text-[11px] text-base-content/60 transition hover:border-accent hover:text-primary"
           >
             <Icon name="user" className="h-3 w-3" />
             看看我的
@@ -101,7 +101,7 @@ export function ShowcaseSettingsSection({ userId }: { userId: string | null }) {
           checked={showPosts}
           disabled={loading || saving || missing}
           onChange={(e) => void toggle(e.target.checked)}
-          className="mt-0.5 h-4 w-4 accent-[var(--accent)] disabled:opacity-50"
+          className="mt-0.5 h-4 w-4 accent-primary disabled:opacity-50"
         />
         <span className="min-w-0">
           <span className="block text-xs font-medium text-base-content">
@@ -109,7 +109,7 @@ export function ShowcaseSettingsSection({ userId }: { userId: string | null }) {
           </span>
           <span className="mt-0.5 block text-[11.5px] leading-relaxed text-base-content/60">
             只列院子里公开说过的话（最多 5 条）。
-            <span className="text-[var(--accent-deep)]">匿名说的永远不会出现在展示页。</span>
+            <span className="text-primary">匿名说的永远不会出现在展示页。</span>
           </span>
         </span>
       </label>

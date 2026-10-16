@@ -87,13 +87,13 @@ export default function ForgotPasswordPage() {
               onChange={(e) => setEmail(e.target.value)}
               placeholder="你的邮箱"
               autoComplete="email"
-              className="w-full rounded-box border border-base-300 bg-primary/5 px-4 py-3 font-serif-cn text-[13px] text-base-content placeholder:text-base-content/60 focus:border-primary focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/10"
+              className="w-full rounded-box border border-base-300 bg-primary/5 px-4 py-3 font-serif-cn text-[13px] text-base-content placeholder:text-base-content/60 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/10"
             />
             {message && <p className="text-[11px] text-red-500">{message}</p>}
             <button
               type="submit"
               disabled={loading || !email.trim()}
-              className="w-full rounded-box bg-primary py-3 font-serif-cn text-[13px] text-white transition hover:shadow-sm disabled:opacity-50"
+              className="w-full rounded-box bg-primary py-3 font-serif-cn text-[13px] text-primary-content transition hover:shadow-sm disabled:opacity-50"
             >
               {loading ? '发送中…' : '寄出重置链接'}
             </button>
@@ -101,10 +101,10 @@ export default function ForgotPasswordPage() {
         )}
 
         <div className="mt-6 flex items-center justify-between font-serif-cn text-[11.5px]">
-          <Link href="/login" className="text-[var(--accent-deep)] hover:underline">
+          <Link href="/login" className="text-primary hover:underline">
             回登录
           </Link>
-          <Link href="/register" className="text-base-content/60 hover:text-[var(--accent-deep)]">
+          <Link href="/register" className="text-base-content/60 hover:text-primary">
             还没有账号
           </Link>
         </div>

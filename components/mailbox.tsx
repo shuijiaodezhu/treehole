@@ -222,7 +222,7 @@ export function MailboxTrigger({ mailbox, onOpen }: { mailbox: Mailbox; onOpen: 
       onClick={onOpen}
       aria-label="冬日信箱"
       title="冬日信箱"
-      className="relative inline-flex h-9 w-9 items-center justify-center rounded-full border border-base-300 bg-base-100/60 text-base-content/60 transition hover:bg-base-100/90 hover:text-[var(--accent-deep)]"
+      className="relative inline-flex h-9 w-9 items-center justify-center rounded-full border border-base-300 bg-base-100/60 text-base-content/60 transition hover:bg-base-100/90 hover:text-primary"
     >
       <svg
         className="h-[18px] w-[18px]"
@@ -239,7 +239,7 @@ export function MailboxTrigger({ mailbox, onOpen }: { mailbox: Mailbox; onOpen: 
         <path d="M22 10V6.5A1.5 1.5 0 0 1 23.5 5h3A1.5 1.5 0 0 1 28 6.5V10" />
       </svg>
       {mailbox.unread > 0 && (
-        <span className="absolute -right-0.5 -top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-primary px-1 text-[11px] text-white">
+        <span className="absolute -right-0.5 -top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-primary px-1 text-[11px] text-primary-content">
           {mailbox.unread > 9 ? '9+' : mailbox.unread}
         </span>
       )}
@@ -385,7 +385,7 @@ export function MailboxDialog({
                 </p>
                 <Link
                   href="/admin"
-                  className="mt-5 inline-flex items-center gap-1.5 rounded-full border border-base-300 bg-primary/5 px-4 py-2 font-serif-cn text-[11.5px] text-[var(--accent-deep)] transition hover:bg-[var(--accent-line)]"
+                  className="mt-5 inline-flex items-center gap-1.5 rounded-full border border-base-300 bg-primary/5 px-4 py-2 font-serif-cn text-[11.5px] text-primary transition hover:bg-base-300"
                 >
                   去后台看信
                   <Icon name="arrow" className="h-3 w-3" />
@@ -404,7 +404,7 @@ export function MailboxDialog({
                 </p>
 
                 <div className="mt-4 text-center">
-                  <span className="inline-flex items-center gap-1.5 rounded-full bg-primary/5 px-3 py-1.5 font-serif-cn text-[11px] text-[var(--accent-deep)]">
+                  <span className="inline-flex items-center gap-1.5 rounded-full bg-primary/5 px-3 py-1.5 font-serif-cn text-[11px] text-primary">
                     <Icon name="lock" className="h-3 w-3" />
                     匿名 · 站主看不到你的名字
                   </span>
@@ -417,7 +417,7 @@ export function MailboxDialog({
                   { t: '匿名，只给你和他看', d: '他没有你的名字；不公开、不进动态' },
                 ].map((step, i) => (
                   <li key={step.t} className="flex items-start gap-3">
-                    <span className="mt-0.5 flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-primary/5 font-serif-cn text-[11px] text-[var(--accent-deep)]">
+                    <span className="mt-0.5 flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-primary/5 font-serif-cn text-[11px] text-primary">
                       {i + 1}
                     </span>
                     <span className="min-w-0">
@@ -430,7 +430,7 @@ export function MailboxDialog({
                 ))}
               </ol>
 
-                <p className="mt-5 text-center font-serif-cn text-[11.5px] text-[var(--accent-light)]">
+                <p className="mt-5 text-center font-serif-cn text-[11.5px] text-accent">
                   说完就轻松一点了。
                 </p>
               </div>
@@ -482,14 +482,14 @@ export function MailboxDialog({
                 rows={2}
                 maxLength={500}
                 placeholder="写点想说的…"
-                className="min-w-0 flex-1 resize-none rounded-box border border-base-300 bg-primary/5 px-3.5 py-2.5 font-serif-cn text-[12.5px] text-base-content placeholder:text-base-content/60 focus:border-primary focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/10"
+                className="min-w-0 flex-1 resize-none rounded-box border border-base-300 bg-primary/5 px-3.5 py-2.5 font-serif-cn text-[12.5px] text-base-content placeholder:text-base-content/60 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/10"
               />
             <EmojiPicker onPick={insertEmoji} align="right" />
               <button
                 type="button"
                 disabled={mailbox.sending || !draft.trim()}
                 onClick={() => void handleSend()}
-                className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-primary text-white transition hover:shadow-sm disabled:opacity-50"
+                className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-primary text-primary-content transition hover:shadow-sm disabled:opacity-50"
                 aria-label="寄出"
               >
                 <Icon name="send" className="h-4 w-4" />

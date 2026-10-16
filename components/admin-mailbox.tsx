@@ -239,7 +239,7 @@ export function AdminMailbox({ adminId }: { adminId: string }) {
           <h2 className="flex items-baseline gap-2 text-sm font-semibold text-base-content">
             冬日信箱
             {unreadTotal > 0 && (
-              <span className="rounded-full bg-primary px-2 py-0.5 text-[11px] font-normal text-white">
+              <span className="rounded-full bg-primary px-2 py-0.5 text-[11px] font-normal text-primary-content">
                 {unreadTotal} 封新的
               </span>
             )}

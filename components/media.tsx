@@ -230,7 +230,7 @@ export function ImagePicker({
     <div className="mt-3">
       <div className="flex flex-wrap items-center gap-2">
         <label
-          className={`cursor-pointer rounded-box border border-base-300 bg-base-100 px-3 py-1.5 text-xs text-base-content/60 transition hover:border-[var(--accent-light)] ${
+          className={`cursor-pointer rounded-box border border-base-300 bg-base-100 px-3 py-1.5 text-xs text-base-content/60 transition hover:border-accent ${
             disabled || uploading ? 'opacity-50 pointer-events-none' : ''
           }`}
         >
@@ -270,7 +270,7 @@ export function ImagePicker({
             type="button"
             onClick={addLink}
             disabled={disabled || !linkInput.trim()}
-            className="rounded-box border border-base-300 bg-base-100 px-2.5 py-1.5 text-xs text-base-content/60 transition hover:border-[var(--accent-light)] disabled:opacity-50"
+            className="rounded-box border border-base-300 bg-base-100 px-2.5 py-1.5 text-xs text-base-content/60 transition hover:border-accent disabled:opacity-50"
           >
             添加
           </button>

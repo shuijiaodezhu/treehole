@@ -177,7 +177,7 @@ export function WelcomeLetter({ userId }: { userId: string | null }) {
       {/* 信头 */}
       <div className="flex flex-shrink-0 items-start gap-3 border-b border-base-300 bg-primary/5 px-6 py-5">
         <span className="mt-0.5 flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full bg-base-100/80">
-          <Icon name="mail" className="h-4 w-4 text-[var(--accent-deep)]" />
+          <Icon name="mail" className="h-4 w-4 text-primary" />
         </span>
         <div className="mx-auto min-w-0 max-w-xl flex-1">
           <h2 className="font-serif-cn text-sm font-semibold text-base-content">{letter.title}</h2>
@@ -202,14 +202,14 @@ export function WelcomeLetter({ userId }: { userId: string | null }) {
           <Link
             href="/p/community"
             onClick={close}
-            className="text-[11px] text-base-content/60 transition hover:text-[var(--accent-deep)]"
+            className="text-[11px] text-base-content/60 transition hover:text-primary"
           >
             看看《社区公约》→
           </Link>
           <button
             type="button"
             onClick={close}
-            className="rounded-box bg-primary px-6 py-2.5 text-xs font-medium text-white transition hover:shadow-sm"
+            className="rounded-box bg-primary px-6 py-2.5 text-xs font-medium text-primary-content transition hover:shadow-sm"
           >
             我记住了，进去吧
           </button>

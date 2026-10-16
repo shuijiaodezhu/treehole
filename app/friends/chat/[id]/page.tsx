@@ -209,7 +209,7 @@ function ChatInner() {
         <div className="max-w-xl mx-auto px-5 py-4 flex items-center gap-3">
           <Link
             href="/friends"
-            className="text-base-content/60 hover:text-[var(--accent-deep)] transition p-1.5 rounded-lg hover:bg-primary/5"
+            className="text-base-content/60 hover:text-primary transition p-1.5 rounded-lg hover:bg-primary/5"
           >
             <IconArrow className="w-5 h-5" />
           </Link>
@@ -218,18 +218,18 @@ function ChatInner() {
             href={`/u/${friendId}`}
             className="flex min-w-0 flex-shrink-0 items-center gap-2.5 transition hover:opacity-80"
           >
-            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[var(--accent-line)] to-[var(--accent-line)] flex items-center justify-center flex-shrink-0 overflow-hidden">
+            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-base-300 to-base-300 flex items-center justify-center flex-shrink-0 overflow-hidden">
               {friendAvatar ? (
                 <img src={friendAvatar} alt="" className="w-full h-full object-cover" />
               ) : (
-                <span className="text-sm text-[var(--accent-deep)] font-semibold">{friendName[0]}</span>
+                <span className="text-sm text-primary font-semibold">{friendName[0]}</span>
               )}
             </div>
             <h1 className="min-w-0 truncate text-sm font-semibold text-base-content">{friendName}</h1>
           </Link>
           {friendStatus && <StatusLabel text={friendStatus} />}
           {friendTyping && (
-            <span className="font-serif-cn text-[11px] leading-none text-[var(--accent-light)]">正在输入…</span>
+            <span className="font-serif-cn text-[11px] leading-none text-accent">正在输入…</span>
           )}
           {!affinityHidden && <AffinityScore amount={affinity.mine} friendName={friendName} />}
         </div>
@@ -266,14 +266,14 @@ function ChatInner() {
               reportTyping()
             }}
             placeholder="说点什么... 也可以发个表情"
-            className="flex-1 px-4 py-2.5 rounded-full border border-base-300 bg-primary/5 text-sm text-base-content focus:outline-none focus:border-primary focus:ring-2 focus:ring-[var(--accent)]/10 transition placeholder:text-base-content/60"
+            className="flex-1 px-4 py-2.5 rounded-full border border-base-300 bg-primary/5 text-sm text-base-content focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition placeholder:text-base-content/60"
             maxLength={500}
           />
           <EmojiPicker onPick={insertEmoji} align="right" size="md" />
           <button
             type="submit"
             disabled={sending || !content.trim()}
-            className="w-11 h-11 rounded-full bg-primary text-white flex items-center justify-center hover:shadow-sm transition-all disabled:opacity-50 disabled:cursor-not-allowed flex-shrink-0"
+            className="w-11 h-11 rounded-full bg-primary text-primary-content flex items-center justify-center hover:shadow-sm transition-all disabled:opacity-50 disabled:cursor-not-allowed flex-shrink-0"
           >
             <IconSend className="w-4 h-4" />
           </button>

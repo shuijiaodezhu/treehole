@@ -112,7 +112,7 @@ export function EmojiPicker({
         className={`flex ${t.box} items-center justify-center rounded-full border transition-all duration-200 ${
           open
             ? 'border-primary bg-primary text-white shadow-sm'
-            : 'border-base-300 bg-primary/5 text-[var(--accent-deep)] hover:-translate-y-0.5 hover:border-[var(--accent-light)] hover:shadow-sm'
+            : 'border-base-300 bg-primary/5 text-primary hover:-translate-y-0.5 hover:border-accent hover:shadow-sm'
         }`}
       >
         <CuteFace className={`${t.icon} transition-transform duration-200 ${open ? 'scale-110' : ''}`} />
@@ -139,7 +139,7 @@ export function EmojiPicker({
                 onClick={() => setGroup(i)}
                 className={`rounded-full px-2.5 py-1 text-[11px] transition ${
                   i === group
-                    ? 'bg-base-100 font-medium text-[var(--accent-deep)] shadow-sm'
+                    ? 'bg-base-100 font-medium text-primary shadow-sm'
                     : 'text-base-content/60 hover:bg-base-100/70'
                 }`}
               >

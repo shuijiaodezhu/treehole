@@ -156,14 +156,14 @@ function UserShowcase() {
           <button
             type="button"
             onClick={() => router.back()}
-            className="text-sm text-base-content/60 transition hover:text-[var(--accent-deep)]"
+            className="text-sm text-base-content/60 transition hover:text-primary"
           >
             ← 返回
           </button>
           {isMe && (
             <Link
               href="/me"
-              className="text-xs text-base-content/60 transition hover:text-[var(--accent-deep)]"
+              className="text-xs text-base-content/60 transition hover:text-primary"
             >
               这是我 · 去改资料
             </Link>
@@ -179,7 +179,7 @@ function UserShowcase() {
                   // eslint-disable-next-line @next/next/no-img-element
                   <img src={profile.avatar_url} alt="" className="h-full w-full object-cover" />
                 ) : (
-                  <span className="font-semibold text-[var(--accent-deep)]">{name[0]}</span>
+                  <span className="font-semibold text-primary">{name[0]}</span>
                 )}
               </div>
 
@@ -205,7 +205,7 @@ function UserShowcase() {
 
             {/* 好感度：显示的是「看的人对 TA 的」，每个人看都是自己那一份 */}
             {!isMe && affinity.mine !== null && affinity.mine > 0 && (
-              <p className="mt-4 flex items-center gap-1.5 font-serif-cn text-[11px] text-[var(--accent-light)]">
+              <p className="mt-4 flex items-center gap-1.5 font-serif-cn text-[11px] text-accent">
                 <Icon name="heart" className="h-3 w-3" />
                 你对 TA 的来往 · {affinity.mine}
               </p>
@@ -215,7 +215,7 @@ function UserShowcase() {
               {isFriend ? (
                 <Link
                   href={`/friends/chat/${targetId}`}
-                  className="rounded-box bg-primary px-5 py-2 text-sm font-medium text-white transition-all hover:shadow-sm"
+                  className="rounded-box bg-primary px-5 py-2 text-sm font-medium text-primary-content transition-all hover:shadow-sm"
                 >
                   去小屋聊聊
                 </Link>
@@ -227,7 +227,7 @@ function UserShowcase() {
               {!isMe && (
                 <Link
                   href="/friends"
-                  className="text-xs text-base-content/60 transition hover:text-[var(--accent-deep)]"
+                  className="text-xs text-base-content/60 transition hover:text-primary"
                 >
                   去小屋
                 </Link>
@@ -252,11 +252,11 @@ function UserShowcase() {
             ) : (
               <ul className="mt-3 space-y-3">
                 {posts.map((post) => (
-                  <li key={post.id} className="border-b border-[var(--accent-soft)] pb-3 last:border-b-0 last:pb-0">
+                  <li key={post.id} className="border-b border-base-300 pb-3 last:border-b-0 last:pb-0">
                     <p className="line-clamp-3 whitespace-pre-wrap text-xs leading-relaxed text-base-content">
                       {post.content}
                     </p>
-                    <div className="mt-1.5 flex items-center gap-3 text-[11px] text-[var(--accent-light)]">
+                    <div className="mt-1.5 flex items-center gap-3 text-[11px] text-accent">
                       <span>{new Date(post.created_at).toLocaleDateString('zh-CN')}</span>
                       {post.image_urls && post.image_urls.length > 0 && (
                         <span className="flex items-center gap-1">
@@ -270,7 +270,7 @@ function UserShowcase() {
               </ul>
             )}
 
-            <p className="mt-4 text-[11px] leading-relaxed text-[var(--accent-light)]">
+            <p className="mt-4 text-[11px] leading-relaxed text-accent">
               只显示公开的帖子。<span className="text-base-content/60">匿名说的不会出现在这里。</span>
             </p>
           </section>

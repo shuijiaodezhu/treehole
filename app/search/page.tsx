@@ -263,7 +263,7 @@ export default function SearchPage() {
       <div className="relative max-w-3xl mx-auto px-6 pt-10 pb-16">
         <Link
           href="/"
-          className="inline-flex items-center gap-1.5 text-sm text-base-content/60 hover:text-[var(--accent-deep)] transition"
+          className="inline-flex items-center gap-1.5 text-sm text-base-content/60 hover:text-primary transition"
         >
           <Icon name="back" className="w-4 h-4" />
           返回
@@ -284,13 +284,13 @@ export default function SearchPage() {
             placeholder="输入关键词，比如：奶龙 / user_ / 今天"
             autoFocus
             maxLength={50}
-            className="w-full pl-11 pr-10 py-3 rounded-box border border-base-300 bg-base-100 text-sm text-base-content placeholder:text-base-content/60 focus:outline-none focus:border-[var(--accent-light)] focus:ring-2 focus:ring-[var(--accent)]/10 transition"
+            className="w-full pl-11 pr-10 py-3 rounded-box border border-base-300 bg-base-100 text-sm text-base-content placeholder:text-base-content/60 focus:outline-none focus:border-accent focus:ring-2 focus:ring-primary/10 transition"
           />
           {keyword && (
             <button
               type="button"
               onClick={() => setKeyword('')}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-base-content/60 hover:text-[var(--accent-deep)] transition"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-base-content/60 hover:text-primary transition"
               aria-label="清空"
             >
               <Icon name="x" className="w-4 h-4" />
@@ -380,7 +380,7 @@ export default function SearchPage() {
                   className="block rounded-box border border-base-300 bg-base-100 p-4 hover:shadow-sm hover:-translate-y-0.5 transition"
                 >
                   <div className="flex items-center gap-2.5 mb-2">
-                    <span className="w-7 h-7 rounded-full bg-base-200 flex items-center justify-center overflow-hidden flex-shrink-0 text-[11px] text-[var(--accent-deep)]">
+                    <span className="w-7 h-7 rounded-full bg-base-200 flex items-center justify-center overflow-hidden flex-shrink-0 text-[11px] text-primary">
                       {p.authorAvatar ? (
                         // eslint-disable-next-line @next/next/no-img-element
                         <img src={p.authorAvatar} alt="" className="w-full h-full object-cover" />
@@ -471,7 +471,7 @@ export default function SearchPage() {
                     key={u.id}
                     className="flex items-center gap-3 rounded-box border border-base-300 bg-base-100 p-4"
                   >
-                    <span className="w-10 h-10 rounded-full bg-gradient-to-br from-primary/20 to-primary/10 flex items-center justify-center overflow-hidden flex-shrink-0 text-sm text-[var(--accent-deep)] font-semibold">
+                    <span className="w-10 h-10 rounded-full bg-gradient-to-br from-primary/20 to-primary/10 flex items-center justify-center overflow-hidden flex-shrink-0 text-sm text-primary font-semibold">
                       {u.avatar_url ? (
                         // eslint-disable-next-line @next/next/no-img-element
                         <img src={u.avatar_url} alt="" className="w-full h-full object-cover" />
@@ -483,7 +483,7 @@ export default function SearchPage() {
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-medium text-base-content truncate">
                         {name}
-                        {isMe && <span className="ml-1.5 text-[11px] text-[var(--accent-deep)]">（我）</span>}
+                        {isMe && <span className="ml-1.5 text-[11px] text-primary">（我）</span>}
                       </p>
                       {u.username && (
                         <p className="text-[11px] text-base-content/40 truncate">@{u.username}</p>
@@ -496,7 +496,7 @@ export default function SearchPage() {
                     {!isMe && (
                       <Link
                         href="/friends"
-                        className="flex-shrink-0 rounded-full bg-primary px-3 py-1 text-[11px] text-white hover:bg-[var(--accent-deep)] transition"
+                        className="flex-shrink-0 rounded-full bg-primary px-3 py-1 text-[11px] text-primary-content hover:bg-primary transition"
                       >
                         去小屋加好友
                       </Link>

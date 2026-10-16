@@ -90,7 +90,7 @@ export default function ResetPasswordPage() {
             </p>
             <Link
               href="/forgot-password"
-              className="mt-3 inline-block rounded-full bg-primary px-4 py-2 font-serif-cn text-[11.5px] text-white"
+              className="mt-3 inline-block rounded-full bg-primary px-4 py-2 font-serif-cn text-[11.5px] text-primary-content"
             >
               重新申请
             </Link>
@@ -104,7 +104,7 @@ export default function ResetPasswordPage() {
               onChange={(e) => setPassword(e.target.value)}
               placeholder="新密码（至少 8 位，含字母和数字）"
               autoComplete="new-password"
-              className="w-full rounded-box border border-base-300 bg-primary/5 px-4 py-3 font-serif-cn text-[13px] text-base-content placeholder:text-base-content/60 focus:border-primary focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/10"
+              className="w-full rounded-box border border-base-300 bg-primary/5 px-4 py-3 font-serif-cn text-[13px] text-base-content placeholder:text-base-content/60 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/10"
             />
             <input
               type="password"
@@ -113,13 +113,13 @@ export default function ResetPasswordPage() {
               onChange={(e) => setConfirm(e.target.value)}
               placeholder="再输一次"
               autoComplete="new-password"
-              className="w-full rounded-box border border-base-300 bg-primary/5 px-4 py-3 font-serif-cn text-[13px] text-base-content placeholder:text-base-content/60 focus:border-primary focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/10"
+              className="w-full rounded-box border border-base-300 bg-primary/5 px-4 py-3 font-serif-cn text-[13px] text-base-content placeholder:text-base-content/60 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/10"
             />
             {message && <p className="text-[11px] text-red-500">{message}</p>}
             <button
               type="submit"
               disabled={loading || !password || !confirm}
-              className="w-full rounded-box bg-primary py-3 font-serif-cn text-[13px] text-white transition hover:shadow-sm disabled:opacity-50"
+              className="w-full rounded-box bg-primary py-3 font-serif-cn text-[13px] text-primary-content transition hover:shadow-sm disabled:opacity-50"
             >
               {loading ? '保存中…' : '保存新密码'}
             </button>

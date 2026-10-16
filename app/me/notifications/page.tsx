@@ -43,7 +43,7 @@ export default function NotificationsPage() {
         <header className="mb-6">
           <Link
             href="/me"
-            className="text-sm text-base-content/60 transition hover:text-[var(--accent-deep)]"
+            className="text-sm text-base-content/60 transition hover:text-primary"
           >
             ← 返回
           </Link>

@@ -26,7 +26,7 @@ export default function Error({
   return (
     <div className="flex min-h-screen flex-col items-center justify-center px-6 text-center">
       <svg
-        className="h-14 w-14 text-[var(--accent-light)]"
+        className="h-14 w-14 text-accent"
         viewBox="0 0 32 32"
         fill="none"
         stroke="currentColor"
@@ -55,13 +55,13 @@ export default function Error({
         <button
           type="button"
           onClick={reset}
-          className="rounded-full bg-primary px-5 py-2.5 font-serif-cn text-[12.5px] text-white transition hover:shadow-sm"
+          className="rounded-full bg-primary px-5 py-2.5 font-serif-cn text-[12.5px] text-primary-content transition hover:shadow-sm"
         >
           再试一次
         </button>
         <Link
           href="/"
-          className="rounded-full border border-base-300 bg-base-100/70 px-5 py-2.5 font-serif-cn text-[12.5px] text-[var(--accent-deep)] transition hover:bg-base-100"
+          className="rounded-full border border-base-300 bg-base-100/70 px-5 py-2.5 font-serif-cn text-[12.5px] text-primary transition hover:bg-base-100"
         >
           回首页
         </Link>

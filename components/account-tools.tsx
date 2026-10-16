@@ -91,7 +91,7 @@ export function ExportDataSection({ userId, email }: { userId: string | null; em
     <section className="rounded-box border border-base-300 bg-base-100 p-6 shadow-sm">
       <div className="flex items-center gap-3">
         <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary/5">
-          <Icon name="download" className="h-4 w-4 text-[var(--accent-deep)]" />
+          <Icon name="download" className="h-4 w-4 text-primary" />
         </div>
         <div className="min-w-0 flex-1">
           <h2 className="text-sm font-semibold text-base-content">导出我的数据</h2>
@@ -110,7 +110,7 @@ export function ExportDataSection({ userId, email }: { userId: string | null; em
           setResult(await exportMyData(userId, email))
           setBusy(false)
         }}
-        className="mt-4 inline-flex items-center gap-1.5 rounded-full bg-primary px-4 py-2 text-xs text-white transition hover:shadow-sm disabled:opacity-50"
+        className="mt-4 inline-flex items-center gap-1.5 rounded-full bg-primary px-4 py-2 text-xs text-primary-content transition hover:shadow-sm disabled:opacity-50"
       >
         <Icon name="download" className="h-3.5 w-3.5" />
         {busy ? '整理中…' : '导出为 JSON'}
@@ -218,7 +218,7 @@ export function DeleteAccountSection({ userId }: { userId: string | null }) {
               type="button"
               disabled={busy}
               onClick={() => void submit()}
-              className="rounded-full bg-primary px-4 py-2 text-xs text-white transition hover:bg-primary disabled:opacity-50"
+              className="rounded-full bg-primary px-4 py-2 text-xs text-primary-content transition hover:bg-primary disabled:opacity-50"
             >
               {busy ? '提交中…' : '确认提交'}
             </button>
@@ -346,7 +346,7 @@ export function DeletionRequestsSection({ adminId }: { adminId: string }) {
           <h2 className="flex items-baseline gap-2 text-sm font-semibold text-base-content">
             注销申请
             {rows.length > 0 && (
-              <span className="rounded-full bg-primary px-2 py-0.5 text-[11px] font-normal text-white">
+              <span className="rounded-full bg-primary px-2 py-0.5 text-[11px] font-normal text-primary-content">
                 {rows.length} 条待处理
               </span>
             )}
@@ -393,7 +393,7 @@ export function DeletionRequestsSection({ adminId }: { adminId: string }) {
                 <button
                   type="button"
                   onClick={() => void markDone(r.id)}
-                  className="ml-auto rounded-full border border-base-300 bg-base-100 px-3 py-1.5 text-[11px] text-[var(--accent-deep)] transition hover:bg-primary/5"
+                  className="ml-auto rounded-full border border-base-300 bg-base-100 px-3 py-1.5 text-[11px] text-primary transition hover:bg-primary/5"
                 >
                   已处理
                 </button>

@@ -198,7 +198,7 @@ export function HomeClassic() {
   return (
     <div className="min-h-screen">
       {/* 顶部 header */}
-      <header className="w-full bg-gradient-to-br from-[var(--accent-soft)] via-primary/15 to-[var(--accent-line)] border-b border-base-300 relative overflow-hidden shadow-[0_2px_16px_rgba(217,119,87,0.06)]">
+      <header className="w-full bg-gradient-to-br from-primary/5 via-primary/15 to-base-300 border-b border-base-300 relative overflow-hidden shadow-[0_2px_16px_rgba(217,119,87,0.06)]">
         <div className="absolute -top-10 -right-10 w-48 h-48 bg-primary opacity-10 rounded-full blur-3xl pointer-events-none"></div>
         <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-primary opacity-[0.07] rounded-full blur-3xl pointer-events-none"></div>
 
@@ -206,14 +206,14 @@ export function HomeClassic() {
           <div>
             <h1 className="text-3xl font-bold text-base-content">你的来信</h1>
             <p className="mt-2 text-base-content/60 flex items-baseline gap-2">
-              <span className="font-art text-2xl text-[var(--accent-deep)]">Dear You</span>
+              <span className="font-art text-2xl text-primary">Dear You</span>
               <span className="text-sm">· 这里有一封，你的来信</span>
             </p>
           </div>
 
           <div className="text-right">
             <p className="text-sm mb-2">
-              <span className="text-[var(--accent-deep)] font-medium">欢迎回来，</span>
+              <span className="text-primary font-medium">欢迎回来，</span>
               <span className="text-base-content/60">{email || '朋友'}</span>
             </p>
 
@@ -225,14 +225,14 @@ export function HomeClassic() {
               <Link
                 href="/search"
                 aria-label="搜索"
-                className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-base-300 bg-base-100/60 text-base-content/60 hover:bg-base-100/90 hover:text-[var(--accent-deep)] transition"
+                className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-base-300 bg-base-100/60 text-base-content/60 hover:bg-base-100/90 hover:text-primary transition"
               >
                 <IconSearch className="w-[18px] h-[18px]" />
               </Link>
               <button
                 type="button"
                 onClick={() => setConfirmLogout(true)}
-                className="text-sm text-[var(--accent-deep)] hover:underline font-medium"
+                className="text-sm text-primary hover:underline font-medium"
               >
                 退出登录
               </button>
@@ -298,14 +298,14 @@ export function HomeClassic() {
             <Link
               key={item.slug}
               href={`/p/${item.slug}`}
-              className="text-[11px] text-base-content/60 transition hover:text-[var(--accent-deep)]"
+              className="text-[11px] text-base-content/60 transition hover:text-primary"
             >
               {item.label}
             </Link>
           ))}
           <Link
             href="/p"
-            className="ml-auto text-[11px] text-base-content/60 transition hover:text-[var(--accent-deep)]"
+            className="ml-auto text-[11px] text-base-content/60 transition hover:text-primary"
           >
             全部条款 →
           </Link>
@@ -343,7 +343,7 @@ export function HomeClassic() {
               <button
                 type="button"
                 onClick={handleLogout}
-                className="flex-1 rounded-box bg-gradient-to-r from-[var(--accent-light)] to-[var(--accent)] px-4 py-2 text-sm font-medium text-white hover:shadow-[0_6px_20px_rgba(217,119,87,0.3)] transition-all"
+                className="flex-1 rounded-box bg-gradient-to-r from-primary/20 to-primary/10 px-4 py-2 text-sm font-medium text-white hover:shadow-[0_6px_20px_rgba(217,119,87,0.3)] transition-all"
               >
                 退出登录
               </button>

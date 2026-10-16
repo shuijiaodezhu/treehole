@@ -233,7 +233,7 @@ export function AffinitySettingsSection({ userId }: { userId: string | null }) {
     <section className="rounded-box border border-base-300 bg-base-100 p-6 shadow-sm">
       <div className="flex items-center gap-3">
         <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary/5">
-          <Icon name="heart" className="h-4 w-4 text-[var(--accent-deep)]" />
+          <Icon name="heart" className="h-4 w-4 text-primary" />
         </div>
         <div className="min-w-0 flex-1">
           <h2 className="text-sm font-semibold text-base-content">好感度</h2>
@@ -256,7 +256,7 @@ export function AffinitySettingsSection({ userId }: { userId: string | null }) {
               setHidden(nextHidden)
               writeAffinityHidden(userId, nextHidden)
             }}
-            className="mt-0.5 h-4 w-4 accent-[var(--accent)]"
+            className="mt-0.5 h-4 w-4 accent-primary"
           />
           <span className="min-w-0">
             <span className="block text-xs font-medium text-base-content">在聊天里显示好感度</span>
@@ -273,7 +273,7 @@ export function AffinitySettingsSection({ userId }: { userId: string | null }) {
             checked={isPublic}
             disabled={loading || saving || missing}
             onChange={(e) => void togglePublic(e.target.checked)}
-            className="mt-0.5 h-4 w-4 accent-[var(--accent)] disabled:opacity-50"
+            className="mt-0.5 h-4 w-4 accent-primary disabled:opacity-50"
           />
           <span className="min-w-0">
             <span className="block text-xs font-medium text-base-content">
@@ -315,7 +315,7 @@ export function AffinityScore({
   return (
     <span
       title={`你和 ${friendName} 来往留下的痕迹：聊一句 +1（每天最多 20），给他的朋友圈点个赞 +2（每天最多 10）。不会减少，也不催你天天说话。`}
-      className="ml-auto flex flex-shrink-0 cursor-default select-none items-center gap-1 font-serif-cn text-[11px] leading-none text-[var(--accent-light)]"
+      className="ml-auto flex flex-shrink-0 cursor-default select-none items-center gap-1 font-serif-cn text-[11px] leading-none text-accent"
     >
       <Icon name="heart" className="h-3 w-3" />
       {amount}

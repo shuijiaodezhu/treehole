@@ -55,7 +55,7 @@ export function ImageWall({
               <button
                 type="button"
                 onClick={() => setPreview(url)}
-                className="block w-full overflow-hidden rounded-box border border-base-300 focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/30"
+                className="block w-full overflow-hidden rounded-box border border-base-300 focus:outline-none focus:ring-2 focus:ring-primary/30"
                 aria-label="查看大图"
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}

@@ -147,7 +147,7 @@ export function UserBanSection({ adminId }: { adminId: string }) {
         <button
           type="button"
           onClick={() => void search()}
-          className="rounded-box bg-primary px-3 py-2 text-xs text-white transition hover:opacity-90"
+          className="rounded-box bg-primary px-3 py-2 text-xs text-primary-content transition hover:opacity-90"
         >
           搜索
         </button>

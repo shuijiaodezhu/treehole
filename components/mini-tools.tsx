@@ -226,14 +226,14 @@ export function MiniTools() {
                 max={6}
                 value={diceCount}
                 onChange={(e) => setDiceCount(Number(e.target.value))}
-                className="accent-[var(--accent)]"
+                className="accent-primary"
               />
               <span className="text-xs text-base-content">{diceCount} 颗</span>
               <button
                 type="button"
                 onClick={rollDice}
                 disabled={rolling}
-                className="ml-auto rounded-box bg-primary px-5 py-2 text-xs font-medium text-white transition hover:shadow-sm disabled:opacity-60"
+                className="ml-auto rounded-box bg-primary px-5 py-2 text-xs font-medium text-primary-content transition hover:shadow-sm disabled:opacity-60"
               >
                 {rolling ? '掷…' : '掷'}
               </button>
@@ -241,15 +241,15 @@ export function MiniTools() {
 
             <div className="mt-5 flex min-h-[72px] flex-wrap items-center justify-center gap-3">
               {dice.length === 0 ? (
-                <p className="text-xs text-[var(--accent-light)]">点「掷」试试</p>
+                <p className="text-xs text-accent">点「掷」试试</p>
               ) : (
                 dice.map((face, i) => (
                   <span
                     key={i}
                     className={`flex h-14 w-14 items-center justify-center rounded-box border text-2xl font-semibold transition ${
                       rolling
-                        ? 'border-base-300 bg-primary/5 text-[var(--accent-light)]'
-                        : 'border-primary bg-base-100 text-[var(--accent-deep)] shadow-sm'
+                        ? 'border-base-300 bg-primary/5 text-accent'
+                        : 'border-primary bg-base-100 text-primary shadow-sm'
                     }`}
                   >
                     {face}
@@ -276,14 +276,14 @@ export function MiniTools() {
                 max={20}
                 value={coinCount}
                 onChange={(e) => setCoinCount(Number(e.target.value))}
-                className="accent-[var(--accent)]"
+                className="accent-primary"
               />
               <span className="text-xs text-base-content">{coinCount} 枚</span>
               <button
                 type="button"
                 onClick={flipCoins}
                 disabled={rolling}
-                className="ml-auto rounded-box bg-primary px-5 py-2 text-xs font-medium text-white transition hover:shadow-sm disabled:opacity-60"
+                className="ml-auto rounded-box bg-primary px-5 py-2 text-xs font-medium text-primary-content transition hover:shadow-sm disabled:opacity-60"
               >
                 {rolling ? '抛…' : '抛'}
               </button>
@@ -291,16 +291,16 @@ export function MiniTools() {
 
             <div className="mt-5 flex min-h-[72px] flex-wrap items-center justify-center gap-2">
               {coins.length === 0 ? (
-                <p className="text-xs text-[var(--accent-light)]">点「抛」试试</p>
+                <p className="text-xs text-accent">点「抛」试试</p>
               ) : (
                 coins.map((isHead, i) => (
                   <span
                     key={i}
                     className={`flex h-11 w-11 items-center justify-center rounded-full border text-[11px] transition ${
                       rolling
-                        ? 'border-base-300 bg-primary/5 text-[var(--accent-light)]'
+                        ? 'border-base-300 bg-primary/5 text-accent'
                         : isHead
-                          ? 'border-primary bg-base-100 text-[var(--accent-deep)]'
+                          ? 'border-primary bg-base-100 text-primary'
                           : 'border-base-300 bg-primary/5 text-base-content/60'
                     }`}
                   >
@@ -336,18 +336,18 @@ export function MiniTools() {
                   type="checkbox"
                   checked={noRepeatPick}
                   onChange={(e) => setNoRepeatPick(e.target.checked)}
-                  className="h-3.5 w-3.5 accent-[var(--accent)]"
+                  className="h-3.5 w-3.5 accent-primary"
                 />
                 不重复（抽完自动重新开始）
               </label>
-              <span className="text-[11.5px] text-[var(--accent-light)]">
+              <span className="text-[11.5px] text-accent">
                 共 {options.length} 个
                 {noRepeatPick && pickedHistory.length > 0 && ` · 已抽 ${pickedHistory.length}`}
               </span>
               <button
                 type="button"
                 onClick={pickOne}
-                className="ml-auto rounded-box bg-primary px-5 py-2 text-xs font-medium text-white transition hover:shadow-sm"
+                className="ml-auto rounded-box bg-primary px-5 py-2 text-xs font-medium text-primary-content transition hover:shadow-sm"
               >
                 抽一个
               </button>
@@ -355,11 +355,11 @@ export function MiniTools() {
 
             <div className="mt-5 flex min-h-[64px] items-center justify-center">
               {picked ? (
-                <p className="rounded-box border border-primary bg-base-100 px-6 py-4 text-xl font-semibold text-[var(--accent-deep)] shadow-sm">
+                <p className="rounded-box border border-primary bg-base-100 px-6 py-4 text-xl font-semibold text-primary shadow-sm">
                   {picked}
                 </p>
               ) : (
-                <p className="text-xs text-[var(--accent-light)]">还没抽</p>
+                <p className="text-xs text-accent">还没抽</p>
               )}
             </div>
           </div>
@@ -394,7 +394,7 @@ export function MiniTools() {
               <button
                 type="button"
                 onClick={rollNumbers}
-                className="ml-auto rounded-box bg-primary px-5 py-2 text-xs font-medium text-white transition hover:shadow-sm"
+                className="ml-auto rounded-box bg-primary px-5 py-2 text-xs font-medium text-primary-content transition hover:shadow-sm"
               >
                 生成
               </button>
@@ -405,7 +405,7 @@ export function MiniTools() {
                 type="checkbox"
                 checked={noRepeatNumber}
                 onChange={(e) => setNoRepeatNumber(e.target.checked)}
-                className="h-3.5 w-3.5 accent-[var(--accent)]"
+                className="h-3.5 w-3.5 accent-primary"
               />
               不重复
             </label>
@@ -416,12 +416,12 @@ export function MiniTools() {
 
             <div className="mt-5 flex min-h-[64px] flex-wrap items-center justify-center gap-2">
               {numbers.length === 0 ? (
-                <p className="text-xs text-[var(--accent-light)]">点「生成」试试</p>
+                <p className="text-xs text-accent">点「生成」试试</p>
               ) : (
                 numbers.map((n, i) => (
                   <span
                     key={i}
-                    className="rounded-box border border-primary bg-base-100 px-4 py-2 text-lg font-semibold text-[var(--accent-deep)]"
+                    className="rounded-box border border-primary bg-base-100 px-4 py-2 text-lg font-semibold text-primary"
                   >
                     {n}
                   </span>
@@ -440,7 +440,7 @@ export function MiniTools() {
             <button
               type="button"
               onClick={() => setHistory([])}
-              className="text-[11.5px] text-[var(--accent-light)] transition hover:text-red-500"
+              className="text-[11.5px] text-accent transition hover:text-red-500"
             >
               清空
             </button>
@@ -448,9 +448,9 @@ export function MiniTools() {
           <ul className="mt-2 space-y-1">
             {history.map((row) => (
               <li key={row.at} className="flex items-center gap-2 text-[11px]">
-                <span className="text-[var(--accent-light)]">{row.tool}</span>
+                <span className="text-accent">{row.tool}</span>
                 <span className="min-w-0 flex-1 truncate text-base-content">{row.result}</span>
-                <span className="flex-shrink-0 text-[11px] text-[var(--accent-light)]">
+                <span className="flex-shrink-0 text-[11px] text-accent">
                   {new Date(row.at).toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' })}
                 </span>
               </li>

@@ -547,7 +547,7 @@ export default function MomentsPage() {
                           type="button"
                           disabled={editor.isBusy('moment', post.id)}
                           onClick={() => void handleSaveMoment(post.id)}
-                          className="rounded-lg bg-primary px-3 py-1 text-xs text-white hover:bg-primary transition disabled:opacity-50"
+                          className="rounded-lg bg-primary px-3 py-1 text-xs text-primary-content hover:bg-primary transition disabled:opacity-50"
                         >
                           {editor.isBusy('moment', post.id) ? '保存中…' : '保存'}
                         </button>

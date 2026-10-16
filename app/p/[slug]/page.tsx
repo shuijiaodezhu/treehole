@@ -50,7 +50,7 @@ function SitePageInner() {
       <div className="mx-auto max-w-2xl px-6 py-10">
         <Link
           href="/p"
-          className="inline-flex items-center gap-1.5 text-sm text-base-content/60 transition hover:text-[var(--accent-deep)]"
+          className="inline-flex items-center gap-1.5 text-sm text-base-content/60 transition hover:text-primary"
         >
           <Icon name="back" className="h-4 w-4" />
           全部条款与说明
@@ -80,7 +80,7 @@ function SitePageInner() {
               </p>
               <Link
                 href="/p"
-                className="mt-4 inline-block rounded-box bg-primary px-4 py-2 text-xs text-white transition hover:bg-[var(--accent-deep)]"
+                className="mt-4 inline-block rounded-box bg-primary px-4 py-2 text-xs text-primary-content transition hover:bg-primary"
               >
                 回去看看有哪些页
               </Link>
@@ -95,7 +95,7 @@ function SitePageInner() {
                     {lines.map((line, j) => (
                       <li
                         key={j}
-                        className="font-serif-cn text-[13px] leading-relaxed text-base-content before:mr-1.5 before:text-[var(--accent-light)] before:content-['']"
+                        className="font-serif-cn text-[13px] leading-relaxed text-base-content before:mr-1.5 before:text-accent before:content-['']"
                       >
                         {line}
                       </li>
@@ -122,7 +122,7 @@ function SitePageInner() {
                 <Link
                   key={p.slug}
                   href={`/p/${p.slug}`}
-                  className="rounded-full border border-base-300 bg-base-100/70 px-3 py-1.5 text-[11px] text-[var(--accent-deep)] transition hover:bg-primary/5"
+                  className="rounded-full border border-base-300 bg-base-100/70 px-3 py-1.5 text-[11px] text-primary transition hover:bg-primary/5"
                 >
                   {p.title}
                 </Link>

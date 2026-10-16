@@ -30,7 +30,7 @@ export function MailboxSetup({ onRetry, accent = 'warm' }: { onRetry: () => void
           panel: 'border-base-300 bg-primary/5',
           title: 'text-base-content',
           body: 'text-base-content/60',
-          btn: 'border-base-300 bg-base-100 text-[var(--accent-deep)] hover:bg-base-100/80',
+          btn: 'border-base-300 bg-base-100 text-primary hover:bg-base-100/80',
           primary: 'bg-primary text-white',
         }
 

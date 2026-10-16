@@ -70,8 +70,8 @@ export function VaultView({ userId }: { userId: string | null }) {
       {/* 顶部：容量与上传 */}
       <div className="mb-4 rounded-box border border-base-300 bg-base-100/80 p-5 shadow-sm backdrop-blur">
         <div className="flex flex-wrap items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-box bg-gradient-to-br from-[var(--accent-light)] to-[var(--accent-light)]">
-            <Icon name="box" className="h-5 w-5 text-[var(--accent-deep)]" />
+          <div className="flex h-10 w-10 items-center justify-center rounded-box bg-gradient-to-br from-primary/20 to-primary/10">
+            <Icon name="box" className="h-5 w-5 text-primary" />
           </div>
           <div className="min-w-0 flex-1">
             <p className="text-sm font-semibold text-base-content">储物箱</p>
@@ -112,7 +112,7 @@ export function VaultView({ userId }: { userId: string | null }) {
           className={`rounded-full px-3 py-1 text-[11px] transition ${
             filter === 'all'
               ? 'bg-primary text-white'
-              : 'border border-base-300 bg-base-100 text-base-content/60 hover:border-[var(--accent-light)]'
+              : 'border border-base-300 bg-base-100 text-base-content/60 hover:border-accent'
           }`}
         >
           全部 {vault.files.length}
@@ -125,7 +125,7 @@ export function VaultView({ userId }: { userId: string | null }) {
             className={`rounded-full px-3 py-1 text-[11px] transition ${
               filter === c
                 ? 'bg-primary text-white'
-                : 'border border-base-300 bg-base-100 text-base-content/60 hover:border-[var(--accent-light)]'
+                : 'border border-base-300 bg-base-100 text-base-content/60 hover:border-accent'
             }`}
           >
             {CATEGORY_LABEL[c]} {vault.counts[c]}
@@ -151,7 +151,7 @@ export function VaultView({ userId }: { userId: string | null }) {
               key={f.id}
               className="flex items-center gap-3 rounded-box border border-base-300 bg-base-100/80 p-3.5 backdrop-blur"
             >
-              <span className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-box bg-primary/5 text-[var(--accent-deep)]">
+              <span className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-box bg-primary/5 text-primary">
                 <Icon name={CATEGORY_ICON[f.category]} className="h-4 w-4" />
               </span>
 
@@ -167,7 +167,7 @@ export function VaultView({ userId }: { userId: string | null }) {
               <button
                 type="button"
                 onClick={() => void handleDownload(f.path)}
-                className="flex flex-shrink-0 items-center gap-1 rounded-lg border border-base-300 px-2.5 py-1 text-[11px] text-base-content/60 transition hover:border-[var(--accent-light)] hover:text-[var(--accent-deep)]"
+                className="flex flex-shrink-0 items-center gap-1 rounded-lg border border-base-300 px-2.5 py-1 text-[11px] text-base-content/60 transition hover:border-accent hover:text-primary"
               >
                 <Icon name="download" className="h-3.5 w-3.5" />
                 下载

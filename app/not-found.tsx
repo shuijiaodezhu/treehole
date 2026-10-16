@@ -46,13 +46,13 @@ export default function NotFound() {
         <div className="mt-7 flex flex-wrap items-center justify-center gap-3">
           <Link
             href="/"
-            className="rounded-box bg-primary px-5 py-2.5 text-sm font-medium text-white transition hover:shadow-sm"
+            className="rounded-box bg-primary px-5 py-2.5 text-sm font-medium text-primary-content transition hover:shadow-sm"
           >
             回首页
           </Link>
           <Link
             href="/p"
-            className="rounded-box border border-base-300 px-5 py-2.5 text-sm text-[var(--accent-deep)] transition hover:bg-primary/5"
+            className="rounded-box border border-base-300 px-5 py-2.5 text-sm text-primary transition hover:bg-primary/5"
           >
             看看条款与说明
           </Link>
