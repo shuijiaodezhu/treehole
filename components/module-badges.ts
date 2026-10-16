@@ -193,15 +193,17 @@ export function useModuleBadges(userId: string | null): ModuleBadges {
           .filter(Boolean)
           .join(',')
 
-        const { data, error } = await supabase
+        // 同样：只数个数（head: true 不带数据体），未读交给服务端过滤
+        let replyQuery = supabase
           .from('world_comments')
-          .select('id, created_at')
+          .select('id', { count: 'exact', head: true })
           .or(orFilter)
           .neq('author_id', userId)
-          .limit(200)
+        if (seenAt) replyQuery = replyQuery.gt('created_at', seenAt)
 
+        const { count: replyCount, error } = await replyQuery
         if (error) throw error
-        setWorldReplies((data ?? []).filter((c) => isNewer(c.created_at, seenAt)).length)
+        setWorldReplies(replyCount ?? 0)
       } catch (err) {
         console.error('院子回复统计失败:', err)
       }
@@ -214,11 +216,20 @@ export function useModuleBadges(userId: string | null): ModuleBadges {
     // refreshWorldReplies 内部是 async，setState 都在 await 之后；规则无法识别
     // eslint-disable-next-line react-hooks/set-state-in-effect
     refreshWorldReplies()
+    /*
+     * 切回标签页时的重算要节流：
+     * 这个 hook 一次要发 5-6 个查询，用户来回切窗口会让它反复打 Supabase ——
+     * 那是纯粹浪费的流量。60 秒内只算一次（挂载时那一次不受影响）。
+     */
+    const MIN_REFRESH_MS = 60_000
+    let lastRefreshAt = 0
     const onVisible = () => {
-      if (document.visibilityState === 'visible') {
-        refreshSeenBadges()
-        refreshWorldReplies()
-      }
+      if (document.visibilityState !== 'visible') return
+      const now = Date.now()
+      if (now - lastRefreshAt < MIN_REFRESH_MS) return
+      lastRefreshAt = now
+      refreshSeenBadges()
+      refreshWorldReplies()
     }
     document.addEventListener('visibilitychange', onVisible)
     return () => document.removeEventListener('visibilitychange', onVisible)
@@ -264,17 +275,21 @@ export function useModuleBadges(userId: string | null): ModuleBadges {
         return
       }
 
-      const { data: msgs, error: msgError } = await supabase
+      /*
+       * 只数个数、不取行。
+       * head: true → 响应里只有计数头（没有数据体）；未读交给服务端过滤。
+       * 原来这里把**每个会话的所有消息**拉回来再在本地筛，是出站流量最大的一个漏斗。
+       */
+      let unreadQuery = supabase
         .from('messages')
-        .select('id, sender_id, created_at')
+        .select('id', { count: 'exact', head: true })
         .in('conversation_id', convIds)
         .neq('sender_id', uid)
+      if (friendSeen) unreadQuery = unreadQuery.gt('created_at', friendSeen)
 
+      const { count: unreadCount, error: msgError } = await unreadQuery
       if (msgError) throw msgError
-
-      setUnreadMessages(
-        (msgs ?? []).filter((m) => isNewer(m.created_at, friendSeen)).length,
-      )
+      setUnreadMessages(unreadCount ?? 0)
     } catch (err) {
       console.error('好友未读统计失败:', err)
     }
