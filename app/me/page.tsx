@@ -170,7 +170,7 @@ export default function MePage() {
 
             <Link
               href="/me/edit"
-              className="relative mt-5 inline-block px-5 py-2 rounded-box bg-primary text-primary-content text-sm font-medium hover:shadow-sm transition-all"
+              className="relative mt-5 inline-block self-start px-5 py-2 rounded-box bg-primary text-primary-content text-sm font-medium transition-colors"
             >
               编辑资料
             </Link>
