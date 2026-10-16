@@ -275,7 +275,39 @@ export default function WorldPage() {
   // 有人回我（评论我的帖 / 回复我的评论）的未读数
   // 只解构出稳定的值：count 是数字 ✓ markRead / refresh 是 useCallback ✓
   // （整包 replies 每次渲染都是新对象 ✗ 放进依赖会死循环 ✓）
-  const { count: repliesCount, markRead: markRepliesRead, refresh: refreshReplies } = useWorldRepliesBadge(meId)
+  const {
+    count: repliesCount,
+    targets: repliesTargets,
+    markRead: markRepliesRead,
+    refresh: refreshReplies,
+  } = useWorldRepliesBadge(meId)
+
+  /** 点「有人回了你」→ 跳到那条帖子并高亮 2 秒；跳完就把红点清掉 ✓ */
+  const jumpToReply = useCallback(() => {
+    const target = repliesTargets[0]
+    markRepliesRead()
+    if (!target) return
+
+    const find = () => document.querySelector(`[data-post-id="${target.postId}"]`)
+    const go = (el: Element) => {
+      el.scrollIntoView({ behavior: 'smooth', block: 'center' })
+      el.classList.add('ring-2', 'ring-primary')
+      window.setTimeout(() => el.classList.remove('ring-2', 'ring-primary'), 2000)
+    }
+
+    const el = find()
+    if (el) {
+      go(el)
+      return
+    }
+    // 不在当前分区（比如你在别的分区看）→ 先切回大厅，再跳一次
+    setCurrentCategory(null)
+    setExpandedCategory(null)
+    window.setTimeout(() => {
+      const again = find()
+      if (again) go(again)
+    }, 600)
+  }, [repliesTargets, markRepliesRead])
 
   /*
    * 打开院子 = 看过"有人回了你"了 → 清掉那个提示。
@@ -285,7 +317,7 @@ export default function WorldPage() {
    */
   useEffect(() => {
     if (repliesCount <= 0) return
-    const timer = window.setTimeout(() => markRepliesRead(), 1500)
+    const timer = window.setTimeout(() => markRepliesRead(), 20000)
     return () => window.clearTimeout(timer)
   }, [repliesCount, markRepliesRead])
 
@@ -767,11 +799,18 @@ export default function WorldPage() {
             <div className="mb-3 flex items-center gap-2 text-xs text-base-content/60">
               <span>正在看：</span><span className="text-primary font-medium">{currentLocationName}</span>
               {repliesCount > 0 && (
-                <span className="ml-1 min-w-[16px] h-4 px-1 rounded-full bg-primary text-primary-content text-[11px] leading-4 text-center font-medium">
-                  {repliesCount > 99 ? '99+' : repliesCount}
-                </span>
+                <button
+                  type="button"
+                  onClick={jumpToReply}
+                  title="点一下跳到被回复的帖子"
+                  className="ml-1 flex items-center gap-1.5 rounded-full bg-primary/10 px-2 py-0.5 text-primary transition-colors hover:bg-primary/20"
+                >
+                  <span className="min-w-[16px] h-4 px-1 rounded-full bg-primary text-primary-content text-[11px] leading-4 text-center font-medium">
+                    {repliesCount > 99 ? '99+' : repliesCount}
+                  </span>
+                  <span>有人回了你</span>
+                </button>
               )}
-              {repliesCount > 0 && <span>有人回了你</span>}
             </div>
 
             <div className="space-y-3">

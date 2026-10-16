@@ -357,10 +357,13 @@ export function markMomentsSeen(userId: string): void {
  */
 export function useWorldRepliesBadge(userId: string | null): {
   count: number
+  /** 新回复所在的位置（按时间倒序）：给它帖子 id，界面就能跳过去 ✓ */
+  targets: { postId: string; commentId: string }[]
   markRead: () => void
   refresh: () => void
 } {
   const [count, setCount] = useState(0)
+  const [targets, setTargets] = useState<{ postId: string; commentId: string }[]>([])
   const [refreshKey, setRefreshKey] = useState(0)
 
   useEffect(() => {
@@ -395,7 +398,7 @@ export function useWorldRepliesBadge(userId: string | null): {
 
         const { data: incoming, error } = await supabase
           .from('world_comments')
-          .select('id, created_at')
+          .select('id, post_id, created_at')
           .or(orFilter)
           .neq('author_id', userId)
           .order('created_at', { ascending: false })
@@ -404,7 +407,10 @@ export function useWorldRepliesBadge(userId: string | null): {
         if (error) throw error
         if (cancelled) return
 
-        setCount((incoming ?? []).filter((c) => isNewer(c.created_at, seenAt)).length)
+        const fresh = ((incoming ?? []) as { id: string; post_id: string; created_at: string }[])
+          .filter((c) => isNewer(c.created_at, seenAt))
+        setCount(fresh.length)
+        setTargets(fresh.map((c) => ({ postId: c.post_id, commentId: c.id })))
       } catch (err) {
         if (!cancelled) console.error('院子回复统计失败:', err)
       }
@@ -423,11 +429,12 @@ export function useWorldRepliesBadge(userId: string | null): {
     // 主页的院子提示也一起推进，否则返回主页还会显示"有新内容"
     writeSeenAt('world', now)
     setCount(0)
+    setTargets([])
   }, [userId])
 
   const refresh = useCallback(() => setRefreshKey((k) => k + 1), [])
 
-  return { count, markRead, refresh }
+  return { count, targets, markRead, refresh }
 }
 
 /** 供主页计算院子徽标：新帖点 + 回复数 */
