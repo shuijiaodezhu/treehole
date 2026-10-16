@@ -185,6 +185,15 @@ export default function WorldPage() {
     if (cachedList && cachedList.length > 0) {
       setPosts(cachedList)
       setLoading(false)
+
+      /*
+       * 「少问」：本机这份**刚刚才拉过**（30 秒内）→ 这一轮连服务器都不问
+       *   来回复切分区时就不会每次都跑一趟跨境请求
+       *   超过 30 秒才照常去对齐（保证点赞/评论/新帖最终会对上）
+       * 这是"增量同步"里风险最低的一半：只判断"刚拉过没有"
+       */
+      const FRESH_MS = 30 * 1000
+      if (age(listKey) < FRESH_MS) return
     }
 
     let query = supabase.from('world_posts').select('id, author_id, is_anonymous, anonymous_id, content, category_id, created_at, image_urls').eq('status', 'published').eq('is_hidden', false).order('created_at', { ascending: false }).limit(50)
