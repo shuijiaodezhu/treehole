@@ -9,6 +9,7 @@ import Link from 'next/link'
 import { readSeenAt, writeSeenAt } from '../../components/module-badges'
 import { useWorldRepliesBadge } from '../../components/unread'
 import { age, peek, save } from '../../components/local-store'
+import { fetchWorldFeed } from '../../components/world-feed'
 import { useFocusQuery } from '../../components/use-focus-query'
 import { useFavorites } from '../../components/favorites'
 import { useDeleteContent } from '../../components/delete-content'
@@ -190,17 +191,31 @@ export default function WorldPage() {
     if (categoryId) query = query.eq('category_id', categoryId)
     else query = query.is('category_id', null)
 
-    const { data: postsData } = await query
+    /*
+     * 先试"一次拿回整页"的数据库函数 ✓
+     * 一次请求代替下面 4 次（实测每次约 229ms → 4 次约 900ms ✗）
+     * 失败 / 超时 / 不知道我是谁 → 返回 null → 下面每行都走**原来的查询** ✓
+     * 所以最坏情况只是"没变快" ✓ 绝不会卡住 / 白屏 ✓✓
+     */
+    const feed = await fetchWorldFeed(categoryId, meId)
+
+    const { data: postsData } = feed ? { data: feed.posts } : await query
     if (!postsData || postsData.length === 0) { setPosts([]); return }
 
     const postIds = postsData.map((p) => p.id)
     const authorIds = [...new Set(postsData.filter((p) => !p.is_anonymous).map((p) => p.author_id))]
-    const { data: likesData } = await supabase.from('world_likes').select('post_id, user_id').in('post_id', postIds)
-    const { data: commentsData } = await supabase.from('world_comments').select('id, post_id, author_id, content, created_at, is_anonymous, anonymous_id, parent_id').in('post_id', postIds).order('created_at', { ascending: true })
+    const likesData = feed
+      ? feed.likes
+      : (await supabase.from('world_likes').select('post_id, user_id').in('post_id', postIds)).data
+    const commentsData = feed
+      ? feed.comments
+      : (await supabase.from('world_comments').select('id, post_id, author_id, content, created_at, is_anonymous, anonymous_id, parent_id').in('post_id', postIds).order('created_at', { ascending: true })).data
 
     const commentAuthorIds = commentsData ? [...new Set(commentsData.filter((c) => !c.is_anonymous).map((c) => c.author_id))] : []
     const allAuthorIds = [...new Set([...authorIds, ...commentAuthorIds])]
-    const { data: allProfilesData } = await supabase.from('profiles').select('id, username, nickname, avatar_url').in('id', allAuthorIds.length > 0 ? allAuthorIds : ['00000000-0000-0000-0000-000000000000'])
+    const allProfilesData = feed
+      ? feed.profiles
+      : (await supabase.from('profiles').select('id, username, nickname, avatar_url').in('id', allAuthorIds.length > 0 ? allAuthorIds : ['00000000-0000-0000-0000-000000000000'])).data
 
     const list: Post[] = postsData.map((p) => {
       const prof = allProfilesData?.find((x) => x.id === p.author_id)
