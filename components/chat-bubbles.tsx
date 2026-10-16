@@ -3,19 +3,19 @@
 import type { RefObject } from 'react'
 
 /**
- * 聊天气泡
+ * 聊天气泡 —— 用 daisyUI 的 chat 组件
  *
- * 两个聊天界面（小屋页内聊天、独立的 /friends/chat/[id]）共用这一份，
- * 免得两边各写一套、越改越不像。
+ * 结构：chat + chat-start/chat-end，里面是 chat-image / chat-header /
+ * chat-bubble / chat-footer。自己的气泡用 chat-bubble-primary（主题的蜡封红），
+ * 对方的是 chat-bubble 默认色（主题的 base 系）。颜色一律不写死。
  *
- * 相比原来的做法，做了四件事：
- *   1. 时间戳从气泡里挪到气泡下方的小字 —— 原来它在气泡内另起一行，
- *      一句「你好」也会被撑成一个方块
- *   2. 同一个人连着发的几条合成一组：组内间距收紧、只在组尾显示时间
- *   3. 按天插入分隔（今天 / 昨天 / 8月14日）
- *   4. 气泡收口：最后一条的靠人那一角收成小圆角，像气泡的尖
+ * 分组规则照旧（这部分和样式无关，只是"什么时候算一组"）：
+ *   1. 时间戳放 chat-footer，不塞在气泡里 —— 一句「你好」不会被撑成方块
+ *   2. 同一个人连着发的几条算一组：组内间距紧、只在组尾显示时间与头像
+ *   3. 按天插入分隔（今天 / 昨天 / 前天 / 8月14日）
+ *   4. 头像只在组尾出现，和气泡底对齐
  *
- * 头像沿用站内既有的做法（首字 + 暖色圆底），和聊天抬头保持一致。
+ * 两个聊天界面（小屋页内聊天、/friends/chat/[id]）共用这一份。
  */
 
 export type ChatMessage = {
@@ -90,46 +90,42 @@ export function ChatMessages({
           <div key={m.id}>
             {newDay && (
               <div className="flex justify-center py-3.5">
-                <span className="rounded-full bg-primary/5 px-3 py-1 font-serif-cn text-[11px] text-base-content/60">
+                <span className="badge badge-ghost badge-sm font-serif-cn">
                   {dayLabel(m.created_at)}
                 </span>
               </div>
             )}
 
             <div
-              className={`flex items-end gap-2 ${mine ? 'justify-end' : 'justify-start'} ${
-                firstOfGroup ? 'mt-3' : 'mt-1'
+              className={`chat ${mine ? 'chat-end' : 'chat-start'} ${
+                firstOfGroup ? 'mt-3' : 'mt-0.5'
               }`}
             >
-              {/* 好友头像：只在组尾出现，和气泡底对齐 */}
+              {/* 头像：只在组尾出现，和气泡底对齐 */}
               {!mine && (
-                <span className="w-7 flex-shrink-0">
+                <div className="chat-image avatar placeholder">
                   {lastOfGroup && (
-                    <span className="flex h-7 w-7 items-center justify-center rounded-full bg-gradient-to-br from-[var(--accent-light)] to-[var(--accent-light)] font-serif-cn text-[11px] font-semibold text-[var(--accent-deep)]">
-                      {initial}
-                    </span>
+                    <div className="w-7 rounded-full bg-accent/25 text-base-content">
+                      <span className="font-serif-cn text-[11px] font-semibold">{initial}</span>
+                    </div>
                   )}
-                </span>
+                </div>
               )}
 
-              <div className={`flex max-w-[72%] flex-col ${mine ? 'items-end' : 'items-start'}`}>
-                <div
-                  className={`animate-fade-in px-4 py-2.5 text-[13.5px] leading-relaxed ${
-                    mine
-                      ? 'bg-gradient-to-br from-[var(--accent-light)] to-[var(--accent)] text-white shadow-sm'
-                      : 'border border-base-300 bg-base-100 text-base-content shadow-sm'
-                  } rounded-[20px] ${lastOfGroup ? (mine ? 'rounded-br-[7px]' : 'rounded-bl-[7px]') : ''}`}
-                >
-                  <p className="whitespace-pre-wrap break-words">{m.content}</p>
-                </div>
-
-                {/* 时间挪到气泡外面：气泡就能保持紧凑 */}
-                {lastOfGroup && (
-                  <span className="mt-1 px-1 font-serif-cn text-[11px] text-base-content/60">
-                    {clock(m.created_at)}
-                  </span>
-                )}
+              <div
+                className={`chat-bubble animate-fade-in text-[13.5px] leading-relaxed ${
+                  mine ? 'chat-bubble-primary' : ''
+                }`}
+              >
+                <p className="whitespace-pre-wrap break-words">{m.content}</p>
               </div>
+
+              {/* 时间放 chat-footer：气泡就能保持紧凑 */}
+              {lastOfGroup && (
+                <div className="chat-footer font-serif-cn text-[11px] opacity-60">
+                  {clock(m.created_at)}
+                </div>
+              )}
             </div>
           </div>
         )

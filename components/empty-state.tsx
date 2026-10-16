@@ -5,8 +5,15 @@ import Link from 'next/link'
 /**
  * 空状态：一张小插画 + 一句话 + 可选的去处
  *
- * 之前空状态全是干巴巴的文字，这里给每个场景配一张线稿，
- * 用 currentColor（跟着页面主色走），风格和表情按钮一致。
+ * 现在是 daisyUI 的 empty 组件（empty / empty-icon / empty-title /
+ * empty-description / empty-content），颜色全部走 treehole 主题：
+ *   · 插画用 text-accent（主题的蜜金）
+ *   · 文字用 empty-title / empty-description 的默认色（base-content 系）
+ *   · 去处用 btn btn-primary
+ * 所以这里也没有任何写死色值；换主题时它自己会跟着变。
+ *
+ * 对外 API 没变（art / title / hint / action / compact），
+ * 所以十几处调用点一行都不用改。
  */
 
 export type EmptyArt = 'mail' | 'leaf' | 'search' | 'box' | 'list' | 'friends' | 'heart'
@@ -112,26 +119,25 @@ export function EmptyState({
   compact?: boolean
 }) {
   return (
-    <div
-      className={`flex flex-col items-center justify-center text-center ${compact ? 'py-8' : 'py-14'} ${className}`}
-    >
-      <Art
-        art={art}
-        className={`${compact ? 'h-12 w-12' : 'h-16 w-16'} animate-float text-[var(--accent-light)]`}
-      />
-      <p className={`font-serif-cn mt-4 ${compact ? 'text-xs' : 'text-sm'} text-base-content`}>{title}</p>
+    <div className={`empty ${compact ? 'py-8' : 'py-14'} ${className}`}>
+      <div className="empty-icon">
+        <Art
+          art={art}
+          className={`${compact ? 'h-12 w-12' : 'h-16 w-16'} animate-float text-accent`}
+        />
+      </div>
+      <p className={`empty-title font-serif-cn ${compact ? 'text-xs' : 'text-sm'}`}>{title}</p>
       {hint && (
-        <p className="font-serif-cn mt-1.5 max-w-xs text-[11px] leading-relaxed text-base-content/60">
+        <p className="empty-description font-serif-cn max-w-xs text-[11px] leading-relaxed">
           {hint}
         </p>
       )}
       {action && (
-        <Link
-          href={action.href}
-          className="mt-4 rounded-box bg-primary/5 px-4 py-2 text-xs text-[var(--accent-deep)] transition hover:bg-[var(--accent-line)]"
-        >
-          {action.label}
-        </Link>
+        <div className="empty-content">
+          <Link href={action.href} className="btn btn-sm btn-primary">
+            {action.label}
+          </Link>
+        </div>
       )}
     </div>
   )
