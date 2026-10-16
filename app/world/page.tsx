@@ -8,6 +8,7 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { readSeenAt, writeSeenAt } from '../../components/module-badges'
 import { useWorldRepliesBadge } from '../../components/unread'
+import { age, peek, save } from '../../components/local-store'
 import { useFocusQuery } from '../../components/use-focus-query'
 import { useFavorites } from '../../components/favorites'
 import { useDeleteContent } from '../../components/delete-content'
@@ -109,6 +110,24 @@ export default function WorldPage() {
   const [currentCategory, setCurrentCategory] = useState<Category | null>(null)
   const [expandedCategory, setExpandedCategory] = useState<string | null>(null)
 
+  /*
+   * 先用**本机存的那两份**立刻铺出来（分区 + 大厅帖子）
+   *
+   * 为什么要这样：以前进院子要等 1~2 次跨境往返（每次约 150ms，加上资源更久）
+   * 期间是一片骨架/空白。
+   * 现在：本机有就直接画 ✓ 再把 loading 关掉 ✓ → 进院子**立刻见内容**
+   * 随后照常去服务器拉一次 ✓ 拉到就悄悄换新（不会闪空）
+   */
+  useEffect(() => {
+    const cachedCats = peek<Category[]>('categories')
+    const cachedHall = peek<Post[]>('world-list:hall', 2 * 60 * 1000)
+    if (!cachedCats && !cachedHall) return
+    // 读本机后同步铺上：这条只在客户端跑，而且必须赶在查询回来之前
+    if (cachedCats) setCategories(cachedCats)
+    if (cachedHall) setPosts(cachedHall)
+    setLoading(false)
+  }, [])
+
   const [showPostModal, setShowPostModal] = useState(false)
   const [postContent, setPostContent] = useState('')
   const [isAnonymous, setIsAnonymous] = useState(false)
@@ -140,12 +159,33 @@ export default function WorldPage() {
     const { data: userData } = await supabase.auth.getUser()
     if (!userData.user) { router.push('/login'); return }
     setMeId(userData.user.id)
-    const { data: cats } = await supabase.from('categories').select('id, name, icon, parent_id, sort_order').eq('status', 'approved').order('sort_order', { ascending: true })
-    setCategories((cats || []) as Category[])
+    /*
+     * 分区很少变 → 5 分钟内直接用本机那份 ✓ 不再白跑一次跨境往返
+     * （超过 5 分钟才重问一次；问到就存回本机 ✓）
+     */
+    if (age('categories') < 5 * 60 * 1000) {
+      const cachedCats = peek<Category[]>('categories')
+      if (cachedCats) setCategories(cachedCats)
+    } else {
+      const { data: cats } = await supabase.from('categories').select('id, name, icon, parent_id, sort_order').eq('status', 'approved').order('sort_order', { ascending: true })
+      setCategories((cats || []) as Category[])
+      save('categories', cats || [])
+    }
     setLoading(false)
   }, [router])
 
   const loadPosts = useCallback(async (categoryId: string | null) => {
+    /*
+     * 先拿本机那份**立刻画出来** ✓ 再照常去服务器拉 ✓
+     * （所以进院子、切分区都是"先见到内容"，不是先见到空白）
+     */
+    const listKey = 'world-list:' + (categoryId ?? 'hall')
+    const cachedList = peek<Post[]>(listKey, 2 * 60 * 1000)
+    if (cachedList && cachedList.length > 0) {
+      setPosts(cachedList)
+      setLoading(false)
+    }
+
     let query = supabase.from('world_posts').select('id, author_id, is_anonymous, anonymous_id, content, category_id, created_at, image_urls').eq('status', 'published').eq('is_hidden', false).order('created_at', { ascending: false }).limit(50)
     if (categoryId) query = query.eq('category_id', categoryId)
     else query = query.is('category_id', null)
@@ -204,6 +244,7 @@ export default function WorldPage() {
     })
 
     setPosts(list)
+    save(listKey, list)
   }, [meId])
 
   function handleCategoryClick(cat: Category) {
