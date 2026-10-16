@@ -369,7 +369,7 @@ export function HomeCurrent() {
       </div>
 
       {/* hero：daisyUI hero + hero-content（居中主视觉） */}
-      <section className="hero">
+      <section className="hero bg-base-200 border-b border-base-300">
         <div className="hero-content px-4 py-16 text-center sm:py-24">
           <motion.div style={{ y: heroY, opacity: heroOpacity }} className="max-w-2xl">
             <h1

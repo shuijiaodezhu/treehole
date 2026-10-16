@@ -316,6 +316,31 @@ body {
   --accent-line: var(--page-home-line);
 }
 
+
+/* ------------------------------------------------------------
+   卡片悬停抬升
+   只有"支持悬停"的设备才加（触屏上没有 hover，加了会让点击莫名其妙）。
+   daisyUI 的 .card 与 .card-border 都覆盖；用 :where() 保证优先级为 0，
+   各页自己写的 hover 样式仍然优先。
+   ------------------------------------------------------------ */
+@media (hover: hover) and (pointer: fine) {
+  :where(.card):hover {
+    transform: translateY(-2px);
+  }
+  :where(.card) {
+    transition:
+      transform 180ms ease,
+      box-shadow 180ms ease,
+      border-color 180ms ease;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :where(.card):hover {
+    transform: none;
+  }
+}
+
 /* ============================================================
    动效与骨架屏
    ============================================================ */
