@@ -1157,9 +1157,9 @@ export default function FriendsPage() {
               </div>
             </aside>
 
-            <main className={`flex-1 flex-col min-w-0 ${showChatOnMobile ? 'flex' : 'hidden md:flex'}`}>
+            <main className={`flex-1 min-h-0 flex-col min-w-0 ${showChatOnMobile ? 'flex' : 'hidden md:flex'}`}>
               <div
-                className={`card rounded-box border backdrop-blur overflow-hidden flex-1 flex flex-col ${
+                className={`card rounded-box border backdrop-blur overflow-hidden min-h-0 flex-1 flex flex-col ${
                   currentFriend
                     ? 'border-base-300 bg-base-100/80 shadow-sm'
                     : /* 没选人时整块淡下去，一眼看出「这里还没开始」 */
@@ -1206,7 +1206,7 @@ export default function FriendsPage() {
                   )}
                 </div>
 
-                <div data-lenis-prevent ref={listRef} className="th-scroll flex-1 overflow-y-auto px-5 py-4">
+                <div data-lenis-prevent ref={listRef} className="th-scroll min-h-0 flex-1 overflow-y-auto px-5 py-4">
                   {!currentFriend ? (
                     /* 还没点任何人的占位状态：不是空白，也绝不是某人的聊天 */
                     <div className="h-full flex flex-col items-center justify-center px-6 text-center">
