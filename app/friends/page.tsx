@@ -340,8 +340,15 @@ export default function FriendsPage() {
      */
 
     const box = listRef.current
-
-    if (box) box.scrollTop = box.scrollHeight
+    if (box) {
+      /*
+       * 关键是"**要不要滚**"，不是"怎么滚"：
+       *   · 用户贴着底部（dataset.stick 不是 '0'，首次也是）→ 落到最新 ✓
+       *   · 用户正在往上翻看历史 → **绝不打扰** ✓
+       *     （原来每次都钉到底部 → 一往上翻就被拽回来 → 用户报"划不动"）
+       */
+      if (box.dataset.stick !== '0') box.scrollTop = box.scrollHeight
+    }
   }, [messages])
 
   /*
@@ -1206,7 +1213,23 @@ export default function FriendsPage() {
                   )}
                 </div>
 
-                <div data-lenis-prevent ref={listRef} className="th-scroll min-h-0 flex-1 overflow-y-auto px-5 py-4">
+                <div
+                  data-lenis-prevent
+                  ref={listRef}
+                  /*
+                   * 记录"用户是不是贴着底部"（滑动时实时更新）：
+                   *   贴在底部 → 有新消息就自动落到底 ✓（聊天该有的样子）
+                   *   正在往上翻 → 绝不打扰 ✗
+                   *     （原来每次都钉到底部 → 一往上翻就被拽回去 → "划不动"）
+                   * 用 dataset 而不是 state：不触发重渲染、也不需要额外 ref
+                   */
+                  onScroll={(e) => {
+                    const el = e.currentTarget
+                    el.dataset.stick =
+                      el.scrollHeight - el.scrollTop - el.clientHeight < 120 ? '1' : '0'
+                  }}
+                  className="th-scroll min-h-0 flex-1 overflow-y-auto px-5 py-4"
+                >
                   {!currentFriend ? (
                     /* 还没点任何人的占位状态：不是空白，也绝不是某人的聊天 */
                     <div className="h-full flex flex-col items-center justify-center px-6 text-center">

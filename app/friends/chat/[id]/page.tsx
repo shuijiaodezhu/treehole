@@ -100,17 +100,12 @@ function ChatInner() {
 
   useEffect(() => {
     /*
-     * 只滚**消息容器自己**，不要用 scrollIntoView：
-     *   scrollIntoView 会滚动**所有**可滚动的祖先 —— 包括整个窗口 ✗
-     *   → 聊天滚到底的同时窗口也被拽下去（用户报"一打开小屋就下滑"）
-     * 这里从底部哨兵往上找**第一个真正能滚**的祖先，只改它的 scrollTop。
-     * 兜底：万一找到的是 documentElement（整页滚动），就干脆不动，别把页面拽下去。
+     * 这里**不再自动滚动** —— 这一页是"整页原生滚动"（消息区没有固定高度），
+     * 所以任何自动滚动都等于**滚动整个窗口** ✗：
+     *   · 打开就跳到底部 → 用户报"一打开就下滑"
+     *   · 每次消息变化又跳 → 用户报"划不动"（其实是老被拽走）
+     * 交给用户自己滑：进来看到最早的消息，往下滑就是最新的（和微信一致）
      */
-    let box: HTMLElement | null = bottomRef.current?.parentElement ?? null
-    while (box && box.scrollHeight <= box.clientHeight + 1) box = box.parentElement
-    if (box && box !== document.documentElement && box !== document.body) {
-      box.scrollTop = box.scrollHeight
-    }
   }, [messages])
 
   // 好感度（互动值）
