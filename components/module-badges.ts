@@ -112,17 +112,19 @@ async function hasNewWorldPosts(userId: string | null): Promise<boolean> {
 }
 
 /**
- * 派对同理（只有第 ① 条：本地没有记录时先记下当前最新，不点亮）。
- * play_activities 不在仓库的 SQL 里，查不到作者列，所以这里不加作者过滤。
+ * 派对同理：既做"首次记账"（本地没记录时先记下当前最新，不点亮），
+ * 也排除自己发的活动 —— 只有「离开后**别人**发了新活动」才算新消息。
+ * （作者列名 author_id 是从读写这张表的四处代码里确认的：
+ *   app/play/page.tsx 的 select 与 insert、admin 与 search 的 select。）
  */
-async function hasNewActivities(): Promise<boolean> {
+async function hasNewActivities(userId: string | null): Promise<boolean> {
   const seen = readSeenAt('play')
-  const { data, error } = await createClient()
+  const base = createClient()
     .from('play_activities')
     .select('created_at')
     .eq('status', 'published')
-    .order('created_at', { ascending: false })
-    .limit(1)
+  const filtered = userId ? base.neq('author_id', userId) : base
+  const { data, error } = await filtered.order('created_at', { ascending: false }).limit(1)
 
   if (error) throw error
   const latest = data?.[0]?.created_at
@@ -149,7 +151,7 @@ export function useModuleBadges(userId: string | null): ModuleBadges {
       try {
         const [world, play] = await Promise.all([
           hasNewWorldPosts(userId),
-          hasNewActivities(),
+          hasNewActivities(userId),
         ])
         setWorldNew(world)
         setPlayNew(play)
