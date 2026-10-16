@@ -44,6 +44,44 @@ const SEEN_KEY = (uid: string) => `treehole:letter:seen:${uid}`
  */
 const SEEN_EVER_KEY = (uid: string) => `treehole:letter:seen-ever:${uid}`
 
+/*
+ * cookie 兜底用的名字
+ * 为什么要 cookie：localStorage 可能**写不进去**（配额满 / 隐私模式）
+ *   而这个站的 local-store 最近存了不少东西（开屏同步）
+ *   一旦写失败，标记就丢了 → 信又会弹出来
+ * cookie 很小、容量独立，用它兜一层最稳
+ */
+const SEEN_EVER_COOKIE = 'th_letter_seen'
+
+/** 读"是否看过"：localStorage 与 cookie 任一为真就算看过 */
+function hasSeenEver(uid: string): boolean {
+  try {
+    if (window.localStorage.getItem(SEEN_EVER_KEY(uid)) === '1') return true
+  } catch {
+    /* 读不到就看 cookie */
+  }
+  try {
+    return window.document.cookie.indexOf(SEEN_EVER_COOKIE + '=1') >= 0
+  } catch {
+    return false
+  }
+}
+
+/** 写"看过"：localStorage 和 cookie 都写一遍（哪个成功都算数） */
+function markSeenEverywhere(uid: string): void {
+  try {
+    window.localStorage.setItem(SEEN_EVER_KEY(uid), '1')
+  } catch {
+    /* 配额满也不怕，下面还有 cookie */
+  }
+  try {
+    window.document.cookie =
+      SEEN_EVER_COOKIE + '=1; path=/; max-age=31536000; SameSite=Lax'
+  } catch {
+    /* 忽略 */
+  }
+}
+
 const supabase = createClient()
 
 /** 内容指纹：够用就行，不需要加密强度 */
@@ -147,13 +185,7 @@ export function WelcomeLetter({ userId }: { userId: string | null }) {
      * 看上面 SEEN_EVER_KEY 的注释：指纹会因为"数据库取数慢/超时"而抖动，
      * 光比对指纹不够稳，必须有一个跟版本无关的标记兜底
      */
-    let seenEver = false
-    try {
-      seenEver = window.localStorage.getItem(SEEN_EVER_KEY(userId)) === '1'
-    } catch {
-      seenEver = false
-    }
-    if (seenEver) {
+    if (hasSeenEver(userId)) {
       if (typeof window !== 'undefined') window.dispatchEvent(new Event('dsh:letter-done'))
       return
     }
@@ -166,6 +198,20 @@ export function WelcomeLetter({ userId }: { userId: string | null }) {
      * 那 400ms 反而会先闪一下主页，所以去掉。
      */
     let timer: number | null = null
+
+    /*
+     * ⚠️ 关键修复（用户报"图二一直跑出来"）
+     *
+     * 原来只在"点按钮关掉"时才写标记 ✗
+     * → 用户没点按钮就离开（按返回 / 切页 / 划掉 App）→ 标记永远没写上 ✗
+     * → 下次进来又弹（就是用户看到的现象）
+     *
+     * 现在：**决定要显示的这一刻**就写 ✓（显示 = 看过）
+     *   · 就算他马上走掉，标记也已经在了 ✓
+     *   · 双写 localStorage + cookie，哪个成功都算数 ✓
+     */
+    markSeenEverywhere(userId)
+
     const show = () => setOpen(true)
 
     if (isLoginTransitioning()) {
@@ -206,7 +252,7 @@ export function WelcomeLetter({ userId }: { userId: string | null }) {
     try {
       // 存指纹，不是存 '1'：下次内容变了就会不一样
       window.localStorage.setItem(SEEN_KEY(userId), letter.sig)
-      window.localStorage.setItem(SEEN_EVER_KEY(userId), '1')
+      markSeenEverywhere(userId)
     } catch {
       /* 忽略 */
     }
