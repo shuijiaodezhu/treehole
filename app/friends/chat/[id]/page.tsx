@@ -158,13 +158,21 @@ function ChatInner() {
   }
 
   async function loadMessages(convId: string) {
+    /*
+     * 只取最近 200 条。
+     * 原来这句是 .order('created_at', { ascending: true }) 且**没有 limit** ✗
+     * → 一个聊了几千条的会话会把全部消息拉回来（出站流量 + 打开变慢）。
+     * 注意顺序：先倒序取 200 条（取到的是"最近"的），再翻回正序给界面用 ✓
+     * 加 limit 却不改排序的话，取到的会是"最早 200 条" ✗
+     */
     const { data } = await supabase
       .from('messages')
       .select('id, sender_id, content, created_at')
       .eq('conversation_id', convId)
-      .order('created_at', { ascending: true })
+      .order('created_at', { ascending: false })
+      .limit(200)
 
-    if (data) setMessages(data as Message[])
+    if (data) setMessages([...(data as Message[])].reverse())
   }
 
   async function handleSend(e: React.FormEvent) {
