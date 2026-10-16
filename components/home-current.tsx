@@ -345,6 +345,8 @@ export function HomeCurrent() {
       )}
       style={pageAccentVars('home')}
     >
+      {/* 顶部色带：navbar 与 hero 合成一整块（同色，避免"浅条 + 深条"） */}
+      <div className="bg-base-200 border-b border-base-300">
       {/* 顶栏：daisyUI navbar；站名用毛笔字 */}
       <div className="navbar mx-auto w-full max-w-6xl px-4 pt-8">
         <div className="navbar-start">
@@ -369,7 +371,7 @@ export function HomeCurrent() {
       </div>
 
       {/* hero：daisyUI hero + hero-content（居中主视觉） */}
-      <section className="hero bg-base-200 border-b border-base-300">
+      <section className="hero">
         <div className="hero-content px-4 py-16 text-center sm:py-24">
           <motion.div style={{ y: heroY, opacity: heroOpacity }} className="max-w-2xl">
             <h1
@@ -399,6 +401,7 @@ export function HomeCurrent() {
           </motion.div>
         </div>
       </section>
+      </div>
 
       {/* 出错时给一条可重试的提示（原来是页面里插一行红字，现在用 daisyUI alert） */}
       {(authError || requestError) && (
