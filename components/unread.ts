@@ -300,6 +300,22 @@ export function useUnreadMessages(userId: string | null): UnreadMessages {
       })
 
       /*
+       * 顺手把**本机缓存**也改掉 ✓
+       *
+       * 只靠"状态变了 → effect 写缓存"不够稳 ✗：
+       * 页面重新挂载时会**先读缓存铺角标** ✓
+       * 只要时序错开一次（标记完立刻跳走），旧数字就被铺回来 ✗
+       * → 在标记的同一刻就把它从缓存里删掉 ✓ 从根上堵住 ✗
+       */
+      try {
+        const nextCounts = { ...byConversation }
+        delete nextCounts[conversationId]
+        writeUnreadCache(userId, nextCounts, friendIdByConversation, lastAtByConversation)
+      } catch {
+        /* 缓存写不进去不影响正事 ✓ */
+      }
+
+      /*
        * 顺手把「小屋整体已看」的时间也推到现在。
        *
        * 主页那张「小屋」卡片用的是 treehole:seen:friends 这个时间戳（进小屋时写的），
@@ -311,7 +327,7 @@ export function useUnreadMessages(userId: string | null): UnreadMessages {
       markModuleSeen('friends')
       void friendId
     },
-    [userId, lastAtByConversation],
+    [userId, lastAtByConversation, byConversation, friendIdByConversation],
   )
 
   const refresh = useCallback(() => setRefreshKey((k) => k + 1), [])
