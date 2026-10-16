@@ -3,6 +3,7 @@
 /* eslint-disable react-hooks/set-state-in-effect -- 规则未识别 async 取数（init/loadActivities），此处是纯客户端页面 */
 
 import { useCallback, useEffect, useState } from 'react'
+import { peek, save } from '../../components/local-store'
 import { createClient } from '../lib/supabase'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
@@ -68,6 +69,26 @@ export default function PlayPage() {
   const [types, setTypes] = useState<PlayType[]>([])
   const [activities, setActivities] = useState<Activity[]>([])
   const [loading, setLoading] = useState(true)
+
+  /*
+   * /play 也先读本机（类型和活动列表都是慢变的）
+   * 以前每次进聚会都要等两次跨境请求才撤等待页
+   * 现在：本机有就先画出来，再去对齐；配 1.2 秒兜底（和首页同一套）
+   */
+  useEffect(() => {
+    const paint = window.setTimeout(() => {
+      const cachedTypes = peek<PlayType[]>('play-types', 30 * 60 * 1000)
+      const cachedActs = peek<Activity[]>('play-activities:all', 5 * 60 * 1000)
+      if (cachedTypes) setTypes(cachedTypes)
+      if (cachedActs) setActivities(cachedActs)
+      if (cachedTypes || cachedActs) setLoading(false)
+    }, 0)
+    const bail = window.setTimeout(() => setLoading(false), 1200)
+    return () => {
+      window.clearTimeout(paint)
+      window.clearTimeout(bail)
+    }
+  }, [])
   const [meId, setMeId] = useState<string | null>(null)
   const [currentType, setCurrentType] = useState<PlayType | null>(null)
 
@@ -110,6 +131,8 @@ export default function PlayPage() {
       .order('sort_order', { ascending: true })
 
     setTypes((typeData || []) as PlayType[])
+
+    save('play-types', (typeData || []) as PlayType[])
     setLoading(false)
   }, [router])
 
@@ -178,6 +201,8 @@ export default function PlayPage() {
     })
 
     setActivities(list)
+
+    save('play-activities:' + (typeId ?? 'all'), list)
   }, [types])
 
   useEffect(() => { init() }, [init])
