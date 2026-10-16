@@ -184,7 +184,7 @@ export default function WorldPage() {
     if (missingIds.length > 0) {
       const { data: fetched } = await supabase
         .from('profiles')
-        .select('id, username, nickname, avatar_url')
+        .select('id, username, nickname, avatar_url, signature')
         .in('id', missingIds)
       for (const row of (fetched ?? []) as ProfileRow[]) profileMap[row.id] = row
       save('profiles:v1', profileMap)
