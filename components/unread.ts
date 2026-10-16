@@ -277,7 +277,21 @@ export function useUnreadMessages(userId: string | null): UnreadMessages {
   const markConversationRead = useCallback(
     (conversationId: string, friendId: string) => {
       if (!userId) return
-      writeKey(`${CONV_SEEN_PREFIX}${userId}:${conversationId}`, new Date().toISOString())
+      /*
+       * 已读位置**必须用服务器时间** ✗ 不能用手机本地时钟 ✓
+       *
+       * 真事故（用户报的"看过的消息还有红点"）：
+       *   标记写的是手机时钟（new Date）✗
+       *   而未读判定比的是消息的 created_at（服务器时钟）✓
+       *   → 手机时钟只要慢一点（很常见 ✓）→ 那条消息永远比标记"更新"
+       *   → 看过了也永远算未读 → 角标**永远消不掉** ✗
+       *
+       * 现在两边同源：拿这个会话里最新那条消息的时间当"读到哪儿" ✓
+       * （lastAt 来自数据库的 last_message_at / 最新消息 created_at ✓）
+       * 万一拿不到（首次加载）才退回本地时钟 ✓
+       */
+      const seenUpTo = lastAtByConversation[conversationId] ?? new Date().toISOString()
+      writeKey(`${CONV_SEEN_PREFIX}${userId}:${conversationId}`, seenUpTo)
       setByConversation((prev) => {
         if (!(conversationId in prev)) return prev
         const next = { ...prev }
@@ -297,7 +311,7 @@ export function useUnreadMessages(userId: string | null): UnreadMessages {
       markModuleSeen('friends')
       void friendId
     },
-    [userId],
+    [userId, lastAtByConversation],
   )
 
   const refresh = useCallback(() => setRefreshKey((k) => k + 1), [])
