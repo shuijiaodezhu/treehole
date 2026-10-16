@@ -152,7 +152,17 @@ export default function RootLayout({
            <html> 那边 React 不碰 → 提示能稳稳留在最上层 */
         d.documentElement.appendChild(box);
       }
-      if(d.body){notice();}else{d.addEventListener("DOMContentLoaded",notice);}
+      /*
+       * 注入时机：**等页面 load 之后**（after-load）
+       *   原来在 DOMContentLoaded 就注入 → 那是**水合之前** ✗
+       *   React 会发现 <html> 下多了个节点 → 水合失败 → 每次弹错误页（用户报的现象）
+       * 现在：
+       *   老内核：React 跑不起来、页面是空的 → 这时注入提示正好 ✓
+       *   新内核：本来不会生成；万一误判，也是在**水合之后**出现 → 不会冲突 ✓
+       */
+      function lateNotice(){ setTimeout(notice, 300); }
+      if(d.readyState==="complete"){ lateNotice(); }
+      else { d.addEventListener("load", lateNotice); }
     }catch(e){}})()`
   }}
 />
