@@ -1,5 +1,9 @@
 'use client'
 
+/* WINTER-INK：冬日信箱的背景是固定浅色 ✓
+   所以这里的文字一律用**固定深墨色**（#3b302a），不跟着主题走 ✗
+   否则深色主题下正文会变成近白色 → 白字压浅底 → 看不见（用户报过）*/
+
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { isAfter } from './time-compare'
 import Link from 'next/link'
@@ -223,7 +227,7 @@ export function MailboxTrigger({ mailbox, onOpen }: { mailbox: Mailbox; onOpen: 
       onClick={onOpen}
       aria-label="冬日信箱"
       title="冬日信箱"
-      className="relative inline-flex h-9 w-9 items-center justify-center rounded-full border border-base-300 bg-base-100/60 text-base-content/60 transition hover:bg-base-100/90 hover:text-primary"
+      className="relative inline-flex h-9 w-9 items-center justify-center rounded-full border border-base-300 bg-base-100/60 text-[#3b302a]/60 transition hover:bg-base-100/90 hover:text-primary"
     >
       <svg
         className="h-[18px] w-[18px]"
@@ -349,8 +353,8 @@ export function MailboxDialog({
             </svg>
           </span>
           <div className="min-w-0 flex-1">
-            <h2 className="font-serif-cn text-sm font-semibold text-base-content">冬日信箱</h2>
-            <p className="mt-0.5 font-serif-cn text-[11px] text-base-content/60">
+            <h2 className="font-serif-cn text-sm font-semibold text-[#3b302a]">冬日信箱</h2>
+            <p className="mt-0.5 font-serif-cn text-[11px] text-[#3b302a]/60">
               {isOwner ? '你是站主 · 大家写来的烦心事都在后台' : '匿名 · 只写给站主一个人'}
             </p>
           </div>
@@ -358,7 +362,7 @@ export function MailboxDialog({
             type="button"
             onClick={onClose}
             aria-label="关上信箱"
-            className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full text-base-content/60 transition hover:bg-base-100/70"
+            className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full text-[#3b302a]/60 transition hover:bg-base-100/70"
           >
             <Icon name="x" className="h-3.5 w-3.5" />
           </button>
@@ -367,7 +371,7 @@ export function MailboxDialog({
         {/* 信 */}
         <div ref={listRef} data-lenis-prevent className="flex-1 space-y-3 overflow-y-auto px-5 py-4">
           {mailbox.loading && mailbox.messages.length === 0 ? (
-            <p className="py-10 text-center font-serif-cn text-xs text-base-content/60">开信箱中…</p>
+            <p className="py-10 text-center font-serif-cn text-xs text-[#3b302a]/60">开信箱中…</p>
           ) : mailbox.errorKind === 'missing-table' ? (
             <MailboxSetup onRetry={mailbox.refresh} />
           ) : mailbox.error ? (
@@ -376,10 +380,10 @@ export function MailboxDialog({
             isOwner ? (
               /* 站主自己在前台点开：指个路，别让他以为要在前台写信 */
               <div className="px-1 py-8 text-center">
-                <p className="font-serif-cn text-[13px] leading-relaxed text-base-content">
+                <p className="font-serif-cn text-[13px] leading-relaxed text-[#3b302a]">
                   你是站主
                 </p>
-                <p className="mt-2 font-serif-cn text-[11px] leading-relaxed text-base-content/60">
+                <p className="mt-2 font-serif-cn text-[11px] leading-relaxed text-[#3b302a]/60">
                   大家写来的烦心事都在后台的「冬日信箱」里，
                   <br />
                   在那边一封一封回。
@@ -395,12 +399,12 @@ export function MailboxDialog({
             ) : (
               /* 第一次打开：把「怎么用」讲清楚，措辞先安慰人 */
               <div className="px-1 py-4">
-                <p className="text-center font-serif-cn text-[13px] leading-relaxed text-base-content">
+                <p className="text-center font-serif-cn text-[13px] leading-relaxed text-[#3b302a]">
                   有什么不好开口的，
                   <br />
                   写在这里就好。
                 </p>
-                <p className="mt-2 text-center font-serif-cn text-[11px] leading-relaxed text-base-content/60">
+                <p className="mt-2 text-center font-serif-cn text-[11px] leading-relaxed text-[#3b302a]/60">
                   不用组织语言，也不必写得体面。
                 </p>
 
@@ -422,8 +426,8 @@ export function MailboxDialog({
                       {i + 1}
                     </span>
                     <span className="min-w-0">
-                      <span className="block font-serif-cn text-[12px] text-base-content">{step.t}</span>
-                      <span className="mt-0.5 block font-serif-cn text-[11.5px] leading-relaxed text-base-content/60">
+                      <span className="block font-serif-cn text-[12px] text-[#3b302a]">{step.t}</span>
+                      <span className="mt-0.5 block font-serif-cn text-[11.5px] leading-relaxed text-[#3b302a]/60">
                         {step.d}
                       </span>
                     </span>
@@ -445,11 +449,11 @@ export function MailboxDialog({
                     className={`max-w-[78%] rounded-box px-3.5 py-2.5 font-serif-cn text-[12.5px] leading-relaxed ${
                       mine
                         ? 'bg-primary text-primary-content'
-                        : 'border border-base-300 bg-base-content/5 text-base-content'
+                        : 'border border-base-300 bg-base-content/5 text-[#3b302a]'
                     }`}
                   >
                     <p className="whitespace-pre-wrap break-words">{m.content}</p>
-                    <p className={`mt-1 text-[11px] ${mine ? 'text-white/70' : 'text-base-content/60'}`}>
+                    <p className={`mt-1 text-[11px] ${mine ? 'text-white/70' : 'text-[#3b302a]/60'}`}>
                       {formatStamp(m.created_at)}
                     </p>
                   </div>
@@ -464,7 +468,7 @@ export function MailboxDialog({
           <div className="px-4 py-3">
             {hint && (
               <p
-                className={'mb-2 text-[11px] ' + (hintTone === 'error' ? 'text-red-500' : 'text-base-content/60')}
+                className={'mb-2 text-[11px] ' + (hintTone === 'error' ? 'text-red-500' : 'text-[#3b302a]/60')}
               >
                 {hint}
               </p>
@@ -483,7 +487,7 @@ export function MailboxDialog({
                 rows={2}
                 maxLength={500}
                 placeholder="写点想说的…"
-                className="min-w-0 flex-1 resize-none rounded-box border border-base-300 bg-base-content/5 px-3.5 py-2.5 font-serif-cn text-[12.5px] text-base-content placeholder:text-base-content/60 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/10"
+                className="min-w-0 flex-1 resize-none rounded-box border border-base-300 bg-base-content/5 px-3.5 py-2.5 font-serif-cn text-[12.5px] text-[#3b302a] placeholder:text-[#3b302a]/60 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/10"
               />
             <EmojiPicker onPick={insertEmoji} align="right" />
               <button
@@ -496,7 +500,7 @@ export function MailboxDialog({
                 <Icon name="send" className="h-4 w-4" />
               </button>
             </div>
-            <p className="mt-1.5 text-[11px] text-base-content/60">
+            <p className="mt-1.5 text-[11px] text-[#3b302a]/60">
               {draft.length}/500 · Ctrl+Enter 寄出 · 匿名，只有站主看得到
             </p>
           </div>
