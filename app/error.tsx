@@ -21,6 +21,33 @@ export default function Error({
   useEffect(() => {
     // 生产环境里这条会进 Vercel 的运行时日志，方便回头查
     console.error('页面出错:', error)
+
+    /*
+     * "文件没加载到"（发布过程中换了文件）→ **自动重载一次**就恢复了
+     *   现象：Failed to load chunk /xxx.js from module … / Loading chunk … failed
+     *   原因：页面是上一版 HTML，它引用的那个 js 已经被新部署换掉 ✗
+     *   为什么可以自动修：重载会拿到**最新 HTML** → 引用**最新文件** → 正常
+     *   防死循环：一个会话里只自动重试一次（记在 sessionStorage）
+     */
+    const msg = String(error?.message || '')
+    const chunkish = /Failed to load chunk|Loading chunk .* failed|Importing a module script failed|error loading dynamically imported module/i.test(msg)
+    if (chunkish) {
+      const KEY = 'treehole:chunk-reload'
+      let tried = ''
+      try {
+        tried = window.sessionStorage.getItem(KEY) ?? ''
+      } catch {
+        tried = ''
+      }
+      if (tried !== '1') {
+        try {
+          window.sessionStorage.setItem(KEY, '1')
+        } catch {
+          /* 忽略 */
+        }
+        window.setTimeout(() => window.location.reload(), 300)
+      }
+    }
   }, [error])
 
   return (
