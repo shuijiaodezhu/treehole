@@ -394,10 +394,19 @@ export default function WorldPage() {
   }
 
 
-  /** 点「⋯」菜单里的任何按钮后，把那个菜单收起来（原生 details，不需要状态） */
+  /**
+   * 点「⋯」菜单里的按钮后收起菜单
+   *
+   * ⚠️ 例外：带 data-stay 的按钮**不收起** ✗
+   *   因为"删除"是两步的：第一下只是把按钮变成「确认删除」，
+   *   菜单一关，用户就看不到那个确认态了 → 会以为"点了没反应"
+   *   （用户报过"要连续点两次删除，第一次无事发生" ← 就是这个）
+   */
   function closePostMenu(e: React.MouseEvent<HTMLDivElement>) {
     const t = e.target as HTMLElement | null
     if (!t || !t.closest('button')) return
+    // 要停留的按钮（比如"删除"待确认）→ 菜单留着
+    if (t.closest('[data-stay="1"]')) return
     const d = t.closest('details')
     if (d) d.open = false
   }
@@ -1254,6 +1263,7 @@ export default function WorldPage() {
                               ) : (
                                 <button
                                   type="button"
+                                  data-stay="1"
                                   onClick={() => {
                                     setConfirmDeletePost(post.id)
                                     window.setTimeout(
