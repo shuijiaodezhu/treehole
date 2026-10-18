@@ -18,7 +18,7 @@
    版本号：改这个文件就顺手改一下 STORE，旧缓存会被清掉 ✓
    ============================================================ */
 
-const STORE = 'yourletters-v2'
+const STORE = 'yourletters-v1'
 const OFFLINE_URLS = ['/', '/manifest.webmanifest', '/icon-192.png']
 
 // ── 安装：把"外壳"里最必要的几个挪进缓存（别的不预缓存 ✗ 免得又慢又占地方）──
@@ -26,6 +26,7 @@ self.addEventListener('install', (event) => {
   event.waitUntil(
     (async () => {
       try {
+        const cache = await caches.open(STORE)
         await cache.addAll(OFFLINE_URLS)
       } catch {
         /* 预缓存失败不影响使用 ✓ */
@@ -98,6 +99,7 @@ self.addEventListener('fetch', (event) => {
     event.respondWith(
       (async () => {
         try {
+          const cache = await caches.open(STORE)
           const hit = await cache.match(request)
           if (hit) return hit
           const res = await fetch(request)
@@ -107,6 +109,7 @@ self.addEventListener('fetch', (event) => {
           }
           return res
         } catch {
+          const cache = await caches.open(STORE)
           const hit = await cache.match(request)
           if (hit) return hit
           return new Response('', { status: 504, statusText: 'offline' })
@@ -123,9 +126,14 @@ self.addEventListener('fetch', (event) => {
         try {
           const res = await fetch(request)
           if (res && res.ok) {
+            const cache = await caches.open(STORE)
+            cache.put('/', res.clone()).catch(() => {}) // 只留一份"外壳"当离线兜底 ✓
           }
           return res
         } catch {
+          const cache = await caches.open(STORE)
+          const hit = (await cache.match('/')) || (await cache.match(request))
+          if (hit) return hit
           return new Response(
             '<!doctype html><meta charset="utf-8"><title>暂时连不上</title><body style="font-family:system-ui;padding:2rem">暂时连不上网络，等会儿再试一次。</body>',
             { status: 200, headers: { 'Content-Type': 'text/html; charset=utf-8' } },
@@ -142,10 +150,12 @@ self.addEventListener('fetch', (event) => {
       try {
         const res = await fetch(request)
         if (res && res.ok && url.origin === self.location.origin) {
+          const cache = await caches.open(STORE)
           cache.put(request, res.clone()).catch(() => {})
         }
         return res
       } catch {
+        const cache = await caches.open(STORE)
         const hit = await cache.match(request)
         if (hit) return hit
         return new Response('', { status: 504, statusText: 'offline' })
