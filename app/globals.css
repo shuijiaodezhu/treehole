@@ -1037,14 +1037,21 @@ select:-webkit-autofill {
    视觉几乎没差别（都是"朦胧 → 清晰"），桌面端仍然保留模糊 ✓
    ============================================================ */
 @media (max-width: 640px) {
+  /*
+   * 手机上曾经这里留了 opacity: 0.45 ✗
+   *   本意是"等待时淡一点"，但那个 class 在某些页面**一直没被移除**
+   *   → 里面的内容永远 45% 透明 → 字还在，但淡到看不见
+   *   （用户报：手机冬日信箱的回信看不见 ✓ 就是这个）
+   *   → 手机端不再做任何透明度处理，内容该多清楚就多清楚
+   */
   .dsh-wait-blur {
     filter: none;
-    opacity: 0.45;
-    transform: scale(1.012);
+    opacity: 1;
+    transform: none;
   }
 
   @keyframes dsh-unblur {
-    from { filter: none; opacity: 0.45; transform: scale(1.012); }
+    from { filter: none; opacity: 1; transform: none; }
     to   { filter: none; opacity: 1;    transform: scale(1); }
   }
 }
