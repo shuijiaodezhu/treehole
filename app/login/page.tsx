@@ -32,7 +32,26 @@ export default function LoginPage() {
     setLoading(true)
     setMessage('')
 
-    const { data, error } = await supabase.auth.signInWithPassword({ email, password })
+    /*
+     * 加 15 秒超时：
+     *   站点在 EdgeOne（国内）很快 ✓ 但账号/数据在 Supabase（国外）✗
+     *   手机网络差的时候，登录请求会**一直挂着** → 按钮永远显示"登录中…" ✗
+     *   （用户报过"登不上去"，其实就是没等到回应 ✓）
+     *   超时后明确说一句，并且把按钮恢复可点 ✓
+     */
+    const TIMEOUT_MS = 15_000
+    const result = await Promise.race([
+      supabase.auth.signInWithPassword({ email, password }),
+      new Promise<null>((resolve) => window.setTimeout(() => resolve(null), TIMEOUT_MS)),
+    ])
+
+    if (!result) {
+      setMessage('网络太慢，登录没等到回应。等几秒再试一次；WiFi 和流量切换一下也许就好。')
+      setLoading(false)
+      return
+    }
+
+    const { data, error } = result
 
     if (error) {
       /*
