@@ -182,7 +182,16 @@ export function ImagePicker({
   const [linkInput, setLinkInput] = useState('')
 
   async function handleFiles(files: FileList | null) {
-    if (!files || files.length === 0 || !userId) return
+    if (!files || files.length === 0) return
+    /*
+     * userId 还没就绪时，原来这里是**静默 return** ✗
+     * → 用户选完图、界面毫无反应、计数还是 0/9（用户报的就是这个）
+     * → 改成明确说一句，至少让人知道"等一下"而不是"坏了"
+     */
+    if (!userId) {
+      setMessage('还没登录完成，稍等一两秒再选')
+      return
+    }
     setMessage('')
 
     const room = MAX_IMAGES - urls.length
@@ -198,7 +207,8 @@ export function ImagePicker({
       for (const file of picked) {
         const result = await uploadImage(file, userId)
         if (result.error) {
-          setMessage(result.error)
+          // 带上文件名：多选时能看出是哪一张失败、什么原因
+          setMessage(`「${file.name}」上传失败：${result.error}`)
           break
         }
         if (result.url) next.push(result.url)
