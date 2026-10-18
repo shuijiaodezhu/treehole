@@ -82,6 +82,10 @@ function isImmutable(url, request) {
 }
 
 self.addEventListener('fetch', (event) => {
+  /* SAFETY-NET：这一层出错绝不能让全站挂
+     （今晚的教训：SW 里一行 ReferenceError → 所有请求失败 → 白屏，连自更新都做不到）
+     有这层：内部报错 → 不抛出去 → 浏览器至少还能走默认网络请求 ✓ */
+  try {
   const request = event.request
   let url
   try {
@@ -162,4 +166,7 @@ self.addEventListener('fetch', (event) => {
       }
     })(),
   )
+  } catch (e) {
+    try { console.error('[sw] fetch error:', e) } catch { /* 忽略 */ }
+  }
 })
