@@ -50,7 +50,19 @@ export default function ForgotPasswordPage() {
     }
 
     if (error && !/user not found/i.test(error.message)) {
-      setMessage('发送失败：' + error.message)
+      /*
+       * 把 "Failed to fetch" 翻成人话
+       *   它的意思**不是**"发不出去" ✗，而是**请求没到服务器** ✓
+       *   常见原因：代理/信号瞬断、浏览器插件拦截
+       *   （服务端我验过：预检 200 ✓ POST 200 ✓ 所以不是配置问题）
+       */
+      const raw = error.message || ''
+      const networkish = /failed to fetch|network ?error|load failed|err_/i.test(raw)
+      setMessage(
+        networkish
+          ? '网络没连上服务器（可能代理或信号不稳）。等几秒再点一次；还不行就换个网络，或者用浏览器打开试试。'
+          : '发送失败：' + raw,
+      )
       setLoading(false)
       return
     }
