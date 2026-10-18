@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import { Bgm } from '../components/bgm'
 import { Suspense } from "react";
 import { Cormorant_Garamond, Ma_Shan_Zheng, Noto_Serif_SC } from "next/font/google";
 import "./globals.css";
@@ -197,6 +198,8 @@ export default function RootLayout({
         <ThemeApplier />
         {/* 开屏同步：背后把常用数据拉到本机（只渲染 null，不影响结构）*/}
         <BootSync />
+        {/* 背景音乐：默认不播，右下角小圆钮随时开/关；主页会问一次要不要放 */}
+        <Bgm />
       {/*
         首次加载才放 splash：这里用内联脚本在**首帧之前**写 html 属性，
         所以不会出现"先看到页面、再被盖住"的空窗。

@@ -68,6 +68,8 @@ function shouldHandle(request, url) {
 
 /** 能长期缓存的静态东西（文件名带哈希 / 图片 / 字体 ✓） */
 function isImmutable(url, request) {
+  // 背景音乐：11MB，只有点开才下；进了一次缓存就不再吃流量 ✓
+  if (url.pathname === "/bgm.mp3") return true
   if (url.origin === self.location.origin) {
     if (url.pathname.startsWith('/_next/static/')) return true // 带哈希 ✓ 永不变 ✓
     if (/\.(png|jpg|jpeg|webp|gif|svg|ico|woff2?|ttf)$/.test(url.pathname)) return true
