@@ -124,6 +124,28 @@ export default function PlayPage() {
     if (!userData.user) { router.push('/login'); return }
     setMeId(userData.user.id)
 
+    /*
+     * 派对过期清理（用户确认的规则：**超过 7 天的活动就删除**）
+     *   · 一次会话只触发一次 → 不会每次进页面都打一条 RPC
+     *   · fire-and-forget（不 await）→ 绝不影响页面加载
+     *   · 函数是 security definer 且带天数安全阀 → 传错了也不会清空派对
+     *   · 函数还没建时静默失败（不报错、不影响使用）
+     *   · 为什么放客户端触发：Supabase 免费版不一定给我们开 pg_cron，
+     *     而"每天有人来一次派对页"这件事本身是稳定的 ✓
+     */
+    try {
+      if (window.sessionStorage.getItem('treehole:play-purge') !== '1') {
+        window.sessionStorage.setItem('treehole:play-purge', '1')
+        void Promise.resolve(
+          supabase.rpc('purge_expired_play_activities', { p_days: 7 }),
+        ).catch(() => {
+          /* 函数不存在/没权限 → 静默 */
+        })
+      }
+    } catch {
+      /* 忽略 */
+    }
+
     const { data: typeData } = await supabase
       .from('play_types')
       .select('id, name, icon, sort_order, created_by')
