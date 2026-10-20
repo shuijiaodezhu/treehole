@@ -128,13 +128,20 @@ export function EmojiPicker({
     · 窄屏自动收窄 ✓ 永远不会超出屏幕 ✓
   高度也封一下（最多屏幕的 45%），免得面板把输入框顶出视野
 */
-className={`card absolute bottom-full z-40 mb-3 w-[min(18rem,calc(100vw-2rem))] max-h-[45vh] overflow-y-auto rounded-box border border-base-300 bg-base-100 shadow-sm ${
-            align === 'right' ? 'right-0' : 'left-0'
-          }`}
+          /*
+           * 固定居中（用户要求）：
+           *   原来 absolute + right-0/left-0 → 贴着表情按钮那一侧 ✗
+           *   窄屏时另一边溢出、被容器裁掉（截图里「动作」前面缺一块 ✓）
+           *   fixed + left:50% + translateX(-50%) → **永远水平居中** ✓
+           *   宽度仍是 min(18rem, 100vw-2rem) → 两边各留 16px ✓ 永不超出屏幕
+           */
+          className="card fixed bottom-24 z-40 w-[min(18rem,calc(100vw-2rem))] max-h-[45vh] overflow-y-auto rounded-box border border-base-300 bg-base-100 shadow-sm"
+          style={{ left: '50%', transform: 'translateX(-50%)' }}
         >
-          {/* 小尖角，视觉上连回按钮 */}
+          {/* 小尖角：居中后它指向空白 → 隐藏（保留 align 判断，避免 lint 报未使用） */}
           <span
-            className={`absolute -bottom-1.5 h-3 w-3 rotate-45 border-b  bg-base-100 ${
+            aria-hidden="true"
+            className={`hidden ${
               align === 'right' ? 'right-3' : 'left-3'
             }`}
           />
