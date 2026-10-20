@@ -42,7 +42,13 @@ export default function NotificationsPage() {
       <div className="relative max-w-xl mx-auto px-6 py-10">
         <header className="mb-6">
           <Link
-            href="/me"
+            /*
+             * DEAD-LOOP：这里原来写死 href="/me" ✗
+             *   通知 → 返回 → 个人主页 → 返回 → 通知 → … 无限来回 ✗
+             *   （个人主页的返回是"回上一页"，正好又回到通知页）
+             * → 通知页的返回直接回**首页** ✓ 一眼就能出去 ✓
+             */
+            href="/"
             className="text-sm text-base-content/60 transition hover:text-primary"
           >
             ← 返回
