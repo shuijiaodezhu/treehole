@@ -29,21 +29,47 @@ jobs:
         with:
           gradle-version: '8.7'
 
-      - name: Build debug APK
+      - name: sign-keystore
+        if: ${{ secrets.KEYSTORE_BASE64 != '' }}
+        run: |
+          echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > android/yourletters.keystore
+          ls -l android/yourletters.keystore
+
+      - name: Build APK
         working-directory: android
-        run: gradle assembleDebug --no-daemon
+        env:
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+        run: |
+          if [ -f yourletters.keystore ]; then
+            echo "==> 用正式签名构建 release"
+            gradle assembleRelease --no-daemon
+          else
+            echo "==> 没有签名文件，出 debug 包（功能一样，只是不能覆盖安装）"
+            gradle assembleDebug --no-daemon
+          fi
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: yourletters-apk
-          path: android/app/build/outputs/apk/debug/*.apk
+          path: |
+            android/app/build/outputs/apk/debug/*.apk
+            android/app/build/outputs/apk/release/*.apk
           if-no-files-found: error
 
       # 起个好看的名字，方便直接分享（apk 里自带的名字是 app-debug.apk ✓ 太丑 ✗）
       - name: Rename APK
         working-directory: android
-        run: cp app/build/outputs/apk/debug/app-debug.apk yourletters.apk
+        run: |
+          if [ -f app/build/outputs/apk/release/app-release.apk ]; then
+            cp app/build/outputs/apk/release/app-release.apk yourletters.apk
+            echo "==> 用的是签名版 release 包"
+          else
+            cp app/build/outputs/apk/debug/app-debug.apk yourletters.apk
+            echo "==> 用的是 debug 包（未签名）"
+          fi
 
       # 发布到 Release：得到一个**永久直链** ✓ 朋友点开就能下 ✓ 不用登录 ✓ 不用解压 ✓
       # 标签固定为 apk-latest ✓ 所以链接永远是这个：
