@@ -57,6 +57,18 @@ export default function ForgotPasswordPage() {
        *   （服务端我验过：预检 200 ✓ POST 200 ✓ 所以不是配置问题）
        */
       const raw = error.message || ''
+
+      /*
+       * Supabase 的限流提示是英文的：
+       *   "For security purposes, you can only request this after 23 seconds."
+       * 用户看不懂 ✗ 翻成人话，并把秒数提出来 ✓
+       */
+      const waitMatch = raw.match(/after (\d+) seconds?/i)
+      if (/for security purposes/i.test(raw) && waitMatch) {
+        setMessage('发得太快啦，请等 ' + waitMatch[1] + ' 秒再试一次。')
+        setLoading(false)
+        return
+      }
       const networkish = /failed to fetch|network ?error|load failed|err_/i.test(raw)
       setMessage(
         networkish
