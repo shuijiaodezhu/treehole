@@ -91,6 +91,23 @@ jobs:
       # 发布到 Release：得到一个**永久直链** ✓ 朋友点开就能下 ✓ 不用登录 ✓ 不用解压 ✓
       # 标签固定为 apk-latest ✓ 所以链接永远是这个：
       #   https://github.com/shuijiaodezhu/treehole/releases/download/apk-latest/yourletters.apk
+      # 同时放一份到官网：yourletters.cn/yourletters.apk（国内 CDN ✓ 下载快很多）
+      #   · 只在构建成功时做 ✓
+      #   · 内容没变就跳过 ✓ 不会每次都产生空提交
+      - name: Publish APK to site
+        run: |
+          cp android/yourletters.apk public/yourletters.apk
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add public/yourletters.apk
+          if git diff --cached --quiet; then
+            echo "==> APK 没有变化，跳过提交"
+          else
+            git commit -m "chore: 更新官网上的 APK（自动构建产物）"
+            git push origin HEAD:main
+            echo "==> 已更新 yourletters.cn/yourletters.apk"
+          fi
+
       - name: Publish to Release
         uses: softprops/action-gh-release@v2
         with:

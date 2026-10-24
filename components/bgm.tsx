@@ -174,7 +174,7 @@ export function Bgm() {
         {/* App 内不显示（点了白下 ✗）；网页上点它直接下 APK ✓ */}
         {!inApp && (
           <a
-            href="https://github.com/shuijiaodezhu/treehole/releases/download/apk-latest/yourletters.apk"
+            href="/yourletters.apk"
             download
             className="app-download flex items-center gap-1.5 rounded-full border border-base-300 bg-base-100/90 px-3 py-2 font-serif-cn text-[11px] text-base-content/70 shadow-sm backdrop-blur transition hover:border-primary/40 hover:text-base-content"
             title="下载安卓 App"
