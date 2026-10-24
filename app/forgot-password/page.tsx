@@ -47,7 +47,7 @@ export default function ForgotPasswordPage() {
   async function handleVerify(e: React.FormEvent) {
     e.preventDefault()
     if (!code.trim()) {
-      setMessage('先填邮件里那 6 位数字。')
+      setMessage('先把邮件里那串数字填上。')
       return
     }
     if (newPwd.length < 6) {
@@ -165,7 +165,7 @@ export default function ForgotPasswordPage() {
                 验证码已经发到 {email} ✓
               </p>
               <p className="font-serif-cn text-[11px] leading-relaxed text-base-content/60">
-                邮件里是 <strong>6 位数字</strong>（不是链接 ✗ 这样国内也能用 ✓）。
+                邮件里是<strong>一串数字</strong>（不是链接 ✗ 这样国内也能用 ✓）。
                 <br />
                 没收到就翻一下垃圾邮件；再没收到，过一会儿重新点一次「寄出」。
               </p>
@@ -175,8 +175,8 @@ export default function ForgotPasswordPage() {
                 autoComplete="one-time-code"
                 required
                 value={code}
-                onChange={(e) => setCode(e.target.value.replace(/\D/g, '').slice(0, 8))}
-                placeholder="6 位验证码"
+                onChange={(e) => setCode(e.target.value.replace(/\D/g, '').slice(0, 10))}
+                placeholder="邮件里的验证码"
                 className="w-full rounded-box border border-base-300 bg-base-content/5 px-4 py-3 text-center font-mono text-lg tracking-[0.4em] text-base-content placeholder:text-base-content/40 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/10"
               />
 
