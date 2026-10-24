@@ -58,29 +58,56 @@ export function BootSync() {
         const uid = sessionRes?.data?.session?.user?.id
         if (!uid || cancelled) return
 
+        /*
+         * 先用一次 RPC 拿回全部（9 次往返 → 1 次 ✓）
+         *   app_boot() 是 security invoker 函数 ✓ RLS 照常生效 ✓
+         *   没建这个函数 / 报错 / 超时 → boot 为 null → 下面的 pick 自动退回原查询 ✓
+         *   **最坏情况只是"没变快"，绝不会"打不开"** ✓
+         */
+        const bootRes = await withTimeout(
+          // rpc 的返回类型和 withTimeout 的泛型对不上 ✓ 这里显式转一层（运行期没有区别）
+          supabase.rpc('app_boot') as unknown as PromiseLike<{ data: unknown }>,
+          Q_TIMEOUT_MS,
+          { data: null },
+        )
+        const boot = (bootRes?.data ?? null) as Record<string, unknown> | null
+        const hasBoot = !!(boot && Array.isArray(boot.categories))
+
+        /** 有合并结果就用它，没有就真的去查（查询函数只在需要时才执行 ✓） */
+        const pick = <T,>(
+          key: string,
+          fallback: T,
+          run: () => PromiseLike<{ data: T | null }>,
+        ): Promise<T> => {
+          if (hasBoot && boot && boot[key] !== undefined && boot[key] !== null) {
+            return Promise.resolve(boot[key] as T)
+          }
+          return q(run(), fallback)
+        }
+
         // ── 并行拉（每条各自兜底 ✓）──
         const [cats, me, friends, conversations, messages, unread, convReads, moduleReads, posts] = await Promise.all([
-          q(supabase.from('categories').select('id, name, icon, parent_id, sort_order').eq('status', 'approved').order('sort_order', { ascending: true }), []),
+          pick('categories', [], () => supabase.from('categories').select('id, name, icon, parent_id, sort_order').eq('status', 'approved').order('sort_order', { ascending: true })),
 
-          q(supabase.from('profiles').select('id, username, nickname, avatar_url, signature, location').eq('id', uid).maybeSingle(), null),
+          pick('me', null, () => supabase.from('profiles').select('id, username, nickname, avatar_url, signature, location').eq('id', uid).maybeSingle()),
 
-          q(supabase.from('friendships').select('id, requester_id, addressee_id').or(`requester_id.eq.${uid},addressee_id.eq.${uid}`).eq('status', 'accepted'), []),
+          pick('friendships', [], () => supabase.from('friendships').select('id, requester_id, addressee_id').or(`requester_id.eq.${uid},addressee_id.eq.${uid}`).eq('status', 'accepted')),
 
-          q(supabase.from('conversations').select('*').order('last_message_at', { ascending: false }).limit(50), []),
+          pick('conversations', [], () => supabase.from('conversations').select('*').order('last_message_at', { ascending: false }).limit(50)),
 
-          q(supabase.from('messages').select('id, conversation_id, sender_id, content, created_at').order('created_at', { ascending: false }).limit(60), []),
+          pick('messages', [], () => supabase.from('messages').select('id, conversation_id, sender_id, content, created_at').order('created_at', { ascending: false }).limit(60)),
 
           q(supabase.from('notifications').select('id', { count: 'exact', head: true }).eq('user_id', uid).is('read_at', null), null),
 
           // 服务端记的"我在每个会话读到哪一刻"（多端同步用）
           // 表还没建 → 这里会返回空数组 ✓ 前端自动退回本机方式 ✓ 不影响任何功能
-          q(supabase.from('conversation_reads').select('conversation_id, read_at').eq('user_id', uid), []),
+          pick('conv_reads', [], () => supabase.from('conversation_reads').select('conversation_id, read_at').eq('user_id', uid)),
 
           // 各模块（院子/小屋/朋友圈…）的已读位置（多端同步 · 第二部分）
           // 表还没建 → 返回空数组 → 前端自动退回本机方式 ✓
-          q(supabase.from('module_reads').select('module, read_at').eq('user_id', uid), []),
+          pick('module_reads', [], () => supabase.from('module_reads').select('module, read_at').eq('user_id', uid)),
 
-          q(supabase.from('world_posts').select('id, author_id, is_anonymous, content, category_id, created_at, image_urls').eq('status', 'published').eq('is_hidden', false).is('category_id', null).order('created_at', { ascending: false }).limit(20), []),
+          pick('posts', [], () => supabase.from('world_posts').select('id, author_id, is_anonymous, content, category_id, created_at, image_urls').eq('status', 'published').eq('is_hidden', false).is('category_id', null).order('created_at', { ascending: false }).limit(20)),
         ])
 
         if (cancelled) return
