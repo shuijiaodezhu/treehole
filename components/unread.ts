@@ -111,6 +111,18 @@ export function useUnreadMessages(userId: string | null): UnreadMessages {
   const [friendIdByConversation, setFriendIdByConversation] = useState<Record<string, string>>({})
   const [lastAtByConversation, setLastAtByConversation] = useState<Record<string, string>>({})
   const [refreshKey, setRefreshKey] = useState(0)
+
+  /*
+   * 开屏同步完成后重算一次 ✓
+   *   重装 App 后本机标记是空的 ✓ 服务器那份由 boot-sync 拉下来写进本地 ✓
+   *   但角标可能先算完了 ✗ → 这里在"同步完成"时再算一遍 ✓
+   */
+  useEffect(() => {
+    if (!userId) return
+    const onSynced = () => setRefreshKey((k) => k + 1)
+    window.addEventListener('treehole:synced', onSynced)
+    return () => window.removeEventListener('treehole:synced', onSynced)
+  }, [userId])
   /** 查询是否已经回来过一次 —— 没回来之前不许写缓存，否则会把上次的结果擦掉 */
   const [loaded, setLoaded] = useState(false)
 
@@ -429,6 +441,18 @@ export function useWorldRepliesBadge(userId: string | null): {
   const [count, setCount] = useState(0)
   const [items, setItems] = useState<{ postId: string; snippet: string; count: number }[]>([])
   const [refreshKey, setRefreshKey] = useState(0)
+
+  /*
+   * 开屏同步完成后重算一次 ✓
+   *   重装 App 后本机标记是空的 ✓ 服务器那份由 boot-sync 拉下来写进本地 ✓
+   *   但角标可能先算完了 ✗ → 这里在"同步完成"时再算一遍 ✓
+   */
+  useEffect(() => {
+    if (!userId) return
+    const onSynced = () => setRefreshKey((k) => k + 1)
+    window.addEventListener('treehole:synced', onSynced)
+    return () => window.removeEventListener('treehole:synced', onSynced)
+  }, [userId])
 
   useEffect(() => {
     if (!userId) return

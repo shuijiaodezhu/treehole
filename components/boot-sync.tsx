@@ -143,6 +143,18 @@ export function BootSync() {
 
         // 记一笔"什么时候同步过"✓（最后写 ✓ 失败了下次还会重试 ✓）
         save(SYNC_KEY, 1)
+
+        /*
+         * 通知各个角标 hook：本地标记刚刚写好了，重算一次 ✓
+         *   之前的问题：开屏同步还在写 conversation-reads / module-reads 时，
+         *   角标 hook 已经算完了 ✗ → 重装后角标一直是旧的 ✗
+         *   而且之后也不会重算（依赖数组里没有"同步完成"这个信号）✗
+         */
+        try {
+          window.dispatchEvent(new Event('treehole:synced'))
+        } catch {
+          /* 忽略 */
+        }
       } catch {
         /* 开屏同步是"锦上添花" ✗ 任何问题都不该影响用户 ✓ */
       }
