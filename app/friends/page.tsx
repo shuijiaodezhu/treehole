@@ -1109,7 +1109,7 @@ export default function FriendsPage() {
                 </div>
               )}
 
-              <div data-lenis-prevent className="card rounded-box border border-base-300 bg-base-100 shadow-sm overflow-hidden flex-1 overflow-y-auto">
+              <div data-lenis-prevent className="card rounded-box border border-base-300 bg-base-100 shadow-sm">
                 <div className="px-4 py-3 ">
                   <p className="text-[11px] text-base-content/60 tracking-wide">
                     我的好友 · {shownFriends.length}
