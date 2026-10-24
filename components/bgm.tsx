@@ -25,6 +25,8 @@ const HINT_KEY = 'treehole:bgm-hint'
 export function Bgm() {
   const [on, setOn] = useState(false)
   const [ready, setReady] = useState(false)
+  /** 是不是在 App（WebView）里 —— App 内不显示"下载 App"按钮 ✓ */
+  const [inApp, setInApp] = useState(false)
   const [hint, setHint] = useState(false)
   const audioRef = useRef<HTMLAudioElement | null>(null)
 
@@ -39,6 +41,13 @@ export function Bgm() {
     // 用 setTimeout 让 setState 离开同步阶段（项目的 eslint 规则要求）
     window.setTimeout(() => {
       setOn(saved)
+      /* 判断是不是在 App（WebView）里 —— App 内不显示"下载 App"按钮 ✓ */
+      try {
+        const ua = navigator.userAgent
+        setInApp(/; wv\)/.test(ua) || /YourLettersApp/.test(ua))
+      } catch {
+        setInApp(false)
+      }
       setReady(true)
     }, 0)
   }, [])
@@ -143,6 +152,8 @@ export function Bgm() {
       )}
 
       {/* 常驻开关：右下角的小圆钮（这里才是真正的"自由打开/关闭"） */}
+      {/* 右下角竖排：音乐在上，下载 App 在下 ✓ */}
+      <div className="fixed bottom-4 right-4 z-40 flex flex-col items-end gap-2">
       <button
         type="button"
         onClick={() => {
@@ -151,7 +162,7 @@ export function Bgm() {
         }}
         aria-label={on ? '关掉背景音乐' : '打开背景音乐'}
         title={on ? '关掉背景音乐' : '打开背景音乐'}
-        className={`fixed bottom-4 right-4 z-40 flex h-10 w-10 items-center justify-center rounded-full border transition ${
+        className={`flex h-10 w-10 items-center justify-center rounded-full border transition ${
           on
             ? 'border-primary/30 bg-primary text-primary-content shadow-sm'
             : 'border-base-300 bg-base-100/90 text-base-content/55 backdrop-blur hover:text-base-content'
@@ -159,6 +170,20 @@ export function Bgm() {
       >
         <Icon name="music" className="h-4 w-4" />
       </button>
+
+        {/* App 内不显示（点了白下 ✗）；网页上点它直接下 APK ✓ */}
+        {!inApp && (
+          <a
+            href="https://github.com/shuijiaodezhu/treehole/releases/download/apk-latest/yourletters.apk"
+            download
+            className="app-download flex items-center gap-1.5 rounded-full border border-base-300 bg-base-100/90 px-3 py-2 font-serif-cn text-[11px] text-base-content/70 shadow-sm backdrop-blur transition hover:border-primary/40 hover:text-base-content"
+            title="下载安卓 App"
+          >
+            <Icon name="download" className="h-3.5 w-3.5" />
+            下载 App
+          </a>
+        )}
+      </div>
     </>
   )
 }
