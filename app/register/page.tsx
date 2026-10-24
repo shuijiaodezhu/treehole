@@ -55,7 +55,18 @@ export default function RegisterPage() {
     if (/already registered|already been registered/i.test(error.message)) {
         setMessage('这个邮箱已经注册过了。直接登录就行；忘了密码的话，登录页有「忘记密码？」')
       } else {
-        setMessage('注册失败：' + error.message)
+        /*
+       * 把 "Failed to fetch" 翻成人话
+       *   它的意思不是"注册失败" ✗，是**请求没到服务器** ✓
+       *   常见原因：网络瞬断、代理不稳、信号差
+       */
+      const raw = (error?.message || '') as string
+      if (/failed to fetch|network ?error|load failed|err_/i.test(raw)) {
+        setMessage('网络没连上服务器（可能信号或代理不稳）。等几秒再点一次；还不行就换个网络试试。')
+        setLoading(false)
+        return
+      }
+      setMessage('注册失败：' + error.message)
       }
       setLoading(false)
       return
