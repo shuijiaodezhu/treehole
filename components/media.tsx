@@ -182,7 +182,15 @@ export function ImagePicker({
   const [linkInput, setLinkInput] = useState('')
 
   async function handleFiles(files: FileList | null) {
-    if (!files || files.length === 0) return
+    /*
+     * 一个文件都没拿到就说一句 ✗
+     *   原来这里是静默 return ✓ 用户选了图、回来什么都没变、也没提示 ✗
+     *   （App 的 WebView 某些机型会把结果给成空数组 → 就是这个现象）
+     */
+    if (!files || files.length === 0) {
+      setMessage('没拿到图片。可能是系统选择器的问题：再选一次试试；或者用下面的「粘贴图片链接」。')
+      return
+    }
     /*
      * userId 还没就绪时，原来这里是**静默 return** ✗
      * → 用户选完图、界面毫无反应、计数还是 0/9（用户报的就是这个）

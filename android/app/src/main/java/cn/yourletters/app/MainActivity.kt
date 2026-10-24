@@ -177,12 +177,32 @@ class MainActivity : AppCompatActivity() {
             val cb = fileCallback
             fileCallback = null
             if (cb == null) return
-            val uris: Array<Uri>? = try {
-                WebChromeClient.FileChooserParams.parseResult(resultCode, data)
-            } catch (e: Exception) {
-                null
+            /*
+             * 手动解析（不只用 parseResult）：
+             *   某些机型/系统版本上 parseResult 会返回**空数组** ✗
+             *   → 网页那边收到 0 个文件 → 选完图什么都没发生 ✓
+             * 这里把 clipData（多选）和 data（单选）都取出来 ✓
+             */
+            val list = mutableListOf<Uri>()
+            if (resultCode == RESULT_OK && data != null) {
+                // 多选：文件都在 clipData 里
+                data.clipData?.let { cd ->
+                    for (i in 0 until cd.itemCount) {
+                        cd.getItemAt(i)?.uri?.let { list.add(it) }
+                    }
+                }
+                // 单选：在 data 里
+                data.data?.let { list.add(it) }
+                // 兜底：再用官方的解析器试一次（去重）
+                try {
+                    WebChromeClient.FileChooserParams.parseResult(resultCode, data)?.forEach { u ->
+                        if (!list.contains(u)) list.add(u)
+                    }
+                } catch (e: Exception) {
+                    // 忽略
+                }
             }
-            cb.onReceiveValue(uris)
+            cb.onReceiveValue(if (list.isEmpty()) null else list.toTypedArray())
             return
         }
         @Suppress("DEPRECATION")
