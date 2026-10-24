@@ -14,6 +14,7 @@ import android.content.pm.PackageManager
 import android.webkit.GeolocationPermissions
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import android.webkit.WebResourceResponse
 import android.webkit.WebViewClient
 import androidx.appcompat.app.AppCompatActivity
 
@@ -118,6 +119,25 @@ class MainActivity : AppCompatActivity() {
                     true
                 } catch (e: Exception) {
                     true
+                }
+            }
+
+            /*
+             * BGM 本地化：网页里 <audio src="/bgm.mp3"> 的请求在这里被拦下 ✓
+             * 直接返回 APK 里的 res/raw/bgm.mp3 ✓
+             *   → 点播放立刻响 ✓ 不吃流量 ✓ 离线也能放 ✓
+             *   → 网页侧一行都不用改（URL 还是 /bgm.mp3 ✓）
+             */
+            override fun shouldInterceptRequest(
+                view: WebView?,
+                request: WebResourceRequest?,
+            ): WebResourceResponse? {
+                val u = request?.url?.toString() ?: return null
+                if (!u.endsWith("/bgm.mp3")) return null
+                return try {
+                    WebResourceResponse("audio/mpeg", null, resources.openRawResource(R.raw.bgm))
+                } catch (e: Exception) {
+                    null
                 }
             }
         }
