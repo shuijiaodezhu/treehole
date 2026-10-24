@@ -947,7 +947,7 @@ export default function FriendsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-base-content/5 relative overflow-hidden">
+    <div className="min-h-screen bg-base-content/5 relative overflow-x-hidden">
 
       {/* pt-24：顶部空间更大，返回键不会被浏览器顶栏挡住 */}
       <div className="relative max-w-6xl mx-auto px-6 pt-24 pb-8">
@@ -1013,7 +1013,7 @@ export default function FriendsPage() {
         </header>
 
         {mode === 'friends' ? (
-          <div className="flex gap-5 h-[calc(100vh-320px)] min-h-[500px]">            <aside className={`w-72 flex-shrink-0 flex-col gap-3 ${showChatOnMobile ? 'hidden md:flex' : 'flex'}`}>
+          <div className="flex gap-5 md:h-[calc(100vh-320px)] md:min-h-[500px]">            <aside className={`w-72 flex-shrink-0 flex-col gap-3 ${showChatOnMobile ? 'hidden md:flex' : 'flex'}`}>
               <button
                 onClick={() => setShowAdd(!showAdd)}
                 className="w-full py-2.5 rounded-box bg-primary text-primary-content text-sm font-medium hover:shadow-sm transition-all flex items-center justify-center gap-2 flex-shrink-0"
