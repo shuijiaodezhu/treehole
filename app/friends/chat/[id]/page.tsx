@@ -61,6 +61,19 @@ function ChatInner() {
    * 现在：本机存过这个对话 → 立刻铺上（消息本身仍然照常去同步）
    * 用 0 延迟铺数据：避开「effect 里同步 setState」的规则，也避免连锁渲染
    */
+  /*
+   * 聊天页要满屏（输入框在底部）✓
+   * 右下角那两个固定按钮（音乐/下载）会压住发送键 ✗
+   * → 进这一页时给 body 打标记 ✓ 由 CSS 把按钮隐藏 ✓
+   * → 离开时清掉 ✓（不用 usePathname，避免 Suspense 要求 ✓）
+   */
+  useEffect(() => {
+    document.body.classList.add('th-in-chat')
+    return () => {
+      document.body.classList.remove('th-in-chat')
+    }
+  }, [])
+
   useEffect(() => {
     if (!conversationId) return
     const paint = window.setTimeout(() => {

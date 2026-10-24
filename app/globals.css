@@ -1071,3 +1071,9 @@ select:-webkit-autofill {
   .dsh-open.dsh-wait-blur,
   .dsh-open .dsh-wait-blur { animation: none; }
 }
+
+
+/* 聊天页：右下角的音乐键和下载按钮会压住发送键 ✗ 隐藏掉 ✓ */
+body.th-in-chat .th-bgm-fixed {
+  display: none !important;
+}

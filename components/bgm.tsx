@@ -153,7 +153,7 @@ export function Bgm() {
 
       {/* 常驻开关：右下角的小圆钮（这里才是真正的"自由打开/关闭"） */}
       {/* 右下角竖排：音乐在上，下载 App 在下 ✓ */}
-      <div className="fixed bottom-4 right-4 z-40 flex flex-col items-end gap-2">
+      <div className="th-bgm-fixed fixed bottom-4 right-4 z-40 flex flex-col items-end gap-2">
       <button
         type="button"
         onClick={() => {
