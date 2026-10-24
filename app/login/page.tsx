@@ -62,6 +62,14 @@ export default function LoginPage() {
       const raw = error.message ?? ''
       if (/email not confirmed/i.test(raw)) {
         setMessage('这个邮箱还没验证。去收件箱点一下确认链接，再回来登录（垃圾邮件里也翻一下）')
+      } else if (/invalid login credentials/i.test(raw)) {
+        /*
+         * Supabase 对"邮箱不存在/密码错"统一回 "Invalid login credentials" ✗
+         * （出于安全，不告诉你是哪一个错了 ✓）
+         * 但对用户来说，最需要知道的是"下一步怎么办" ✓
+         * —— 尤其是刚重置过密码的人，很容易还在用旧密码 ✓
+         */
+        setMessage('邮箱或密码不对。如果刚重置过密码，用**新的**那个试试；也可以点「忘记密码」重来一次。')
       } else {
         setMessage('登录失败：' + raw)
       }
