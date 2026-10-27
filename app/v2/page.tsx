@@ -174,10 +174,19 @@ export default function V2Page() {
               Dear You
             </div>
           </div>
-          <nav className="flex gap-4 pt-1 text-[12px]" style={{ color: C.ink3 }}>
-            <span style={{ color: C.wax, fontWeight: 600 }}>大厅</span>
-            <Link href="/friends">小屋</Link>
-            <Link href="/me">我的</Link>
+          <nav className="flex items-end gap-5 text-[13px] tracking-[0.02em]">
+            <span
+              className="border-b-2 pb-0.5 font-semibold"
+              style={{ color: C.wax, borderColor: C.wax }}
+            >
+              大厅
+            </span>
+            <Link href="/friends" className="pb-[3px]" style={{ color: C.ink3 }}>
+              小屋
+            </Link>
+            <Link href="/me" className="pb-[3px]" style={{ color: C.ink3 }}>
+              我的
+            </Link>
           </nav>
         </header>
 
@@ -272,7 +281,7 @@ export default function V2Page() {
                     {(me?.nickname || me?.username || '我').slice(0, 1)}
                   </div>
                   <span className="text-[11px] font-medium" style={{ color: C.ink }}>
-                    {p.author_id === me?.id ? me?.nickname || me?.username || '我' : '有人'}
+                    {p.author_id === me?.id ? me?.nickname || me?.username || '' : '有人'}
                   </span>
                   <span className="ml-auto font-mono text-[8px]" style={{ color: C.ink3 }}>
                     {relTime(p.created_at)}
