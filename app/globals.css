@@ -1418,6 +1418,8 @@ body.th-in-chat .th-bgm-fixed {
   position: relative;
   overflow: hidden;
   flex-shrink: 0;
+  /* 里面的内容以后要加 —— 高度先锁住，删了内容也不会缩 */
+  min-height: 380px;
 }
 .v4-hero::after {
   content: '';
