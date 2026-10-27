@@ -116,15 +116,6 @@ export default function V4Page() {
             <span>DEAR YOU</span>
           </div>
 
-          <div className={`${"v4-glass"} ${"v4-nav"}`}>
-            <button className={`${"v4-navItem"} ${"v4-navOn"}`}>大厅</button>
-            <Link href="/friends" className={"v4-navItem"}>
-              小屋
-            </Link>
-            <Link href="/me" className={"v4-navItem"}>
-              我的
-            </Link>
-          </div>
 
           <div className={"v4-spacer"} />
 
@@ -220,6 +211,21 @@ export default function V4Page() {
 
           {/* 右栏 */}
           <aside className={"v4-rail"}>
+            <div className={`${"v4-glass"} ${"v4-navCol"}`}>
+              <button className={`${"v4-navColItem"} ${"v4-navColOn"}`}>
+                <span className={"v4-navColDot"} />
+                大厅
+              </button>
+              <Link href="/friends" className={"v4-navColItem"}>
+                <span className={"v4-navColDot"} />
+                小屋
+              </Link>
+              <Link href="/me" className={"v4-navColItem"}>
+                <span className={"v4-navColDot"} />
+                我的
+              </Link>
+            </div>
+
             <div className={`${"v4-glass"} ${"v4-card"}`}>
               <div className={"v4-k"}>我在这里</div>
               <div className={"v4-nums"}>
