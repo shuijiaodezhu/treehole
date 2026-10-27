@@ -1444,11 +1444,12 @@ body.th-in-chat .th-bgm-fixed {
 }
 .v4-hero h1 {
   font-size: 41px;
-  font-weight: 300;
+  font-weight: 500;
   line-height: 1.34;
-  letter-spacing: -0.015em;
+  letter-spacing: -0.01em;
   margin-top: 16px;
   max-width: 16em;
+  color: var(--ink);
 }
 .v4-heroSub {
   font-size: 14.5px;
@@ -1550,13 +1551,9 @@ body.th-in-chat .th-bgm-fixed {
 
 /* 右栏 */
 .v4-rail { display: flex; flex-direction: column; gap: 16px; min-height: 0; }
-.v4-card { border-radius: 22px; padding: 20px; }
-.v4-k {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 9.5px;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  opacity: 0.68;
+.v4-card {
+  border-radius: 22px;
+  padding: 26px 26px 24px;
 }
 .v4-nums { display: flex; flex-direction: column; gap: 16px; margin-top: 16px; }
 .v4-num { display: flex; align-items: baseline; gap: 9px; }
@@ -1956,4 +1953,87 @@ html:has(.v4-page) {
 .v4-page,
 .v4-page * {
   overscroll-behavior: none !important;
+}
+
+/* ═══════════ /v4 右栏：陪伴天数卡 ═══════════ */
+
+.v4-card {
+  border-radius: 22px;
+  padding: 26px 26px 24px;
+}
+
+.v4-daysHead {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.v4-flame {
+  flex-shrink: 0;
+  color: #c8764e;
+  opacity: 0.9;
+}
+.v4-daysLabel {
+  font-size: 12.5px;
+  color: #6b5346;
+  opacity: 0.85;
+  letter-spacing: 0.02em;
+}
+
+.v4-daysNum {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  margin-top: 16px;
+}
+.v4-daysNum b {
+  font-family: 'Noto Sans SC', sans-serif;
+  font-size: 48px;
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: #a8543a;
+}
+.v4-daysNum span {
+  font-size: 15px;
+  color: #a8543a;
+  opacity: 0.85;
+}
+
+.v4-daysNote {
+  font-size: 12.5px;
+  color: #6b5346;
+  opacity: 0.78;
+  margin-top: 14px;
+  line-height: 1.75;
+}
+
+.v4-daysSub {
+  font-size: 11.5px;
+  color: #9c8b78;
+  opacity: 0.9;
+  margin-top: 18px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(110, 72, 52, 0.10);
+  line-height: 1.9;
+}
+.v4-daysSub b {
+  color: #6b5346;
+  font-weight: 500;
+}
+
+/* 天气手写体 */
+@font-face {
+  font-family: 'HW Weather';
+  src: url('/hw-weather.woff2') format('woff2');
+  font-display: swap;
+  font-weight: 400;
+}
+.v4-heroWeather {
+  font-family: 'HW Weather', 'Noto Sans SC', sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  letter-spacing: 0.03em;
+  color: #6b5346;
+  opacity: 0.78;
+  margin-left: 0;
 }
