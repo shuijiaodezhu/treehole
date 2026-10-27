@@ -1200,15 +1200,15 @@ body.th-in-chat .th-bgm-fixed {
 .v4-brand {
   display: flex;
   align-items: center;
-  gap: 14px;
-  padding: 12px 26px 12px 22px;
-  border-radius: 18px;
+  gap: 16px;
+  padding: 14px 30px 14px 24px;
+  border-radius: 20px;
 }
 .v4-wordmark {
-  height: 40px;
+  height: 72px;
   width: auto;
   display: block;
-  opacity: 0.92;
+  opacity: 0.95;
 }
 .v4-brand b {
   font-family: 'Noto Sans SC', sans-serif;
@@ -1218,9 +1218,10 @@ body.th-in-chat .th-bgm-fixed {
 }
 .v4-brand span {
   font-family: 'JetBrains Mono', monospace;
-  font-size: 10px;
-  letter-spacing: 0.26em;
-  opacity: 0.55;
+  font-size: 11px;
+  letter-spacing: 0.28em;
+  opacity: 0.6;
+  padding-bottom: 4px;
 }
 
 .v4-nav {
