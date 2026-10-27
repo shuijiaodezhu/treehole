@@ -3,7 +3,6 @@
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import { peek } from '../../components/local-store'
-import s from './v4.module.css'
 
 /**
  * /v4 —— 电脑版首页（液态玻璃 + 深色窄栏）
@@ -82,19 +81,19 @@ export default function V4Page() {
   }, [])
 
   return (
-    <div className={s.page}>
+    <div className={"v4-page"}>
       {/* 背景 */}
-      <div className={s.bg} aria-hidden>
-        <i className={`${s.blob} ${s.b1}`} />
-        <i className={`${s.blob} ${s.b2}`} />
-        <i className={`${s.blob} ${s.b3}`} />
-        <div className={s.gridlines} />
-        <div className={s.bigtype}>你的来信</div>
+      <div className={"v4-bg"} aria-hidden>
+        <i className={`${"v4-blob"} ${"v4-b1"}`} />
+        <i className={`${"v4-blob"} ${"v4-b2"}`} />
+        <i className={`${"v4-blob"} ${"v4-b3"}`} />
+        <div className={"v4-gridlines"} />
+        <div className={"v4-bigtype"}>你的来信</div>
       </div>
 
       {/* 窄屏提示 */}
-      <div className={s.mobileNote}>
-        这一版是**电脑版**（液态玻璃要宽屏才成立）
+      <div className={"v4-mobileNote"}>
+        这一版是电脑版（液态玻璃要宽屏才成立）
         <br />
         手机上请用 yourletters.cn 原来的首页
         <br />
@@ -103,107 +102,107 @@ export default function V4Page() {
         </Link>
       </div>
 
-      <div className={s.wrap}>
+      <div className={"v4-wrap"}>
         {/* 顶部 */}
-        <div className={s.top}>
-          <div className={`${s.glass} ${s.brand}`}>
+        <div className={"v4-top"}>
+          <div className={`${"v4-glass"} ${"v4-brand"}`}>
             <b>你的来信</b>
             <span>DEAR YOU</span>
           </div>
 
-          <div className={`${s.glass} ${s.nav}`}>
-            <button className={`${s.navItem} ${s.navOn}`}>大厅</button>
-            <Link href="/friends" className={s.navItem}>
+          <div className={`${"v4-glass"} ${"v4-nav"}`}>
+            <button className={`${"v4-navItem"} ${"v4-navOn"}`}>大厅</button>
+            <Link href="/friends" className={"v4-navItem"}>
               小屋
             </Link>
-            <Link href="/me" className={s.navItem}>
+            <Link href="/me" className={"v4-navItem"}>
               我的
             </Link>
           </div>
 
-          <div className={s.spacer} />
+          <div className={"v4-spacer"} />
 
-          <div className={`${s.glass} ${s.weather}`}>杭州 · {clock || '--:--'} · 18° 小雨</div>
+          <div className={`${"v4-glass"} ${"v4-weather"}`}>杭州 · {clock || '--:--'} · 18° 小雨</div>
         </div>
 
-        <div className={s.cols}>
+        <div className={"v4-cols"}>
           {/* 深色窄栏（烟熏玻璃）*/}
-          <nav className={`${s.darkGlass} ${s.railbar}`}>
-            <div className={s.logo}>你</div>
-            <button className={`${s.railItem} ${s.railOn}`} title="大厅">
+          <nav className={`${"v4-darkGlass"} ${"v4-railbar"}`}>
+            <div className={"v4-logo"}>你</div>
+            <button className={`${"v4-railItem"} ${"v4-railOn"}`} title="大厅">
               ⌂
             </button>
-            <button className={s.railItem} title="聚会">
-              ✧<span className={s.badge}>3</span>
+            <button className={"v4-railItem"} title="聚会">
+              ✧<span className={"v4-badge"}>3</span>
             </button>
-            <button className={s.railItem} title="分类">
+            <button className={"v4-railItem"} title="分类">
               ☰
             </button>
-            <button className={s.railItem} title="信箱">
-              ✉<span className={s.badge}>12</span>
+            <button className={"v4-railItem"} title="信箱">
+              ✉<span className={"v4-badge"}>12</span>
             </button>
-            <div className={s.sep} />
-            <button className={s.railItem} title="收藏">
+            <div className={"v4-sep"} />
+            <button className={"v4-railItem"} title="收藏">
               ♡
             </button>
-            <button className={s.railItem} title="我的">
+            <button className={"v4-railItem"} title="我的">
               ☺
             </button>
-            <div className={s.railSpacer} />
-            <button className={s.railItem} title="设置">
+            <div className={"v4-railSpacer"} />
+            <button className={"v4-railItem"} title="设置">
               ⚙
             </button>
           </nav>
 
           {/* 左栏：分区 */}
-          <aside className={`${s.glass} ${s.side}`}>
-            <div className={s.lbl}>大厅的分区</div>
+          <aside className={`${"v4-glass"} ${"v4-side"}`}>
+            <div className={"v4-lbl"}>大厅的分区</div>
             {SECTIONS.map((sec, i) => (
-              <button key={sec.name} className={`${s.sideItem} ${i === 0 ? s.sideOn : ''}`}>
+              <button key={sec.name} className={`${"v4-sideItem"} ${i === 0 ? "v4-sideOn" : ''}`}>
                 {sec.name}
-                <span className={s.sideN}>{sec.n}</span>
+                <span className={"v4-sideN"}>{sec.n}</span>
               </button>
             ))}
-            <div className={s.lbl}>其他</div>
-            <button className={s.sideItem}>＋ 新建分区</button>
+            <div className={"v4-lbl"}>其他</div>
+            <button className={"v4-sideItem"}>＋ 新建分区</button>
           </aside>
 
           {/* 中间 */}
-          <section className={s.main}>
-            <div className={`${s.glass} ${s.hero}`}>
-              <div className={s.meta}>大厅 · 写给睡不着的人</div>
+          <section className={"v4-main"}>
+            <div className={`${"v4-glass"} ${"v4-hero"}`}>
+              <div className={"v4-meta"}>大厅 · 写给睡不着的人</div>
               <h1>外面在下小雨。</h1>
-              <p className={s.heroSub}>你那边呢？</p>
+              <p className={"v4-heroSub"}>你那边呢？</p>
 
               {quote && (
-                <div className={s.quote}>
-                  <p className={s.quoteP}>{(quote.content || '').trim()}</p>
-                  <div className={s.quoteM}>{rel(quote.created_at)}</div>
+                <div className={"v4-quote"}>
+                  <p className={"v4-quoteP"}>{(quote.content || '').trim()}</p>
+                  <div className={"v4-quoteM"}>{rel(quote.created_at)}</div>
                 </div>
               )}
 
-              <div className={s.heroRow}>
-                <Link href="/world" className={s.btn}>
+              <div className={"v4-heroRow"}>
+                <Link href="/world" className={"v4-btn"}>
                   进大厅 →
                 </Link>
-                <span className={s.cnt}>{ready && posts.length ? '实时更新' : '等你开口'}</span>
+                <span className={"v4-cnt"}>{ready && posts.length ? '实时更新' : '等你开口'}</span>
               </div>
             </div>
 
-            <div className={s.feed}>
+            <div className={"v4-feed"}>
               {posts.map((p) => (
-                <article key={p.id} className={`${s.glass} ${s.post}`}>
-                  <div className={s.postH}>
-                    <div className={s.av}>
+                <article key={p.id} className={`${"v4-glass"} ${"v4-post"}`}>
+                  <div className={"v4-postH"}>
+                    <div className={"v4-av"}>
                       {(p.author_id === me?.id ? me?.nickname || '我' : '有').slice(0, 1)}
                     </div>
-                    <span className={s.who}>
+                    <span className={"v4-who"}>
                       {p.author_id === me?.id ? me?.nickname || '我' : '有人'}
                     </span>
-                    <span className={s.when}>{rel(p.created_at)}</span>
+                    <span className={"v4-when"}>{rel(p.created_at)}</span>
                   </div>
-                  <p className={s.postP}>{(p.content || '').trim() || '（这条只有图片）'}</p>
-                  <div className={s.acts}>
+                  <p className={"v4-postP"}>{(p.content || '').trim() || '（这条只有图片）'}</p>
+                  <div className={"v4-acts"}>
                     <span>♡</span>
                     <span>◌</span>
                     <span>⋯</span>
@@ -214,36 +213,36 @@ export default function V4Page() {
           </section>
 
           {/* 右栏 */}
-          <aside className={s.rail}>
-            <div className={`${s.glass} ${s.card}`}>
-              <div className={s.k}>我在这里</div>
-              <div className={s.nums}>
-                <div className={s.num}>
+          <aside className={"v4-rail"}>
+            <div className={`${"v4-glass"} ${"v4-card"}`}>
+              <div className={"v4-k"}>我在这里</div>
+              <div className={"v4-nums"}>
+                <div className={"v4-num"}>
                   <b>42</b>
                   <span>天，你在这里</span>
                 </div>
-                <div className={s.num}>
+                <div className={"v4-num"}>
                   <b>18</b>
                   <span>条回复，给过你</span>
                 </div>
-                <div className={s.num}>
+                <div className={"v4-num"}>
                   <b>7</b>
                   <span>句话，说出口了</span>
                 </div>
               </div>
             </div>
 
-            <div className={`${s.glass} ${s.card}`}>
-              <div className={s.k}>今天在听</div>
-              <div className={s.song}>
-                <span className={s.songN}>♪</span> 《我不配》
-                <span className={s.songNote}>不用配得上谁，才被允许留下。</span>
+            <div className={`${"v4-glass"} ${"v4-card"}`}>
+              <div className={"v4-k"}>今天在听</div>
+              <div className={"v4-song"}>
+                <span className={"v4-songN"}>♪</span> 《我不配》
+                <span className={"v4-songNote"}>不用配得上谁，才被允许留下。</span>
               </div>
             </div>
 
-            <div className={`${s.glass} ${s.foot}`}>
-              <div className={s.input}>说点什么…</div>
-              <div className={s.send}>↗</div>
+            <div className={`${"v4-glass"} ${"v4-foot"}`}>
+              <div className={"v4-input"}>说点什么…</div>
+              <div className={"v4-send"}>↗</div>
             </div>
           </aside>
         </div>
