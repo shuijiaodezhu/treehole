@@ -112,7 +112,7 @@ export default function V4Page() {
         <div className={"v4-top"}>
           <div className={`${"v4-glass"} ${"v4-brand"}`}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img className={"v4-wordmark"} src="/wordmark.png" alt="你的来信" />
+            <img className={"v4-wordmark"} src="/wordmark-light.png" alt="你的来信" />
             <span>DEAR YOU</span>
           </div>
 
