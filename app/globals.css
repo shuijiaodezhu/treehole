@@ -1434,6 +1434,11 @@ body.th-in-chat .th-bgm-fixed {
   font-size: 12px;
   letter-spacing: 0.12em;
   opacity: 0.72;
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  min-height: 22px;
+  /* 这里以后还要加东西 —— 高度先占住，不会跳动 */
 }
 .v4-hero h1 {
   font-size: 41px;
@@ -1906,7 +1911,7 @@ body.th-in-chat .th-bgm-fixed {
   letter-spacing: 0.03em;
   color: var(--ink2);
   opacity: 0.78;
-  margin-left: 14px;
+  margin-left: 0;
 }
 
 

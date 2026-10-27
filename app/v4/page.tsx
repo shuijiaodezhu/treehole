@@ -230,10 +230,7 @@ export default function V4Page() {
           <section className={"v4-main"}>
             <div className={`${"v4-glass"} ${"v4-hero"}`}>
               <div className={"v4-meta"}>
-                院子 · 写给睡不着的人
-                <span className={"v4-heroWeather"}>
-                  {weatherLine}
-                </span>
+                <span className={"v4-heroWeather"}>{weatherLine}</span>
               </div>
               <h1>外面在下小雨。</h1>
               <p className={"v4-heroSub"}>你那边呢？</p>
