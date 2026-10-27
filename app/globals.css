@@ -1596,3 +1596,147 @@ body.th-in-chat .th-bgm-fixed {
   .v4-mobileNote { display: flex; }
 }
 
+
+
+/* ═══════════ /v4 交互动效 ═══════════ */
+
+/* ① 入场：淡入 + 上移，逐级交错 */
+@keyframes v4-fade-up {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.v4-top > * {
+  animation: v4-fade-up 0.5s cubic-bezier(.22,.7,.3,1) both;
+}
+.v4-top > *:nth-child(1) { animation-delay: .02s; }
+.v4-top > *:nth-child(2) { animation-delay: .08s; }
+.v4-top > *:nth-child(3) { animation-delay: .14s; }
+.v4-top > *:nth-child(4) { animation-delay: .20s; }
+
+.v4-cols > * {
+  animation: v4-fade-up 0.62s cubic-bezier(.22,.7,.3,1) both;
+}
+.v4-cols > *:nth-child(1) { animation-delay: .16s; }
+.v4-cols > *:nth-child(2) { animation-delay: .22s; }
+.v4-cols > *:nth-child(3) { animation-delay: .28s; }
+.v4-cols > *:nth-child(4) { animation-delay: .34s; }
+
+/* ② 玻璃面板：悬停轻微浮起 + 变实一点 */
+.v4-glass {
+  transition:
+    transform 0.24s cubic-bezier(.22,.7,.3,1),
+    box-shadow 0.24s ease,
+    background 0.24s ease,
+    border-color 0.24s ease;
+}
+.v4-glass:hover {
+  transform: translateY(-2px);
+  background: rgba(250, 246, 240, 0.88);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.85),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.25),
+    0 22px 56px rgba(60, 35, 22, 0.20);
+}
+
+/* ③ 窄栏图标：悬停放大，按下回弹 */
+.v4-railItem {
+  transition: background 0.18s ease, color 0.18s ease, transform 0.18s cubic-bezier(.22,.7,.3,1);
+}
+.v4-railItem:hover {
+  transform: scale(1.10);
+}
+.v4-railItem:active {
+  transform: scale(0.94);
+}
+
+/* ④ 侧栏分区：悬停时轻微右移（有"被推向"的感觉）*/
+.v4-sideItem {
+  transition: background 0.18s ease, color 0.18s ease, padding-left 0.2s cubic-bezier(.22,.7,.3,1);
+}
+.v4-sideItem:hover {
+  padding-left: 16px;
+}
+.v4-sideItem:active {
+  transform: scale(0.985);
+}
+
+/* ⑤ 按钮：浮起 + 按下压回 */
+.v4-btn {
+  transition: background 0.2s ease, transform 0.18s cubic-bezier(.22,.7,.3,1), box-shadow 0.2s ease;
+}
+.v4-btn:active {
+  transform: translateY(0) scale(0.97);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.7), 0 2px 6px rgba(120,60,40,.15);
+}
+
+/* ⑥ 帖子：悬停时整条微微抬起 */
+.v4-post {
+  transition: transform 0.22s cubic-bezier(.22,.7,.3,1), background 0.22s ease, box-shadow 0.22s ease;
+}
+.v4-post:hover {
+  transform: translateY(-1px);
+}
+
+/* ⑦ 导航项：颜色 + 下划线出现 */
+.v4-navItem::before {
+  content: "";
+  position: absolute;
+  left: 14px;
+  right: 14px;
+  bottom: 4px;
+  height: 1.5px;
+  border-radius: 2px;
+  background: rgba(160, 86, 63, 0.55);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 0.24s cubic-bezier(.22,.7,.3,1);
+}
+.v4-navItem:hover::before {
+  transform: scaleX(1);
+}
+.v4-navOn::before {
+  display: none;
+}
+
+/* ⑧ 三个数字：悬停时轻微放大（可读性提示）*/
+.v4-num {
+  transition: transform 0.2s ease;
+}
+.v4-num:hover {
+  transform: translateY(-1px);
+}
+
+/* ⑨ 发送键：悬停浮起、按下回弹 */
+.v4-send {
+  transition: transform 0.18s cubic-bezier(.22,.7,.3,1), background 0.18s ease;
+}
+.v4-send:hover {
+  transform: translateY(-1px) scale(1.04);
+  background: rgba(255, 255, 255, 0.85);
+}
+.v4-send:active {
+  transform: scale(0.94);
+}
+
+/* ⑩ 尊重系统设置：开了"减弱动态"就关掉这一切 */
+@media (prefers-reduced-motion: reduce) {
+  .v4-top > *,
+  .v4-cols > * {
+    animation: none;
+  }
+  .v4-glass,
+  .v4-railItem,
+  .v4-sideItem,
+  .v4-btn,
+  .v4-post,
+  .v4-num,
+  .v4-send {
+    transition: none;
+  }
+  .v4-glass:hover,
+  .v4-post:hover,
+  .v4-railItem:hover {
+    transform: none;
+  }
+}
