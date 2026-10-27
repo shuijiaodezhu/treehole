@@ -1202,12 +1202,13 @@ body.th-in-chat .th-bgm-fixed {
   align-items: flex-end;
   gap: 16px;
   padding: 4px 6px 4px 2px;
-  background: none;
-  border: 0;
-  box-shadow: none;
-  backdrop-filter: none;
-  -webkit-backdrop-filter: none;
+  background: none !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
 }
+.v4-brand::before { display: none !important; }
 .v4-brand::before { display: none; }
 .v4-wordmark {
   height: 100px;
@@ -1368,10 +1369,10 @@ body.th-in-chat .th-bgm-fixed {
 .v4-side::-webkit-scrollbar { width: 0; }
 .v4-lbl {
   font-family: 'JetBrains Mono', monospace;
-  font-size: 8px;
-  letter-spacing: 0.24em;
+  font-size: 9.5px;
+  letter-spacing: 0.2em;
   text-transform: uppercase;
-  opacity: 0.6;
+  opacity: 0.68;
   padding: 12px 10px 6px;
 }
 .v4-sideItem {
@@ -1401,9 +1402,9 @@ body.th-in-chat .th-bgm-fixed {
 .v4-sideN {
   margin-left: auto;
   font-family: 'JetBrains Mono', monospace;
-  font-size: 9px;
-  letter-spacing: 0.04em;
-  opacity: 0.75;
+  font-size: 10.5px;
+  letter-spacing: 0.02em;
+  opacity: 0.8;
 }
 
 /* 中间 */
@@ -1430,10 +1431,10 @@ body.th-in-chat .th-bgm-fixed {
 }
 .v4-meta {
   font-family: 'JetBrains Mono', monospace;
-  font-size: 8.5px;
-  letter-spacing: 0.26em;
+  font-size: 10px;
+  letter-spacing: 0.2em;
   text-transform: uppercase;
-  opacity: 0.62;
+  opacity: 0.7;
 }
 .v4-hero h1 {
   font-size: 41px;
@@ -1529,8 +1530,8 @@ body.th-in-chat .th-bgm-fixed {
 .v4-when {
   margin-left: auto;
   font-family: 'JetBrains Mono', monospace;
-  font-size: 9px;
-  opacity: 0.62;
+  font-size: 10.5px;
+  opacity: 0.7;
 }
 .v4-postP {
   font-size: 13px;
@@ -1546,10 +1547,10 @@ body.th-in-chat .th-bgm-fixed {
 .v4-card { border-radius: 22px; padding: 20px; }
 .v4-k {
   font-family: 'JetBrains Mono', monospace;
-  font-size: 8px;
-  letter-spacing: 0.24em;
+  font-size: 9.5px;
+  letter-spacing: 0.2em;
   text-transform: uppercase;
-  opacity: 0.62;
+  opacity: 0.68;
 }
 .v4-nums { display: flex; flex-direction: column; gap: 16px; margin-top: 16px; }
 .v4-num { display: flex; align-items: baseline; gap: 9px; }
@@ -1813,8 +1814,8 @@ body.th-in-chat .th-bgm-fixed {
 
 /* 窄栏项的小字标签 */
 .v4-railLabel {
-  font-size: 9.5px;
-  letter-spacing: 0.06em;
+  font-size: 11px;
+  letter-spacing: 0.04em;
   line-height: 1;
   opacity: 0.95;
 }
@@ -1901,9 +1902,9 @@ body.th-in-chat .th-bgm-fixed {
 /* 大厅块里的天气 */
 .v4-heroWeather {
   font-family: 'JetBrains Mono', monospace;
-  font-size: 8.5px;
-  letter-spacing: 0.22em;
+  font-size: 10px;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
-  opacity: 0.55;
+  opacity: 0.62;
   margin-left: 10px;
 }

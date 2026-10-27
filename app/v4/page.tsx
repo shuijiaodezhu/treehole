@@ -124,7 +124,7 @@ export default function V4Page() {
       <div className={"v4-wrap"}>
         {/* 顶部 */}
         <div className={"v4-top"}>
-          <div className={`${"v4-glass"} ${"v4-brand"}`}>
+          <div className={"v4-brand"}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img className={"v4-wordmark"} src="/wordmark-light.png" alt="你的来信" />
             <span>DEAR YOU</span>
@@ -158,35 +158,35 @@ export default function V4Page() {
           <nav className={`${"v4-darkGlass"} ${"v4-railbar"}`}>
             <div className={"v4-logo"}>你</div>
             <button className={`${"v4-railItem"} ${"v4-railOn"}`} title="大厅">
-              <span className={"v4-railIcon"}>☰</span>
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
               <span className={"v4-railLabel"}>大厅</span>
             </button>
             <Link href="/friends" className={"v4-railItem"} title="小屋">
-              <span className={"v4-railIcon"}>⌂</span>
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V20h5v-6h4v6h5V9.5"/></svg>
               <span className={"v4-railLabel"}>小屋</span>
             </Link>
             <Link href="/me" className={"v4-railItem"} title="我的">
-              <span className={"v4-railIcon"}>☺</span>
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><circle cx="12" cy="8.5" r="3.4"/><path d="M4.6 20.4c0-3.6 3.3-5.9 7.4-5.9s7.4 2.3 7.4 5.9"/></svg>
               <span className={"v4-railLabel"}>我的</span>
             </Link>
             <div className={"v4-sep"} />
             <button className={"v4-railItem"} title="聚会">
-              <span className={"v4-railIcon"}>✧</span>
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M12 3v4.5M12 16.5V21M4.5 12H9M15 12h4.5"/><path d="M6.9 6.9l3 3M14.1 14.1l3 3M17.1 6.9l-3 3M9.9 14.1l-3 3"/></svg>
               <span className={"v4-railLabel"}>聚会</span>
               <span className={"v4-badge"}>3</span>
             </button>
             <button className={"v4-railItem"} title="信箱">
-              <span className={"v4-railIcon"}>✉</span>
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><rect x="3" y="5.5" width="18" height="13" rx="2.4"/><path d="m3.8 7.2 8.2 5.6 8.2-5.6"/></svg>
               <span className={"v4-railLabel"}>信箱</span>
               <span className={"v4-badge"}>12</span>
             </button>
             <button className={"v4-railItem"} title="收藏">
-              <span className={"v4-railIcon"}>♡</span>
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M12 20s-7.4-4.5-7.4-9.3A4 4 0 0 1 12 8a4 4 0 0 1 7.4 2.7C19.4 15.5 12 20 12 20Z"/></svg>
               <span className={"v4-railLabel"}>收藏</span>
             </button>
             <div className={"v4-railSpacer"} />
             <button className={"v4-railItem"} title="设置">
-              ⚙
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 3v2.4M12 18.6V21M4.3 7.6l2.1 1.2M17.6 15.2l2.1 1.2M4.3 16.4l2.1-1.2M17.6 8.8l2.1-1.2"/></svg>
             </button>
           </nav>
 
@@ -244,7 +244,7 @@ export default function V4Page() {
                   </div>
                   <p className={"v4-postP"}>{(p.content || '').trim() || '（这条只有图片）'}</p>
                   <div className={"v4-acts"}>
-                    <span>♡</span>
+                    <span><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M12 20s-7.4-4.5-7.4-9.3A4 4 0 0 1 12 8a4 4 0 0 1 7.4 2.7C19.4 15.5 12 20 12 20Z"/></svg></span>
                     <span>◌</span>
                     <span>⋯</span>
                   </div>
