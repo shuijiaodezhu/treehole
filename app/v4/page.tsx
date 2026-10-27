@@ -53,7 +53,6 @@ function rel(iso?: string | null): string {
 export default function V4Page() {
   const [posts, setPosts] = useState<Post[]>([])
   const [me, setMe] = useState<Me | null>(null)
-  const [ready, setReady] = useState(false)
   const [email, setEmail] = useState('')
   const [days, setDays] = useState(0)
   const [weatherLine, setWeatherLine] = useState('杭州的小雨，十八度')
@@ -114,7 +113,6 @@ export default function V4Page() {
       if (Array.isArray(cached) && cached.length) {
         setPosts(cached.slice(0, 6))
       }
-      setReady(true)
     }, 0)
     return () => window.clearTimeout(t)
   }, [])
@@ -243,12 +241,7 @@ export default function V4Page() {
               {/* 这里先空着 —— 等设计 */}
               <div className={"v4-heroBlank"} />
 
-              <div className={"v4-heroRow"}>
-                <Link href="/world" className={"v4-btn"}>
-                  进院子 →
-                </Link>
-                <span className={"v4-cnt"}>{ready && posts.length ? '实时更新' : '等你开口'}</span>
-              </div>
+              {/* 底部也先空着 —— 等设计 */}
             </div>
 
             <div className={"v4-feed"}>

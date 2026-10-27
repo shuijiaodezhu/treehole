@@ -1908,3 +1908,45 @@ body.th-in-chat .th-bgm-fixed {
   opacity: 0.78;
   margin-left: 14px;
 }
+
+
+/* ═══════════ /v4 彻底禁掉页面级滚动 & 滚动条 ═══════════ */
+
+/* ① 页面本身永不滚动（内容都锁在 100vh 里，只有中间 feed 内部滚）*/
+html:has(.v4-page),
+body:has(.v4-page) {
+  overflow: hidden !important;
+  height: 100% !important;
+  overscroll-behavior: none !important;
+}
+
+/* ② 滚动条颜色跟随主题（万一哪天真冒出来，也是深色不是白杠）*/
+html:has(.v4-page) {
+  color-scheme: dark;
+  scrollbar-color: rgba(255, 255, 255, 0.18) transparent;
+}
+
+/* ③ 再压一遍：所有元素的所有滚动条 */
+.v4-page,
+.v4-page * {
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+  scrollbar-color: transparent transparent !important;
+}
+.v4-page *::-webkit-scrollbar {
+  width: 0 !important;
+  height: 0 !important;
+  background: transparent !important;
+  display: none !important;
+}
+.v4-page *::-webkit-scrollbar-thumb,
+.v4-page *::-webkit-scrollbar-track {
+  background: transparent !important;
+  display: none !important;
+}
+
+/* ④ 滚到尽头不出"橡皮筋"白底 */
+.v4-page,
+.v4-page * {
+  overscroll-behavior: none !important;
+}
