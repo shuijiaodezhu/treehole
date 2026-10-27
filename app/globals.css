@@ -1443,21 +1443,21 @@ body.th-in-chat .th-bgm-fixed {
   /* 这里以后还要加东西 —— 高度先占住，不会跳动 */
 }
 .v4-hero h1 {
-  font-family: 'HW Weather', 'Noto Sans SC', sans-serif;
-  font-size: 52px;
+  font-family: 'KaiTi', 'STKaiti', 'Kaiti SC', '楷体', 'Noto Serif SC', serif;
+  font-size: 64px;
   font-weight: 400;
-  line-height: 1.5;
-  letter-spacing: 0.01em;
-  margin-top: 14px;
+  line-height: 1.42;
+  letter-spacing: 0.02em;
+  margin-top: 12px;
   max-width: 16em;
   color: var(--ink);
 }
 .v4-heroSub {
-  font-family: 'HW Weather', 'Noto Sans SC', sans-serif;
-  font-size: 20px;
+  font-family: 'KaiTi', 'STKaiti', 'Kaiti SC', '楷体', 'Noto Serif SC', serif;
+  font-size: 24px;
   font-weight: 400;
   color: #6b5346;
-  margin-top: 4px;
+  margin-top: 2px;
   line-height: 1.9;
   letter-spacing: 0.02em;
 }
@@ -1556,7 +1556,8 @@ body.th-in-chat .th-bgm-fixed {
 .v4-rail { display: flex; flex-direction: column; gap: 16px; min-height: 0; }
 .v4-card {
   border-radius: 22px;
-  padding: 26px 26px 24px;
+  padding: 26px 24px 24px;
+  text-align: center;
 }
 .v4-nums { display: flex; flex-direction: column; gap: 16px; margin-top: 16px; }
 .v4-num { display: flex; align-items: baseline; gap: 9px; }
@@ -1907,12 +1908,12 @@ body.th-in-chat .th-bgm-fixed {
 
 /* 大厅块里的天气 */
 .v4-heroWeather {
-  font-family: 'HW Weather', 'Noto Sans SC', sans-serif;
-  font-size: 16px;
+  font-family: 'KaiTi', 'STKaiti', 'Kaiti SC', '楷体', 'Noto Serif SC', serif;
+  font-size: 18px;
   font-weight: 400;
-  letter-spacing: 0.03em;
-  color: var(--ink2);
-  opacity: 0.78;
+  letter-spacing: 0.04em;
+  color: #6b5346;
+  opacity: 0.8;
   margin-left: 0;
 }
 
@@ -1968,6 +1969,7 @@ html:has(.v4-page) {
 .v4-daysHead {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 8px;
 }
 .v4-flame {
@@ -1985,6 +1987,7 @@ html:has(.v4-page) {
 .v4-daysNum {
   display: flex;
   align-items: baseline;
+  justify-content: center;
   gap: 6px;
   margin-top: 16px;
 }
@@ -2008,6 +2011,7 @@ html:has(.v4-page) {
   opacity: 0.78;
   margin-top: 14px;
   line-height: 1.75;
+  text-align: center;
 }
 
 .v4-daysSub {
@@ -2018,6 +2022,7 @@ html:has(.v4-page) {
   padding-top: 16px;
   border-top: 1px solid rgba(110, 72, 52, 0.10);
   line-height: 1.9;
+  text-align: center;
 }
 .v4-daysSub b {
   color: #6b5346;
