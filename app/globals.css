@@ -1575,7 +1575,6 @@ body.th-in-chat .th-bgm-fixed {
   color: #6b5346;
   font-weight: 400;
   text-align: center;
-  font-family: 'KaiTi', 'STKaiti', 'Kaiti SC', '楷体', 'Noto Serif SC', serif;
 }
 .v4-input {
   flex: 1;
@@ -2043,7 +2042,3 @@ html:has(.v4-page) {
   margin-left: 0;
 }
 
-/* 右栏卡片的小标题居中 */
-.v4-card .v4-k {
-  text-align: center;
-}
