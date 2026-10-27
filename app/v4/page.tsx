@@ -52,17 +52,23 @@ function rel(iso?: string | null): string {
 
 export default function V4Page() {
   const [posts, setPosts] = useState<Post[]>([])
-  const [quote, setQuote] = useState<Post | null>(null)
   const [me, setMe] = useState<Me | null>(null)
   const [ready, setReady] = useState(false)
   const [clock, setClock] = useState('')
   const [email, setEmail] = useState('')
+  const [greeting, setGreeting] = useState('还没睡？')
 
   useEffect(() => {
     const t = window.setTimeout(() => {
       const now = new Date()
       setClock(
         String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0'),
+      )
+      // 时间问候：和原站 /v2 用同一套分档
+      const h = now.getHours()
+      setGreeting(
+        h < 5 ? '还没睡？' : h < 11 ? '早。今天也慢慢来。' : h < 14 ? '中午了，吃过饭了吗？'
+          : h < 18 ? '下午了，撑得住吗？' : h < 22 ? '天黑了，回来了就好。' : '这么晚了，还有人在吗。',
       )
 
       // 读当前登录邮箱（Supabase 客户端从本地会话拿，不发网络请求）
@@ -83,11 +89,6 @@ export default function V4Page() {
       const cached = peek<Post[]>('world-posts-hall', 24 * 60 * 60 * 1000)
       if (Array.isArray(cached) && cached.length) {
         setPosts(cached.slice(0, 6))
-        // 引用：跳过带图的 ✓ 没有就不显示
-        const textOnly = cached.filter(
-          (p) => !(Array.isArray(p.image_urls) && p.image_urls.length > 0) && (p.content || '').trim().length > 12,
-        )
-        if (textOnly.length) setQuote(textOnly[0])
       }
       setReady(true)
     }, 0)
@@ -157,9 +158,9 @@ export default function V4Page() {
           {/* 深色窄栏（烟熏玻璃）*/}
           <nav className={`${"v4-darkGlass"} ${"v4-railbar"}`}>
             <div className={"v4-logo"}>你</div>
-            <button className={`${"v4-railItem"} ${"v4-railOn"}`} title="大厅">
+            <button className={`${"v4-railItem"} ${"v4-railOn"}`} title="院子">
               <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
-              <span className={"v4-railLabel"}>大厅</span>
+              <span className={"v4-railLabel"}>院子</span>
             </button>
             <Link href="/friends" className={"v4-railItem"} title="小屋">
               <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V20h5v-6h4v6h5V9.5"/></svg>
@@ -192,7 +193,7 @@ export default function V4Page() {
 
           {/* 左栏：分区 */}
           <aside className={`${"v4-glass"} ${"v4-side"}`}>
-            <div className={"v4-lbl"}>大厅的分区</div>
+            <div className={"v4-lbl"}>院子的分区</div>
             {SECTIONS.map((sec, i) => (
               <button key={sec.name} className={`${"v4-sideItem"} ${i === 0 ? "v4-sideOn" : ''}`}>
                 {sec.name}
@@ -207,7 +208,7 @@ export default function V4Page() {
           <section className={"v4-main"}>
             <div className={`${"v4-glass"} ${"v4-hero"}`}>
               <div className={"v4-meta"}>
-                大厅 · 写给睡不着的人
+                院子 · 写给睡不着的人
                 <span className={"v4-heroWeather"}>
                   杭州 {clock || '--:--'} · 18° 小雨
                 </span>
@@ -215,16 +216,28 @@ export default function V4Page() {
               <h1>外面在下小雨。</h1>
               <p className={"v4-heroSub"}>你那边呢？</p>
 
-              {quote && (
-                <div className={"v4-quote"}>
-                  <p className={"v4-quoteP"}>{(quote.content || '').trim()}</p>
-                  <div className={"v4-quoteM"}>{rel(quote.created_at)}</div>
-                </div>
-              )}
+              {/* 时间问候 */}
+              <div className={"v4-greet"}>{greeting}</div>
+
+              {/* 三个入口 */}
+              <div className={"v4-entries"}>
+                <Link href="/play" className={"v4-entry"}>
+                  <span className={"v4-entryIcon"}>✧</span>
+                  聚会
+                </Link>
+                <Link href="/world/categories" className={"v4-entry"}>
+                  <span className={"v4-entryIcon"}>☰</span>
+                  分类
+                </Link>
+                <Link href="/world" className={"v4-entry"}>
+                  <span className={"v4-entryIcon"}>✉</span>
+                  写信
+                </Link>
+              </div>
 
               <div className={"v4-heroRow"}>
                 <Link href="/world" className={"v4-btn"}>
-                  进大厅 →
+                  进院子 →
                 </Link>
                 <span className={"v4-cnt"}>{ready && posts.length ? '实时更新' : '等你开口'}</span>
               </div>
