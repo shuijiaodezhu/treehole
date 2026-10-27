@@ -44,6 +44,30 @@ type Me = { id: string; nickname?: string | null; username?: string | null }
 const FIRST_KEY = 'treehole:first-visit'
 
 const MOODS = moods as Record<string, string>
+/** 演示数据（访问 ?demo=1 时才用；真实用户永远看不到 ✓） */
+const DEMO_QUOTE: Post = {
+  id: 'demo-quote',
+  content: '写到这里突然不想写了。但想到会有人看到，就还是发出去了。',
+  created_at: new Date(Date.now() - 23 * 60000).toISOString(),
+}
+const DEMO_FEED: Post[] = [
+  {
+    id: 'demo-1',
+    content: '写到这里突然不想写了。但想到会有人看到，就还是发出去了。',
+    created_at: new Date(Date.now() - 23 * 60000).toISOString(),
+  },
+  {
+    id: 'demo-2',
+    content: '楼下那棵树今天开花了，没人在意，我替它记一下。',
+    created_at: new Date(Date.now() - 2 * 3600000).toISOString(),
+  },
+  {
+    id: 'demo-3',
+    content: '今天也有好好活着吗？不用回答，看到就行。',
+    created_at: new Date(Date.now() - 26 * 3600000).toISOString(),
+  },
+]
+
 
 function relTime(iso?: string | null): string {
   if (!iso) return ''
@@ -64,6 +88,7 @@ export default function V2Page() {
   const [feed, setFeed] = useState<Post[]>([])
   const [me, setMe] = useState<Me | null>(null)
   const [ready, setReady] = useState(false)
+  const [demo, setDemo] = useState(false)
 
   // 每日一首：索引在 mount 时算一次（render 里不能调 Date.now ✗）
   const [songIdx, setSongIdx] = useState(0)
@@ -77,6 +102,18 @@ export default function V2Page() {
       const now = new Date()
       const idx = Math.floor((now.getTime() - new Date(now.getFullYear(), 0, 0).getTime()) / 86400000)
       setSongIdx(idx)
+
+      // ⓪ 演示模式：?demo=1（只影响显示，不写任何东西 ✓）
+      const isDemo = new URLSearchParams(window.location.search).get('demo') === '1'
+      setDemo(isDemo)
+      if (isDemo) {
+        setDays(42)
+        setMyPosts(7)
+        setQuote(DEMO_QUOTE)
+        setFeed(DEMO_FEED)
+        setReady(true)
+        return
+      }
 
       // ① 陪伴天数：第一次访问存下来，之后每天 +1
       let first = peek<number>(FIRST_KEY, 365 * 24 * 60 * 60 * 1000)
@@ -250,7 +287,7 @@ export default function V2Page() {
         )}
 
         <p className="mt-6 text-center font-serif-cn text-[9.5px]" style={{ color: C.ink3 }}>
-          这是新版首页的试验页 /v2，正式首页还没变。
+          {demo ? '演示模式（?demo=1）· 数据是假的，只给你看版面' : '这是新版首页的试验页 /v2，正式首页还没变。'}
         </p>
       </div>
     </div>
