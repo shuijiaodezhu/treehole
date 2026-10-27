@@ -1110,6 +1110,27 @@ body.th-in-chat .th-bgm-fixed {
   inset: 0;
   z-index: 0;
   overflow: hidden;
+  background: #241a14;
+}
+
+/* 视频背景：压暗 + 偏暖（sepia 一点点）*/
+.v4-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: saturate(0.92) brightness(0.72) sepia(0.14);
+}
+
+/* 暖色压暗层：中间亮、四周暗（把文字托出来）*/
+.v4-scrim {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(120% 95% at 50% 42%, rgba(30,21,15,0.08) 0%, rgba(30,21,15,0.52) 76%),
+    linear-gradient(180deg, rgba(42,29,19,0.42) 0%, rgba(42,29,19,0.30) 42%, rgba(42,29,19,0.62) 100%);
 }
 .v4-blob {
   position: absolute;
@@ -1121,34 +1142,13 @@ body.th-in-chat .th-bgm-fixed {
 .v4-b2 { width: 46vw; height: 46vw; right: -8vw; top: 2vw; background: radial-gradient(circle, var(--blob2), transparent 70%); }
 .v4-b3 { width: 60vw; height: 60vw; left: 18vw; bottom: -24vw; background: radial-gradient(circle, var(--blob3), transparent 72%); }
 
-.v4-bigtype {
-  position: absolute;
-  left: 2vw;
-  top: 6vh;
-  font-family: 'Noto Sans SC', sans-serif;
-  font-weight: 600;
-  font-size: 19vw;
-  line-height: 1;
-  letter-spacing: -0.02em;
-  color: var(--detail);
-  user-select: none;
-  white-space: nowrap;
-}
-.v4-gridlines {
-  position: absolute;
-  inset: 0;
-  background-image:
-    linear-gradient(to right, var(--detail) 1px, transparent 1px),
-    linear-gradient(to bottom, var(--detail) 1px, transparent 1px);
-  background-size: 64px 64px;
-  -webkit-mask-image: radial-gradient(circle at 50% 45%, #000 0%, transparent 78%);
-  mask-image: radial-gradient(circle at 50% 45%, #000 0%, transparent 78%);
-}
+.v4-bigtype { display: none; }
+.v4-gridlines { display: none; }
 
 /* ── 玻璃（三层：模糊 + 边缘光 + 斜向镜面）── */
 .v4-glass {
   position: relative;
-  background: rgba(255, 255, 255, 0.10);
+  background: rgba(252, 247, 240, 0.30);
   -webkit-backdrop-filter: blur(16px) saturate(160%);
   backdrop-filter: blur(16px) saturate(160%);
   border: 1px solid rgba(255, 255, 255, 0.50);
@@ -1170,7 +1170,7 @@ body.th-in-chat .th-bgm-fixed {
 
 /* 深色玻璃（窄栏用）*/
 .v4-darkGlass {
-  background: rgba(43, 33, 28, 0.58);
+  background: rgba(38, 29, 23, 0.72);
   -webkit-backdrop-filter: blur(22px) saturate(140%);
   backdrop-filter: blur(22px) saturate(140%);
   border: 1px solid rgba(255, 255, 255, 0.16);

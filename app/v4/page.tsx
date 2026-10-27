@@ -82,13 +82,18 @@ export default function V4Page() {
 
   return (
     <div className={"v4-page"}>
-      {/* 背景 */}
+      {/* 背景：冬日圣诞树视频 + 暖色压暗 */}
       <div className={"v4-bg"} aria-hidden>
-        <i className={`${"v4-blob"} ${"v4-b1"}`} />
-        <i className={`${"v4-blob"} ${"v4-b2"}`} />
-        <i className={`${"v4-blob"} ${"v4-b3"}`} />
-        <div className={"v4-gridlines"} />
-        <div className={"v4-bigtype"}>你的来信</div>
+        <video
+          className={"v4-video"}
+          src="/bg-winter.mp4"
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="auto"
+        />
+        <div className={"v4-scrim"} />
       </div>
 
       {/* 窄屏提示 */}
