@@ -2006,3 +2006,67 @@ body.th-in-chat .th-bgm-fixed {
   width: 0;
   pointer-events: none;
 }
+
+
+/* 大厅中间：先空着 */
+.v4-heroBlank {
+  flex: 1;
+  min-height: 90px;
+}
+
+/* 右栏：陪伴天数（参照原版"已经陪你走过 14 天"）*/
+.v4-daysHead {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: #c8764e;
+}
+.v4-flame {
+  flex-shrink: 0;
+  opacity: 0.85;
+}
+.v4-daysLabel {
+  font-size: 12.5px;
+  color: var(--ink2);
+  opacity: 0.8;
+  letter-spacing: 0.02em;
+}
+.v4-daysNum {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+  margin-top: 10px;
+}
+.v4-daysNum b {
+  font-family: 'Noto Sans SC', sans-serif;
+  font-size: 46px;
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: #a8543a;
+}
+.v4-daysNum span {
+  font-size: 15px;
+  color: #a8543a;
+  opacity: 0.85;
+}
+.v4-daysNote {
+  font-size: 12.5px;
+  color: var(--ink2);
+  opacity: 0.75;
+  margin-top: 8px;
+  line-height: 1.7;
+}
+.v4-daysSub {
+  font-size: 11.5px;
+  color: var(--ink3);
+  opacity: 0.85;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(110, 72, 52, 0.10);
+  line-height: 1.7;
+}
+.v4-daysSub b {
+  color: var(--ink2);
+  font-weight: 500;
+}
