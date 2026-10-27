@@ -126,7 +126,7 @@ export default function V2Page() {
         }}
       />
 
-      <div style={{ position: 'relative', zIndex: 1 }} className="mx-auto w-full max-w-[520px] px-5 pb-24 pt-4">
+      <div style={{ position: 'relative', zIndex: 1 }} className="mx-auto w-full max-w-[400px] px-6 pb-24 pt-5">
         {/* 顶部 */}
         <header className="flex items-start justify-between pb-5">
           <div>
@@ -146,7 +146,7 @@ export default function V2Page() {
 
         {/* 大厅块 */}
         <section
-          className="relative overflow-hidden rounded-[24px] px-5 pb-5 pt-4"
+          className="relative overflow-hidden rounded-[26px] px-5 pb-6 pt-5"
           style={{ backgroundColor: C.deep, boxShadow: '0 10px 28px rgba(43,33,28,.18)' }}
         >
           <div
@@ -159,7 +159,7 @@ export default function V2Page() {
             <WeatherLine />
           </div>
 
-          <h1 className="mt-2.5 max-w-[90%] font-serif-cn text-[21px] font-semibold leading-[1.3]" style={{ color: '#fdf7f0' }}>
+          <h1 className="mt-3 max-w-[90%] font-serif-cn text-[22px] font-semibold leading-[1.35]" style={{ color: '#fdf7f0' }}>
             <WeatherTitle />
           </h1>
 
@@ -175,7 +175,7 @@ export default function V2Page() {
             </div>
           )}
 
-          <div className="mt-4 flex items-center justify-between">
+          <div className="mt-5 flex items-center justify-between">
             <Link
               href="/world"
               className="rounded-full px-4 py-2 font-serif-cn text-[11px] font-semibold"
@@ -190,14 +190,13 @@ export default function V2Page() {
         </section>
 
         {/* 三个数字（大字居中）*/}
-        <section className="grid grid-cols-3 gap-2 px-1 pb-1 pt-5 text-center">
-          <Stat n={days} label={`陪伴你的第 ${days} 天`} />
-          <Stat n="—" label="收到回复（待接入）" />
+        <section className="grid grid-cols-2 gap-3 px-1 pb-1 pt-6 text-center">
+          <Stat n={days} label={`陪伴你的第 ${days} 天`} />
           <Stat n={myPosts} label={`写下过 ${myPosts} 句话`} />
         </section>
 
         {/* 今天在听 */}
-        <section className="flex flex-col items-center pb-4 pt-3">
+        <section className="flex flex-col items-center pb-6 pt-5">
           <div className="flex items-center gap-1.5">
             <span className="text-[11px]" style={{ color: C.wax, opacity: 0.8 }}>
               ♪
@@ -214,14 +213,14 @@ export default function V2Page() {
         </section>
 
         {/* 两张入口卡 */}
-        <div className="flex flex-col gap-2.5">
+        <div className="flex flex-col gap-3">
           <Card icon="✧" title="聚会" desc="活动、小工具、一起听歌" badge="3" href="/play" />
           <Card icon="☰" title="分类" desc="游戏 / 音乐 / 吃喝 / 压抑 / 旅游…" href="/world/categories" />
         </div>
 
         {/* 帖子流 */}
         {ready && feed.length > 0 && (
-          <section className="mt-3 flex flex-col gap-2.5">
+          <section className="mt-4 flex flex-col gap-3">
             {feed.map((p) => (
               <article
                 key={p.id}
@@ -258,7 +257,7 @@ export default function V2Page() {
   )
 }
 
-function Stat({ n, label }: { n: string | number; label: string }) {
+function Stat({ n, label }: { n: number; label: string }) {
   return (
     <div>
       <div className="font-serif-cn text-[26px] font-semibold leading-none" style={{ color: C.ink }}>
@@ -276,7 +275,7 @@ function Card({ icon, title, desc, badge, href }: { icon: string; title: string;
   return (
     <Link
       href={href}
-      className="flex items-center gap-3 rounded-[20px] px-3.5 py-3.5 transition active:scale-[0.995]"
+      className="flex items-center gap-3.5 rounded-[22px] px-4 py-4 transition active:scale-[0.995]"
       style={{ backgroundColor: C.card, boxShadow: '0 2px 12px rgba(120,80,50,.08)' }}
     >
       <div
