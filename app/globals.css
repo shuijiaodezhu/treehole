@@ -1823,3 +1823,59 @@ body.th-in-chat .th-bgm-fixed {
   font-size: 15px;
   line-height: 1;
 }
+
+
+/* 右上角：账号栏（替代原来的天气胶囊）*/
+.v4-account {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 10px 20px;
+  border-radius: 999px;
+}
+.v4-email {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11.5px;
+  letter-spacing: 0.02em;
+  color: var(--ink2);
+  max-width: 210px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.v4-accBtn {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: rgba(255, 255, 255, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.9);
+  font-size: 14px;
+  color: var(--ink2);
+  cursor: pointer;
+  transition: background 0.18s ease, transform 0.18s cubic-bezier(.22,.7,.3,1);
+}
+.v4-accBtn:hover { background: rgba(255, 255, 255, 0.78); transform: translateY(-1px); }
+.v4-accBtn:active { transform: scale(0.94); }
+.v4-logout {
+  font-size: 12.5px;
+  font-weight: 500;
+  color: var(--ink);
+  text-decoration: none;
+  padding: 6px 4px;
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.18s ease;
+}
+.v4-logout:hover { border-bottom-color: var(--wax); }
+
+/* 大厅块里的天气 */
+.v4-heroWeather {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 8.5px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  opacity: 0.55;
+  margin-left: 10px;
+}

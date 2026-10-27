@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import { peek } from '../../components/local-store'
+import { createClient } from '../lib/supabase'
 
 /**
  * /v4 —— 电脑版首页（液态玻璃 + 深色窄栏）
@@ -55,6 +56,7 @@ export default function V4Page() {
   const [me, setMe] = useState<Me | null>(null)
   const [ready, setReady] = useState(false)
   const [clock, setClock] = useState('')
+  const [email, setEmail] = useState('')
 
   useEffect(() => {
     const t = window.setTimeout(() => {
@@ -62,6 +64,18 @@ export default function V4Page() {
       setClock(
         String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0'),
       )
+
+      // 读当前登录邮箱（Supabase 客户端从本地会话拿，不发网络请求）
+      try {
+        void createClient()
+          .auth.getUser()
+          .then((res) => {
+            const u = (res.data as { user?: { email?: string } } | null)?.user
+            if (u?.email) setEmail(u.email)
+          })
+      } catch {
+        /* 忽略 */
+      }
 
       const profile = peek<Me>('me-profile')
       if (profile) setMe(profile)
@@ -119,7 +133,18 @@ export default function V4Page() {
 
           <div className={"v4-spacer"} />
 
-          <div className={`${"v4-glass"} ${"v4-weather"}`}>杭州 · {clock || '--:--'} · 18° 小雨</div>
+          <div className={`${"v4-glass"} ${"v4-account"}`}>
+            <span className={"v4-email"}>{email || '未登录'}</span>
+            <button className={"v4-accBtn"} title="通知" aria-label="通知">
+              ♢
+            </button>
+            <button className={"v4-accBtn"} title="搜索" aria-label="搜索">
+              ⌕
+            </button>
+            <Link href="/login" className={"v4-logout"}>
+              退出登录
+            </Link>
+          </div>
         </div>
 
         <div className={"v4-cols"}>
@@ -175,7 +200,12 @@ export default function V4Page() {
           {/* 中间 */}
           <section className={"v4-main"}>
             <div className={`${"v4-glass"} ${"v4-hero"}`}>
-              <div className={"v4-meta"}>大厅 · 写给睡不着的人</div>
+              <div className={"v4-meta"}>
+                大厅 · 写给睡不着的人
+                <span className={"v4-heroWeather"}>
+                  杭州 {clock || '--:--'} · 18° 小雨
+                </span>
+              </div>
               <h1>外面在下小雨。</h1>
               <p className={"v4-heroSub"}>你那边呢？</p>
 
