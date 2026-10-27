@@ -127,23 +127,31 @@ export default function V4Page() {
           <nav className={`${"v4-darkGlass"} ${"v4-railbar"}`}>
             <div className={"v4-logo"}>你</div>
             <button className={`${"v4-railItem"} ${"v4-railOn"}`} title="大厅">
-              ⌂
+              <span className={"v4-railIcon"}>☰</span>
+              <span className={"v4-railLabel"}>大厅</span>
             </button>
+            <Link href="/friends" className={"v4-railItem"} title="小屋">
+              <span className={"v4-railIcon"}>⌂</span>
+              <span className={"v4-railLabel"}>小屋</span>
+            </Link>
+            <Link href="/me" className={"v4-railItem"} title="我的">
+              <span className={"v4-railIcon"}>☺</span>
+              <span className={"v4-railLabel"}>我的</span>
+            </Link>
+            <div className={"v4-sep"} />
             <button className={"v4-railItem"} title="聚会">
-              ✧<span className={"v4-badge"}>3</span>
-            </button>
-            <button className={"v4-railItem"} title="分类">
-              ☰
+              <span className={"v4-railIcon"}>✧</span>
+              <span className={"v4-railLabel"}>聚会</span>
+              <span className={"v4-badge"}>3</span>
             </button>
             <button className={"v4-railItem"} title="信箱">
-              ✉<span className={"v4-badge"}>12</span>
+              <span className={"v4-railIcon"}>✉</span>
+              <span className={"v4-railLabel"}>信箱</span>
+              <span className={"v4-badge"}>12</span>
             </button>
-            <div className={"v4-sep"} />
             <button className={"v4-railItem"} title="收藏">
-              ♡
-            </button>
-            <button className={"v4-railItem"} title="我的">
-              ☺
+              <span className={"v4-railIcon"}>♡</span>
+              <span className={"v4-railLabel"}>收藏</span>
             </button>
             <div className={"v4-railSpacer"} />
             <button className={"v4-railItem"} title="设置">
@@ -211,20 +219,6 @@ export default function V4Page() {
 
           {/* 右栏 */}
           <aside className={"v4-rail"}>
-            <div className={`${"v4-glass"} ${"v4-navCol"}`}>
-              <button className={`${"v4-navColItem"} ${"v4-navColOn"}`}>
-                <span className={"v4-navColDot"} />
-                大厅
-              </button>
-              <Link href="/friends" className={"v4-navColItem"}>
-                <span className={"v4-navColDot"} />
-                小屋
-              </Link>
-              <Link href="/me" className={"v4-navColItem"}>
-                <span className={"v4-navColDot"} />
-                我的
-              </Link>
-            </div>
 
             <div className={`${"v4-glass"} ${"v4-card"}`}>
               <div className={"v4-k"}>我在这里</div>

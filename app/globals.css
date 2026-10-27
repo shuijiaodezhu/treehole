@@ -1275,7 +1275,7 @@ body.th-in-chat .th-bgm-fixed {
 .v4-cols {
   flex: 1;
   display: grid;
-  grid-template-columns: 72px 200px 1fr 276px;
+  grid-template-columns: 88px 200px 1fr 276px;
   gap: 16px;
   min-height: 0;
 }
@@ -1304,11 +1304,14 @@ body.th-in-chat .th-bgm-fixed {
   box-shadow: 0 4px 14px rgba(160, 86, 63, 0.35);
 }
 .v4-railItem {
-  width: 40px;
-  height: 40px;
+  width: 62px;
+  height: 52px;
   border-radius: 12px;
-  display: grid;
-  place-items: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
   color: rgba(255, 255, 255, 0.72);
   text-decoration: none;
   transition: 0.16s;
@@ -1794,4 +1797,18 @@ body.th-in-chat .th-bgm-fixed {
 }
 .v4-navColItem:not(.v4-navColOn) .v4-navColDot {
   opacity: 0;
+}
+
+
+/* 窄栏项的小字标签 */
+.v4-railLabel {
+  font-size: 9.5px;
+  letter-spacing: 0.06em;
+  line-height: 1;
+  opacity: 0.95;
+}
+.v4-railItem svg,
+.v4-railIcon {
+  font-size: 15px;
+  line-height: 1;
 }
