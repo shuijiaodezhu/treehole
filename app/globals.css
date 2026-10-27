@@ -1953,3 +1953,56 @@ body.th-in-chat .th-bgm-fixed {
   font-size: 13px;
   opacity: 0.9;
 }
+
+
+/* ═══════════ /v4 隐藏所有滚动条（白杠）═══════════ */
+
+/* ① 所有可能滚动的容器：从根上禁掉滚动条 */
+.v4-page,
+.v4-wrap,
+.v4-cols,
+.v4-main,
+.v4-feed,
+.v4-side,
+.v4-rail {
+  scrollbar-width: none;        /* Firefox */
+  -ms-overflow-style: none;     /* 老 Edge */
+}
+.v4-page *::-webkit-scrollbar,
+.v4-feed::-webkit-scrollbar,
+.v4-side::-webkit-scrollbar,
+.v4-rail::-webkit-scrollbar {
+  width: 0 !important;
+  height: 0 !important;
+  display: none !important;
+}
+
+/* ② 滚到尽头时不要"弹"出白色背景 */
+.v4-feed,
+.v4-side,
+.v4-rail,
+.v4-page {
+  overscroll-behavior: contain;
+}
+
+/* ③ 页面本身不要出现纵向滚动条（结构已经是 100vh 固定）*/
+.v4-page {
+  overflow: hidden;
+}
+
+/* ④ 滚动时内容不要贴边（留一点呼吸），替代原来的 padding-right:4px */
+.v4-feed {
+  padding-right: 2px;
+  scroll-behavior: smooth;
+}
+
+/* ⑤ 遮罩层：滚动条宽度的空白也别露白 */
+.v4-page::after {
+  content: "";
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 0;
+  pointer-events: none;
+}
