@@ -173,6 +173,14 @@ export default function RootLayout({
         <link rel="preconnect" href="https://cdmytrvpskkdwjsenidt.supabase.co" crossOrigin="anonymous" />
         <link rel="dns-prefetch" href="https://cdmytrvpskkdwjsenidt.supabase.co" />
         <link rel="dns-prefetch" href="https://cdn.jsdelivr.net" />
+        {/* DEAR YOU 用的手写花体 */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        {/* eslint-disable-next-line @next/next/no-page-custom-font */}
+        <link
+          href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@500;600&display=swap"
+          rel="stylesheet"
+        />
 {/* 字体：懒加载（见下方说明）—— font-lazy-ok */}
 {/*
   霞鹜文楷（正文字体）
