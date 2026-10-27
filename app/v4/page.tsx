@@ -133,13 +133,19 @@ export default function V4Page() {
 
           <div className={"v4-spacer"} />
 
-          <div className={`${"v4-glass"} ${"v4-account"}`}>
+          <div className={"v4-account"}>
             <span className={"v4-email"}>{email || '未登录'}</span>
             <button className={"v4-accBtn"} title="通知" aria-label="通知">
-              ♢
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M6 9a6 6 0 0 1 12 0c0 5 1.8 6 1.8 6H4.2S6 14 6 9Z" />
+                <path d="M10 20a2.2 2.2 0 0 0 4 0" />
+              </svg>
             </button>
             <button className={"v4-accBtn"} title="搜索" aria-label="搜索">
-              ⌕
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round">
+                <circle cx="11" cy="11" r="6.6" />
+                <path d="m19.6 19.6-3.4-3.4" />
+              </svg>
             </button>
             <Link href="/login" className={"v4-logout"}>
               退出登录

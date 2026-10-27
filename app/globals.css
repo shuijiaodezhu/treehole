@@ -1829,44 +1829,72 @@ body.th-in-chat .th-bgm-fixed {
 .v4-account {
   display: flex;
   align-items: center;
-  gap: 14px;
-  padding: 10px 20px;
-  border-radius: 999px;
+  gap: 18px;
+  padding: 6px 2px;
+  /* 不要气泡：无背景、无边框、无阴影、不参与 hover 浮起 */
+  background: none;
+  border: 0;
+  box-shadow: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
 }
 .v4-email {
   font-family: 'JetBrains Mono', monospace;
-  font-size: 11.5px;
+  font-size: 12px;
   letter-spacing: 0.02em;
-  color: var(--ink2);
+  color: #f2e8db;
+  opacity: 0.85;
   max-width: 210px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  text-shadow: 0 1px 6px rgba(24, 16, 11, 0.6);
 }
 .v4-accBtn {
-  width: 34px;
-  height: 34px;
+  width: 30px;
+  height: 30px;
   border-radius: 50%;
   display: grid;
   place-items: center;
-  background: rgba(255, 255, 255, 0.55);
-  border: 1px solid rgba(255, 255, 255, 0.8);
-  box-shadow: inset 0 1px 0 rgba(255,255,255,.9);
-  font-size: 14px;
-  color: var(--ink2);
+  /* 不要气泡 */
+  background: none;
+  border: 0;
+  box-shadow: none;
+  color: #f2e8db;
+  opacity: 0.8;
   cursor: pointer;
-  transition: background 0.18s ease, transform 0.18s cubic-bezier(.22,.7,.3,1);
+  transition: opacity 0.16s ease, transform 0.16s ease;
+}
+.v4-accBtn:hover {
+  opacity: 1;
+  /* 只做很轻的放大，不做背景 */
+  transform: scale(1.08);
+}
+.v4-accBtn:active {
+  transform: scale(0.94);
+}
+.v4-accBtn svg {
+  width: 19px;
+  height: 19px;
+  display: block;
+  filter: drop-shadow(0 1px 4px rgba(24, 16, 11, 0.5));
 }
 .v4-accBtn:hover { background: rgba(255, 255, 255, 0.78); transform: translateY(-1px); }
 .v4-accBtn:active { transform: scale(0.94); }
 .v4-logout {
   font-size: 12.5px;
   font-weight: 500;
-  color: var(--ink);
+  color: #f2e8db;
+  opacity: 0.9;
   text-decoration: none;
-  padding: 6px 4px;
+  padding: 6px 2px;
   border-bottom: 1px solid transparent;
-  transition: border-color 0.18s ease;
+  transition: border-color 0.18s ease, opacity 0.18s ease;
+  text-shadow: 0 1px 6px rgba(24, 16, 11, 0.6);
+}
+.v4-logout:hover {
+  opacity: 1;
+  border-bottom-color: rgba(242, 232, 219, 0.6);
 }
 .v4-logout:hover { border-bottom-color: var(--wax); }
 
