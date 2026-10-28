@@ -727,65 +727,11 @@ body:has(.v4-page) {
   .v4-post:hover,
   .v4-railItem:hover,
   .v4-sideItem:hover,
-  .v4-composeBar:hover,
-  
-/* 帖子两种形态：无图=紧凑纸卡，有图=图片主导 */
-.v4-post {
-  background: rgba(252, 245, 233, .88);
-}
-.v4-postWithImg {
-  padding-bottom: 12px;
-}
-.v4-postWithImg .v4-postP {
-  margin-bottom: 12px;
-}
-
-/* ══════════════════════════════════════════════
-   发帖栏：之前"透"和"露角"，是被旧规则和父级影响
-   → 这里关键属性全部 !important 写死，且 overflow 裁掉角
-   ══════════════════════════════════════════════ */
-.v4-sayLine {
-  position: sticky !important;
-  bottom: 0 !important;
-  z-index: 20 !important;
-  isolation: isolate !important;
-  overflow: hidden !important;
-  flex-shrink: 0 !important;
-  display: flex !important;
-  align-items: center !important;
-  gap: 16px !important;
-  width: 100% !important;
-  margin: 10px 0 0 0 !important;
-  padding: 16px 24px 17px !important;
-  border-radius: 20px !important;
-  border: 0 !important;
-  background: #a4593f !important;
-  background-image: none !important;
-  opacity: 1 !important;
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
-  box-shadow: 0 14px 30px rgba(90, 40, 22, .28) !important;
-  cursor: pointer;
-  font-family: inherit;
-  text-align: left;
-  transition: box-shadow var(--dur-state) ease !important;
-}
-.v4-sayLine:hover {
-  background: #ad6247 !important;
-  box-shadow: 0 18px 38px rgba(90, 40, 22, .34) !important;
-}
-.v4-sayLine img {
-  display: block !important;
-  height: 36px !important;
-  width: auto !important;
-  opacity: 1 !important;
-  border: 0 !important;
-  filter: none !important;
-}
-.v4-sayLineHint {
-  font-size: 12.5px !important;
-  color: #ffe9d8 !important;
-  opacity: .9 !important;
-  letter-spacing: .04em;
-  margin-left: auto;
+  .v4-sayLine:hover,
+  .v4-mailbox:hover,
+  .v4-accBtn:hover,
+  .v4-logout:hover,
+  .v4-send:hover {
+    transform: none;
+  }
 }
