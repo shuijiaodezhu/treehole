@@ -221,18 +221,23 @@ export default function V4Page() {
             </Link>
             <div className={"v4-sep"} />
             <button className={"v4-railItem"} title="聚会">
-              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M12 3v4.5M12 16.5V21M4.5 12H9M15 12h4.5"/><path d="M6.9 6.9l3 3M14.1 14.1l3 3M17.1 6.9l-3 3M9.9 14.1l-3 3"/></svg>
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15" rx="2.6"/><path d="M8 3v4M16 3v4M3.5 10.2h17"/></svg>
               <span className={"v4-railLabel"}>聚会</span>
               <span className={"v4-badge"}>3</span>
+            </button>
+            <button
+              className={`${"v4-railItem"} ${"v4-railSoon"}`}
+              title="功能 · 即将推出的新模式"
+              aria-disabled="true"
+            >
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><rect x="4" y="4" width="7" height="7" rx="2"/><rect x="13" y="4" width="7" height="7" rx="2"/><rect x="4" y="13" width="7" height="7" rx="2"/><rect x="13" y="13" width="7" height="7" rx="2"/></svg>
+              <span className={"v4-railLabel"}>功能</span>
+              <span className={"v4-badge v4-badgeSoon"}>即将</span>
             </button>
             <button className={"v4-railItem"} title="信箱">
               <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><rect x="3" y="5.5" width="18" height="13" rx="2.4"/><path d="m3.8 7.2 8.2 5.6 8.2-5.6"/></svg>
               <span className={"v4-railLabel"}>信箱</span>
               <span className={"v4-badge"}>12</span>
-            </button>
-            <button className={"v4-railItem"} title="收藏">
-              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M12 20s-7.4-4.5-7.4-9.3A4 4 0 0 1 12 8a4 4 0 0 1 7.4 2.7C19.4 15.5 12 20 12 20Z"/></svg>
-              <span className={"v4-railLabel"}>收藏</span>
             </button>
             <div className={"v4-railSpacer"} />
             <button className={"v4-railItem"} title="设置">

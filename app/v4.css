@@ -360,3 +360,20 @@ html:has(.v4-page), body:has(.v4-page) { overflow: hidden !important; height: 10
   .v4-top > *, .v4-cols > * { animation: none; }
   .v4-glass, .v4-railItem, .v4-sideItem, .v4-post, .v4-send { transition: none; }
 }
+
+/* 功能 · 即将推出（不可点）*/
+.v4-railSoon {
+  opacity: .5;
+  cursor: default;
+}
+.v4-railSoon:hover {
+  background: none;
+  color: rgba(255,255,255,.72);
+  transform: none;
+}
+.v4-badgeSoon {
+  background: rgba(255,255,255,.26);
+  color: #f2e8db;
+  font-size: 7.5px;
+  letter-spacing: .02em;
+}
