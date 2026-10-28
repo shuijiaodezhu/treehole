@@ -19,6 +19,9 @@ export function SmoothScroll() {
   useEffect(() => {
     if (typeof window === "undefined") return;
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    /* /v4 是固定布局（左右两栏 sticky 吸顶），Lenis 会给页面套 transform
+       → 会破坏 position:sticky ✗ 所以这一页用原生滚动 ✓ */
+    if (window.location.pathname.startsWith('/v4')) return;
 
     const lenis = new Lenis({
       duration: 0.9,
@@ -29,6 +32,11 @@ export function SmoothScroll() {
 
     let raf = 0;
     const loop = (time: number) => {
+      if (window.location.pathname.startsWith('/v4')) {
+        lenis.destroy();
+        cancelAnimationFrame(raf);
+        return;
+      }
       lenis.raf(time);
       raf = requestAnimationFrame(loop);
     };

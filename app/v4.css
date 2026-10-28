@@ -636,15 +636,16 @@ body:has(.v4-page) {
 }
 .v4-cols { align-items: start; }
 
-/* 左窄条 / 左分区 / 右栏：吸顶跟随 */
+/* 左窄条 / 左分区 / 右栏：吸顶跟随（sticky + top，高度用 max-height 不用写死）*/
 .v4-railbar,
 .v4-side,
 .v4-rail {
   position: sticky;
   top: 14px;
-  height: calc(100vh - 42px);
-  overflow: hidden;
+  align-self: start;
+  max-height: calc(100vh - 28px);
 }
+.v4-railbar { overflow: hidden; }
 .v4-side, .v4-rail { overflow-y: auto; }
 
 /* 中间：跟随页面滚，不再自己滚 */
