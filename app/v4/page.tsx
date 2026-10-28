@@ -84,13 +84,6 @@ export default function V4Page() {
           if (!cur || typeof cur.temperature_2m !== 'number') return
           const code = cur.weather_code ?? 0
           const t = Math.round(cur.temperature_2m)
-          const digits = ['零', '一', '二', '三', '四', '五', '六', '七', '八', '九', '十',
-            '十一', '十二', '十三', '十四', '十五', '十六', '十七', '十八', '十九', '二十',
-            '二十一', '二十二', '二十三', '二十四', '二十五', '二十六', '二十七', '二十八',
-            '二十九', '三十', '三十一', '三十二', '三十三', '三十四', '三十五', '三十六',
-            '三十七', '三十八', '三十九', '四十']
-          const num = (n: number) =>
-            n < 0 ? '零下' + (digits[Math.min(40, -n)] || String(-n)) : digits[Math.min(40, n)] || String(n)
           // WMO 天气代码 → 中文说法
           const word =
             code === 0 ? '晴'
@@ -119,14 +112,7 @@ export default function V4Page() {
                         ? t >= 30 ? 'clear-hot' : t <= 5 ? 'clear-cold' : t <= 15 ? 'clear-cool' : 'clear-mild'
                         : t >= 30 ? 'cloud-hot' : t <= 15 ? 'cloud-cool' : 'cloud-mild',
           )
-          const isWet = word === '雨' || word === '雪' || word === '毛毛雨' || word === '雷阵雨'
-          setWeatherText(
-            word
-              ? isWet
-                ? '杭州在下' + word + '，' + num(t) + '度'
-                : '杭州' + word + '，' + num(t) + '度'
-              : '杭州，' + num(t) + '度',
-          )
+          setWeatherText('杭州 · ' + (word || '天气') + ' · ' + t + '°')
         })
         .catch(() => {
           /* 失败就保持"杭州" */
