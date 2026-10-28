@@ -1576,6 +1576,13 @@ body.th-in-chat .th-bgm-fixed {
   font-weight: 400;
   text-align: center;
 }
+.v4-songNote {
+  display: block;
+  font-size: 12px;
+  opacity: 0.72;
+  margin-top: 6px;
+  text-align: center;
+}
 .v4-input {
   flex: 1;
   height: 38px;
