@@ -641,10 +641,10 @@ body:has(.v4-page) {
 
 /* ══════ 发帖：浮在中间栏底部，始终可见（朱砂色，显眼但不刺眼）══════ */
 .v4-composeBar {
-  position: sticky;
-  bottom: 16px;
-  align-self: center;
-  z-index: 5;
+  position: fixed;
+  right: 20px;
+  bottom: 170px;
+  z-index: 41;
   display: inline-flex;
   align-items: center;
   gap: 9px;
