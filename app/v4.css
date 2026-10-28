@@ -652,3 +652,22 @@ body:has(.v4-page) { overflow: hidden !important; height: 100% !important; }
 .v4-post:hover {
   background: rgba(255, 250, 238, .97);
 }
+
+/* ══════════════════════════════════════════════
+   SPACE-PASS：发帖栏被"压"到屏幕底边 —— 四周留出空隙
+   反馈：「下面这一块 / 没留边距」「线被压了好丑」
+   ══════════════════════════════════════════════ */
+.v4-main {
+  padding-bottom: 4px;
+}
+.v4-sayLine {
+  bottom: 12px;
+  width: auto;
+  align-self: stretch;
+  margin: 10px 6px 12px 6px;
+  border-radius: 18px;
+}
+/* 上面那条"被压"的细线：交给发帖栏自己的分隔，不要再叠一条 */
+.v4-sayLine::before {
+  display: none;
+}
