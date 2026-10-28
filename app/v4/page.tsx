@@ -55,11 +55,9 @@ export default function V4Page() {
   const [me, setMe] = useState<Me | null>(null)
   const [email, setEmail] = useState('')
   const [days, setDays] = useState(0)
-  const [weatherLine, setWeatherLine] = useState('杭州的小雨，十八度')
 
   useEffect(() => {
     const t = window.setTimeout(() => {
-      const now = new Date()
 
       // 读当前登录邮箱（Supabase 客户端从本地会话拿，不发网络请求）
       try {
@@ -73,23 +71,6 @@ export default function V4Page() {
         /* 忽略 */
       }
 
-      // 天气文案：先说天气，再说温度（诗意的说法，不用"18° 小雨"这种仪表盘写法）
-      {
-        const h = now.getHours()
-        const rainy = true // TODO: 接 open-meteo 后改成真实天气
-        const temp = 18
-        const digits = ['', '一', '二', '三', '四', '五', '六', '七', '八', '九', '十',
-          '十一', '十二', '十三', '十四', '十五', '十六', '十七', '十八', '十九', '二十',
-          '二十一', '二十二', '二十三', '二十四', '二十五', '二十六', '二十七', '二十八',
-          '二十九', '三十']
-        const cn = (n: number) => (n < 0 ? '零下' + digits[Math.min(10, -n)] : digits[Math.min(30, n)] || String(n))
-        const night = h >= 19 || h < 5
-        setWeatherLine(
-          rainy
-            ? (night ? '杭州的小雨，' + cn(temp) + '度' : '杭州在下小雨，' + cn(temp) + '度')
-            : '杭州的天气，' + cn(temp) + '度',
-        )
-      }
 
       // 陪伴天数：从第一次来的那天算
       try {
@@ -230,7 +211,8 @@ export default function V4Page() {
           <section className={"v4-main"}>
             <div className={`${"v4-glass"} ${"v4-hero"}`}>
               <div className={"v4-meta"}>
-                <span className={"v4-heroWeather"}>{weatherLine}</span>
+                <span>院子 · 写给睡不着的人</span>
+                <span className={"v4-heroWeather"}>杭州 18° 小雨</span>
               </div>
               <h1>外面在下小雨。</h1>
               <p className={"v4-heroSub"}>你那边呢？</p>
