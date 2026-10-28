@@ -560,3 +560,95 @@
 .v4-page *::-webkit-scrollbar { width: 0 !important; height: 0 !important; display: none !important; }
 html:has(.v4-page),
 body:has(.v4-page) { overflow: hidden !important; height: 100% !important; }
+
+/* ══════════════════════════════════════════════════════════
+   TONE-PASS：解决"沉闷 / 单调 / 看久了疲惫"
+   诊断（来自反馈）：
+     · 暖色调但**饱和度偏低** → 沉闷 ✗
+     · 全是"白色圆角长方形" → 单调 ✗
+     · 缺**亮色** → 看久疲劳 ✗
+   对策：
+     ① 三种玻璃色区分（不是同一个米色）✓
+     ② 提饱和 + 两个更亮的强调色 ✓
+     ③ 选中态用实色 + 左侧色条（一眼看到"我在哪"）✓
+   ══════════════════════════════════════════════════════════ */
+
+.v4-page {
+  /* 更饱和的强调色：朱砂 & 琥珀 */
+  --wax: #b04a2c;
+  --amber: #d9963f;
+}
+
+/* ① 三种玻璃，颜色/渐变不同 */
+.v4-hero.v4-glass {
+  background:
+    linear-gradient(150deg, rgba(255, 238, 220, .52) 0%, rgba(248, 224, 202, .38) 100%);
+  border-color: rgba(255, 240, 224, .72);
+}
+.v4-side.v4-glass {
+  background:
+    linear-gradient(165deg, rgba(244, 240, 231, .52) 0%, rgba(232, 228, 219, .36) 100%);
+  border-color: rgba(255, 252, 246, .66);
+}
+.v4-rail .v4-card.v4-glass {
+  background:
+    linear-gradient(160deg, rgba(255, 232, 204, .52) 0%, rgba(250, 218, 182, .34) 100%);
+  border-color: rgba(255, 236, 214, .70);
+}
+
+/* ② 选中态：实色 + 左侧朱砂条（不再只是"白一点的圆角行"）*/
+.v4-sideItem {
+  position: relative;
+}
+.v4-sideOn.v4-sideOn {
+  background: rgba(176, 74, 44, .16);
+  color: #6d2a17;
+  font-weight: 600;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .7);
+}
+.v4-sideOn.v4-sideOn::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 3px;
+  height: 18px;
+  margin-top: -9px;
+  border-radius: 0 3px 3px 0;
+  background: var(--wax);
+}
+.v4-sideOn.v4-sideOn .v4-sideN {
+  color: var(--wax);
+  font-weight: 600;
+  opacity: 1;
+}
+
+/* ③ 数字与徽章更亮（提饱和）*/
+.v4-sideN { color: #8a6a52; }
+.v4-daysNum b,
+.v4-daysNum span { color: #b04a2c; }
+.v4-badge { background: #e0a049; color: #3a2416; }
+.v4-flame { color: #d9963f; }
+
+/* ④ 视频稍微提饱和，让"暖"是真的暖 */
+.v4-video {
+  filter: saturate(1.18) brightness(.84) sepia(.06);
+}
+
+/* ⑤ 发帖栏：用更饱和的朱砂 */
+.v4-sayLine,
+.v4-sayLine:link {
+  background: #b04a2c;
+}
+.v4-sayLine:hover {
+  background: #c05432;
+}
+
+/* ⑥ 帖子纸卡：从"纯白"偏到暖纸，避免整屏都是白 */
+.v4-post {
+  background: rgba(255, 246, 231, .92);
+  border-color: rgba(255, 250, 240, .8);
+}
+.v4-post:hover {
+  background: rgba(255, 250, 238, .97);
+}
