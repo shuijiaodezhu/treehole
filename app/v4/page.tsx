@@ -214,8 +214,15 @@ export default function V4Page() {
                 <span>院子 · 写给睡不着的人</span>
                 <span className={"v4-heroWeather"}>杭州 18° 小雨</span>
               </div>
-              <h1>外面在下小雨。</h1>
-              <p className={"v4-heroSub"}>你那边呢？</p>
+              <h1 className={"v4-heroTitle"}>
+                {/* 字体浏览器不认，改成图片渲染（同一份 ttf 用 PIL 画的）*/}
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src="/hand-hero.png" alt="外面在下小雨。" width={640} height={154} />
+              </h1>
+              <p className={"v4-heroSub"}>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src="/hand-sub.png" alt="你那边呢？" width={160} height={52} />
+              </p>
 
               {/* 这里先空着 —— 等设计 */}
               <div className={"v4-heroBlank"} />
