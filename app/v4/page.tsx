@@ -292,12 +292,6 @@ export default function V4Page() {
             </div>
 
             <div className={"v4-feed"}>
-            {/* 发帖入口：手写的一行「说一句…」，不是按钮 */}
-            <button className={"v4-sayLine"} type="button" title="说一句">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/say-line.png" alt="说一句…" />
-              <span className={"v4-sayLineHint"}>写下来，就有人接住</span>
-            </button>
               {posts.map((p) => (
                 <article key={p.id} className={`${"v4-glass"} ${"v4-post"}`}>
                   <div className={"v4-postH"}>
@@ -330,6 +324,12 @@ export default function V4Page() {
                 </article>
               ))}
             </div>
+            {/* 发帖入口：钉在中间栏最底部，不随内容滚 */}
+            <button className={"v4-sayLine"} type="button" title="说一句">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/say-line.png" alt="说一句…" />
+              <span className={"v4-sayLineHint"}>写下来，就有人接住</span>
+            </button>
           </section>
 
           {/* 右栏 */}

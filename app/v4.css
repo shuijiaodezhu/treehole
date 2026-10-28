@@ -661,38 +661,53 @@ body:has(.v4-page) {
   box-shadow: inset 0 1px 1px rgba(255, 255, 255, .35), 0 1px 3px rgba(110, 45, 30, .35);
 }
 
-/* ══════ 发帖入口：一行手写的「说一句…」══════ */
+
+/* ══════ 发帖入口：钉在中间栏最底部，不随内容滚动 ══════ */
 .v4-sayLine {
+  position: sticky;
+  bottom: 0;
+  z-index: 6;
+  flex-shrink: 0;
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 14px;
   width: 100%;
-  padding: 10px 4px 12px;
-  margin-bottom: 2px;
-  background: none;
-  border: 0;
-  border-bottom: 1px solid rgba(160, 86, 63, .18);
+  margin-top: 8px;
+  padding: 13px 20px 14px;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 248, 238, .60);
+  background: rgba(246, 232, 214, .72);
+  -webkit-backdrop-filter: blur(26px) saturate(180%);
+  backdrop-filter: blur(26px) saturate(180%);
+  box-shadow:
+    inset 0 1.5px 0 rgba(255, 255, 255, .92),
+    0 -6px 24px rgba(60, 35, 22, .14),
+    0 10px 26px rgba(60, 35, 22, .12);
   cursor: pointer;
   font-family: inherit;
   text-align: left;
-  flex-shrink: 0;
-  transition: border-color .22s ease, transform .22s ease;
+  transition: background .2s ease, transform .2s cubic-bezier(.22,.7,.3,1), box-shadow .2s ease;
 }
 .v4-sayLine:hover {
-  border-bottom-color: rgba(160, 86, 63, .45);
-  transform: translateX(2px);
+  background: rgba(246, 232, 214, .88);
+  transform: translateY(-1px);
+  box-shadow:
+    inset 0 1.5px 0 rgba(255, 255, 255, .95),
+    0 -8px 28px rgba(60, 35, 22, .18),
+    0 14px 32px rgba(60, 35, 22, .16);
 }
+.v4-sayLine:active { transform: scale(.995); }
 .v4-sayLine img {
   display: block;
-  height: 30px;
+  height: 34px;
   width: auto;
-  opacity: .92;
+  opacity: 1;
+  filter: drop-shadow(0 1px 1px rgba(255, 255, 255, .5));
 }
 .v4-sayLineHint {
-  font-size: 11.5px;
-  color: #8a6a55;
-  opacity: .85;
-  letter-spacing: .02em;
+  font-size: 12px;
+  color: #6b4a34;
+  opacity: .95;
+  letter-spacing: .03em;
   margin-left: auto;
 }
-.v4-sayLine:hover .v4-sayLineHint { opacity: 1; }
