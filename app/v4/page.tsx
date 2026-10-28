@@ -350,10 +350,11 @@ export default function V4Page() {
               </div>
             </div>
 
-            <div className={`${"v4-glass"} ${"v4-foot"}`}>
-              <div className={"v4-input"}>说点什么…</div>
-              <div className={"v4-send"}>↗</div>
-            </div>
+            {/* 发帖：单个按钮，深色但不抢戏 */}
+            <button className={"v4-compose"} type="button">
+              <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{ flexShrink: 0 }}><path d="M4 20h4.2L19.6 8.6a2.1 2.1 0 0 0 0-3L18 4a2.1 2.1 0 0 0-3 0L4 14.6V20Z" /><path d="M13.5 5.5 18 10" /></svg>
+              发帖
+            </button>
           </aside>
         </div>
       </div>
