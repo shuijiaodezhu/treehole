@@ -291,19 +291,19 @@
   flex: 0 0 auto;
 }
 .v4-post {
-  border-radius: 0;
-  padding: 18px 6px 22px;
+  border-radius: 18px;
+  padding: 18px 22px 20px;
   flex-shrink: 0;
-  background: none;
-  border: 0;
-  border-bottom: 1px solid rgba(160, 86, 63, .14);
-  box-shadow: none;
-  backdrop-filter: none;
-  -webkit-backdrop-filter: none;
-  transition: background .22s ease;
+  background: rgba(252, 245, 233, .88);
+  border: 1px solid rgba(255, 255, 255, .66);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, .85),
+    0 8px 22px rgba(70, 42, 26, .12);
+  transition: transform var(--dur-state) var(--ease-out), background var(--dur-state) ease;
 }
 .v4-post:hover {
-  background: rgba(255, 250, 243, .22);
+  transform: translateY(-1px);
+  background: rgba(255, 249, 239, .95);
 }
 .v4-postH { display: flex; align-items: center; gap: 9px; }
 .v4-av {
@@ -311,9 +311,21 @@
   font-size: 11px; font-weight: 600;
   background: linear-gradient(135deg,#f3d3bd,#e8b99c); color: #8a4a30;
 }
-.v4-who { font-size: 13px; font-weight: 600; color: #3d2f26; }
-.v4-when { margin-left: auto; font-family: 'JetBrains Mono', monospace; font-size: 10.5px; opacity: .95; color: #5a4a3d; }
-.v4-postP { font-size: 13.5px; font-weight: 400; line-height: 1.95; color: #3d2f26; margin-top: 10px; }
+.v4-who { font-size: 13px; font-weight: 600; color: #261c15; }
+.v4-when {
+  margin-left: auto;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px;
+  color: #7a6455;
+  opacity: 1;
+}
+.v4-postP {
+  font-size: 13.5px;
+  font-weight: 400;
+  line-height: 1.95;
+  color: #2f231b;
+  margin-top: 10px;
+}
 .v4-acts { display: flex; gap: 16px; margin-top: 12px; font-size: 11px; opacity: .8; }
 
 /* ── 右栏 ── */
@@ -716,45 +728,49 @@ body:has(.v4-page) {
 }
 
 
-/* ══════ 发帖入口：钉底，但不是卡片，是"纸面的一条书写线" ══════ */
+/* ══════ 发帖入口：朱砂实心，一眼锁定 ══════ */
 .v4-sayLine {
   position: sticky;
   bottom: 0;
-  z-index: 6;
+  z-index: 8;
   flex-shrink: 0;
   display: flex;
   align-items: center;
   gap: 16px;
   width: 100%;
-  padding: 16px 8px 14px;
-  margin-top: 4px;
-  background: linear-gradient(to top,
-      rgba(246, 232, 214, .92) 0%,
-      rgba(246, 232, 214, .72) 58%,
-      rgba(246, 232, 214, 0) 100%);
-  border: 0;
-  border-bottom: 1px solid rgba(160, 86, 63, .26);
-  box-shadow: none;
-  backdrop-filter: none;
-  -webkit-backdrop-filter: none;
+  margin-top: 10px;
+  padding: 16px 24px 17px;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 236, 220, .34);
+  background: linear-gradient(135deg, #ad5c42 0%, #964c34 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, .26),
+    0 -8px 30px rgba(90, 40, 22, .30),
+    0 16px 34px rgba(90, 40, 22, .34);
   cursor: pointer;
   font-family: inherit;
   text-align: left;
-  transition: border-color .22s ease;
+  transition: transform var(--dur-state) var(--ease-out), box-shadow var(--dur-state) ease;
 }
-.v4-sayLine:hover { border-bottom-color: rgba(160, 86, 63, .60); }
-.v4-sayLine:active { transform: none; }
+.v4-sayLine:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, .32),
+    0 -10px 34px rgba(90, 40, 22, .34),
+    0 20px 42px rgba(90, 40, 22, .40);
+}
+.v4-sayLine:active { transform: scale(.995); }
 .v4-sayLine img {
   display: block;
-  height: 32px;
+  height: 36px;
   width: auto;
-  opacity: .95;
+  opacity: 1;
 }
 .v4-sayLineHint {
-  font-size: 11.5px;
-  color: #6b4a34;
-  opacity: .8;
-  letter-spacing: .03em;
+  font-size: 12.5px;
+  color: #ffe9d8;
+  opacity: .88;
+  letter-spacing: .04em;
   margin-left: auto;
 }
 .v4-sayLine:hover .v4-sayLineHint { opacity: 1; }

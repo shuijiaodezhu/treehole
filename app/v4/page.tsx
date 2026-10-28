@@ -327,7 +327,7 @@ export default function V4Page() {
             {/* 发帖入口：钉在中间栏最底部，不随内容滚 */}
             <button className={"v4-sayLine"} type="button" title="说一句">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/say-line.png" alt="说一句…" />
+              <img src="/say-line-light.png" alt="说一句" />
               <span className={"v4-sayLineHint"}>写下来，就有人接住</span>
             </button>
           </section>
