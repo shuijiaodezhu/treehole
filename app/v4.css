@@ -641,14 +641,18 @@ body:has(.v4-page) {
 
 /* ══════ 发帖：浮在中间栏底部，始终可见（朱砂色，显眼但不刺眼）══════ */
 .v4-composeBar {
-  position: fixed;
-  right: 20px;
-  bottom: 170px;
-  z-index: 41;
-  display: inline-flex;
+  position: fixed !important;
+  right: 24px !important;
+  bottom: 176px !important;
+  left: auto !important;
+  top: auto !important;
+  z-index: 60 !important;
+  float: none !important;
+  margin: 0 !important;
+  align-self: auto !important;
+  display: inline-flex !important;
   align-items: center;
   gap: 9px;
-  margin-top: 6px;
   padding: 13px 26px;
   border-radius: 999px;
   border: 1px solid rgba(255, 236, 220, .30);
