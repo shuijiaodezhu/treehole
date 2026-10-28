@@ -643,6 +643,7 @@ body:has(.v4-page) {
   position: sticky;
   top: 14px;
   align-self: start;
+  height: calc(100vh - 28px);
   max-height: calc(100vh - 28px);
 }
 .v4-railbar { overflow: hidden; }
