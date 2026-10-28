@@ -224,10 +224,13 @@
 }
 
 .v4-hero {
-  position: sticky; top: 0; z-index: 2;
-  border-radius: 22px; padding: 24px 30px 22px;
-  display: flex; flex-direction: column;
-  position: relative; overflow: hidden;
+  position: relative;
+  border-radius: 28px;
+  padding: 26px 34px 24px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
   flex: 0 1 auto;
   min-height: clamp(200px, 38vh, 360px);
 }
@@ -261,8 +264,21 @@
   padding-right: 2px;
   flex: 0 0 auto;
 }
-.v4-post { border-radius: 20px; padding: 16px 20px; flex-shrink: 0; transition: transform .22s cubic-bezier(.22,.7,.3,1); }
-.v4-post:hover { transform: translateY(-1px); }
+.v4-post {
+  border-radius: 0;
+  padding: 18px 6px 22px;
+  flex-shrink: 0;
+  background: none;
+  border: 0;
+  border-bottom: 1px solid rgba(160, 86, 63, .14);
+  box-shadow: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  transition: background .22s ease;
+}
+.v4-post:hover {
+  background: rgba(255, 250, 243, .22);
+}
 .v4-postH { display: flex; align-items: center; gap: 9px; }
 .v4-av {
   width: 26px; height: 26px; border-radius: 9px; display: grid; place-items: center;
@@ -662,7 +678,7 @@ body:has(.v4-page) {
 }
 
 
-/* ══════ 发帖入口：钉在中间栏最底部，不随内容滚动 ══════ */
+/* ══════ 发帖入口：钉底，但不是卡片，是"纸面的一条书写线" ══════ */
 .v4-sayLine {
   position: sticky;
   bottom: 0;
@@ -670,44 +686,47 @@ body:has(.v4-page) {
   flex-shrink: 0;
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 16px;
   width: 100%;
-  margin-top: 8px;
-  padding: 13px 20px 14px;
-  border-radius: 16px;
-  border: 1px solid rgba(255, 248, 238, .60);
-  background: rgba(246, 232, 214, .72);
-  -webkit-backdrop-filter: blur(26px) saturate(180%);
-  backdrop-filter: blur(26px) saturate(180%);
-  box-shadow:
-    inset 0 1.5px 0 rgba(255, 255, 255, .92),
-    0 -6px 24px rgba(60, 35, 22, .14),
-    0 10px 26px rgba(60, 35, 22, .12);
+  padding: 16px 8px 14px;
+  margin-top: 4px;
+  background: linear-gradient(to top,
+      rgba(246, 232, 214, .92) 0%,
+      rgba(246, 232, 214, .72) 58%,
+      rgba(246, 232, 214, 0) 100%);
+  border: 0;
+  border-bottom: 1px solid rgba(160, 86, 63, .26);
+  box-shadow: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
   cursor: pointer;
   font-family: inherit;
   text-align: left;
-  transition: background .2s ease, transform .2s cubic-bezier(.22,.7,.3,1), box-shadow .2s ease;
+  transition: border-color .22s ease;
 }
-.v4-sayLine:hover {
-  background: rgba(246, 232, 214, .88);
-  transform: translateY(-1px);
-  box-shadow:
-    inset 0 1.5px 0 rgba(255, 255, 255, .95),
-    0 -8px 28px rgba(60, 35, 22, .18),
-    0 14px 32px rgba(60, 35, 22, .16);
-}
-.v4-sayLine:active { transform: scale(.995); }
+.v4-sayLine:hover { border-bottom-color: rgba(160, 86, 63, .60); }
+.v4-sayLine:active { transform: none; }
 .v4-sayLine img {
   display: block;
-  height: 34px;
+  height: 32px;
   width: auto;
-  opacity: 1;
-  filter: drop-shadow(0 1px 1px rgba(255, 255, 255, .5));
+  opacity: .95;
 }
 .v4-sayLineHint {
-  font-size: 12px;
+  font-size: 11.5px;
   color: #6b4a34;
-  opacity: .95;
+  opacity: .8;
   letter-spacing: .03em;
   margin-left: auto;
+}
+.v4-sayLine:hover .v4-sayLineHint { opacity: 1; }
+
+/* 大厅卡不参与"悬停浮起"（它不可点）*/
+.v4-hero:hover {
+  transform: none;
+  background: rgba(246, 232, 214, .40);
+  box-shadow:
+    inset 0 1.5px 0 rgba(255, 255, 255, .95),
+    inset 0 -1px 0 rgba(255, 255, 255, .30),
+    0 20px 56px rgba(60, 35, 22, .18);
 }
