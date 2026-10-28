@@ -37,7 +37,7 @@
 /* ── 玻璃 ── */
 .v4-glass {
   position: relative;
-  background: rgba(255,250,243,.50);
+  background: rgba(255,250,243,.38);
   -webkit-backdrop-filter: blur(30px) saturate(190%) brightness(1.05);
   backdrop-filter: blur(30px) saturate(190%) brightness(1.05);
   border: 1px solid rgba(255,255,255,.55);
@@ -57,7 +57,7 @@
 }
 .v4-glass:hover {
   transform: translateY(-2px);
-  background: rgba(255,250,243,.60);
+  background: rgba(255,250,243,.46);
   box-shadow:
     inset 0 1.5px 0 rgba(255,255,255,.98),
     inset 0 -1px 0 rgba(255,255,255,.35),
@@ -195,6 +195,7 @@
   text-transform: uppercase; opacity: .8; padding: 12px 10px 6px;
 }
 .v4-sideItem {
+  color: #4a3a2f;
   display: flex; align-items: center; gap: 10px; padding: 9px 12px; border-radius: 11px;
   text-decoration: none; color: var(--ink2); font-size: 13px;
   width: 100%; text-align: left;
@@ -230,12 +231,12 @@
 }
 .v4-meta {
   font-family: KaiTi, STKaiti, 'Kaiti SC', 楷体, serif;
-  font-size: 17px; letter-spacing: .04em; color: #6b5346; opacity: .82;
+  font-size: 17px; letter-spacing: .04em; color: #4f3f33; opacity: .95;
   display: flex; align-items: baseline; gap: 14px; min-height: 24px;
 }
 .v4-heroWeather {
   font-family: KaiTi, STKaiti, 'Kaiti SC', 楷体, serif;
-  font-size: 17px; letter-spacing: .04em; color: #6b5346; opacity: .82;
+  font-size: 17px; letter-spacing: .04em; color: #4f3f33; opacity: .95;
   margin-left: 0;
 }
 .v4-hero h1 { margin-top: 10px; max-width: 16em; }
@@ -260,9 +261,9 @@
   font-size: 11px; font-weight: 600;
   background: linear-gradient(135deg,#f3d3bd,#e8b99c); color: #8a4a30;
 }
-.v4-who { font-size: 12.5px; font-weight: 500; }
-.v4-when { margin-left: auto; font-family: 'JetBrains Mono', monospace; font-size: 10.5px; opacity: .82; }
-.v4-postP { font-size: 13px; font-weight: 300; line-height: 1.85; color: var(--ink2); margin-top: 10px; }
+.v4-who { font-size: 13px; font-weight: 600; color: #3d2f26; }
+.v4-when { margin-left: auto; font-family: 'JetBrains Mono', monospace; font-size: 10.5px; opacity: .95; color: #5a4a3d; }
+.v4-postP { font-size: 13.5px; font-weight: 400; line-height: 1.95; color: #3d2f26; margin-top: 10px; }
 .v4-acts { display: flex; gap: 16px; margin-top: 12px; font-size: 11px; opacity: .8; }
 
 /* ── 右栏 ── */
@@ -285,18 +286,18 @@
 }
 .v4-daysNum span { font-size: 15px; color: #a8543a; opacity: .85; }
 .v4-daysNote {
-  font-size: 12.5px; color: #6b5346; opacity: .82;
+  font-size: 12.5px; color: #4a3a2f; opacity: 1;
   margin-top: 12px; line-height: 1.75; text-align: center;
 }
 .v4-daysSub {
-  font-size: 11.5px; color: #7a6a5c; opacity: 1;
+  font-size: 11.5px; color: #5a4a3d; opacity: 1;
   margin-top: 14px; padding-top: 14px;
   border-top: 1px solid rgba(110,72,52,.12); line-height: 1.9; text-align: center;
 }
 .v4-daysSub b { color: #6b5346; font-weight: 500; }
-.v4-song { margin-top: 12px; font-size: 13.5px; line-height: 1.95; color: #6b5346; text-align: center; }
+.v4-song { margin-top: 12px; font-size: 13.5px; line-height: 1.95; color: #44342a; text-align: center; }
 .v4-songN { color: #a0563f; margin-right: 3px; }
-.v4-songNote { display: block; font-size: 12px; opacity: .8; margin-top: 6px; text-align: center; }
+.v4-songNote { display: block; font-size: 12px; opacity: 1; color: #5a4a3d; margin-top: 6px; text-align: center; }
 .v4-foot {
   border-radius: 20px; padding: 10px 16px;
   display: flex; align-items: center; gap: 10px; margin-top: auto; flex-shrink: 0;
@@ -318,7 +319,7 @@
 
 /* 视频背景上文字加一点白晕，边缘更清楚 */
 .v4-card, .v4-side, .v4-hero, .v4-post, .v4-railbar {
-  text-shadow: 0 1px 1px rgba(255,255,255,.35);
+  text-shadow: 0 1px 1px rgba(255,255,255,.22);
 }
 
 /* ── 窄屏提示 ── */
