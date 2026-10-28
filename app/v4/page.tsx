@@ -301,6 +301,18 @@ export default function V4Page() {
                     <span className={"v4-when"}>{rel(p.created_at)}</span>
                   </div>
                   <p className={"v4-postP"}>{(p.content || '').trim() || '（这条只有图片）'}</p>
+                  {/* 帖子图片（最多 4 张）*/}
+                  {Array.isArray(p.image_urls) && p.image_urls.length > 0 && (
+                    <div
+                      className={"v4-postImgs"}
+                      data-n={Math.min(4, p.image_urls.length)}
+                    >
+                      {p.image_urls.slice(0, 4).map((u: string, k: number) => (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img key={k} src={u} alt="" loading="lazy" />
+                      ))}
+                    </div>
+                  )}
                   <div className={"v4-acts"}>
                     <span><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M12 20s-7.4-4.5-7.4-9.3A4 4 0 0 1 12 8a4 4 0 0 1 7.4 2.7C19.4 15.5 12 20 12 20Z"/></svg></span>
                     <span>◌</span>
