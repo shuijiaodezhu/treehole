@@ -351,15 +351,11 @@ export default function V4Page() {
             {/* 冬日信箱 */}
             <button className={"v4-mailbox"} type="button" title="冬日信箱">
               <span className={"v4-mailboxIcon"}>
-                <svg viewBox="0 0 64 64" width="52" height="52" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                <path d="M14 30a11 11 0 0 1 11-11h14a11 11 0 0 1 11 11v13H14V30Z" />
-                <path d="M14 43h36" />
-                <path d="M24 32h16" />
-                <path d="M20 43v9M44 43v9" />
-                <path d="M15 53h34" />
-                <path d="M50 25.5 56 29" />
-                <path d="M32 19v-5h7" />
-              </svg>
+                <svg viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <rect x="3" y="6.2" width="18" height="12.6" rx="2.4" />
+                  <path d="M3.7 7.7 10.9 12.6a2 2 0 0 0 2.2 0l7.2-4.9" />
+                  <circle cx="12" cy="16.6" r="1.5" fill="currentColor" stroke="none" opacity="0.9" />
+                </svg>
               </span>
               <span className={"v4-mailboxTitle"}>冬日信箱</span>
               <span className={"v4-mailboxSub"}>把想说的话投进来</span>
