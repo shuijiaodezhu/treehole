@@ -1,3 +1,13 @@
+/* ══════ 动效 token（按 emilkowalski/skills 的规矩）══════
+   · 曲线不用自己编：ease-out 给"入场"、ease-in-out 给"移动"
+   · 时长分档：hover 160ms / 状态 200ms / 进场 320ms
+   · 只过渡具体属性，绝不 transition: transform var(--dur-state) var(--ease-out), background var(--dur-state) ease, box-shadow var(--dur-state) ease;
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+  --dur-hover: 160ms;
+  --dur-state: 200ms;
+  --dur-enter: 320ms;
+}
+
 /* ═══════════════════════════════════════════════════════════
    /v4 电脑版 · 液态玻璃
    ⚠️ 这个文件请只在末尾追加或用精确字符串替换修改，
@@ -46,7 +56,7 @@
     inset 0 -1px 0 rgba(255,255,255,.30),
     inset 0 0 60px rgba(255,255,255,.10),
     0 20px 56px rgba(60,35,22,.18);
-  transition: transform .24s cubic-bezier(.22,.7,.3,1), box-shadow .24s ease, background .24s ease;
+  transition: transform .24s var(--ease-out), box-shadow .24s ease, background .24s ease;
 }
 .v4-glass::before {
   content: ''; position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
@@ -164,7 +174,7 @@
   display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px;
   color: rgba(255,255,255,.72); text-decoration: none; position: relative;
   background: none; border: 0; cursor: pointer; font-family: inherit;
-  transition: background .18s ease, color .18s ease, transform .18s cubic-bezier(.22,.7,.3,1);
+  transition: background .18s ease, color .18s ease, transform .18s var(--ease-out);
   flex-shrink: 0;
 }
 .v4-railItem:hover { background: rgba(255,255,255,.09); color: #fff; transform: scale(1.06); }
@@ -200,7 +210,7 @@
   text-decoration: none; color: var(--ink2); font-size: 13px;
   width: 100%; text-align: left;
   background: none; border: 0; cursor: pointer; font-family: inherit;
-  transition: background .18s ease, color .18s ease, padding-left .2s cubic-bezier(.22,.7,.3,1);
+  transition: background .18s ease, color .18s ease, padding-left .2s var(--ease-out);
   flex-shrink: 0;
 }
 .v4-sideItem:hover { background: rgba(255,255,255,.35); color: var(--ink); padding-left: 16px; }
@@ -336,7 +346,7 @@
   width: 36px; height: 36px; border-radius: 11px; display: grid; place-items: center;
   background: rgba(255,255,255,.68); border: 1px solid rgba(255,255,255,.85); color: #7a3524;
   box-shadow: inset 0 1px 0 rgba(255,255,255,.95); cursor: pointer; font-size: 14px;
-  transition: transform .18s cubic-bezier(.22,.7,.3,1), background .18s ease;
+  transition: transform var(--dur-hover) var(--ease-out);
 }
 .v4-send:hover { transform: translateY(-1px) scale(1.04); background: rgba(255,255,255,.85); }
 .v4-send:active { transform: scale(.94); }
@@ -362,11 +372,11 @@
   from { opacity: 0; transform: translateY(12px); }
   to { opacity: 1; transform: translateY(0); }
 }
-.v4-top > * { animation: v4-fade-up .5s cubic-bezier(.22,.7,.3,1) both; }
+.v4-top > * { animation: v4-fade-up .5s var(--ease-out) both; }
 .v4-top > *:nth-child(1) { animation-delay: .02s; }
 .v4-top > *:nth-child(2) { animation-delay: .08s; }
 .v4-top > *:nth-child(3) { animation-delay: .14s; }
-.v4-cols > * { animation: v4-fade-up .62s cubic-bezier(.22,.7,.3,1) both; }
+.v4-cols > * { animation: v4-fade-up .62s var(--ease-out) both; }
 .v4-cols > *:nth-child(1) { animation-delay: .16s; }
 .v4-cols > *:nth-child(2) { animation-delay: .22s; }
 .v4-cols > *:nth-child(3) { animation-delay: .28s; }
@@ -476,7 +486,7 @@ html:has(.v4-page) .border-dashed {
   box-shadow:
     inset 0 1px 0 rgba(255, 244, 230, .16),
     0 10px 26px rgba(24, 14, 9, .28);
-  transition: transform .2s cubic-bezier(.22,.7,.3,1), background .2s ease, box-shadow .2s ease;
+  transition: transform var(--dur-state) var(--ease-out), background var(--dur-state) ease, box-shadow var(--dur-state) ease;
 }
 .v4-compose:hover {
   transform: translateY(-1px);
@@ -634,7 +644,7 @@ body:has(.v4-page) {
     inset 0 1px 0 rgba(255, 255, 255, .9),
     0 10px 26px rgba(90, 50, 32, .16),
     0 2px 0 rgba(160, 86, 63, .10);
-  transition: transform .25s cubic-bezier(.22,.7,.3,1), box-shadow .25s ease;
+  transition: transform .25s var(--ease-out), box-shadow .25s ease;
 }
 .v4-mailbox:hover {
   transform: rotate(0deg) translateY(-2px);
@@ -729,4 +739,20 @@ body:has(.v4-page) {
     inset 0 1.5px 0 rgba(255, 255, 255, .95),
     inset 0 -1px 0 rgba(255, 255, 255, .30),
     0 20px 56px rgba(60, 35, 22, .18);
+}
+
+/* ══════ 只在有 hover 的设备上应用悬停态（触屏别留"粘住"的状态）══════ */
+@media (hover: none) {
+  .v4-glass:hover,
+  .v4-post:hover,
+  .v4-railItem:hover,
+  .v4-sideItem:hover,
+  .v4-composeBar:hover,
+  .v4-sayLine:hover,
+  .v4-mailbox:hover,
+  .v4-accBtn:hover,
+  .v4-logout:hover,
+  .v4-send:hover {
+    transform: none;
+  }
 }
