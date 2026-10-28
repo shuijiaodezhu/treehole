@@ -382,27 +382,27 @@ html:has(.v4-page), body:has(.v4-page) { overflow: hidden !important; height: 10
 .v4-glow {
   position: absolute;
   border-radius: 50%;
-  filter: blur(110px);
+  filter: blur(90px);
   pointer-events: none;
   mix-blend-mode: screen;
   will-change: transform;
 }
 .v4-glow1 {
   width: 46vw; height: 46vw; left: -8vw; top: -10vh;
-  background: radial-gradient(circle, #ffb27a, transparent 70%);
-  opacity: .32;
+  background: radial-gradient(circle, #ffb27a, transparent 68%);
+  opacity: .55;
   animation: v4-breathe-a 28s ease-in-out infinite alternate;
 }
 .v4-glow2 {
   width: 40vw; height: 40vw; right: -8vw; top: 6vh;
-  background: radial-gradient(circle, #d9b3ff, transparent 70%);
-  opacity: .22;
+  background: radial-gradient(circle, #d9b3ff, transparent 68%);
+  opacity: .42;
   animation: v4-breathe-b 36s ease-in-out infinite alternate;
 }
 .v4-glow3 {
   width: 54vw; height: 54vw; left: 22vw; bottom: -22vh;
-  background: radial-gradient(circle, #ffd9a0, transparent 72%);
-  opacity: .26;
+  background: radial-gradient(circle, #ffd9a0, transparent 70%);
+  opacity: .50;
   animation: v4-breathe-c 44s ease-in-out infinite alternate;
 }
 @keyframes v4-breathe-a {
