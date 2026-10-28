@@ -350,10 +350,21 @@ export default function V4Page() {
               </div>
             </div>
 
-            {/* 发帖：单个按钮，深色但不抢戏 */}
-            <button className={"v4-compose"} type="button">
-              <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{ flexShrink: 0 }}><path d="M4 20h4.2L19.6 8.6a2.1 2.1 0 0 0 0-3L18 4a2.1 2.1 0 0 0-3 0L4 14.6V20Z" /><path d="M13.5 5.5 18 10" /></svg>
-              发帖
+            {/* 冬日信箱 */}
+            <button className={"v4-mailbox"} type="button" title="冬日信箱">
+              <span className={"v4-mailboxIcon"}>
+                <svg viewBox="0 0 64 64" width="52" height="52" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <path d="M14 30a11 11 0 0 1 11-11h14a11 11 0 0 1 11 11v13H14V30Z" />
+                <path d="M14 43h36" />
+                <path d="M24 32h16" />
+                <path d="M20 43v9M44 43v9" />
+                <path d="M15 53h34" />
+                <path d="M50 25.5 56 29" />
+                <path d="M32 19v-5h7" />
+              </svg>
+              </span>
+              <span className={"v4-mailboxTitle"}>冬日信箱</span>
+              <span className={"v4-mailboxSub"}>把想说的话投进来</span>
             </button>
           </aside>
         </div>
