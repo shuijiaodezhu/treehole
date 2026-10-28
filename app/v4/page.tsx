@@ -55,6 +55,7 @@ export default function V4Page() {
   const [me, setMe] = useState<Me | null>(null)
   const [email, setEmail] = useState('')
   const [days, setDays] = useState(0)
+  const [weatherText, setWeatherText] = useState('杭州')
 
   useEffect(() => {
     const t = window.setTimeout(() => {
@@ -71,6 +72,49 @@ export default function V4Page() {
         /* 忽略 */
       }
 
+
+      // 真实天气：open-meteo 免费接口，杭州坐标
+      fetch(
+        'https://api.open-meteo.com/v1/forecast?latitude=30.2741&longitude=120.1551&current=temperature_2m,weather_code&timezone=Asia%2FShanghai',
+      )
+        .then((r) => r.json())
+        .then((j) => {
+          const cur = (j as { current?: { temperature_2m?: number; weather_code?: number } }).current
+          if (!cur || typeof cur.temperature_2m !== 'number') return
+          const code = cur.weather_code ?? 0
+          const t = Math.round(cur.temperature_2m)
+          const digits = ['零', '一', '二', '三', '四', '五', '六', '七', '八', '九', '十',
+            '十一', '十二', '十三', '十四', '十五', '十六', '十七', '十八', '十九', '二十',
+            '二十一', '二十二', '二十三', '二十四', '二十五', '二十六', '二十七', '二十八',
+            '二十九', '三十', '三十一', '三十二', '三十三', '三十四', '三十五', '三十六',
+            '三十七', '三十八', '三十九', '四十']
+          const num = (n: number) =>
+            n < 0 ? '零下' + (digits[Math.min(40, -n)] || String(-n)) : digits[Math.min(40, n)] || String(n)
+          // WMO 天气代码 → 中文说法
+          const word =
+            code === 0 ? '晴'
+              : code === 1 || code === 2 ? '多云'
+              : code === 3 ? '阴'
+              : code === 45 || code === 48 ? '雾'
+              : code >= 51 && code <= 57 ? '毛毛雨'
+              : code >= 61 && code <= 67 ? '雨'
+              : code >= 71 && code <= 77 ? '雪'
+              : code >= 80 && code <= 82 ? '雨'
+              : code >= 85 && code <= 86 ? '雪'
+              : code >= 95 ? '雷阵雨'
+              : ''
+          const isWet = word === '雨' || word === '雪' || word === '毛毛雨' || word === '雷阵雨'
+          setWeatherText(
+            word
+              ? isWet
+                ? '杭州在下' + word + '，' + num(t) + '度'
+                : '杭州' + word + '，' + num(t) + '度'
+              : '杭州，' + num(t) + '度',
+          )
+        })
+        .catch(() => {
+          /* 失败就保持"杭州" */
+        })
 
       // 陪伴天数：从第一次来的那天算
       try {
@@ -212,7 +256,7 @@ export default function V4Page() {
             <div className={`${"v4-glass"} ${"v4-hero"}`}>
               <div className={"v4-meta"}>
                 <span>院子 · 写给睡不着的人</span>
-                <span className={"v4-heroWeather"}>杭州 18° 小雨</span>
+                <span className={"v4-heroWeather"}>{weatherText}</span>
               </div>
               <h1 className={"v4-heroTitle"}>
                 {/* 字体浏览器不认，改成图片渲染（同一份 ttf 用 PIL 画的）*/}
