@@ -215,9 +215,16 @@
 }
 
 /* ── 中间 ── */
-.v4-main { display: flex; flex-direction: column; gap: 16px; min-height: 0; overflow: hidden; }
+.v4-main {
+  display: flex; flex-direction: column; gap: 16px;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+}
 
 .v4-hero {
+  position: sticky; top: 0; z-index: 2;
   border-radius: 22px; padding: 24px 30px 22px;
   display: flex; flex-direction: column;
   position: relative; overflow: hidden;
@@ -250,8 +257,9 @@
 .v4-heroBlank { flex: 1; min-height: 10px; }
 
 .v4-feed {
-  flex: 1; min-height: 0; overflow-y: auto;
-  display: flex; flex-direction: column; gap: 12px; padding-right: 2px;
+  display: flex; flex-direction: column; gap: 12px;
+  padding-right: 2px;
+  flex: 0 0 auto;
 }
 .v4-post { border-radius: 20px; padding: 16px 20px; flex-shrink: 0; transition: transform .22s cubic-bezier(.22,.7,.3,1); }
 .v4-post:hover { transform: translateY(-1px); }
