@@ -741,12 +741,11 @@ body:has(.v4-page) {
   margin-top: 10px;
   padding: 16px 24px 17px;
   border-radius: 20px;
-  border: 1px solid rgba(255, 236, 220, .34);
-  background: linear-gradient(135deg, #ad5c42 0%, #964c34 100%);
+  border: 0;
+  background: #a4593f;
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, .26),
-    0 -8px 30px rgba(90, 40, 22, .30),
-    0 16px 34px rgba(90, 40, 22, .34);
+    0 -6px 26px rgba(90, 40, 22, .22),
+    0 14px 30px rgba(90, 40, 22, .26);
   cursor: pointer;
   font-family: inherit;
   text-align: left;
@@ -755,9 +754,8 @@ body:has(.v4-page) {
 .v4-sayLine:hover {
   transform: translateY(-2px);
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, .32),
-    0 -10px 34px rgba(90, 40, 22, .34),
-    0 20px 42px rgba(90, 40, 22, .40);
+    0 -8px 30px rgba(90, 40, 22, .26),
+    0 18px 38px rgba(90, 40, 22, .32);
 }
 .v4-sayLine:active { transform: scale(.995); }
 .v4-sayLine img {
@@ -799,4 +797,15 @@ body:has(.v4-page) {
   .v4-send:hover {
     transform: none;
   }
+}
+
+/* 帖子两种形态：无图=紧凑纸卡，有图=图片主导 */
+.v4-post {
+  background: rgba(252, 245, 233, .88);
+}
+.v4-postWithImg {
+  padding-bottom: 12px;
+}
+.v4-postWithImg .v4-postP {
+  margin-bottom: 12px;
 }

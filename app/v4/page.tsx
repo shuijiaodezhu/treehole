@@ -50,6 +50,14 @@ function rel(iso?: string | null): string {
   return Math.floor(h / 24) + ' 天前'
 }
 
+/** 按作者 id 生成头像底色：同一个人永远同一个颜色，不同人不同色 */
+function avatarBg(id?: string | null): string {
+  const s = id || 'anon'
+  let h = 0
+  for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) % 360
+  return 'linear-gradient(135deg, hsl(' + h + ' 46% 84%), hsl(' + ((h + 24) % 360) + ' 42% 74%))'
+}
+
 export default function V4Page() {
   const [posts, setPosts] = useState<Post[]>([])
   const [me, setMe] = useState<Me | null>(null)
@@ -293,9 +301,15 @@ export default function V4Page() {
 
             <div className={"v4-feed"}>
               {posts.map((p) => (
-                <article key={p.id} className={`${"v4-glass"} ${"v4-post"}`}>
+                <article
+                  key={p.id}
+                  className={p.image_urls && p.image_urls.length ? "v4-post v4-postWithImg" : "v4-post"}
+                >
                   <div className={"v4-postH"}>
-                    <div className={"v4-av"}>
+                    <div
+                      className={"v4-av"}
+                      style={{ background: avatarBg(p.author_id) }}
+                    >
                       {(p.author_id === me?.id ? me?.nickname || '我' : '有').slice(0, 1)}
                     </div>
                     <span className={"v4-who"}>
