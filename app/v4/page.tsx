@@ -291,14 +291,6 @@ export default function V4Page() {
             </div>
 
             <div className={"v4-feed"}>
-            {/* 发帖：放在帖子流顶部，和右下角那几个功能按钮完全不同 */}
-            <button className={"v4-composeBar"} type="button">
-              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                <path d="M4 20h4.2L19.6 8.6a2.1 2.1 0 0 0 0-3L18 4a2.1 2.1 0 0 0-3 0L4 14.6V20Z" />
-                <path d="M13.5 5.5 18 10" />
-              </svg>
-              <span>写点什么…</span>
-            </button>
               {posts.map((p) => (
                 <article key={p.id} className={`${"v4-glass"} ${"v4-post"}`}>
                   <div className={"v4-postH"}>
@@ -331,6 +323,14 @@ export default function V4Page() {
                 </article>
               ))}
             </div>
+            {/* 发帖：浮在中间栏底部，滚动时一直在屏幕上 */}
+            <button className={"v4-composeBar"} type="button">
+              <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <path d="M4 20h4.2L19.6 8.6a2.1 2.1 0 0 0 0-3L18 4a2.1 2.1 0 0 0-3 0L4 14.6V20Z" />
+                <path d="M13.5 5.5 18 10" />
+              </svg>
+              <span>发帖</span>
+            </button>
           </section>
 
           {/* 右栏 */}
