@@ -426,16 +426,7 @@
     to { opacity: 1; }
   }
   .v4-top > *, .v4-cols > * { animation-duration: 200ms; }
-  .v4-glass, .v4-railItem, .v4-sideItem, .v4-post, .v4-send, .v4-mailbox, .v4-sayLine {
-    transition-duration: 1ms;
-  }
-  .v4-glass:hover, .v4-railItem:hover, .v4-sideItem:hover,
-  .v4-post:hover, .v4-send:hover, .v4-mailbox:hover {
-    transform: none;
-  }
-  .v4-glow { animation: none; }
-}
-
+  .v4-glass, .v4-railItem, .v4-sideItem, .v4-post, .v4-send, .v4-mailbox, 
 /* 功能 · 即将推出（不可点）*/
 .v4-railSoon {
   opacity: .5;
@@ -729,59 +720,6 @@ body:has(.v4-page) {
 
 
 /* ══════ 发帖入口：朱砂实心，一眼锁定 ══════ */
-.v4-sayLine {
-  position: sticky;
-  bottom: 0;
-  z-index: 8;
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  width: 100%;
-  margin-top: 10px;
-  padding: 16px 24px 17px;
-  border-radius: 20px;
-  border: 0;
-  background: #a4593f;
-  box-shadow:
-    0 -6px 26px rgba(90, 40, 22, .22),
-    0 14px 30px rgba(90, 40, 22, .26);
-  cursor: pointer;
-  font-family: inherit;
-  text-align: left;
-  transition: transform var(--dur-state) var(--ease-out), box-shadow var(--dur-state) ease;
-}
-.v4-sayLine:hover {
-  transform: translateY(-2px);
-  box-shadow:
-    0 -8px 30px rgba(90, 40, 22, .26),
-    0 18px 38px rgba(90, 40, 22, .32);
-}
-.v4-sayLine:active { transform: scale(.995); }
-.v4-sayLine img {
-  display: block;
-  height: 36px;
-  width: auto;
-  opacity: 1;
-}
-.v4-sayLineHint {
-  font-size: 12.5px;
-  color: #ffe9d8;
-  opacity: .88;
-  letter-spacing: .04em;
-  margin-left: auto;
-}
-.v4-sayLine:hover .v4-sayLineHint { opacity: 1; }
-
-/* 大厅卡不参与"悬停浮起"（它不可点）*/
-.v4-hero:hover {
-  transform: none;
-  background: rgba(246, 232, 214, .40);
-  box-shadow:
-    inset 0 1.5px 0 rgba(255, 255, 255, .95),
-    inset 0 -1px 0 rgba(255, 255, 255, .30),
-    0 20px 56px rgba(60, 35, 22, .18);
-}
 
 /* ══════ 只在有 hover 的设备上应用悬停态（触屏别留"粘住"的状态）══════ */
 @media (hover: none) {
@@ -790,15 +728,7 @@ body:has(.v4-page) {
   .v4-railItem:hover,
   .v4-sideItem:hover,
   .v4-composeBar:hover,
-  .v4-sayLine:hover,
-  .v4-mailbox:hover,
-  .v4-accBtn:hover,
-  .v4-logout:hover,
-  .v4-send:hover {
-    transform: none;
-  }
-}
-
+  
 /* 帖子两种形态：无图=紧凑纸卡，有图=图片主导 */
 .v4-post {
   background: rgba(252, 245, 233, .88);
@@ -808,4 +738,54 @@ body:has(.v4-page) {
 }
 .v4-postWithImg .v4-postP {
   margin-bottom: 12px;
+}
+
+/* ══════════════════════════════════════════════
+   发帖栏：之前"透"和"露角"，是被旧规则和父级影响
+   → 这里关键属性全部 !important 写死，且 overflow 裁掉角
+   ══════════════════════════════════════════════ */
+.v4-sayLine {
+  position: sticky !important;
+  bottom: 0 !important;
+  z-index: 20 !important;
+  isolation: isolate !important;
+  overflow: hidden !important;
+  flex-shrink: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 16px !important;
+  width: 100% !important;
+  margin: 10px 0 0 0 !important;
+  padding: 16px 24px 17px !important;
+  border-radius: 20px !important;
+  border: 0 !important;
+  background: #a4593f !important;
+  background-image: none !important;
+  opacity: 1 !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  box-shadow: 0 14px 30px rgba(90, 40, 22, .28) !important;
+  cursor: pointer;
+  font-family: inherit;
+  text-align: left;
+  transition: box-shadow var(--dur-state) ease !important;
+}
+.v4-sayLine:hover {
+  background: #ad6247 !important;
+  box-shadow: 0 18px 38px rgba(90, 40, 22, .34) !important;
+}
+.v4-sayLine img {
+  display: block !important;
+  height: 36px !important;
+  width: auto !important;
+  opacity: 1 !important;
+  border: 0 !important;
+  filter: none !important;
+}
+.v4-sayLineHint {
+  font-size: 12.5px !important;
+  color: #ffe9d8 !important;
+  opacity: .9 !important;
+  letter-spacing: .04em;
+  margin-left: auto;
 }
