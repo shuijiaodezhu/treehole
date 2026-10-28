@@ -472,56 +472,6 @@ html:has(.v4-page) .border-dashed {
 .v4-compose:active { transform: scale(.985); }
 
 
-/* ══════ 冬日信箱（右栏底部）══════ */
-.v4-mailbox {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
-  align-self: stretch;
-  padding: 18px 16px 16px;
-  border-radius: 22px;
-  border: 1px solid rgba(255, 248, 238, .55);
-  background: rgba(246, 232, 214, .40);
-  -webkit-backdrop-filter: blur(28px) saturate(180%);
-  backdrop-filter: blur(28px) saturate(180%);
-  cursor: pointer;
-  font-family: inherit;
-  box-shadow:
-    inset 0 1.5px 0 rgba(255, 255, 255, .90),
-    inset 0 -1px 0 rgba(255, 255, 255, .26),
-    0 16px 40px rgba(60, 35, 22, .16);
-  transition: transform .24s cubic-bezier(.22,.7,.3,1), background .24s ease, box-shadow .24s ease;
-}
-.v4-mailbox:hover {
-  transform: translateY(-2px);
-  background: rgba(246, 232, 214, .52);
-  box-shadow:
-    inset 0 1.5px 0 rgba(255, 255, 255, .95),
-    0 22px 50px rgba(60, 35, 22, .22);
-}
-.v4-mailbox:active { transform: scale(.985); }
-.v4-mailboxIcon {
-  color: #a0563f;
-  opacity: .92;
-  display: block;
-  line-height: 0;
-  filter: drop-shadow(0 2px 5px rgba(120, 60, 40, .18));
-}
-.v4-mailboxTitle {
-  font-family: KaiTi, STKaiti, 'Kaiti SC', 楷体, serif;
-  font-size: 18px;
-  color: #3d2f26;
-  letter-spacing: .06em;
-  margin-top: 2px;
-}
-.v4-mailboxSub {
-  font-size: 11.5px;
-  color: #6b5346;
-  opacity: .9;
-  letter-spacing: .03em;
-}
 
 /* 陪伴卡底部的"今天在听"（一行，不再单独占一张卡）*/
 .v4-todaySong {
@@ -639,43 +589,74 @@ body:has(.v4-page) {
 .v4-side, .v4-rail { overflow-y: auto; }
 
 
-/* ══════ 发帖：浮在中间栏底部，始终可见（朱砂色，显眼但不刺眼）══════ */
-.v4-composeBar {
-  position: fixed !important;
-  right: 100px !important;
-  bottom: 96px !important;
-  left: auto !important;
-  top: auto !important;
-  z-index: 60 !important;
-  float: none !important;
-  margin: 0 !important;
-  align-self: auto !important;
-  display: inline-flex !important;
-  align-items: center;
-  gap: 9px;
-  padding: 13px 26px;
-  border-radius: 999px;
-  border: 1px solid rgba(255, 236, 220, .30);
-  background: #a0563f;
-  color: #fff6ec;
-  font-size: 13.5px;
-  font-weight: 600;
-  letter-spacing: .06em;
-  cursor: pointer;
-  font-family: inherit;
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, .22),
-    0 14px 34px rgba(120, 55, 34, .42);
-  transition: transform .2s cubic-bezier(.22,.7,.3,1), background .2s ease, box-shadow .2s ease;
-}
-.v4-composeBar:hover {
-  transform: translateY(-2px);
-  background: #b0624a;
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, .28),
-    0 18px 40px rgba(120, 55, 34, .50);
-}
-.v4-composeBar:active { transform: scale(.975); }
-.v4-composeBar svg { flex-shrink: 0; opacity: .95; }
 
 /* build-trigger: 1793180025312 */
+
+/* ═══════════════════════════════════════
+   冬日信箱 —— 它就是"写东西"的入口
+   做成"一封放在桌上的信"：纸、火漆、微倾
+   ═══════════════════════════════════════ */
+.v4-mailbox {
+  position: relative;
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  gap: 14px !important;
+  padding: 16px 18px !important;
+  border-radius: 14px 22px 18px 20px !important;   /* 四角不等，像手裁的纸 */
+  border: 1px solid rgba(160, 86, 63, .22) !important;
+  background:
+    linear-gradient(160deg, rgba(255, 250, 242, .72) 0%, rgba(247, 233, 214, .58) 100%) !important;
+  -webkit-backdrop-filter: blur(18px) saturate(150%) !important;
+  backdrop-filter: blur(18px) saturate(150%) !important;
+  cursor: pointer;
+  font-family: inherit;
+  text-align: left;
+  transform: rotate(-.6deg);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, .9),
+    0 10px 26px rgba(90, 50, 32, .16),
+    0 2px 0 rgba(160, 86, 63, .10);
+  transition: transform .25s cubic-bezier(.22,.7,.3,1), box-shadow .25s ease;
+}
+.v4-mailbox:hover {
+  transform: rotate(0deg) translateY(-2px);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, .95),
+    0 18px 38px rgba(90, 50, 32, .24),
+    0 2px 0 rgba(160, 86, 63, .14);
+}
+.v4-mailbox:active { transform: rotate(0deg) scale(.985); }
+.v4-mailboxIcon { color: #a0563f; opacity: .9; display: block; line-height: 0; flex-shrink: 0; }
+.v4-mailboxIcon svg { width: 32px !important; height: 32px !important; }
+.v4-mailboxText {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.v4-mailboxTitle {
+  font-family: KaiTi, STKaiti, 'Kaiti SC', 楷体, serif;
+  font-size: 16px;
+  color: #3d2f26;
+  letter-spacing: .06em;
+  margin: 0 !important;
+}
+.v4-mailboxSub {
+  display: block;
+  font-size: 11px;
+  color: #7a5a48;
+  letter-spacing: .03em;
+}
+.v4-mailboxSeal {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  width: 13px;
+  height: 13px;
+  margin-top: -6px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 34% 30%, #c9705a, #8d3f2c 72%);
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, .35), 0 1px 3px rgba(110, 45, 30, .35);
+}

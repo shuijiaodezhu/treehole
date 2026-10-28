@@ -166,14 +166,6 @@ export default function V4Page() {
       {/* 窄屏提示 */}
 
 
-      {/* 发帖：固定在屏幕右下角（挂在页面根节点下，不放在任何滚动容器里）*/}
-      <button className={"v4-composeBar"} type="button">
-        <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-          <path d="M4 20h4.2L19.6 8.6a2.1 2.1 0 0 0 0-3L18 4a2.1 2.1 0 0 0-3 0L4 14.6V20Z" />
-          <path d="M13.5 5.5 18 10" />
-        </svg>
-        <span>发帖</span>
-      </button>
 
       <div className={"v4-mobileNote"}>
         这一版是电脑版（液态玻璃要宽屏才成立）
@@ -380,8 +372,11 @@ export default function V4Page() {
                   <circle cx="12" cy="16.6" r="1.5" fill="currentColor" stroke="none" opacity="0.9" />
                 </svg>
               </span>
-              <span className={"v4-mailboxTitle"}>冬日信箱</span>
-              <span className={"v4-mailboxSub"}>把想说的话投进来</span>
+              <span className={"v4-mailboxText"}>
+                <span className={"v4-mailboxTitle"}>冬日信箱</span>
+                <span className={"v4-mailboxSub"}>投一封信进去</span>
+              </span>
+              <span className={"v4-mailboxSeal"} aria-hidden="true" />
             </button>
           </aside>
         </div>
