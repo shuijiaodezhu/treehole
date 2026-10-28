@@ -362,8 +362,8 @@
   -ms-overflow-style: none !important;
 }
 .v4-page *::-webkit-scrollbar { width: 0 !important; height: 0 !important; display: none !important; }
-html:has(.v4-page), body:has(.v4-page) { overflow: hidden !important; height: 100% !important; }
-.v4-page, .v4-page * { overscroll-behavior: none !important; }
+
+
 
 @media (prefers-reduced-motion: reduce) {
   .v4-top > *, .v4-cols > * { animation: none; }
@@ -613,3 +613,43 @@ html:has(.v4-page) .th-bgm-fixed {
   border-radius: 12px;
   background: rgba(0, 0, 0, .05);
 }
+
+
+/* ══════════════════════════════════════════════════════════
+   滚动方案：站里有 SmoothScroll（Lenis）接管 window 滚轮
+   → 内层 overflow 容器收不到滚轮事件 ✗
+   → 所以改成"页面本身滚"，三栏用 sticky 固定 ✓
+   ══════════════════════════════════════════════════════════ */
+
+html:has(.v4-page),
+body:has(.v4-page) {
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  height: auto !important;
+}
+
+.v4-page { min-height: 100vh; overflow: visible; }
+.v4-wrap {
+  height: auto;
+  min-height: 100vh;
+  padding-bottom: 28px;
+}
+.v4-cols { align-items: start; }
+
+/* 左窄条 / 左分区 / 右栏：吸顶跟随 */
+.v4-railbar,
+.v4-side,
+.v4-rail {
+  position: sticky;
+  top: 14px;
+  height: calc(100vh - 42px);
+  overflow: hidden;
+}
+.v4-side, .v4-rail { overflow-y: auto; }
+
+/* 中间：跟随页面滚，不再自己滚 */
+.v4-main, .v4-feed {
+  overflow: visible;
+  min-height: 0;
+}
+.v4-hero { position: relative; top: auto; }
