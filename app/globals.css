@@ -2039,13 +2039,4 @@ html:has(.v4-page) {
   font-display: swap;
   font-weight: 400;
 }
-.v4-heroWeather {
-  font-family: 'HW Weather', 'Noto Sans SC', sans-serif;
-  font-size: 16px;
-  font-weight: 400;
-  letter-spacing: 0.03em;
-  color: #6b5346;
-  opacity: 0.78;
-  margin-left: 0;
-}
 
