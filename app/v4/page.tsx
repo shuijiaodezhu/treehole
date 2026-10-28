@@ -56,7 +56,7 @@ export default function V4Page() {
   const [email, setEmail] = useState('')
   const [days, setDays] = useState(0)
   const [weatherText, setWeatherText] = useState('杭州')
-  const [heroKey, setHeroKey] = useState('rain')
+  const [heroKey, setHeroKey] = useState('unknown')
 
   useEffect(() => {
     const t = window.setTimeout(() => {
@@ -105,17 +105,19 @@ export default function V4Page() {
               : code >= 95 ? '雷阵雨'
               : ''
           setHeroKey(
-            code === 0 ? 'clear'
-              : code === 1 || code === 2 ? 'cloudy'
-              : code === 3 ? 'overcast'
-              : code === 45 || code === 48 ? 'fog'
-              : code >= 51 && code <= 57 ? 'drizzle'
-              : code >= 61 && code <= 67 ? 'rain'
-              : code >= 71 && code <= 77 ? 'snow'
-              : code >= 80 && code <= 82 ? 'rain'
-              : code >= 85 && code <= 86 ? 'snow'
-              : code >= 95 ? 'storm'
-              : 'rain',
+            !word
+              ? 'unknown'
+              : code >= 95
+                ? 'storm'
+                : code >= 71 && code <= 86
+                  ? 'snow'
+                  : (code >= 51 && code <= 67) || (code >= 80 && code <= 82)
+                    ? 'rain'
+                    : code === 45 || code === 48
+                      ? 'fog'
+                      : code === 0
+                        ? t >= 30 ? 'clear-hot' : t <= 5 ? 'clear-cold' : t <= 15 ? 'clear-cool' : 'clear-mild'
+                        : t >= 30 ? 'cloud-hot' : t <= 15 ? 'cloud-cool' : 'cloud-mild',
           )
           const isWet = word === '雨' || word === '雪' || word === '毛毛雨' || word === '雷阵雨'
           setWeatherText(
@@ -276,7 +278,7 @@ export default function V4Page() {
                 {/* 字体浏览器不认，改成图片渲染（同一份 ttf 用 PIL 画的）*/}
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
-                  src={'/hand-hero-' + heroKey + '.png'}
+                  src={'/wg-' + heroKey + '.png'}
                   alt="天气问候"
                   className={"v4-heroImg"}
                 />
