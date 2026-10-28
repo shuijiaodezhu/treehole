@@ -292,6 +292,12 @@ export default function V4Page() {
             </div>
 
             <div className={"v4-feed"}>
+            {/* 发帖入口：手写的一行「说一句…」，不是按钮 */}
+            <button className={"v4-sayLine"} type="button" title="说一句">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/say-line.png" alt="说一句…" />
+              <span className={"v4-sayLineHint"}>写下来，就有人接住</span>
+            </button>
               {posts.map((p) => (
                 <article key={p.id} className={`${"v4-glass"} ${"v4-post"}`}>
                   <div className={"v4-postH"}>
@@ -364,7 +370,7 @@ export default function V4Page() {
 
 
             {/* 冬日信箱 */}
-            <button className={"v4-mailbox"} type="button" title="冬日信箱">
+            <button className={"v4-mailbox"} type="button" title="冬日信箱 · 写给站长">
               <span className={"v4-mailboxIcon"}>
                 <svg viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                   <rect x="3" y="6.2" width="18" height="12.6" rx="2.4" />
@@ -374,7 +380,7 @@ export default function V4Page() {
               </span>
               <span className={"v4-mailboxText"}>
                 <span className={"v4-mailboxTitle"}>冬日信箱</span>
-                <span className={"v4-mailboxSub"}>投一封信进去</span>
+                <span className={"v4-mailboxSub"}>写给站长</span>
               </span>
               <span className={"v4-mailboxSeal"} aria-hidden="true" />
             </button>
