@@ -3,6 +3,7 @@ import { Bgm } from '../components/bgm'
 import { Suspense } from "react";
 import { Cormorant_Garamond, Ma_Shan_Zheng, Noto_Serif_SC } from "next/font/google";
 import "./globals.css";
+import "./v4.css";
 import { OnlinePresence } from "../components/presence";
 import { ThemeProvider } from "../components/theme";
 import { SmoothScroll } from "../components/smooth-scroll"
