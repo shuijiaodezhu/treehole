@@ -30,7 +30,7 @@
 .v4-scrim {
   position: absolute; inset: 0; pointer-events: none;
   background:
-    radial-gradient(120% 95% at 50% 42%, rgba(30,21,15,.02) 0%, rgba(30,21,15,.38) 78%),
+    radial-gradient(120% 95% at 50% 42%, rgba(30,21,15,.02) 0%, rgba(30,21,15,.30) 78%),
     linear-gradient(180deg, rgba(42,29,19,.30) 0%, rgba(42,29,19,.18) 45%, rgba(42,29,19,.46) 100%);
 }
 
@@ -237,7 +237,7 @@
 .v4-hero::after {
   content: ''; position: absolute; left: 30px; right: 30px; top: 0; height: 1px;
   background: linear-gradient(90deg, transparent, #c99a63 18%, #c99a63 82%, transparent);
-  opacity: .55;
+  opacity: .30;
 }
 .v4-meta {
   font-family: KaiTi, STKaiti, 'Kaiti SC', 楷体, serif;
@@ -409,25 +409,25 @@
   border-radius: 50%;
   filter: blur(90px);
   pointer-events: none;
-  mix-blend-mode: screen;
+  mix-blend-mode: soft-light;
   will-change: transform;
 }
 .v4-glow1 {
   width: 46vw; height: 46vw; left: -8vw; top: -10vh;
   background: radial-gradient(circle, #ffb27a, transparent 68%);
-  opacity: .55;
+  opacity: .30;
   animation: v4-breathe-a 28s ease-in-out infinite alternate;
 }
 .v4-glow2 {
   width: 40vw; height: 40vw; right: -8vw; top: 6vh;
   background: radial-gradient(circle, #d9b3ff, transparent 68%);
-  opacity: .42;
+  opacity: .22;
   animation: v4-breathe-b 36s ease-in-out infinite alternate;
 }
 .v4-glow3 {
   width: 54vw; height: 54vw; left: 22vw; bottom: -22vh;
   background: radial-gradient(circle, #ffd9a0, transparent 70%);
-  opacity: .50;
+  opacity: .26;
   animation: v4-breathe-c 44s ease-in-out infinite alternate;
 }
 @keyframes v4-breathe-a {
