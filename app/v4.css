@@ -1,7 +1,10 @@
 /* ══════ 动效 token（按 emilkowalski/skills 的规矩）══════
-   · 曲线不用自己编：ease-out 给"入场"、ease-in-out 给"移动"
+   · 曲线不自编：入场用 ease-out，移动用 ease-in-out
    · 时长分档：hover 160ms / 状态 200ms / 进场 320ms
-   · 只过渡具体属性，绝不 transition: transform var(--dur-state) var(--ease-out), background var(--dur-state) ease, box-shadow var(--dur-state) ease;
+   · 只过渡具体属性，绝不 transition: all；只动 transform / opacity
+   ═══════════════════════════════════════════════════ */
+:root {
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
   --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
   --dur-hover: 160ms;
   --dur-state: 200ms;
@@ -56,7 +59,7 @@
     inset 0 -1px 0 rgba(255,255,255,.30),
     inset 0 0 60px rgba(255,255,255,.10),
     0 20px 56px rgba(60,35,22,.18);
-  transition: transform .24s var(--ease-out), box-shadow .24s ease, background .24s ease;
+  transition: transform var(--dur-state) var(--ease-out);
 }
 .v4-glass::before {
   content: ''; position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
@@ -65,6 +68,19 @@
     radial-gradient(120% 80% at 20% 0%, rgba(255,255,255,.25), transparent 60%);
   mix-blend-mode: overlay;
 }
+/* hover 的"变实"用一层 opacity 覆盖，避免过渡 background ✗ */
+.v4-glass::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background: rgba(255, 250, 243, .30);
+  opacity: 0;
+  transition: opacity var(--dur-state) ease;
+}
+.v4-glass:hover::after { opacity: 1; }
+
 .v4-glass:hover {
   transform: translateY(-2px);
   background: rgba(246,232,214,.50);
@@ -142,7 +158,7 @@
   width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center;
   background: none; border: 0; box-shadow: none;
   color: #f2e8db; opacity: .8; cursor: pointer;
-  transition: opacity .16s ease, transform .16s ease;
+  transition: opacity var(--dur-hover) ease, transform var(--dur-hover) var(--ease-out);
 }
 .v4-accBtn:hover { opacity: 1; transform: scale(1.08); }
 .v4-accBtn:active { transform: scale(.94); }
@@ -150,7 +166,7 @@
 .v4-logout {
   font-size: 12.5px; font-weight: 500; color: #f2e8db; opacity: .9; text-decoration: none;
   padding: 6px 2px; border-bottom: 1px solid transparent;
-  transition: border-color .18s ease, opacity .18s ease;
+  transition: border-color var(--dur-hover) ease, opacity var(--dur-hover) ease;
   text-shadow: 0 1px 6px rgba(24,16,11,.6);
 }
 .v4-logout:hover { opacity: 1; border-bottom-color: rgba(242,232,219,.6); }
@@ -210,10 +226,10 @@
   text-decoration: none; color: var(--ink2); font-size: 13px;
   width: 100%; text-align: left;
   background: none; border: 0; cursor: pointer; font-family: inherit;
-  transition: background .18s ease, color .18s ease, padding-left .2s var(--ease-out);
+  transition: background var(--dur-hover) ease, color var(--dur-hover) ease, transform var(--dur-hover) var(--ease-out);
   flex-shrink: 0;
 }
-.v4-sideItem:hover { background: rgba(255,255,255,.35); color: var(--ink); padding-left: 16px; }
+.v4-sideItem:hover { background: rgba(255,255,255,.35); color: var(--ink); transform: translateX(4px); }
 .v4-sideItem:active { transform: scale(.985); }
 .v4-sideOn {
   background: rgba(255,247,235,.60); color: var(--ink); font-weight: 500;
@@ -372,15 +388,15 @@
   from { opacity: 0; transform: translateY(12px); }
   to { opacity: 1; transform: translateY(0); }
 }
-.v4-top > * { animation: v4-fade-up .5s var(--ease-out) both; }
-.v4-top > *:nth-child(1) { animation-delay: .02s; }
-.v4-top > *:nth-child(2) { animation-delay: .08s; }
-.v4-top > *:nth-child(3) { animation-delay: .14s; }
-.v4-cols > * { animation: v4-fade-up .62s var(--ease-out) both; }
-.v4-cols > *:nth-child(1) { animation-delay: .16s; }
-.v4-cols > *:nth-child(2) { animation-delay: .22s; }
-.v4-cols > *:nth-child(3) { animation-delay: .28s; }
-.v4-cols > *:nth-child(4) { animation-delay: .34s; }
+.v4-top > * { animation: v4-fade-up var(--dur-enter) var(--ease-out) both; }
+.v4-top > *:nth-child(1) { animation-delay: 0s; }
+.v4-top > *:nth-child(2) { animation-delay: 40ms; }
+.v4-top > *:nth-child(3) { animation-delay: 80ms; }
+.v4-cols > * { animation: v4-fade-up calc(var(--dur-enter) + 40ms) var(--ease-out) both; }
+.v4-cols > *:nth-child(1) { animation-delay: 80ms; }
+.v4-cols > *:nth-child(2) { animation-delay: 120ms; }
+.v4-cols > *:nth-child(3) { animation-delay: 160ms; }
+.v4-cols > *:nth-child(4) { animation-delay: 200ms; }
 
 /* ── 滚动条彻底隐藏 ── */
 .v4-page, .v4-wrap, .v4-cols, .v4-main, .v4-feed, .v4-side, .v4-rail, .v4-page * {
@@ -392,8 +408,20 @@
 
 
 @media (prefers-reduced-motion: reduce) {
-  .v4-top > *, .v4-cols > * { animation: none; }
-  .v4-glass, .v4-railItem, .v4-sideItem, .v4-post, .v4-send { transition: none; }
+  /* 减弱而非消除：保留淡入，去掉位移与缩放 */
+  @keyframes v4-fade-up {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  .v4-top > *, .v4-cols > * { animation-duration: 200ms; }
+  .v4-glass, .v4-railItem, .v4-sideItem, .v4-post, .v4-send, .v4-mailbox, .v4-sayLine {
+    transition-duration: 1ms;
+  }
+  .v4-glass:hover, .v4-railItem:hover, .v4-sideItem:hover,
+  .v4-post:hover, .v4-send:hover, .v4-mailbox:hover {
+    transform: none;
+  }
+  .v4-glow { animation: none; }
 }
 
 /* 功能 · 即将推出（不可点）*/
@@ -644,7 +672,7 @@ body:has(.v4-page) {
     inset 0 1px 0 rgba(255, 255, 255, .9),
     0 10px 26px rgba(90, 50, 32, .16),
     0 2px 0 rgba(160, 86, 63, .10);
-  transition: transform .25s var(--ease-out), box-shadow .25s ease;
+  transition: transform var(--dur-state) var(--ease-out);
 }
 .v4-mailbox:hover {
   transform: rotate(0deg) translateY(-2px);
