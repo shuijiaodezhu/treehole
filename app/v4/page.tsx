@@ -164,6 +164,13 @@ export default function V4Page() {
       </div>
 
       {/* 窄屏提示 */}
+
+      {/* 右下角浮动：发帖（和音乐/下载 App 同一角，但更靠上、样式更深）*/}
+      <button className={"v4-fab"} type="button" title="发帖">
+        <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M4 20h4.2L19.6 8.6a2.1 2.1 0 0 0 0-3L18 4a2.1 2.1 0 0 0-3 0L4 14.6V20Z" /><path d="M13.5 5.5 18 10" /></svg>
+        发帖
+      </button>
+
       <div className={"v4-mobileNote"}>
         这一版是电脑版（液态玻璃要宽屏才成立）
         <br />
