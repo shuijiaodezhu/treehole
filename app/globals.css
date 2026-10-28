@@ -1117,7 +1117,7 @@ body.th-in-chat .th-bgm-fixed {
 /* ── 玻璃 ── */
 .v4-glass{
   position:relative;
-  background:rgba(255,250,243,.42);
+  background:rgba(255,250,243,.50);
   -webkit-backdrop-filter:blur(30px) saturate(190%) brightness(1.05);
   backdrop-filter:blur(30px) saturate(190%) brightness(1.05);
   border:1px solid rgba(255,255,255,.55);
@@ -1261,7 +1261,7 @@ body.th-in-chat .th-bgm-fixed {
 }
 .v4-sideN{
   margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:10.5px;
-  letter-spacing:.02em;opacity:.8;
+  letter-spacing:.02em;opacity:.92;
 }
 
 /* ── 中间 ── */
@@ -1320,16 +1320,16 @@ body.th-in-chat .th-bgm-fixed {
   font-size:11px;font-weight:600;background:linear-gradient(135deg,#f3d3bd,#e8b99c);color:#8a4a30;
 }
 .v4-who{font-size:12.5px;font-weight:500}
-.v4-when{margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:10.5px;opacity:.7}
+.v4-when{margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:10.5px;opacity:.82}
 .v4-postP{font-size:13px;font-weight:300;line-height:1.85;color:var(--ink2);margin-top:10px}
-.v4-acts{display:flex;gap:16px;margin-top:12px;font-size:11px;opacity:.68}
+.v4-acts{display:flex;gap:16px;margin-top:12px;font-size:11px;opacity:.8}
 
 /* ── 右栏 ── */
 .v4-rail{display:flex;flex-direction:column;gap:16px;min-height:0}
 .v4-card{border-radius:22px;padding:26px 24px 24px;text-align:center}
 .v4-k{
   font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:.2em;
-  text-transform:uppercase;opacity:.68;
+  text-transform:uppercase;opacity:.8;
 }
 /* 陪伴天数 */
 .v4-daysHead{display:flex;align-items:center;justify-content:center;gap:8px}
@@ -1403,4 +1403,9 @@ html:has(.v4-page),body:has(.v4-page){overflow:hidden !important;height:100% !im
 @media (prefers-reduced-motion:reduce){
   .v4-top>*,.v4-cols>*{animation:none}
   .v4-glass,.v4-railItem,.v4-sideItem,.v4-post,.v4-send{transition:none}
+}
+
+/* 视频背景上文字加一点点白晕，边缘更清楚（不改变颜色观感）*/
+.v4-card, .v4-side, .v4-hero, .v4-post, .v4-railbar {
+  text-shadow: 0 1px 1px rgba(255,255,255,.35);
 }
