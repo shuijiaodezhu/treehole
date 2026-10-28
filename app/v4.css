@@ -518,3 +518,59 @@ html:has(.v4-page) .th-bgm-fixed {
   opacity: .9;
   letter-spacing: .03em;
 }
+
+/* 陪伴卡底部的"今天在听"（一行，不再单独占一张卡）*/
+.v4-todaySong {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(110, 72, 52, .12);
+}
+.v4-todaySongTitle {
+  font-size: 12.5px;
+  color: #44342a;
+  letter-spacing: .02em;
+}
+.v4-todaySongNote {
+  font-size: 11.5px;
+  color: #6b5346;
+  opacity: .92;
+  line-height: 1.8;
+  margin-top: 6px;
+  text-align: center;
+}
+
+/* 冬日信箱：改成**横向**、暖色实底 —— 和上面两张玻璃卡明显不同 */
+.v4-mailbox {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  gap: 14px !important;
+  padding: 16px 18px !important;
+  background: rgba(160, 86, 63, .14) !important;
+  border: 1px solid rgba(160, 86, 63, .26) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(150%) !important;
+  backdrop-filter: blur(20px) saturate(150%) !important;
+  text-align: left;
+}
+.v4-mailbox:hover {
+  background: rgba(160, 86, 63, .20) !important;
+}
+.v4-mailboxIcon svg {
+  width: 34px !important;
+  height: 34px !important;
+}
+.v4-mailboxTitle {
+  font-size: 15.5px !important;
+  margin-top: 0 !important;
+}
+.v4-mailboxSub {
+  display: block;
+  margin-top: 2px;
+  font-size: 11px;
+  color: #7a5a48;
+}

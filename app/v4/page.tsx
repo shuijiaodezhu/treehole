@@ -340,15 +340,13 @@ export default function V4Page() {
               <div className={"v4-daysSub"}>
                 收到 <b>18</b> 条回复 · 写下 <b>7</b> 句话
               </div>
+              <div className={"v4-todaySong"}>
+                <span className={"v4-songN"}>♪</span>
+                <span className={"v4-todaySongTitle"}>今天在听《我不配》</span>
+              </div>
+              <div className={"v4-todaySongNote"}>不用配得上谁，才被允许留下。</div>
             </div>
 
-            <div className={`${"v4-glass"} ${"v4-card"}`}>
-              <div className={"v4-k"}>今天在听</div>
-              <div className={"v4-song"}>
-                <span className={"v4-songN"}>♪</span> 《我不配》
-                <span className={"v4-songNote"}>不用配得上谁，才被允许留下。</span>
-              </div>
-            </div>
 
             {/* 冬日信箱 */}
             <button className={"v4-mailbox"} type="button" title="冬日信箱">
