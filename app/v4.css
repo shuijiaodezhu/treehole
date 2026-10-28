@@ -421,12 +421,32 @@
 
 @media (prefers-reduced-motion: reduce) {
   /* 减弱而非消除：保留淡入，去掉位移与缩放 */
-  @keyframes v4-fade-up {
-    from { opacity: 0; }
-    to { opacity: 1; }
+  .v4-top > *,
+  .v4-cols > * {
+    animation-duration: 200ms;
   }
-  .v4-top > *, .v4-cols > * { animation-duration: 200ms; }
-  .v4-glass, .v4-railItem, .v4-sideItem, .v4-post, .v4-send, .v4-mailbox, 
+  .v4-glass,
+  .v4-railItem,
+  .v4-sideItem,
+  .v4-post,
+  .v4-send,
+  .v4-mailbox,
+  .v4-sayLine {
+    transition-duration: 1ms;
+  }
+  .v4-glass:hover,
+  .v4-railItem:hover,
+  .v4-sideItem:hover,
+  .v4-post:hover,
+  .v4-send:hover,
+  .v4-mailbox:hover {
+    transform: none;
+  }
+  .v4-glow {
+    animation: none;
+  }
+}
+
 /* 功能 · 即将推出（不可点）*/
 .v4-railSoon {
   opacity: .5;
