@@ -158,6 +158,9 @@ export default function V4Page() {
           preload="auto"
         />
         <div className={"v4-scrim"} />
+        <i className={"v4-glow v4-glow1"} />
+        <i className={"v4-glow v4-glow2"} />
+        <i className={"v4-glow v4-glow3"} />
       </div>
 
       {/* 窄屏提示 */}
@@ -241,7 +244,7 @@ export default function V4Page() {
             </button>
             <div className={"v4-railSpacer"} />
             <button className={"v4-railItem"} title="设置">
-              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 3v2.4M12 18.6V21M4.3 7.6l2.1 1.2M17.6 15.2l2.1 1.2M4.3 16.4l2.1-1.2M17.6 8.8l2.1-1.2"/></svg>
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" /><circle cx="9" cy="7" r="2.3" fill="currentColor" stroke="none" /><circle cx="15.5" cy="12" r="2.3" fill="currentColor" stroke="none" /><circle cx="7.5" cy="17" r="2.3" fill="currentColor" stroke="none" /></svg>
             </button>
           </nav>
 

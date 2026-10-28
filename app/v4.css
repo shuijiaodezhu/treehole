@@ -377,3 +377,53 @@ html:has(.v4-page), body:has(.v4-page) { overflow: hidden !important; height: 10
   font-size: 7.5px;
   letter-spacing: .02em;
 }
+
+/* ══════ 呼吸光（缓慢移动的色块）══════ */
+.v4-glow {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(110px);
+  pointer-events: none;
+  mix-blend-mode: screen;
+  will-change: transform;
+}
+.v4-glow1 {
+  width: 46vw; height: 46vw; left: -8vw; top: -10vh;
+  background: radial-gradient(circle, #ffb27a, transparent 70%);
+  opacity: .32;
+  animation: v4-breathe-a 28s ease-in-out infinite alternate;
+}
+.v4-glow2 {
+  width: 40vw; height: 40vw; right: -8vw; top: 6vh;
+  background: radial-gradient(circle, #d9b3ff, transparent 70%);
+  opacity: .22;
+  animation: v4-breathe-b 36s ease-in-out infinite alternate;
+}
+.v4-glow3 {
+  width: 54vw; height: 54vw; left: 22vw; bottom: -22vh;
+  background: radial-gradient(circle, #ffd9a0, transparent 72%);
+  opacity: .26;
+  animation: v4-breathe-c 44s ease-in-out infinite alternate;
+}
+@keyframes v4-breathe-a {
+  0%   { transform: translate(0, 0) scale(1); }
+  100% { transform: translate(7vw, 5vh) scale(1.18); }
+}
+@keyframes v4-breathe-b {
+  0%   { transform: translate(0, 0) scale(1.1); }
+  100% { transform: translate(-6vw, 8vh) scale(.92); }
+}
+@keyframes v4-breathe-c {
+  0%   { transform: translate(0, 0) scale(.95); }
+  100% { transform: translate(-5vw, -6vh) scale(1.12); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .v4-glow { animation: none; }
+}
+
+/* ══════ 干掉页面装饰的虚线（就是"白杠"）══════
+   来自 components/page-decor.tsx：inset-4 的虚线圆角框
+   + 左右两条 1px 虚线竖线 → 在 v4 上看着就是两根白杠 */
+html:has(.v4-page) .border-dashed {
+  display: none !important;
+}
