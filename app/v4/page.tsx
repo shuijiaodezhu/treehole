@@ -165,11 +165,6 @@ export default function V4Page() {
 
       {/* 窄屏提示 */}
 
-      {/* 右下角浮动：发帖（和音乐/下载 App 同一角，但更靠上、样式更深）*/}
-      <button className={"v4-fab"} type="button" title="发帖">
-        <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M4 20h4.2L19.6 8.6a2.1 2.1 0 0 0 0-3L18 4a2.1 2.1 0 0 0-3 0L4 14.6V20Z" /><path d="M13.5 5.5 18 10" /></svg>
-        发帖
-      </button>
 
       <div className={"v4-mobileNote"}>
         这一版是电脑版（液态玻璃要宽屏才成立）
@@ -296,6 +291,14 @@ export default function V4Page() {
             </div>
 
             <div className={"v4-feed"}>
+            {/* 发帖：放在帖子流顶部，和右下角那几个功能按钮完全不同 */}
+            <button className={"v4-composeBar"} type="button">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <path d="M4 20h4.2L19.6 8.6a2.1 2.1 0 0 0 0-3L18 4a2.1 2.1 0 0 0-3 0L4 14.6V20Z" />
+                <path d="M13.5 5.5 18 10" />
+              </svg>
+              <span>写点什么…</span>
+            </button>
               {posts.map((p) => (
                 <article key={p.id} className={`${"v4-glass"} ${"v4-post"}`}>
                   <div className={"v4-postH"}>

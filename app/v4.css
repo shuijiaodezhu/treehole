@@ -611,87 +611,59 @@ html:has(.v4-page) .border-dashed {
 }
 
 
-/* ══════════════════════════════════════════════════════════
-   滚动方案：站里有 SmoothScroll（Lenis）接管 window 滚轮
-   → 内层 overflow 容器收不到滚轮事件 ✗
-   → 所以改成"页面本身滚"，三栏用 sticky 固定 ✓
-   ══════════════════════════════════════════════════════════ */
 
+
+/* ══════════════════════════════════════════════════════════
+   布局：页面本身不滚（100vh 锁定），**只有中间一栏内部滚**
+   —— Lenis 已在 /v4 关闭，所以内层 overflow 能正常接收滚轮 ✓
+   —— 左右两栏永远是满的，不会"滚下去两边空"
+   ══════════════════════════════════════════════════════════ */
 html:has(.v4-page),
 body:has(.v4-page) {
-  overflow-y: auto !important;
-  overflow-x: hidden !important;
-  height: auto !important;
+  overflow: hidden !important;
+  height: 100% !important;
 }
-
-.v4-page { min-height: 100vh; overflow: visible; }
-.v4-wrap {
+.v4-page { height: 100vh; min-height: 0; overflow: hidden; }
+.v4-wrap { height: 100vh; min-height: 0; }
+.v4-cols { flex: 1; min-height: 0; }
+.v4-main { overflow-y: auto; overflow-x: hidden; min-height: 0; }
+.v4-feed { overflow: visible; min-height: 0; }
+.v4-railbar, .v4-side, .v4-rail {
+  position: static;
   height: auto;
-  min-height: 100vh;
-  padding-bottom: 28px;
-}
-.v4-cols { align-items: start; }
-
-/* 左窄条 / 左分区 / 右栏：吸顶跟随（sticky + top，高度用 max-height 不用写死）*/
-.v4-railbar,
-.v4-side,
-.v4-rail {
-  position: sticky;
-  top: 14px;
-  align-self: start;
-  height: calc(100vh - 28px);
-  max-height: calc(100vh - 28px);
+  max-height: none;
+  align-self: stretch;
+  min-height: 0;
 }
 .v4-railbar { overflow: hidden; }
 .v4-side, .v4-rail { overflow-y: auto; }
 
-/* 中间：跟随页面滚，不再自己滚 */
-.v4-main, .v4-feed {
-  overflow: visible;
-  min-height: 0;
-}
-.v4-hero { position: relative; top: auto; }
-
-/* ══════ 右下角"发帖"浮动按钮
-   和 音乐 / 下载 App 在同一角，但：
-     · 往上挪（bottom 96px），不和它们挤在一起
-     · 样式明显不同：深色实心 + 铅笔图标 + 文字，宽度更长
-   ══════ */
-.v4-fab {
-  position: fixed;
-  right: 18px;
-  bottom: 100px;
-  z-index: 41;
-  display: inline-flex;
+/* ══════ 发帖：帖子流顶部的宽条（和右下角的音乐/下载完全不同）══════ */
+.v4-composeBar {
+  display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 13px 22px;
-  border-radius: 999px;
-  border: 1px solid rgba(255, 240, 222, .22);
-  background: rgba(38, 27, 21, .90);
-  -webkit-backdrop-filter: blur(20px) saturate(150%);
-  backdrop-filter: blur(20px) saturate(150%);
-  color: #f6ecdd;
-  font-size: 13.5px;
-  font-weight: 600;
-  letter-spacing: .05em;
+  gap: 10px;
+  width: 100%;
+  padding: 13px 18px;
+  margin-bottom: 2px;
+  border-radius: 16px;
+  border: 1px dashed rgba(110, 72, 52, .28);
+  background: rgba(255, 250, 243, .34);
+  -webkit-backdrop-filter: blur(20px) saturate(160%);
+  backdrop-filter: blur(20px) saturate(160%);
+  color: #6b5346;
+  font-size: 13px;
+  letter-spacing: .02em;
   cursor: pointer;
   font-family: inherit;
-  box-shadow:
-    inset 0 1px 0 rgba(255, 244, 230, .20),
-    0 12px 30px rgba(20, 12, 8, .40);
-  transition: transform .2s cubic-bezier(.22,.7,.3,1), background .2s ease, box-shadow .2s ease;
+  text-align: left;
+  flex-shrink: 0;
+  transition: background .2s ease, border-color .2s ease, transform .2s cubic-bezier(.22,.7,.3,1);
 }
-.v4-fab:hover {
-  transform: translateY(-2px);
-  background: rgba(52, 37, 28, .95);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 244, 230, .26),
-    0 16px 36px rgba(20, 12, 8, .48);
+.v4-composeBar:hover {
+  background: rgba(255, 250, 243, .55);
+  border-color: rgba(160, 86, 63, .42);
+  transform: translateY(-1px);
 }
-.v4-fab:active { transform: scale(.975); }
-.v4-fab svg { flex-shrink: 0; opacity: .95; }
-
-@media (max-width: 1100px) {
-  .v4-fab { display: none; }
-}
+.v4-composeBar:active { transform: scale(.995); }
+.v4-composeBar svg { color: #a0563f; opacity: .9; flex-shrink: 0; }
