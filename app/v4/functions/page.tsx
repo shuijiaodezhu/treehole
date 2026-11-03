@@ -34,9 +34,19 @@ function todayYmd() {
   return ymd(t.getFullYear(), t.getMonth(), t.getDate())
 }
 
+function readTab(): 'calendar' | 'plans' | 'vault' {
+  if (typeof window === 'undefined') return 'calendar'
+  const t = new URLSearchParams(window.location.search).get('tab')
+  return t === 'plans' || t === 'vault' ? t : 'calendar'
+}
+
 export default function FunctionsPage() {
   const router = useRouter()
   const [tab, setTab] = useState<'calendar' | 'plans' | 'vault'>('calendar')
+  useEffect(() => {
+    const t = readTab()
+    if (t !== 'calendar') window.requestAnimationFrame(() => setTab(t))
+  }, [])
   const [userId, setUserId] = useState<string | null>(null)
   const [email, setEmail] = useState<string | null>(null)
 
