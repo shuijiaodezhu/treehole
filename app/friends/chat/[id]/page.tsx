@@ -3,6 +3,7 @@
 /* eslint-disable @next/next/no-img-element -- 头像用原生 img 即可，尺寸固定 */
 
 import { useEffect, useState, useRef, Suspense } from 'react'
+import '../../../v4-skin.css'
 import { peek, save } from '../../../../components/local-store'
 import { createClient } from '../../../lib/supabase'
 import { useRouter, useParams } from 'next/navigation'
@@ -376,7 +377,18 @@ export default function ChatPage() {
   return (
     <Suspense
       fallback={
-        <div className="min-h-screen flex items-center justify-center">
+        <div className="min-h-screen flex items-center justify-center th-v4skin">
+      {/* v4 皮肤：冬日视频 + 呼吸光 */}
+      <div className={"v4-bg"}>
+        <video className={"v4-video"} autoPlay muted loop playsInline preload="auto">
+          <source src="/bg-winter.mp4" type="video/mp4" />
+        </video>
+        <div className={"v4-scrim"} />
+        <div className={"v4-glow v4-glow1"} />
+        <div className={"v4-glow v4-glow2"} />
+        <div className={"v4-glow v4-glow3"} />
+      </div>
+
           <p>加载中...</p>
         </div>
       }

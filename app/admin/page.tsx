@@ -2,6 +2,7 @@
 /* eslint-disable react-hooks/set-state-in-effect -- 规则未识别 async 取数（init/loadAll），此处是纯客户端页面 */
 
 import { useCallback, useEffect, useState } from 'react'
+import '../v4-skin.css'
 import { createClient } from '../lib/supabase'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
@@ -356,7 +357,18 @@ export default function AdminPage() {
   const totalReports = reports.length + activityReports.length
 
   return (
-    <div className="min-h-screen bg-base-100 relative overflow-hidden">
+    <div className="min-h-screen bg-base-100 relative overflow-hidden th-v4skin">
+      {/* v4 皮肤：冬日视频 + 呼吸光 */}
+      <div className={"v4-bg"}>
+        <video className={"v4-video"} autoPlay muted loop playsInline preload="auto">
+          <source src="/bg-winter.mp4" type="video/mp4" />
+        </video>
+        <div className={"v4-scrim"} />
+        <div className={"v4-glow v4-glow1"} />
+        <div className={"v4-glow v4-glow2"} />
+        <div className={"v4-glow v4-glow3"} />
+      </div>
+
 
       <div className="relative max-w-4xl mx-auto px-6 pt-24 pb-8">
         <header className="mb-6">

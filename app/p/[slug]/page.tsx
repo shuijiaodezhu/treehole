@@ -1,6 +1,7 @@
 'use client'
 
 import { Suspense } from 'react'
+import '../../v4-skin.css'
 import Link from 'next/link'
 import { useParams } from 'next/navigation'
 import { Icon } from '../../../components/icons'
@@ -24,7 +25,18 @@ export default function SitePageView() {
   return (
     <Suspense
       fallback={
-        <div className="min-h-screen bg-[var(--paper)]" style={pageAccentVars('home')}>
+        <div className="min-h-screen bg-[var(--paper)] th-v4skin" style={pageAccentVars('home')}>
+      {/* v4 皮肤：冬日视频 + 呼吸光 */}
+      <div className={"v4-bg"}>
+        <video className={"v4-video"} autoPlay muted loop playsInline preload="auto">
+          <source src="/bg-winter.mp4" type="video/mp4" />
+        </video>
+        <div className={"v4-scrim"} />
+        <div className={"v4-glow v4-glow1"} />
+        <div className={"v4-glow v4-glow2"} />
+        <div className={"v4-glow v4-glow3"} />
+      </div>
+
           <p className="py-24 text-center font-serif-cn text-sm text-base-content/60">翻页中…</p>
         </div>
       }
