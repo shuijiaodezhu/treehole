@@ -110,7 +110,8 @@ export default function V4Page() {
               ? 'unknown'
               : code >= 95
                 ? 'storm'
-                : code >= 71 && code <= 86
+                /* 雪：71-77（降雪）+ 85-86（阵雪）；80-82 是**阵雨**，不能算雪 */
+                : (code >= 71 && code <= 77) || code === 85 || code === 86
                   ? 'snow'
                   : (code >= 51 && code <= 67) || (code >= 80 && code <= 82)
                     ? 'rain'
