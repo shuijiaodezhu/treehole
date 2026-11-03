@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import '../v4-skin.css'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { createClient } from '../lib/supabase'
@@ -69,7 +70,18 @@ export default function ResetPasswordPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4">
+    <div className="min-h-screen flex items-center justify-center px-4 th-v4skin">
+      {/* v4 皮肤：冬日视频 + 呼吸光 */}
+      <div className={"v4-bg"}>
+        <video className={"v4-video"} autoPlay muted loop playsInline preload="auto">
+          <source src="/bg-winter.mp4" type="video/mp4" />
+        </video>
+        <div className={"v4-scrim"} />
+        <div className={"v4-glow v4-glow1"} />
+        <div className={"v4-glow v4-glow2"} />
+        <div className={"v4-glow v4-glow3"} />
+      </div>
+
       <div className="card w-full max-w-sm rounded-box border border-base-300 bg-base-100/80 p-7 backdrop-blur shadow-sm">
         <h1 className="font-serif-cn text-lg font-semibold text-base-content">设置新密码</h1>
 
