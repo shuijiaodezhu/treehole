@@ -118,29 +118,26 @@
   text-shadow: 0 1px 8px rgba(255, 250, 242, .9);
 }
 
-/* ══════ CRISP-TEXT：文字要清晰 —— 去掉大范围光晕，改成深色 + 极紧的投影 ══════ */
-.th-v4skin .font-brush,
-.th-v4skin h1,
-.th-v4skin h2 {
+/* ══════ LOGIN-SCENE-FIX ══════
+   登录页用 .lg-scene 做静态背景（暖纸）
+   → 根节点的深色底必须让开，否则纸被盖住，整个页面变黑 ✗
+   → 文字也回到"深色 + 极紧投影"的清晰版，但只针对登录页 */
+.th-v4skin:has(.lg-scene) {
+  background: transparent !important;
+}
+.th-v4skin:has(.lg-scene) .font-brush,
+.th-v4skin:has(.lg-scene) h1,
+.th-v4skin:has(.lg-scene) h2 {
   color: #241a14 !important;
   font-weight: 600 !important;
-  text-shadow: 0 1px 0 rgba(255, 252, 245, .55) !important;
-  -webkit-font-smoothing: antialiased;
+  text-shadow: 0 1px 0 rgba(255, 252, 245, .5) !important;
 }
-.th-v4skin p,
-.th-v4skin .text-base-content\/60,
-.th-v4skin .text-base-content\/70 {
+.th-v4skin:has(.lg-scene) p,
+.th-v4skin:has(.lg-scene) .text-base-content\/60 {
   color: #3a2b21 !important;
-  text-shadow: 0 1px 0 rgba(255, 252, 245, .5) !important;
+  text-shadow: 0 1px 0 rgba(255, 252, 245, .45) !important;
 }
-.th-v4skin .font-art {
+.th-v4skin:has(.lg-scene) .font-art {
   color: #a8412a !important;
-  text-shadow: 0 1px 0 rgba(255, 252, 245, .5) !important;
-}
-
-/* 登录场景是平纸底，文字可以完全不用光晕 */
-.lg-scene ~ * .font-brush,
-.lg-scene ~ * h1,
-.lg-scene ~ * p {
-  text-shadow: none !important;
+  text-shadow: 0 1px 0 rgba(255, 252, 245, .45) !important;
 }
