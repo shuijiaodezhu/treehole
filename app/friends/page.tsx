@@ -989,26 +989,21 @@ export default function FriendsPage() {
                 </span>
               )}
             </button>
-            <button
-              onClick={() => setMode('vault')}
-              className={`pb-2.5 text-sm transition flex items-center gap-1.5 ${
-                mode === 'vault'
-                  ? 'border-b-2 border-primary text-primary font-medium'
-                  : 'text-base-content/60 hover:text-base-content'
-              }`}
+            {/* 储物箱 / 计划书 已收进「功能区」，这里只留入口，避免两处重复维护 */}
+            <a
+              href="/v4/functions?tab=vault"
+              className="pb-2.5 text-sm transition flex items-center gap-1.5 text-base-content/60 hover:text-base-content"
             >
               储物箱
-            </button>
-            <button
-              onClick={() => setMode('plans')}
-              className={`pb-2.5 text-sm transition flex items-center gap-1.5 ${
-                mode === 'plans'
-                  ? 'border-b-2 border-primary text-primary font-medium'
-                  : 'text-base-content/60 hover:text-base-content'
-              }`}
+              <span className="text-[10px] opacity-60">↗ 功能区</span>
+            </a>
+            <a
+              href="/v4/functions?tab=plans"
+              className="pb-2.5 text-sm transition flex items-center gap-1.5 text-base-content/60 hover:text-base-content"
             >
               计划书
-            </button>
+              <span className="text-[10px] opacity-60">↗ 功能区</span>
+            </a>
           </div>
         </header>
 
