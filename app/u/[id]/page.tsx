@@ -1,6 +1,7 @@
 'use client'
 
 import { Suspense, useEffect, useState } from 'react'
+import '../../v4-skin.css'
 import Link from 'next/link'
 import { useParams, useRouter } from 'next/navigation'
 import { createClient } from '../../lib/supabase'
@@ -283,8 +284,20 @@ function UserShowcase() {
 export default function UserShowcasePage() {
   // useParams 需要包一层 Suspense（构建时会预渲染这个路由）
   return (
-    <Suspense fallback={<div className="min-h-screen bg-base-content/5" />}>
-      <UserShowcase />
-    </Suspense>
+    <div className="th-v4skin">
+      {/* v4 皮肤：冬日视频 + 呼吸光 */}
+      <div className={"v4-bg"}>
+        <video className={"v4-video"} autoPlay muted loop playsInline preload="auto">
+          <source src="/bg-winter.mp4" type="video/mp4" />
+        </video>
+        <div className={"v4-scrim"} />
+        <div className={"v4-glow v4-glow1"} />
+        <div className={"v4-glow v4-glow2"} />
+        <div className={"v4-glow v4-glow3"} />
+      </div>
+      <Suspense fallback={<div className="min-h-screen bg-base-content/5" />}>
+        <UserShowcase />
+      </Suspense>
+    </div>
   )
 }
