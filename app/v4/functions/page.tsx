@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { createClient } from '../../lib/supabase'
 import { usePlans } from '@/components/plans'
-import { PlansView } from '@/components/plans-view'
+import { PlansPanel } from './plans-panel'
 import { VaultView } from '@/components/vault-view'
 import './functions.css'
 
@@ -120,7 +120,7 @@ export default function FunctionsPage() {
 
         <main className={"fn-main"}>
           {tab === 'calendar' && <CalendarView userId={userId} />}
-          {tab === 'plans' && <PlansView userId={userId} />}
+          {tab === 'plans' && <PlansPanel userId={userId} />}
           {tab === 'vault' && <VaultView userId={userId} />}
         </main>
       </div>
