@@ -1,6 +1,8 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { LoginScene } from './login-scene'
+import './login-scene.css'
 import '../v4-skin.css'
 import { createClient } from '../lib/supabase'
 import { useRouter } from 'next/navigation'
@@ -91,16 +93,7 @@ export default function LoginPage() {
 
   return (
     <div className={"min-h-screen relative overflow-hidden flex items-center justify-center px-4 th-v4skin"}>
-      {/* v4 皮肤：冬日视频 + 呼吸光 */}
-      <div className={"v4-bg"}>
-        <video className={"v4-video"} autoPlay muted loop playsInline preload="auto">
-          <source src="/bg-winter.mp4" type="video/mp4" />
-        </video>
-        <div className={"v4-scrim"} />
-        <div className={"v4-glow v4-glow1"} />
-        <div className={"v4-glow v4-glow2"} />
-        <div className={"v4-glow v4-glow3"} />
-      </div>
+      <LoginScene />
       {/* 背景装饰光晕 */}
 
       {/* 左侧装饰文字（大屏可见） */}
