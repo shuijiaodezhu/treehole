@@ -98,3 +98,22 @@
   color: #2b1f18 !important;
 }
 .th-v4skin .text-primary { color: #b04a2c !important; }
+
+/* ══════ V4-SKIN-3：直接压在视频上的文字要看得清 ══════ */
+.th-v4skin p,
+.th-v4skin .text-base-content\/40,
+.th-v4skin .text-base-content\/50,
+.th-v4skin .text-base-content\/60,
+.th-v4skin .text-base-content\/70 {
+  color: #4a3a2f !important;
+  text-shadow: 0 1px 3px rgba(255, 250, 242, .95), 0 0 10px rgba(255, 250, 242, .6);
+}
+.th-v4skin h1,
+.th-v4skin h2,
+.th-v4skin .font-brush {
+  text-shadow: 0 2px 10px rgba(255, 250, 242, .85), 0 0 1px rgba(120, 90, 70, .4);
+}
+.th-v4skin .font-art {
+  color: #b04a2c !important;
+  text-shadow: 0 1px 8px rgba(255, 250, 242, .9);
+}
