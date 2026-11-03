@@ -40,7 +40,7 @@ import { EmojiPicker, useEmojiInsert } from '../../components/emoji-picker'
 import { pageAccentVars } from '../../components/theme'
 import { SkeletonSplit } from '../../components/skeleton'
 import { EmptyState } from '../../components/empty-state'
-import './v4-skin.css'
+import '../v4-skin.css'
 
 type Friend = {
   friendship_id: string

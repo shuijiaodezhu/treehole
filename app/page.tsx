@@ -4,6 +4,7 @@ import { useSyncExternalStore } from 'react'
 import { HomeCurrent } from '../components/home-current'
 import { HomeClassic } from '../components/home-classic'
 import { HOME_STYLE_KEY, readHomeStyle, type HomeStyle } from '../components/home-style'
+import './v4-skin.css'
 
 /**
  * 首页 —— 只做一件事：按"个性化"里选的样式，渲染对应的一版。
@@ -20,6 +21,9 @@ import { HOME_STYLE_KEY, readHomeStyle, type HomeStyle } from '../components/hom
  *     既不水合不一致、也不闪。
  *
  * 切换能**立刻生效**：写偏好时会 dispatch 一个同名事件（见 home-style.ts）。
+ *
+ * v4 皮肤：外面这层 th-v4skin 负责冬日视频背景 + 把白面板换成暖色玻璃，
+ * 具体规则都在 app/v4-skin.css。不想要就删掉这个 class 和那个文件。
  */
 function subscribe(onChange: () => void): () => void {
   const onStorage = (e: StorageEvent) => {
@@ -40,5 +44,20 @@ export default function HomePage() {
     () => 'current' as HomeStyle,
   )
 
-  return style === 'classic' ? <HomeClassic /> : <HomeCurrent />
+  return (
+    <div className={"th-v4skin"}>
+      <div className={"v4-bg"}>
+        <video className={"v4-video"} autoPlay muted loop playsInline preload="auto">
+          <source src="/bg-winter.mp4" type="video/mp4" />
+        </video>
+        <div className={"v4-scrim"} />
+        <div className={"v4-glow v4-glow1"} />
+        <div className={"v4-glow v4-glow2"} />
+        <div className={"v4-glow v4-glow3"} />
+      </div>
+      <div className={"th-v4skin-inner"}>
+        {style === 'classic' ? <HomeClassic /> : <HomeCurrent />}
+      </div>
+    </div>
+  )
 }

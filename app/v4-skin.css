@@ -71,3 +71,9 @@
   -ms-overflow-style: none;
 }
 .th-v4skin *::-webkit-scrollbar { width: 0; height: 0; display: none; }
+
+/* 内容层：浮在视频之上 */
+.th-v4skin-inner {
+  position: relative;
+  z-index: 1;
+}
