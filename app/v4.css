@@ -702,3 +702,33 @@ body:has(.v4-page) { overflow: hidden !important; height: 100% !important; }
 .v4-sayLine:hover .v4-sayLineHint {
   opacity: .95;
 }
+
+/* ══════════════════════════════════════════════
+   SOFT-PASS-2：再淡一档
+   淡砖底 + 深褐色字（对比度保住，但不刺眼）
+   ══════════════════════════════════════════════ */
+.v4-sayLine {
+  background: rgba(210, 156, 128, .58);
+  -webkit-backdrop-filter: blur(20px) saturate(140%);
+  backdrop-filter: blur(20px) saturate(140%);
+  border: 1px solid rgba(255, 240, 228, .42);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, .30),
+    0 6px 18px rgba(90, 40, 22, .12);
+}
+.v4-sayLine:hover {
+  background: rgba(214, 162, 134, .70);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, .36),
+    0 8px 22px rgba(90, 40, 22, .16);
+}
+.v4-sayLine img {
+  opacity: .88;
+}
+.v4-sayLineHint {
+  color: #6b3a26;
+  opacity: .80;
+}
+.v4-sayLine:hover .v4-sayLineHint {
+  opacity: .95;
+}
