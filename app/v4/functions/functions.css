@@ -1,0 +1,412 @@
+/* ══════════════════════════════════════════════════════
+   功能区 /v4/functions —— 沿用 v4 的液态玻璃风格
+   日历为主，计划书与储物箱作为另两个页签
+   ══════════════════════════════════════════════════════ */
+
+.fn-page {
+  overflow: hidden;
+}
+
+.fn-wrap {
+  position: relative;
+  z-index: 1;
+  height: 100vh;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  padding: clamp(14px, 2vh, 26px) clamp(20px, 2.2vw, 34px) clamp(12px, 1.8vh, 22px);
+}
+
+/* 顶部 */
+.fn-top {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  flex-shrink: 0;
+  margin-bottom: clamp(10px, 1.6vh, 20px);
+}
+.fn-brand {
+  display: flex;
+  align-items: flex-end;
+  gap: 16px;
+  text-decoration: none;
+  background: none;
+  border: 0;
+  box-shadow: none;
+}
+.fn-brand span {
+  font-family: 'Dancing Script', 'Brush Script MT', cursive;
+  font-size: 21px;
+  font-weight: 500;
+  letter-spacing: .04em;
+  color: #f6ecdd;
+  opacity: .9;
+  padding-bottom: 14px;
+  text-shadow: 0 2px 8px rgba(30, 20, 14, .55);
+}
+.fn-account {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.fn-email {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  color: #f2e8db;
+  opacity: .88;
+  text-shadow: 0 1px 6px rgba(24, 16, 11, .6);
+  max-width: 220px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.fn-logout {
+  font-size: 12.5px;
+  color: #f2e8db;
+  opacity: .9;
+  text-decoration: none;
+  padding: 6px 2px;
+  border: 0;
+  border-bottom: 1px solid transparent;
+  background: none;
+  cursor: pointer;
+  font-family: inherit;
+  text-shadow: 0 1px 6px rgba(24, 16, 11, .6);
+  transition: border-color var(--dur-hover) ease, opacity var(--dur-hover) ease;
+}
+.fn-logout:hover {
+  opacity: 1;
+  border-bottom-color: rgba(242, 232, 219, .6);
+}
+
+/* 页签 */
+.fn-tabs {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+  margin-bottom: 14px;
+}
+.fn-tab {
+  padding: 9px 20px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 248, 238, .40);
+  background: rgba(246, 232, 214, .28);
+  -webkit-backdrop-filter: blur(18px) saturate(160%);
+  backdrop-filter: blur(18px) saturate(160%);
+  color: #4a3a2f;
+  font-size: 13px;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background var(--dur-hover) ease, color var(--dur-hover) ease,
+              transform var(--dur-hover) var(--ease-out);
+}
+.fn-tab:hover {
+  background: rgba(255, 250, 242, .50);
+  transform: translateY(-1px);
+}
+.fn-tabOn {
+  background: rgba(176, 74, 44, .82);
+  border-color: rgba(255, 240, 228, .40);
+  color: #ffeade;
+  font-weight: 600;
+}
+.fn-tabOn:hover {
+  background: rgba(184, 82, 50, .90);
+}
+.fn-back {
+  font-size: 12.5px;
+  color: #f2e8db;
+  opacity: .82;
+  text-decoration: none;
+  padding: 6px 10px;
+  border-radius: 999px;
+  text-shadow: 0 1px 6px rgba(24, 16, 11, .55);
+}
+.fn-back:hover { opacity: 1; }
+
+/* 主体 */
+.fn-main {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+/* ── 日历 ── */
+.cal-wrap {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 340px;
+  gap: 16px;
+  align-items: start;
+  padding-bottom: 12px;
+}
+.cal-card {
+  border-radius: 22px;
+  padding: 20px 22px 18px;
+}
+.cal-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+.cal-title {
+  font-family: KaiTi, STKaiti, 'Kaiti SC', 楷体, serif;
+  font-size: 19px;
+  letter-spacing: .06em;
+  color: #3d2f26;
+}
+.cal-nav {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 1px solid rgba(160, 86, 63, .22);
+  background: rgba(255, 250, 242, .55);
+  color: #6b4a34;
+  font-size: 16px;
+  line-height: 1;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background var(--dur-hover) ease, transform var(--dur-hover) var(--ease-out);
+}
+.cal-nav:hover { background: rgba(255, 250, 242, .85); transform: scale(1.06); }
+
+.cal-week,
+.cal-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+}
+.cal-week {
+  margin-bottom: 8px;
+}
+.cal-week span {
+  text-align: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: .12em;
+  color: #8a6a52;
+  opacity: .9;
+  padding-bottom: 4px;
+}
+.cal-pad { display: block; }
+.cal-day {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  min-height: 44px;
+  border-radius: 12px;
+  border: 1px solid transparent;
+  background: none;
+  cursor: pointer;
+  font-family: inherit;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  color: #4a3a2f;
+  transition: background var(--dur-hover) ease, border-color var(--dur-hover) ease,
+              transform var(--dur-hover) var(--ease-out);
+}
+.cal-day:hover {
+  background: rgba(255, 250, 242, .55);
+  border-color: rgba(160, 86, 63, .18);
+}
+.cal-dayNum {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12.5px;
+  line-height: 1;
+}
+.cal-dayToday {
+  border-color: rgba(176, 74, 44, .50);
+  background: rgba(255, 246, 236, .55);
+}
+.cal-dayToday .cal-dayNum {
+  color: #b04a2c;
+  font-weight: 700;
+}
+.cal-dayOn {
+  background: rgba(176, 74, 44, .16);
+  border-color: rgba(176, 74, 44, .45);
+}
+.cal-dots {
+  display: flex;
+  gap: 3px;
+  height: 5px;
+}
+.cal-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  display: inline-block;
+}
+.cal-dotPlan { background: #d9963f; }
+.cal-dotEvent { background: #b04a2c; }
+
+.cal-legend {
+  display: flex;
+  gap: 16px;
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(110, 72, 52, .12);
+  font-size: 11px;
+  color: #6b5346;
+}
+.cal-legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* 右侧当天 */
+.cal-side {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.cal-sideHead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+}
+.cal-sideDate {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13.5px;
+  letter-spacing: .04em;
+  color: #3d2f26;
+}
+.cal-sideHint {
+  font-size: 11px;
+  color: #b04a2c;
+  letter-spacing: .06em;
+}
+.cal-blockTitle {
+  font-size: 12px;
+  color: #6b4a34;
+  letter-spacing: .04em;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.cal-add {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+.cal-input {
+  flex: 1;
+  min-width: 0;
+  padding: 9px 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(160, 86, 63, .22);
+  background: rgba(255, 252, 246, .72);
+  font-size: 12.5px;
+  color: #2f231b;
+  font-family: inherit;
+  outline: none;
+  transition: border-color var(--dur-hover) ease, background var(--dur-hover) ease;
+}
+.cal-input::placeholder { color: #a08a76; }
+.cal-input:focus {
+  border-color: rgba(176, 74, 44, .55);
+  background: rgba(255, 254, 250, .9);
+}
+.cal-addBtn {
+  padding: 9px 16px;
+  border-radius: 10px;
+  border: 0;
+  background: rgba(176, 74, 44, .84);
+  color: #ffeade;
+  font-size: 12.5px;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background var(--dur-hover) ease, transform var(--dur-hover) var(--ease-out);
+}
+.cal-addBtn:hover { background: rgba(186, 82, 48, .92); transform: translateY(-1px); }
+.cal-addBtn:active { transform: scale(.97); }
+
+.cal-empty {
+  font-size: 11.5px;
+  color: #8a6a52;
+  margin: 6px 0 0;
+}
+.cal-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.cal-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 10px;
+  border-radius: 9px;
+  background: rgba(255, 250, 242, .55);
+  border: 1px solid rgba(160, 86, 63, .12);
+  font-size: 12.5px;
+  color: #2f231b;
+}
+.cal-itemDot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #b04a2c;
+  flex-shrink: 0;
+}
+.cal-itemText {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.cal-del {
+  border: 0;
+  background: none;
+  color: #a08a76;
+  font-size: 14px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0 2px;
+  transition: color var(--dur-hover) ease;
+}
+.cal-del:hover { color: #b04a2c; }
+
+.cal-link .cal-blockTitle { justify-content: flex-start; }
+.cal-linkTag {
+  font-size: 9.5px;
+  letter-spacing: .08em;
+  color: #b04a2c;
+  border: 1px solid rgba(176, 74, 44, .35);
+  border-radius: 999px;
+  padding: 1px 7px;
+}
+.cal-foot {
+  margin: 10px 0 0;
+  font-size: 11px;
+  line-height: 1.7;
+  color: #8a6a52;
+}
+
+/* 计划书 / 储物箱页签：给旧的 Tailwind 组件一个纸质底，避免和视频打架 */
+.fn-main > div[class*='min-h-screen'],
+.fn-main > section {
+  border-radius: 22px;
+  background: rgba(252, 245, 233, .92);
+  border: 1px solid rgba(255, 250, 240, .8);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .85), 0 12px 30px rgba(70, 42, 26, .14);
+  padding: 20px 22px;
+  min-height: 300px;
+}
+
+@media (max-width: 1180px) {
+  .cal-wrap { grid-template-columns: 1fr; }
+  .cal-side { order: -1; }
+}

@@ -240,15 +240,10 @@ export default function V4Page() {
               <span className={"v4-railLabel"}>聚会</span>
               <span className={"v4-badge"}>3</span>
             </button>
-            <button
-              className={`${"v4-railItem"} ${"v4-railSoon"}`}
-              title="功能 · 即将推出的新模式"
-              aria-disabled="true"
-            >
+            <Link href="/v4/functions" className={"v4-railItem"} title="功能 · 日历 / 计划书 / 储物箱">
               <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><rect x="4" y="4" width="7" height="7" rx="2"/><rect x="13" y="4" width="7" height="7" rx="2"/><rect x="4" y="13" width="7" height="7" rx="2"/><rect x="13" y="13" width="7" height="7" rx="2"/></svg>
               <span className={"v4-railLabel"}>功能</span>
-              <span className={"v4-badge v4-badgeSoon"}>即将</span>
-            </button>
+            </Link>
             <button className={"v4-railItem"} title="信箱">
               <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><rect x="3" y="5.5" width="18" height="13" rx="2.4"/><path d="m3.8 7.2 8.2 5.6 8.2-5.6"/></svg>
               <span className={"v4-railLabel"}>信箱</span>
