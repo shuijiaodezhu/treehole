@@ -410,3 +410,13 @@
   .cal-wrap { grid-template-columns: 1fr; }
   .cal-side { order: -1; }
 }
+
+/* ══════ CAL-HEIGHT：格子别用 1:1，太高了 ══════ */
+.cal-day {
+  aspect-ratio: auto;
+  height: clamp(44px, 6.4vh, 62px);
+  min-height: 0;
+}
+.cal-dayNum { font-size: 13px; }
+.cal-wrap { align-items: start; }
+.cal-card { max-height: none; }
