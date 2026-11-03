@@ -77,3 +77,24 @@
   position: relative;
   z-index: 1;
 }
+
+/* ══════ V4-SKIN-2：让页面自带的不透明大底放行视频 ══════ */
+.th-v4skin .min-h-screen,
+.th-v4skin .min-h-\[100vh\],
+.th-v4skin .h-screen,
+.th-v4skin > .th-v4skin-inner > div {
+  background: transparent !important;
+}
+/* 但卡片类仍然要玻璃（放后面，优先级靠后覆盖上面的透明） */
+.th-v4skin .card,
+.th-v4skin .rounded-box.border,
+.th-v4skin .bg-base-100 {
+  background: rgba(246, 232, 214, .62) !important;
+}
+/* 文字/链接在视频上要能看清 */
+.th-v4skin .font-brush,
+.th-v4skin h1,
+.th-v4skin h2 {
+  color: #2b1f18 !important;
+}
+.th-v4skin .text-primary { color: #b04a2c !important; }
