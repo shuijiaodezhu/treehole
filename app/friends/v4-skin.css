@@ -1,0 +1,73 @@
+/* ══════════════════════════════════════════════════════════
+   小屋 /friends 的 v4 皮肤
+   只做"套一层"：背景换成冬日视频 + 把页面里的白色面板换成暖色玻璃
+   不动原有结构和逻辑，风险最小
+   ══════════════════════════════════════════════════════════ */
+
+.th-v4skin {
+  position: relative;
+  background: #241a14 !important;
+  color: #2b1f18;
+}
+
+/* 让内容浮在视频上 */
+.th-v4skin > div:not(.v4-bg) {
+  position: relative;
+  z-index: 1;
+}
+
+/* 页面里所有"白底面板" → 暖色玻璃 */
+.th-v4skin .bg-base-100,
+.th-v4skin .bg-base-200,
+.th-v4skin .bg-base-300,
+.th-v4skin .card,
+.th-v4skin .rounded-box {
+  background: rgba(246, 232, 214, .58) !important;
+  -webkit-backdrop-filter: blur(22px) saturate(170%);
+  backdrop-filter: blur(22px) saturate(170%);
+  border-color: rgba(255, 248, 238, .58) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, .8),
+    0 14px 34px rgba(60, 35, 22, .16) !important;
+}
+
+/* 去掉页面自带的浅灰大背景 */
+.th-v4skin .bg-base-content\/5,
+.th-v4skin .bg-base-content\/10 {
+  background: transparent !important;
+}
+
+/* 文字在玻璃上要压深 */
+.th-v4skin .text-base-content { color: #2f231b !important; }
+.th-v4skin .text-base-content\/60 { color: #6b5346 !important; }
+.th-v4skin .text-base-content\/70 { color: #5a4a3d !important; }
+.th-v4skin .text-base-content\/80 { color: #4a3a2f !important; }
+.th-v4skin .border-base-content\/10 { border-color: rgba(110, 72, 52, .18) !important; }
+.th-v4skin .border-base-content\/20 { border-color: rgba(110, 72, 52, .26) !important; }
+
+/* 输入框 */
+.th-v4skin input,
+.th-v4skin textarea,
+.th-v4skin select {
+  background: rgba(255, 252, 246, .8) !important;
+  border-color: rgba(160, 86, 63, .24) !important;
+  color: #2f231b !important;
+}
+.th-v4skin input::placeholder,
+.th-v4skin textarea::placeholder { color: #a08a76 !important; }
+
+/* 主按钮 / 强调色统一到朱砂 */
+.th-v4skin .bg-primary { background-color: #b04a2c !important; }
+.th-v4skin .text-primary { color: #b04a2c !important; }
+.th-v4skin .border-primary { border-color: #b04a2c !important; }
+.th-v4skin .bg-primary\/10 { background-color: rgba(176, 74, 44, .12) !important; }
+.th-v4skin .bg-primary\/15 { background-color: rgba(176, 74, 44, .16) !important; }
+.th-v4skin .ring-primary { --tw-ring-color: rgba(176, 74, 44, .5) !important; }
+
+/* 滚动条也别露出来 */
+.th-v4skin,
+.th-v4skin * {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.th-v4skin *::-webkit-scrollbar { width: 0; height: 0; display: none; }

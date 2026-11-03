@@ -40,6 +40,7 @@ import { EmojiPicker, useEmojiInsert } from '../../components/emoji-picker'
 import { pageAccentVars } from '../../components/theme'
 import { SkeletonSplit } from '../../components/skeleton'
 import { EmptyState } from '../../components/empty-state'
+import './v4-skin.css'
 
 type Friend = {
   friendship_id: string
@@ -945,7 +946,17 @@ export default function FriendsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-base-content/5 relative overflow-x-hidden">
+    <div className="min-h-screen relative overflow-x-hidden th-v4skin" style={pageAccentVars('friends')}>
+      {/* v4 皮肤：冬日视频 + 呼吸光（样式见 app/friends/v4-skin.css） */}
+      <div className={"v4-bg"}>
+        <video className={"v4-video"} autoPlay muted loop playsInline preload="auto">
+          <source src="/bg-winter.mp4" type="video/mp4" />
+        </video>
+        <div className={"v4-scrim"} />
+        <div className={"v4-glow v4-glow1"} />
+        <div className={"v4-glow v4-glow2"} />
+        <div className={"v4-glow v4-glow3"} />
+      </div>
 
       {/* pt-24：顶部空间更大，返回键不会被浏览器顶栏挡住 */}
       <div className="relative max-w-6xl mx-auto px-6 pt-24 pb-8">
