@@ -35,8 +35,6 @@ import {
   useFriendList,
   type Visibility,
 } from '../../components/visibility'
-import { VaultView } from '../../components/vault-view'
-import { PlansView } from '../../components/plans-view'
 import { ImageWall } from '../../components/image-wall'
 import { EmojiPicker, useEmojiInsert } from '../../components/emoji-picker'
 import { pageAccentVars } from '../../components/theme'
@@ -145,7 +143,7 @@ function formatTime(dateStr: string) {
 }
 
 export default function FriendsPage() {
-  const [mode, setMode] = useState<'friends' | 'moments' | 'vault' | 'plans'>('friends')
+  const [mode, setMode] = useState<'friends' | 'moments'>('friends')
 
   const [friends, setFriends] = useState<Friend[]>([])
   const [requests, setRequests] = useState<Request[]>([])
@@ -1743,13 +1741,7 @@ export default function FriendsPage() {
               )}
             </div>
           </div>
-        ) : mode === 'vault' ? (
-          /* 储物箱：号主私有文件（≤10MB，按类别归档） */
-          <VaultView userId={meId} />
-        ) : (
-          /* 计划书：计划 / 目标 / 待办任务 */
-          <PlansView userId={meId} />
-        )}
+        ) : null}
       </div>
     </div>
   )

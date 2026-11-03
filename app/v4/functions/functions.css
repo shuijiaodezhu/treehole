@@ -620,3 +620,26 @@
 .vf-emptyTitle { font-size: 13.5px; color: #3d2f26; }
 .vf-emptySub { font-size: 11.5px; color: #8a6a52; }
 .vf-empty { font-size: 12.5px; color: #6b4a34; }
+
+/* ══════ PL-BAR-CLICK：目标进度条可点（点哪设到哪）══════ */
+.pl-bar {
+  display: block;
+  width: 100%;
+  height: 8px;
+  padding: 0;
+  border: 0;
+  border-radius: 4px;
+  background: rgba(160,86,63,.14);
+  overflow: hidden;
+  cursor: pointer;
+  position: relative;
+  transition: background var(--dur-hover) ease;
+}
+.pl-bar:hover { background: rgba(160,86,63,.22); }
+.pl-bar i {
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg, #d9963f, #b04a2c);
+  border-radius: 4px;
+  transition: width var(--dur-state) var(--ease-out);
+}

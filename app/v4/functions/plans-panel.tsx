@@ -149,9 +149,20 @@ export function PlansPanel({ userId }: { userId: string | null }) {
                       <div className={"pl-itemMain"}>
                         <span className={"pl-itemTitle"}>{p.title}</span>
                         {p.kind === 'goal' && (
-                          <span className={"pl-bar"}>
+                          <button
+                            type="button"
+                            className={"pl-bar"}
+                            title={'点一下设置进度，现在是 ' + p.progress + '%'}
+                            aria-label={'设置进度，当前 ' + p.progress + '%'}
+                            onClick={(e) => {
+                              const box = e.currentTarget.getBoundingClientRect()
+                              const raw = ((e.clientX - box.left) / Math.max(1, box.width)) * 100
+                              const next = Math.max(0, Math.min(100, Math.round(raw / 5) * 5))
+                              void plans.update(p.id, { progress: next })
+                            }}
+                          >
                             <i style={{ width: Math.max(0, Math.min(100, p.progress)) + '%' }} />
-                          </span>
+                          </button>
                         )}
                       </div>
                       {due && (
