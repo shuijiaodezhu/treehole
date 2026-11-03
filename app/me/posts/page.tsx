@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import '../../v4-skin.css'
 import { createClient } from '../../lib/supabase'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
@@ -67,7 +68,18 @@ export default function MyPostsPage() {
   }
 
   return (
-    <div className="min-h-screen relative overflow-hidden">
+    <div className="min-h-screen relative overflow-hidden th-v4skin">
+      {/* v4 皮肤：冬日视频 + 呼吸光 */}
+      <div className={"v4-bg"}>
+        <video className={"v4-video"} autoPlay muted loop playsInline preload="auto">
+          <source src="/bg-winter.mp4" type="video/mp4" />
+        </video>
+        <div className={"v4-scrim"} />
+        <div className={"v4-glow v4-glow1"} />
+        <div className={"v4-glow v4-glow2"} />
+        <div className={"v4-glow v4-glow3"} />
+      </div>
+
 
       <div className="relative max-w-xl mx-auto px-6 py-10">
         <header className="mb-6">

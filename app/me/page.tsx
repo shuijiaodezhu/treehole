@@ -2,6 +2,7 @@
 /* eslint-disable @next/next/no-img-element -- 头像/背景图用原生 img 即可，尺寸固定 */
 
 import { useEffect, useState } from 'react'
+import '../v4-skin.css'
 import { VersionInfo } from '../../components/version-info'
 import { BackLink } from '../../components/back-link'
 import { peek, save } from '../../components/local-store'
@@ -164,7 +165,18 @@ export default function MePage() {
   const displayName = profile?.nickname || profile?.username || '未命名'
 
   return (
-    <div className="min-h-screen relative overflow-hidden" style={pageAccentVars('me')}>
+    <div className="min-h-screen relative overflow-hidden th-v4skin" style={pageAccentVars('me')}>
+      {/* v4 皮肤：冬日视频 + 呼吸光 */}
+      <div className={"v4-bg"}>
+        <video className={"v4-video"} autoPlay muted loop playsInline preload="auto">
+          <source src="/bg-winter.mp4" type="video/mp4" />
+        </video>
+        <div className={"v4-scrim"} />
+        <div className={"v4-glow v4-glow1"} />
+        <div className={"v4-glow v4-glow2"} />
+        <div className={"v4-glow v4-glow3"} />
+      </div>
+
 
       <div className="relative max-w-xl lg:max-w-3xl mx-auto px-6 py-10">
         <header className="mb-6">
