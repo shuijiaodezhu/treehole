@@ -1,119 +1,132 @@
 /* ══════════════════════════════════════════════════════════
-   小屋 /friends 的 v4 皮肤
-   只做"套一层"：背景换成冬日视频 + 把页面里的白色面板换成暖色玻璃
-   不动原有结构和逻辑，风险最小
+   桌面版皮肤（DESKTOP-ONLY）
+   ⚠️ 只在 >=1101px 生效 —— 手机版保持原样，不受影响
    ══════════════════════════════════════════════════════════ */
 
-.th-v4skin {
-  position: relative;
-  background: #241a14 !important;
-  color: #2b1f18;
+@media (min-width: 1101px) {
+
+  .th-v4skin {
+    position: relative;
+    background: #241a14 !important;
+    color: #2b1f18;
+  }
+
+  /* 让内容浮在视频上 */
+  .th-v4skin > div:not(.v4-bg) {
+    position: relative;
+    z-index: 1;
+  }
+
+  /* 页面里所有"白底面板" → 暖色玻璃 */
+  .th-v4skin .bg-base-100,
+  .th-v4skin .bg-base-200,
+  .th-v4skin .bg-base-300,
+  .th-v4skin .card,
+  .th-v4skin .rounded-box {
+    background: rgba(246, 232, 214, .58) !important;
+    -webkit-backdrop-filter: blur(22px) saturate(170%);
+    backdrop-filter: blur(22px) saturate(170%);
+    border-color: rgba(255, 248, 238, .58) !important;
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, .8),
+      0 14px 34px rgba(60, 35, 22, .16) !important;
+  }
+
+  /* 去掉页面自带的浅灰大背景 */
+  .th-v4skin .bg-base-content\/5,
+  .th-v4skin .bg-base-content\/10 {
+    background: transparent !important;
+  }
+
+  /* 文字在玻璃上要压深 */
+  .th-v4skin .text-base-content { color: #2f231b !important; }
+  .th-v4skin .text-base-content\/60 { color: #6b5346 !important; }
+  .th-v4skin .text-base-content\/70 { color: #5a4a3d !important; }
+  .th-v4skin .text-base-content\/80 { color: #4a3a2f !important; }
+  .th-v4skin .border-base-content\/10 { border-color: rgba(110, 72, 52, .18) !important; }
+  .th-v4skin .border-base-content\/20 { border-color: rgba(110, 72, 52, .26) !important; }
+
+  /* 输入框 */
+  .th-v4skin input,
+  .th-v4skin textarea,
+  .th-v4skin select {
+    background: rgba(255, 252, 246, .8) !important;
+    border-color: rgba(160, 86, 63, .24) !important;
+    color: #2f231b !important;
+  }
+  .th-v4skin input::placeholder,
+  .th-v4skin textarea::placeholder { color: #a08a76 !important; }
+
+  /* 主按钮 / 强调色统一到朱砂 */
+  .th-v4skin .bg-primary { background-color: #b04a2c !important; }
+  .th-v4skin .text-primary { color: #b04a2c !important; }
+  .th-v4skin .border-primary { border-color: #b04a2c !important; }
+  .th-v4skin .bg-primary\/10 { background-color: rgba(176, 74, 44, .12) !important; }
+  .th-v4skin .bg-primary\/15 { background-color: rgba(176, 74, 44, .16) !important; }
+  .th-v4skin .ring-primary { --tw-ring-color: rgba(176, 74, 44, .5) !important; }
+
+  /* 滚动条也别露出来 */
+  .th-v4skin,
+  .th-v4skin * {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .th-v4skin *::-webkit-scrollbar { width: 0; height: 0; display: none; }
+
+  /* 内容层：浮在视频之上 */
+  .th-v4skin-inner {
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ══════ V4-SKIN-2：让页面自带的不透明大底放行视频 ══════ */
+  .th-v4skin .min-h-screen,
+  .th-v4skin .min-h-\[100vh\],
+  .th-v4skin .h-screen,
+  .th-v4skin > .th-v4skin-inner > div {
+    background: transparent !important;
+  }
+  /* 但卡片类仍然要玻璃（放后面，优先级靠后覆盖上面的透明） */
+  .th-v4skin .card,
+  .th-v4skin .rounded-box.border,
+  .th-v4skin .bg-base-100 {
+    background: rgba(246, 232, 214, .62) !important;
+  }
+  /* 文字/链接在视频上要能看清 */
+  .th-v4skin .font-brush,
+  .th-v4skin h1,
+  .th-v4skin h2 {
+    color: #2b1f18 !important;
+  }
+  .th-v4skin .text-primary { color: #b04a2c !important; }
+
+  /* ══════ V4-SKIN-3：直接压在视频上的文字要看得清 ══════ */
+  .th-v4skin p,
+  .th-v4skin .text-base-content\/40,
+  .th-v4skin .text-base-content\/50,
+  .th-v4skin .text-base-content\/60,
+  .th-v4skin .text-base-content\/70 {
+    color: #4a3a2f !important;
+    text-shadow: 0 1px 3px rgba(255, 250, 242, .95), 0 0 10px rgba(255, 250, 242, .6);
+  }
+  .th-v4skin h1,
+  .th-v4skin h2,
+  .th-v4skin .font-brush {
+    text-shadow: 0 2px 10px rgba(255, 250, 242, .85), 0 0 1px rgba(120, 90, 70, .4);
+  }
+  .th-v4skin .font-art {
+    color: #b04a2c !important;
+    text-shadow: 0 1px 8px rgba(255, 250, 242, .9);
+  }
+
+
 }
 
-/* 让内容浮在视频上 */
-.th-v4skin > div:not(.v4-bg) {
-  position: relative;
-  z-index: 1;
-}
-
-/* 页面里所有"白底面板" → 暖色玻璃 */
-.th-v4skin .bg-base-100,
-.th-v4skin .bg-base-200,
-.th-v4skin .bg-base-300,
-.th-v4skin .card,
-.th-v4skin .rounded-box {
-  background: rgba(246, 232, 214, .58) !important;
-  -webkit-backdrop-filter: blur(22px) saturate(170%);
-  backdrop-filter: blur(22px) saturate(170%);
-  border-color: rgba(255, 248, 238, .58) !important;
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, .8),
-    0 14px 34px rgba(60, 35, 22, .16) !important;
-}
-
-/* 去掉页面自带的浅灰大背景 */
-.th-v4skin .bg-base-content\/5,
-.th-v4skin .bg-base-content\/10 {
-  background: transparent !important;
-}
-
-/* 文字在玻璃上要压深 */
-.th-v4skin .text-base-content { color: #2f231b !important; }
-.th-v4skin .text-base-content\/60 { color: #6b5346 !important; }
-.th-v4skin .text-base-content\/70 { color: #5a4a3d !important; }
-.th-v4skin .text-base-content\/80 { color: #4a3a2f !important; }
-.th-v4skin .border-base-content\/10 { border-color: rgba(110, 72, 52, .18) !important; }
-.th-v4skin .border-base-content\/20 { border-color: rgba(110, 72, 52, .26) !important; }
-
-/* 输入框 */
-.th-v4skin input,
-.th-v4skin textarea,
-.th-v4skin select {
-  background: rgba(255, 252, 246, .8) !important;
-  border-color: rgba(160, 86, 63, .24) !important;
-  color: #2f231b !important;
-}
-.th-v4skin input::placeholder,
-.th-v4skin textarea::placeholder { color: #a08a76 !important; }
-
-/* 主按钮 / 强调色统一到朱砂 */
-.th-v4skin .bg-primary { background-color: #b04a2c !important; }
-.th-v4skin .text-primary { color: #b04a2c !important; }
-.th-v4skin .border-primary { border-color: #b04a2c !important; }
-.th-v4skin .bg-primary\/10 { background-color: rgba(176, 74, 44, .12) !important; }
-.th-v4skin .bg-primary\/15 { background-color: rgba(176, 74, 44, .16) !important; }
-.th-v4skin .ring-primary { --tw-ring-color: rgba(176, 74, 44, .5) !important; }
-
-/* 滚动条也别露出来 */
-.th-v4skin,
-.th-v4skin * {
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-}
-.th-v4skin *::-webkit-scrollbar { width: 0; height: 0; display: none; }
-
-/* 内容层：浮在视频之上 */
-.th-v4skin-inner {
-  position: relative;
-  z-index: 1;
-}
-
-/* ══════ V4-SKIN-2：让页面自带的不透明大底放行视频 ══════ */
-.th-v4skin .min-h-screen,
-.th-v4skin .min-h-\[100vh\],
-.th-v4skin .h-screen,
-.th-v4skin > .th-v4skin-inner > div {
-  background: transparent !important;
-}
-/* 但卡片类仍然要玻璃（放后面，优先级靠后覆盖上面的透明） */
-.th-v4skin .card,
-.th-v4skin .rounded-box.border,
-.th-v4skin .bg-base-100 {
-  background: rgba(246, 232, 214, .62) !important;
-}
-/* 文字/链接在视频上要能看清 */
-.th-v4skin .font-brush,
-.th-v4skin h1,
-.th-v4skin h2 {
-  color: #2b1f18 !important;
-}
-.th-v4skin .text-primary { color: #b04a2c !important; }
-
-/* ══════ V4-SKIN-3：直接压在视频上的文字要看得清 ══════ */
-.th-v4skin p,
-.th-v4skin .text-base-content\/40,
-.th-v4skin .text-base-content\/50,
-.th-v4skin .text-base-content\/60,
-.th-v4skin .text-base-content\/70 {
-  color: #4a3a2f !important;
-  text-shadow: 0 1px 3px rgba(255, 250, 242, .95), 0 0 10px rgba(255, 250, 242, .6);
-}
-.th-v4skin h1,
-.th-v4skin h2,
-.th-v4skin .font-brush {
-  text-shadow: 0 2px 10px rgba(255, 250, 242, .85), 0 0 1px rgba(120, 90, 70, .4);
-}
-.th-v4skin .font-art {
-  color: #b04a2c !important;
-  text-shadow: 0 1px 8px rgba(255, 250, 242, .9);
+/* 手机版：确保没有任何皮肤残留 */
+@media (max-width: 1100px) {
+  .th-v4skin,
+  .th-v4skin * {
+    --tw-ring-color: inherit;
+  }
+  .th-v4skin .v4-bg { display: none !important; }
 }
