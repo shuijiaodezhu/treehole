@@ -1,6 +1,8 @@
 'use client'
 
 import { useSyncExternalStore } from 'react'
+import V4Page from './v4/page'
+import { useEffect, useState } from 'react'
 import { HomeCurrent } from '../components/home-current'
 import { HomeClassic } from '../components/home-classic'
 import { HOME_STYLE_KEY, readHomeStyle, type HomeStyle } from '../components/home-style'
@@ -37,12 +39,32 @@ function subscribe(onChange: () => void): () => void {
   }
 }
 
+/** 桌面判宽：≥1101px 走 v4 正式版；窄屏保持原来的手机版 */
+function useIsDesktop(): boolean {
+  const [wide, setWide] = useState(false)
+  useEffect(() => {
+    const mq = window.matchMedia('(min-width: 1101px)')
+    const on = () => setWide(mq.matches)
+    const f = window.requestAnimationFrame(on)
+    mq.addEventListener('change', on)
+    return () => {
+      window.cancelAnimationFrame(f)
+      mq.removeEventListener('change', on)
+    }
+  }, [])
+  return wide
+}
+
 export default function HomePage() {
+  const wide = useIsDesktop()
   const style: HomeStyle = useSyncExternalStore(
     subscribe,
     readHomeStyle,
     () => 'current' as HomeStyle,
   )
+
+  /* 桌面：/v4 正式版 */
+  if (wide) return <V4Page />
 
   return (
     <div className={"th-v4skin"}>

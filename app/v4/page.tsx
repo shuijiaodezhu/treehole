@@ -20,6 +20,7 @@ import { createClient } from '../lib/supabase'
  */
 
 type Post = {
+  category_id?: string | null
   id: string
   author_id?: string | null
   content?: string | null
@@ -220,6 +221,9 @@ export default function V4Page() {
     return () => window.clearTimeout(t)
   }, [])
 
+  /* 分区筛选：选了具体分区就只显示该分区的帖子 */
+  const shown = activeCat === 'all' ? posts : posts.filter((p) => p.category_id === activeCat)
+
   return (
     <div className={"v4-page"}>
       {/* 背景：冬日圣诞树视频 + 暖色压暗 */}
@@ -367,7 +371,7 @@ export default function V4Page() {
             </div>
 
             <div className={"v4-feed"}>
-              {posts.map((p) => (
+              {shown.map((p) => (
                 <article
                   key={p.id}
                   className={p.image_urls && p.image_urls.length ? "v4-post v4-postWithImg" : "v4-post"}
