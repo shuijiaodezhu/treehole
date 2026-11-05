@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import SONGS from '../../content/songs.json'
 import { useEffect, useState } from 'react'
 import { peek } from '../../components/local-store'
 import { createClient } from '../lib/supabase'
@@ -58,6 +59,17 @@ function avatarBg(id?: string | null): string {
   return 'linear-gradient(135deg, hsl(' + h + ' 46% 84%), hsl(' + ((h + 24) % 360) + ' 42% 74%))'
 }
 
+/** 今天在听：按"今年第几天"取模，同一天所有人看到同一首，隔天自动换 */
+function pickTodaySong(): string {
+  const list = SONGS as string[]
+  if (!list.length) return '我不配'
+  const t = new Date()
+  const day = Math.floor(
+    (t.getTime() - new Date(t.getFullYear(), 0, 0).getTime()) / 86400000,
+  )
+  return list[day % list.length]
+}
+
 export default function V4Page() {
   const [posts, setPosts] = useState<Post[]>([])
   const [me, setMe] = useState<Me | null>(null)
@@ -65,8 +77,11 @@ export default function V4Page() {
   const [days, setDays] = useState(0)
   const [weatherText, setWeatherText] = useState('杭州')
   const [heroKey, setHeroKey] = useState('unknown')
+  const [todaySong, setTodaySong] = useState('我不配')
 
   useEffect(() => {
+    const f = window.requestAnimationFrame(() => setTodaySong(pickTodaySong()))
+    return () => window.cancelAnimationFrame(f)
     const t = window.setTimeout(() => {
 
       // 读当前登录邮箱（Supabase 客户端从本地会话拿，不发网络请求）
@@ -247,7 +262,6 @@ export default function V4Page() {
             <button className={"v4-railItem"} title="信箱">
               <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><rect x="3" y="5.5" width="18" height="13" rx="2.4"/><path d="m3.8 7.2 8.2 5.6 8.2-5.6"/></svg>
               <span className={"v4-railLabel"}>信箱</span>
-              <span className={"v4-badge"}>12</span>
             </button>
             <div className={"v4-railSpacer"} />
             <button className={"v4-railItem"} title="设置">
@@ -373,7 +387,7 @@ export default function V4Page() {
               </div>
               <div className={"v4-todaySong"}>
                 <span className={"v4-songN"}>♪</span>
-                <span className={"v4-todaySongTitle"}>今天在听《我不配》</span>
+                <span className={"v4-todaySongTitle"}>今天在听《{todaySong}》</span>
               </div>
               <div className={"v4-todaySongNote"}>不用配得上谁，才被允许留下。</div>
             </div>
