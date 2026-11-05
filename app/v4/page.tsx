@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import { fetchWorldFeed } from '../../components/world-feed'
 import SONGS from '../../content/songs.json'
 import { useEffect, useState } from 'react'
 import { peek } from '../../components/local-store'
@@ -82,8 +83,30 @@ export default function V4Page() {
 
   useEffect(() => {
     const f = window.requestAnimationFrame(() => setTodaySong(pickTodaySong()))
-    /* ── 真实数据：分区 + 我的帖子数 + 收到的回复数 ── */
+
     const sb = createClient()
+    /* ── 真正拉一次帖子流（v4 之前只 peek 本地缓存，缓存空了就一片空白）── */
+    ;(async () => {
+      try {
+        const { data: u } = await sb.auth.getUser()
+        const meId = u.user?.id ?? null
+        const feed = await fetchWorldFeed(null, meId)
+        if (feed && feed.posts.length) {
+          const mapped = feed.posts.map((p) => ({
+            id: p.id,
+            author_id: p.author_id,
+            content: p.content,
+            created_at: p.created_at,
+            image_urls: p.image_urls,
+            category_id: p.category_id,
+          }))
+          window.requestAnimationFrame(() => setPosts(mapped))
+        }
+      } catch {
+        /* 失败就保留缓存 */
+      }
+    })()
+    /* ── 真实数据：分区 + 我的帖子数 + 收到的回复数 ── */
     ;(async () => {
       try {
         const { data: cs } = await sb
