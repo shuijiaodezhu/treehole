@@ -1,0 +1,141 @@
+/* ═══════════════════════════════════════════════════════════════
+   /v4/mailbox · 冬日信箱（电脑版）
+   外壳沿用 v4 的液态玻璃；里面那封信是 components/mailbox 的 MailboxPanel
+   ⚠️ 只用 write 工具整份重写，不要用 PowerShell 重定向（>）—— 会写成 UTF-16
+   ═══════════════════════════════════════════════════════════════ */
+
+.v4m-wrap {
+  position: relative;
+  z-index: 1;
+  height: 100vh;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  padding: clamp(14px, 2vh, 26px) clamp(20px, 2.2vw, 34px) clamp(12px, 1.8vh, 22px);
+}
+
+/* ── 顶部 ── */
+.v4m-top {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  flex-shrink: 0;
+  margin-bottom: clamp(12px, 2vh, 22px);
+}
+.v4m-brand {
+  display: flex;
+  align-items: flex-end;
+  gap: 16px;
+  text-decoration: none;
+}
+.v4m-brand span {
+  font-family: 'Dancing Script', 'Brush Script MT', cursive;
+  font-size: 21px;
+  font-weight: 500;
+  letter-spacing: .04em;
+  color: #f6ecdd;
+  opacity: .9;
+  padding-bottom: 14px;
+  text-shadow: 0 2px 8px rgba(30, 20, 14, .55);
+}
+.v4m-account {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+/* ── 信箱那张"信纸" ── */
+.v4m-main {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+}
+.v4m-shell {
+  width: 100%;
+  max-width: 780px;
+  height: 100%;
+  max-height: 760px;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  border-radius: 28px;
+  overflow: hidden;
+  /* 静态面板：不要玻璃那层 hover 提亮（整块闪一下很难看）*/
+  transition: none;
+}
+.v4m-shell.v4-glass::after { display: none; }
+.v4m-shell.v4-glass:hover { transform: none; }
+
+/* 本体（MailboxPanel）在这张纸上就不该再有卡片自己的边框/底色 */
+.v4m-panel.v4m-panel {
+  flex: 1;
+  min-height: 0;
+  max-height: none;
+  width: 100%;
+  max-width: none;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+/* 等登录态 */
+.v4m-wait {
+  flex: 1;
+  display: grid;
+  place-items: center;
+  font-family: KaiTi, STKaiti, 'Kaiti SC', 楷体, serif;
+  font-size: 13px;
+  letter-spacing: .04em;
+  color: #6b5346;
+  opacity: .85;
+}
+
+/* 没登录 */
+.v4m-login {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 40px 28px;
+  text-align: center;
+}
+.v4m-loginTitle {
+  font-family: KaiTi, STKaiti, 'Kaiti SC', 楷体, serif;
+  font-size: 22px;
+  letter-spacing: .08em;
+  color: #3d2f26;
+}
+.v4m-loginSub {
+  font-size: 12.5px;
+  line-height: 2;
+  color: #5a4a3d;
+  opacity: .9;
+}
+.v4m-loginBtn {
+  margin-top: 10px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 26px;
+  border-radius: 999px;
+  border: 1px solid rgba(160, 86, 63, .34);
+  background: rgba(255, 247, 235, .62);
+  color: #8d3f2c;
+  font-size: 13px;
+  text-decoration: none;
+  transition: background var(--dur-hover) ease, transform var(--dur-hover) var(--ease-out);
+}
+.v4m-loginBtn:hover {
+  background: rgba(255, 250, 242, .86);
+  transform: translateY(-1px);
+}
+
+/* 窄屏：这一版只在电脑上成立（手机版保持原样）*/
+@media (max-width: 1100px) {
+  .v4m-wrap { display: none; }
+}

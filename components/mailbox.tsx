@@ -267,14 +267,18 @@ function formatStamp(iso: string): string {
   }
 }
 
-export function MailboxDialog({
+/* ==================== 读信 / 写信的本体 ====================
+   首页的弹窗（MailboxDialog）和 /v4/mailbox 页面共用这一份 ✓
+   数据、写入、已读全在 useMailbox 里，这里只有界面 —— 两处不会各写一遍 */
+
+export function MailboxPanel({
   mailbox,
-  open,
   onClose,
+  className = '',
 }: {
   mailbox: Mailbox
-  open: boolean
-  onClose: () => void
+  onClose?: () => void
+  className?: string
 }) {
   const [draft, setDraft] = useState('')
   const [hint, setHint] = useState('')
@@ -282,25 +286,13 @@ export function MailboxDialog({
   const listRef = useRef<HTMLDivElement>(null)
   const { ref: inputRef, insert: insertEmoji } = useEmojiInsert<HTMLTextAreaElement>(draft, setDraft)
 
-  // 打开时标记已读 + 滚到底
+  // 挂上就标记已读 + 滚到底（弹窗是"打开才挂"，页面是"进页面就挂"）
   useEffect(() => {
-    if (!open) return
     mailbox.markRead()
     const el = listRef.current
     if (el) el.scrollTop = el.scrollHeight
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [open, mailbox.messages.length])
-
-  useEffect(() => {
-    if (!open) return
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose()
-    }
-    document.addEventListener('keydown', onKey)
-    return () => document.removeEventListener('keydown', onKey)
-  }, [open, onClose])
-
-  if (!open) return null
+  }, [mailbox.messages.length])
 
   const isOwner = mailbox.meId === ADMIN_UUID
 
@@ -327,13 +319,12 @@ export function MailboxDialog({
 
   return (
     <div
-      className="fixed inset-0 z-[70] flex items-center justify-center bg-black/25 px-4 backdrop-blur-sm"
-      onClick={onClose}
+      className={
+        'card flex max-h-[82vh] w-full max-w-lg flex-col overflow-hidden rounded-box border border-base-300 bg-base-100 shadow-2xl ' +
+        className
+      }
+      onClick={(e) => e.stopPropagation()}
     >
-      <div
-        className="card flex max-h-[82vh] w-full max-w-lg flex-col overflow-hidden rounded-box border border-base-300 bg-base-100 shadow-2xl"
-        onClick={(e) => e.stopPropagation()}
-      >
         {/* 抬头 */}
         <div className="flex items-start gap-3  bg-base-content/5 px-5 py-4">
           <span className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-box bg-base-100/70">
@@ -505,7 +496,39 @@ export function MailboxDialog({
             </p>
           </div>
         )}
-      </div>
+    </div>
+  )
+}
+
+/* ==================== 弹窗壳（首页里点开信箱用的那个） ==================== */
+
+export function MailboxDialog({
+  mailbox,
+  open,
+  onClose,
+}: {
+  mailbox: Mailbox
+  open: boolean
+  onClose: () => void
+}) {
+  // Esc 关上（点背景关是在下面那层的 onClick 上）
+  useEffect(() => {
+    if (!open) return
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose()
+    }
+    document.addEventListener('keydown', onKey)
+    return () => document.removeEventListener('keydown', onKey)
+  }, [open, onClose])
+
+  if (!open) return null
+
+  return (
+    <div
+      className="fixed inset-0 z-[70] flex items-center justify-center bg-black/25 px-4 backdrop-blur-sm"
+      onClick={onClose}
+    >
+      <MailboxPanel mailbox={mailbox} onClose={onClose} />
     </div>
   )
 }
