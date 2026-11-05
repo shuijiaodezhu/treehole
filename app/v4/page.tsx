@@ -82,7 +82,7 @@ export default function V4Page() {
   const [repliesToMe, setRepliesToMe] = useState(0)
 
   useEffect(() => {
-    const f = window.requestAnimationFrame(() => setTodaySong(pickTodaySong()))
+    window.requestAnimationFrame(() => setTodaySong(pickTodaySong()))
 
     const sb = createClient()
     /* ── 真正拉一次帖子流（v4 之前只 peek 本地缓存，缓存空了就一片空白）── */
@@ -157,7 +157,6 @@ export default function V4Page() {
       }
     })()
 
-    return () => window.cancelAnimationFrame(f)
     const t = window.setTimeout(() => {
 
       // 读当前登录邮箱（Supabase 客户端从本地会话拿，不发网络请求）
