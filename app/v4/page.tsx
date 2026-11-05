@@ -28,16 +28,12 @@ type Post = {
 }
 type Me = { id: string; nickname?: string | null; username?: string | null }
 
-const SECTIONS = [
-  { name: '全部', n: 12 },
-  { name: '游戏', n: 4 },
-  { name: '音乐', n: 3 },
-  { name: '吃喝', n: 2 },
-  { name: '压抑', n: 2 },
-  { name: '旅游', n: 1 },
-  { name: '感情', n: 1 },
-  { name: '抽象', n: 1 },
+type Cat = { id: string; name: string; n: number }
+
+const SECTIONS_FALLBACK: Cat[] = [
+  { id: 'all', name: '全部', n: 0 },
 ]
+
 
 function rel(iso?: string | null): string {
   if (!iso) return ''
@@ -78,9 +74,65 @@ export default function V4Page() {
   const [weatherText, setWeatherText] = useState('杭州')
   const [heroKey, setHeroKey] = useState('unknown')
   const [todaySong, setTodaySong] = useState('我不配')
+  const [cats, setCats] = useState<Cat[]>(SECTIONS_FALLBACK)
+  const [activeCat, setActiveCat] = useState('all')
+  const [myPosts, setMyPosts] = useState(0)
+  const [repliesToMe, setRepliesToMe] = useState(0)
 
   useEffect(() => {
     const f = window.requestAnimationFrame(() => setTodaySong(pickTodaySong()))
+    /* ── 真实数据：分区 + 我的帖子数 + 收到的回复数 ── */
+    const sb = createClient()
+    ;(async () => {
+      try {
+        const { data: cs } = await sb
+          .from('categories')
+          .select('id, name, parent_id, sort_order')
+          .eq('status', 'approved')
+          .order('sort_order', { ascending: true })
+        const list = (cs ?? []) as { id: string; name: string; parent_id: string | null }[]
+        /* 只取一级分区，并把每个分区下的帖子数数出来 */
+        const top = list.filter((c) => !c.parent_id)
+        const { data: ps } = await sb.from('posts').select('category_id').limit(2000)
+        const counts = new Map<string, number>()
+        for (const p of (ps ?? []) as { category_id: string | null }[]) {
+          if (!p.category_id) continue
+          counts.set(p.category_id, (counts.get(p.category_id) ?? 0) + 1)
+        }
+        const total = (ps ?? []).length
+        const next: Cat[] = [
+          { id: 'all', name: '全部', n: total },
+          ...top.map((c) => ({ id: c.id, name: c.name, n: counts.get(c.id) ?? 0 })),
+        ]
+        window.requestAnimationFrame(() => setCats(next))
+      } catch {
+        /* 读取失败就保留兜底 */
+      }
+    })()
+    ;(async () => {
+      try {
+        const { data: u } = await sb.auth.getUser()
+        const uid = u.user?.id
+        if (!uid) return
+        const { count: mp } = await sb
+          .from('posts')
+          .select('id', { count: 'exact', head: true })
+          .eq('author_id', uid)
+        window.requestAnimationFrame(() => setMyPosts(mp ?? 0))
+        const { data: mine } = await sb.from('posts').select('id').eq('author_id', uid).limit(500)
+        const ids = (mine ?? []).map((r: { id: string }) => r.id)
+        if (ids.length) {
+          const { count: rc } = await sb
+            .from('comments')
+            .select('id', { count: 'exact', head: true })
+            .in('post_id', ids)
+          window.requestAnimationFrame(() => setRepliesToMe(rc ?? 0))
+        }
+      } catch {
+        /* 忽略 */
+      }
+    })()
+
     return () => window.cancelAnimationFrame(f)
     const t = window.setTimeout(() => {
 
@@ -272,8 +324,13 @@ export default function V4Page() {
           {/* 左栏：分区 */}
           <aside className={`${"v4-glass"} ${"v4-side"}`}>
             <div className={"v4-lbl"}>院子的分区</div>
-            {SECTIONS.map((sec, i) => (
-              <button key={sec.name} className={`${"v4-sideItem"} ${i === 0 ? "v4-sideOn" : ''}`}>
+            {cats.map((sec) => (
+              <button
+                key={sec.id}
+                type="button"
+                onClick={() => setActiveCat(sec.id)}
+                className={"v4-sideItem" + (sec.id === activeCat ? " v4-sideOn" : "")}
+              >
                 {sec.name}
                 <span className={"v4-sideN"}>{sec.n}</span>
               </button>
@@ -383,7 +440,7 @@ export default function V4Page() {
               </div>
               <div className={"v4-daysNote"}>今天是重逢的第一天</div>
               <div className={"v4-daysSub"}>
-                收到 <b>18</b> 条回复 · 写下 <b>7</b> 句话
+                收到 <b>{repliesToMe}</b> 条回复 · 写下 <b>{myPosts}</b> 句话
               </div>
               <div className={"v4-todaySong"}>
                 <span className={"v4-songN"}>♪</span>
