@@ -119,6 +119,37 @@
     text-shadow: 0 1px 8px rgba(255, 250, 242, .9);
   }
 
+  /* ══════ V4-SKIN-4：首页那些"实心彩卡"直接用 /v4 的玻璃 ══════
+     问题：上面只换了 .card / .bg-base-100，
+     而首页的 天气 / 陪伴 / 一句话 / 四个入口 是 rounded-2xl + bg-gradient 的实心块，
+     于是桌面上只有 /v4 是玻璃，首页还是塑封彩卡 ✗
+     对策：挂 .th-glass，**配方逐字照搬 app/v4.css 的 .v4-glass**（含 ::before 那道斜向镜面），
+           只是包在媒体查询里 —— 手机版一个像素都不动 */
+  .th-v4skin .th-glass {
+    background: rgba(246, 232, 214, .40) !important;
+    background-image: none !important;
+    -webkit-backdrop-filter: blur(28px) saturate(180%) brightness(1.04);
+    backdrop-filter: blur(28px) saturate(180%) brightness(1.04);
+    border-color: rgba(255, 248, 238, .60) !important;
+    box-shadow:
+      inset 0 1.5px 0 rgba(255, 255, 255, .92),
+      inset 0 -1px 0 rgba(255, 255, 255, .26),
+      0 20px 56px rgba(60, 35, 22, .18) !important;
+    /* 卡里那些 10px 的浅字（"今天的一句话"/"已经陪你走过"）在玻璃上要压深一档 */
+    --accent-muted: #6f5241;
+  }
+  /* 斜向镜面 + 顶部径向光（和 .v4-glass::before 同一条）*/
+  .th-v4skin .th-glass::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    background:
+      linear-gradient(135deg, rgba(255, 255, 255, .50) 0%, rgba(255, 255, 255, .10) 28%, transparent 46%),
+      radial-gradient(120% 80% at 20% 0%, rgba(255, 255, 255, .22), transparent 60%);
+    mix-blend-mode: overlay;
+  }
 
 }
 

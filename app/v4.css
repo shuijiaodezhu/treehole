@@ -181,6 +181,7 @@
   display: grid; place-items: center;
   background: none; border: 0; box-shadow: none;
   color: #f2e8db; opacity: .82; cursor: pointer;
+  text-decoration: none;
   transition: opacity var(--dur-hover) ease, transform var(--dur-hover) var(--ease-out);
 }
 .v4-accBtn:hover { opacity: 1; transform: scale(1.08); }
@@ -189,6 +190,8 @@
 .v4-logout {
   font-size: 12.5px; font-weight: 500; color: #f2e8db; opacity: .9; text-decoration: none;
   padding: 6px 2px; border-bottom: 1px solid transparent;
+  background: none; border-top: 0; border-left: 0; border-right: 0;
+  font-family: inherit; cursor: pointer;
   transition: border-color var(--dur-hover) ease, opacity var(--dur-hover) ease;
   text-shadow: 0 1px 6px rgba(24,16,11,.6);
 }
@@ -239,6 +242,14 @@
   color: #f2e8db;
   font-size: 7.5px;
   letter-spacing: .02em;
+}
+/* 只有"有新东西"时的那个点（没数字）*/
+.v4-badgeDot {
+  min-width: 8px;
+  height: 8px;
+  padding: 0;
+  top: 5px;
+  right: 7px;
 }
 .v4-sep { width: 22px; height: 1px; background: rgba(255,255,255,.16); margin: 4px 0; flex-shrink: 0; }
 .v4-railSpacer { flex: 1; }
@@ -313,7 +324,31 @@
 }
 .v4-heroSub { margin-top: 8px; line-height: 1.9; }
 .v4-heroSub img { display: block; width: auto; height: clamp(18px, 2.6vh, 26px); }
-.v4-heroBlank { flex: 1; min-height: 10px; }
+
+/* 今日一句话：占住 hero 下面那块留白，贴着底边（原来这里空着）*/
+.v4-heroQuote {
+  flex: 1;
+  min-height: 10px;
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 6px;
+}
+.v4-heroQuoteP {
+  font-family: KaiTi, STKaiti, 'Kaiti SC', 楷体, serif;
+  font-size: clamp(15px, 2vh, 18px);
+  line-height: 1.7;
+  color: #4a3a2f;
+  letter-spacing: .02em;
+  opacity: .95;
+}
+.v4-heroQuoteBy {
+  font-size: 11.5px;
+  letter-spacing: .06em;
+  color: #7a5f4c;
+  opacity: .9;
+}
 
 /* ── 帖子 ── */
 .v4-feed {
@@ -422,6 +457,7 @@
   cursor: pointer;
   font-family: inherit;
   text-align: left;
+  text-decoration: none;
   transform: rotate(-.6deg);
   box-shadow:
     inset 0 1px 0 rgba(255,255,255,.9),
@@ -471,6 +507,7 @@
   cursor: pointer;
   font-family: inherit;
   text-align: left;
+  text-decoration: none;
   transition: box-shadow var(--dur-state) ease, background var(--dur-state) ease;
 }
 .v4-sayLine:hover {
@@ -792,4 +829,17 @@ body:has(.v4-page) { overflow: hidden !important; height: 100% !important; }
 .v4-sayLineHint {
   color: #5e3221;
   opacity: .82;
+}
+
+/* ══════════════════════════════════════════════
+   LINK-PASS：「说一句」原来是 button，现在是去院子的链接
+   ✗ 问题：TONE-PASS 里那条 `.v4-sayLine:link` 是实色朱砂，
+     选择器比后面的 `.v4-sayLine`（玻璃）更"重" → a 标签一挂上就变砖块
+   ✓ 对策：同权重再写一遍玻璃那档，放在最后，把实色按住
+   ══════════════════════════════════════════════ */
+.v4-sayLine:link {
+  background: rgba(212, 168, 142, .58);
+}
+.v4-sayLine:link:hover {
+  background: rgba(214, 172, 148, .68);
 }

@@ -120,7 +120,8 @@ export function HomeClassic() {
     async function checkUser() {
       try {
         const { data, error } = await supabase.auth.getUser()
-        if (error) throw error
+        // 「没有会话」不是错误：未登录是正常状态，下面按未登录处理（跳登录页）
+        if (error && error.name !== 'AuthSessionMissingError') throw error
         if (!mountedRef.current) return
 
         const user = data.user
