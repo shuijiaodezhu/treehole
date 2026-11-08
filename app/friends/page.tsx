@@ -976,19 +976,19 @@ export default function FriendsPage() {
       {/* pt-24：手机上留出浏览器顶栏；桌面上压到 pt-8，页头别占那么大 */}
       <div
         className={
-          'relative z-[1] max-w-6xl mx-auto px-6 pt-24 md:pt-8 pb-8 w-full' +
+          'relative z-[1] max-w-6xl mx-auto px-6 pt-24 md:pt-4 pb-8 w-full' +
           (mode === 'friends' ? ' md:flex md:flex-1 md:min-h-0 md:flex-col' : '')
         }
       >
-        <header className={'mb-6 md:mb-4' + (mode === 'friends' ? ' md:flex-shrink-0' : '')}>
+        <header className={'mb-6 md:mb-2' + (mode === 'friends' ? ' md:flex-shrink-0' : '')}>
           <BackLink fallback="/" />
-          <h1 className="text-3xl md:text-2xl font-bold text-base-content mt-4 md:mt-2">小屋</h1>
-          <p className="text-sm text-base-content/60 mt-1">小屋里，慢慢说</p>
+          <h1 className="text-3xl md:text-xl font-bold text-base-content mt-4 md:mt-1">小屋</h1>
+          <p className="text-sm md:text-xs text-base-content/60 mt-1 md:mt-0.5">小屋里，慢慢说</p>
 
-          <div className="flex gap-6 mt-5 md:mt-3">
+          <div className="flex gap-6 mt-5 md:mt-2">
             <button
               onClick={() => setMode('friends')}
-              className={`pb-2.5 text-sm transition flex items-center gap-1.5 ${
+              className={`pb-2.5 md:pb-1.5 text-sm transition flex items-center gap-1.5 ${
                 mode === 'friends'
                   ? 'border-b-2 border-primary text-primary font-medium'
                   : 'text-base-content/60 hover:text-base-content'
@@ -1003,7 +1003,7 @@ export default function FriendsPage() {
             </button>
             <button
               onClick={() => setMode('moments')}
-              className={`pb-2.5 text-sm transition flex items-center gap-1.5 ${
+              className={`pb-2.5 md:pb-1.5 text-sm transition flex items-center gap-1.5 ${
                 mode === 'moments'
                   ? 'border-b-2 border-primary text-primary font-medium'
                   : 'text-base-content/60 hover:text-base-content'
@@ -1021,13 +1021,13 @@ export default function FriendsPage() {
             {/* 储物箱 / 计划书 已收进「功能区」，这里只留入口，避免两处重复维护 */}
             <a
               href="/functions?tab=vault"
-              className="pb-2.5 text-sm transition flex items-center gap-1.5 text-base-content/60 hover:text-base-content"
+              className="pb-2.5 md:pb-1.5 text-sm transition flex items-center gap-1.5 text-base-content/60 hover:text-base-content"
             >
               储物箱
             </a>
             <a
               href="/functions?tab=plans"
-              className="pb-2.5 text-sm transition flex items-center gap-1.5 text-base-content/60 hover:text-base-content"
+              className="pb-2.5 md:pb-1.5 text-sm transition flex items-center gap-1.5 text-base-content/60 hover:text-base-content"
             >
               计划书
             </a>
