@@ -969,19 +969,23 @@ export default function FriendsPage() {
         <div className={"v4-glow v4-glow3"} />
       </div>
 
-      {/* pt-24：顶部空间更大，返回键不会被浏览器顶栏挡住 */}
+      {/* 顶部的"纸雾"：只把最上面那截视频垫亮一点，字就清楚了
+          （不是一块板子，没有边也没有圆角；手机上不显示）*/}
+      <div className={"th-pageVeil"} aria-hidden />
+
+      {/* pt-24：手机上留出浏览器顶栏；桌面上压到 pt-8，页头别占那么大 */}
       <div
         className={
-          'relative max-w-6xl mx-auto px-6 pt-24 pb-8 w-full' +
+          'relative z-[1] max-w-6xl mx-auto px-6 pt-24 md:pt-8 pb-8 w-full' +
           (mode === 'friends' ? ' md:flex md:flex-1 md:min-h-0 md:flex-col' : '')
         }
       >
-        <header className={'mb-6' + (mode === 'friends' ? ' md:flex-shrink-0' : '')}>
+        <header className={'mb-6 md:mb-4' + (mode === 'friends' ? ' md:flex-shrink-0' : '')}>
           <BackLink fallback="/" />
-          <h1 className="text-3xl font-bold text-base-content mt-4">小屋</h1>
+          <h1 className="text-3xl md:text-2xl font-bold text-base-content mt-4 md:mt-2">小屋</h1>
           <p className="text-sm text-base-content/60 mt-1">小屋里，慢慢说</p>
 
-          <div className="flex gap-6 mt-5 ">
+          <div className="flex gap-6 mt-5 md:mt-3">
             <button
               onClick={() => setMode('friends')}
               className={`pb-2.5 text-sm transition flex items-center gap-1.5 ${

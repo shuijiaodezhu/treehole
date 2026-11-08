@@ -3,6 +3,9 @@
    ⚠️ 只在 >=1101px 生效 —— 手机版保持原样，不受影响
    ══════════════════════════════════════════════════════════ */
 
+/* 手机版不铺那层纸雾（桌面规则见下面的媒体查询）*/
+.th-pageVeil { display: none; }
+
 @media (min-width: 1101px) {
 
   .th-v4skin {
@@ -147,6 +150,30 @@
   .th-v4skin .font-art {
     color: #b04a2c !important;
     text-shadow: 0 1px 2px rgba(255, 250, 242, .5);
+  }
+
+  /* ══════ V4-SKIN-5：顶部"纸雾" ══════
+     视频每一帧的明暗不一样，写死深色字在某些帧上会看不见（小屋的标题区就踩过）。
+     这里只在最上面垫一层很淡的暖纸渐变 —— 没有边、没有圆角、不是一块板子，
+     所以不会像"大额头"，但字压在上面始终清楚。手机上不显示。 */
+  /* 注意选择器要在皮肤那条 `.th-v4skin > div:not(.v4-bg)` 之上，
+     否则会被它拽回 position:relative; z-index:1（那样就盖在字上面了）*/
+  .th-v4skin > div.th-pageVeil {
+    display: block;
+    position: fixed;
+    z-index: 0;
+    left: 0;
+    right: 0;
+    top: 0;
+    height: clamp(150px, 30vh, 300px);
+    background: linear-gradient(
+      180deg,
+      rgba(248, 241, 231, .74) 0%,
+      rgba(248, 241, 231, .46) 52%,
+      rgba(248, 241, 231, 0) 100%
+    );
+    pointer-events: none;
+    z-index: 0;
   }
 
   /* ══════ V4-SKIN-4：首页那些"实心彩卡"直接用 /v4 的玻璃 ══════
