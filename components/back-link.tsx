@@ -17,11 +17,13 @@
  */
 
 import { useRouter } from 'next/navigation'
+import type { ReactNode } from 'react'
 
 export function BackLink({
   fallback,
   label = '← 返回',
   className,
+  children,
 }: {
   /** 没有上一页时去哪儿（比如「我的」回首页） */
   fallback: string
@@ -29,12 +31,18 @@ export function BackLink({
   label?: string
   /** 样式，默认和其他页面保持一致 */
   className?: string
+  /**
+   * 想自己画按钮内容（比如图标 + 文字）就传这个；
+   * 不传就还是那句文字 —— 老调用点一个字都不用改
+   */
+  children?: ReactNode
 }) {
   const router = useRouter()
 
   return (
     <button
       type="button"
+      aria-label={label}
       onClick={() => {
         try {
           if (typeof window !== 'undefined' && window.history.length > 1) {
@@ -50,7 +58,7 @@ export function BackLink({
         className ?? 'text-sm text-base-content/60 transition hover:text-primary'
       }
     >
-      {label}
+      {children ?? label}
     </button>
   )
 }

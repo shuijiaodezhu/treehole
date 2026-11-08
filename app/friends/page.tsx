@@ -992,9 +992,23 @@ export default function FriendsPage() {
             <span className="hidden md:inline-flex">
               <BackLink
                 fallback="/"
-                label="←"
-                className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-base-content/15 bg-base-100/45 text-[15px] leading-none text-base-content/70 backdrop-blur-sm transition hover:bg-base-100/85 hover:text-primary"
-              />
+                label="返回"
+                className="group inline-flex h-8 items-center gap-1 rounded-full border border-base-content/15 bg-base-100/50 pl-2 pr-2.5 text-[12.5px] text-base-content/70 backdrop-blur-sm transition hover:bg-base-100/85 hover:text-primary"
+              >
+                <svg
+                  viewBox="0 0 24 24"
+                  className="h-3.5 w-3.5"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.8"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  aria-hidden="true"
+                >
+                  <path d="m14 5.5-6.5 6.5 6.5 6.5" />
+                </svg>
+                返回
+              </BackLink>
             </span>
           </div>
 
