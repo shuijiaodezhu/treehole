@@ -4,7 +4,7 @@ import { useEffect, useSyncExternalStore } from 'react'
 import { useRouter } from 'next/navigation'
 import { HomeCurrent } from '../components/home-current'
 import { HomeClassic } from '../components/home-classic'
-import { HomeV4 } from '../components/home-v4'
+import { HomeDesktop } from '../components/home-desktop'
 import { HOME_STYLE_KEY, readHomeStyle, type HomeStyle } from '../components/home-style'
 import { markRedirectingToLogin } from '../components/login-handoff'
 import { createClient } from './lib/supabase'
@@ -13,7 +13,7 @@ import './v4-skin.css'
 /**
  * 首页 —— 按屏幕宽度决定给哪一套：
  *
- *   ≥1101px（电脑）→ <HomeV4 />：就是 /v4 那个界面（液态玻璃 + 深色窄栏 + 冬日视频）
+ *   ≥1101px（电脑）→ <HomeDesktop />：液态玻璃 + 深色窄栏 + 冬日视频（正式版）
  *   ≤1100px（手机）→ 原来的首页，完全不动（个性化里的 current / classic 只在这边生效）
  *
  * 为什么用 useSyncExternalStore 读宽度：
@@ -94,7 +94,7 @@ function DesktopHome() {
     }
   }, [router])
 
-  return <HomeV4 />
+  return <HomeDesktop />
 }
 
 export default function HomePage() {

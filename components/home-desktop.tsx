@@ -18,18 +18,18 @@ import { markRedirectingToLogin } from './login-handoff'
 import { markModuleSeen, useModuleBadges, type ModuleBadge } from './module-badges'
 
 /**
- * 电脑版首页（液态玻璃 + 深色窄栏）—— 就是 /v4 那个界面，现在也是真正的 `/`（仅 ≥1101px）
+ * 电脑版首页（液态玻璃 + 深色窄栏）—— 正式版，宽屏打开 `/` 就是它
  *
- * 两处入口共用这一份：
- *   · `/`      —— 宽屏走这里；窄屏仍然是原来的首页（HomeCurrent / HomeClassic）
- *   · `/v4`    —— 同一个组件，留作直链（功能区的「← 回院子」也指着它）
+ * 分工：
+ *   · `/`      —— ≥1101px 走这里；≤1100px 仍然是原来的首页（HomeCurrent / HomeClassic）
+ *   · 老地址 `/v4` 现在只是重定向回 `/`
  *
  * 数据（2026-10 从原来的首页搬过来，不重写查询）：
  *   · 天气 / 定位 —— components/weather 的 useWeather（资料里的城市 → GPS → IP → 徐州兜底）
  *   · 陪伴天数 —— calcLoginStreak(created_at, last_sign_in_at)，注册那天算第 1 天
  *   · 今日一句话 —— getQuoteByTime()，2 小时一个时间片，全站同刻同句
  *   · 帖子流 / 分区 —— 原来的 fetchWorldFeed / categories / posts / comments
- *   · 信箱 —— 原来的 useMailbox（入口在 /v4/mailbox，见 components/mailbox 的 MailboxPanel）
+ *   · 信箱 —— 原来的 useMailbox（入口在 /mailbox，见 components/mailbox 的 MailboxPanel）
  *
  * 设计要点（都是前几轮踩出来的）：
  *   · 玻璃 = 模糊 + 边缘光 + 斜向镜面（三层，缺一层就假）
@@ -122,7 +122,7 @@ function sinceTextOf(iso?: string | null): string {
   return d.getFullYear() + '年' + (d.getMonth() + 1) + '月' + d.getDate() + '日'
 }
 
-export function HomeV4() {
+export function HomeDesktop() {
   const router = useRouter()
   const [posts, setPosts] = useState<Post[]>([])
   const [me, setMe] = useState<Me | null>(null)
@@ -402,11 +402,11 @@ export function HomeV4() {
               <span className={"v4-railLabel"}>聚会</span>
               <RailBadge badge={badges.play} />
             </Link>
-            <Link href="/v4/functions" className={"v4-railItem"} title="功能 · 日历 / 计划书 / 储物箱">
+            <Link href="/functions" className={"v4-railItem"} title="功能 · 日历 / 计划书 / 储物箱">
               <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><rect x="4" y="4" width="7" height="7" rx="2"/><rect x="13" y="4" width="7" height="7" rx="2"/><rect x="4" y="13" width="7" height="7" rx="2"/><rect x="13" y="13" width="7" height="7" rx="2"/></svg>
               <span className={"v4-railLabel"}>功能</span>
             </Link>
-            <Link href="/v4/mailbox" className={"v4-railItem"} title="信箱">
+            <Link href="/mailbox" className={"v4-railItem"} title="信箱">
               <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><rect x="3" y="5.5" width="18" height="13" rx="2.4"/><path d="m3.8 7.2 8.2 5.6 8.2-5.6"/></svg>
               <span className={"v4-railLabel"}>信箱</span>
             </Link>
@@ -554,8 +554,8 @@ export function HomeV4() {
             </div>
 
 
-            {/* 冬日信箱：链到 /v4/mailbox（里面就是首页那个信箱本体）*/}
-            <Link href="/v4/mailbox" className={"v4-mailbox"} title="冬日信箱 · 写给站长">
+            {/* 冬日信箱：链到 /mailbox（里面就是首页那个信箱本体）*/}
+            <Link href="/mailbox" className={"v4-mailbox"} title="冬日信箱 · 写给站长">
               <span className={"v4-mailboxIcon"}>
                 <svg viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                   <rect x="3" y="6.2" width="18" height="12.6" rx="2.4" />
@@ -576,5 +576,5 @@ export function HomeV4() {
   )
 }
 
-/* 也作为默认导出，/v4 那条路由直接转手 */
-export default HomeV4
+/* 也作为默认导出，方便直接当页面用 */
+export default HomeDesktop

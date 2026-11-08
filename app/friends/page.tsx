@@ -960,7 +960,7 @@ export default function FriendsPage() {
 
       {/* pt-24：顶部空间更大，返回键不会被浏览器顶栏挡住 */}
       <div className="relative max-w-6xl mx-auto px-6 pt-24 pb-8">
-        <header className="mb-6">
+        <header className="th-head mb-6">
           <BackLink fallback="/" />
           <h1 className="text-3xl font-bold text-base-content mt-4">小屋</h1>
           <p className="text-sm text-base-content/60 mt-1">小屋里，慢慢说</p>
@@ -1000,24 +1000,22 @@ export default function FriendsPage() {
             </button>
             {/* 储物箱 / 计划书 已收进「功能区」，这里只留入口，避免两处重复维护 */}
             <a
-              href="/v4/functions?tab=vault"
+              href="/functions?tab=vault"
               className="pb-2.5 text-sm transition flex items-center gap-1.5 text-base-content/60 hover:text-base-content"
             >
               储物箱
-              <span className="text-[10px] opacity-60">↗ 功能区</span>
             </a>
             <a
-              href="/v4/functions?tab=plans"
+              href="/functions?tab=plans"
               className="pb-2.5 text-sm transition flex items-center gap-1.5 text-base-content/60 hover:text-base-content"
             >
               计划书
-              <span className="text-[10px] opacity-60">↗ 功能区</span>
             </a>
           </div>
         </header>
 
         {mode === 'friends' ? (
-          <div className="flex gap-5 md:h-[calc(100vh-320px)] md:min-h-[500px]">            <aside className={`w-72 flex-shrink-0 flex-col gap-3 ${showChatOnMobile ? 'hidden md:flex' : 'flex'}`}>
+          <div className="flex gap-5 md:h-[calc(100vh-320px)] md:min-h-[500px]">            <aside className={`w-72 flex-shrink-0 flex-col gap-3 min-h-0 ${showChatOnMobile ? 'hidden md:flex' : 'flex'}`}>
               <button
                 onClick={() => setShowAdd(!showAdd)}
                 className="w-full py-2.5 rounded-box bg-primary text-primary-content text-sm font-medium hover:shadow-sm transition-all flex items-center justify-center gap-2 flex-shrink-0"
@@ -1113,8 +1111,8 @@ export default function FriendsPage() {
                 </div>
               )}
 
-              <div data-lenis-prevent className="card rounded-box border border-base-300 bg-base-100 shadow-sm">
-                <div className="px-4 py-3 ">
+              <div data-lenis-prevent className="card rounded-box border border-base-300 bg-base-100 shadow-sm flex min-h-0 flex-1 flex-col">
+                <div className="px-4 py-3 flex-shrink-0">
                   <p className="text-[11px] text-base-content/60 tracking-wide">
                     我的好友 · {shownFriends.length}
                   </p>
@@ -1122,7 +1120,7 @@ export default function FriendsPage() {
                 {shownFriends.length === 0 ? (
                   <EmptyState art="friends" compact title="还没有好友" hint="在上面搜昵称，加一个试试" />
                 ) : (
-                  <div>
+                  <div data-lenis-prevent className="th-scroll min-h-0 flex-1 overflow-y-auto">
                     {shownFriends.map((f) => {
                       const convId = conversationByFriend[f.friend_id]
                       const unreadCount = convId ? unread.byConversation[convId] ?? 0 : 0

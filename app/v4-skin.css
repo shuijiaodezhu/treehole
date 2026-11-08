@@ -73,6 +73,34 @@
   }
   .th-v4skin *::-webkit-scrollbar { width: 0; height: 0; display: none; }
 
+  /* 但"内部滚动区"要留一条细的：列表不露条，人根本不知道还能往下滑
+     （小屋的好友列表、会话区都挂 .th-scroll；手机版这条不生效） */
+  .th-v4skin .th-scroll {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(168, 86, 58, .45) transparent;
+  }
+  .th-v4skin .th-scroll::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+    display: block;
+  }
+  /* 不要两端那对箭头（Chromium 默认会画，看着像二十年前的滚动条）*/
+  .th-v4skin .th-scroll::-webkit-scrollbar-button {
+    display: none;
+    width: 0;
+    height: 0;
+  }
+  .th-v4skin .th-scroll::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .th-v4skin .th-scroll::-webkit-scrollbar-thumb {
+    background: rgba(168, 86, 58, .42);
+    border-radius: 99px;
+  }
+  .th-v4skin .th-scroll::-webkit-scrollbar-thumb:hover {
+    background: rgba(168, 86, 58, .6);
+  }
+
   /* 内容层：浮在视频之上 */
   .th-v4skin-inner {
     position: relative;
@@ -100,23 +128,50 @@
   }
   .th-v4skin .text-primary { color: #b04a2c !important; }
 
-  /* ══════ V4-SKIN-3：直接压在视频上的文字要看得清 ══════ */
+  /* ══════ V4-SKIN-3：直接压在视频上的文字要看得清 ══════
+     ✗ 旧写法是给每个字加 10px 的白色光晕 —— 那个会把字糊成一团（"上面字体不清晰"）
+     ✓ 改成只在字脚垫 1px，靠"字本身够深"来保证可读性 */
   .th-v4skin p,
   .th-v4skin .text-base-content\/40,
   .th-v4skin .text-base-content\/50,
   .th-v4skin .text-base-content\/60,
   .th-v4skin .text-base-content\/70 {
-    color: #4a3a2f !important;
-    text-shadow: 0 1px 3px rgba(255, 250, 242, .95), 0 0 10px rgba(255, 250, 242, .6);
+    color: #3f3329 !important;
+    text-shadow: 0 1px 1px rgba(255, 250, 242, .45);
   }
   .th-v4skin h1,
   .th-v4skin h2,
   .th-v4skin .font-brush {
-    text-shadow: 0 2px 10px rgba(255, 250, 242, .85), 0 0 1px rgba(120, 90, 70, .4);
+    text-shadow: 0 1px 2px rgba(255, 250, 242, .45);
   }
   .th-v4skin .font-art {
     color: #b04a2c !important;
-    text-shadow: 0 1px 8px rgba(255, 250, 242, .9);
+    text-shadow: 0 1px 2px rgba(255, 250, 242, .5);
+  }
+
+  /* ══════ V4-SKIN-5：标题区放到一块玻璃上（原来直接压在视频上，字看不清） ══════
+     只给挂了 .th-head 的页头用（小屋现在就挂着）；手机上这条规则不生效 */
+  .th-v4skin .th-head {
+    background: rgba(246, 232, 214, .46) !important;
+    -webkit-backdrop-filter: blur(26px) saturate(170%) brightness(1.03);
+    backdrop-filter: blur(26px) saturate(170%) brightness(1.03);
+    border: 1px solid rgba(255, 248, 238, .62);
+    border-radius: 24px;
+    padding: 20px 26px 16px;
+    box-shadow:
+      inset 0 1.5px 0 rgba(255, 255, 255, .9),
+      inset 0 -1px 0 rgba(255, 255, 255, .22),
+      0 16px 36px rgba(60, 35, 22, .16);
+  }
+  /* 玻璃上的字不再需要垫光，直接给深墨色，最清楚 */
+  .th-v4skin .th-head p,
+  .th-v4skin .th-head h1,
+  .th-v4skin .th-head a {
+    text-shadow: none;
+    color: #33291f !important;
+  }
+  .th-v4skin .th-head .text-base-content\/60 {
+    color: #5a4635 !important;
   }
 
   /* ══════ V4-SKIN-4：首页那些"实心彩卡"直接用 /v4 的玻璃 ══════

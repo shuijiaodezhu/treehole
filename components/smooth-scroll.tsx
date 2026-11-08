@@ -15,13 +15,25 @@ import Lenis from "lenis";
  *   · 系统开了"减少动态效果"就不接管（无障碍优先，这不是可选项）
  *   · 时长 0.9s、不再叠加自定义缓动 —— 再滑就"飘"了，反而不像纸
  */
+
+/**
+ * 是不是"v4 那种固定布局"的页面
+ *
+ * 这类页面自己就是 100vh 的壳子，滚动发生在里面的几个区域上，
+ * Lenis 一接管滚轮，里面那几块就**一格都滚不动**（首页信息流 / 小屋的会话区都踩过）。
+ * 所以：路径是 /v4，或者页面上出现 .v4-page（现在的 `/` 就是这种），一律交给原生滚动。
+ */
+function isFixedLayoutPage(): boolean {
+  if (window.location.pathname.startsWith('/v4')) return true;
+  return document.querySelector('.v4-page') !== null;
+}
+
 export function SmoothScroll() {
   useEffect(() => {
     if (typeof window === "undefined") return;
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    /* /v4 是固定布局（左右两栏 sticky 吸顶），Lenis 会给页面套 transform
-       → 会破坏 position:sticky ✗ 所以这一页用原生滚动 ✓ */
-    if (window.location.pathname.startsWith('/v4')) return;
+    /* 固定布局页面用原生滚动 ✓ */
+    if (isFixedLayoutPage()) return;
 
     const lenis = new Lenis({
       duration: 0.9,
@@ -32,7 +44,7 @@ export function SmoothScroll() {
 
     let raf = 0;
     const loop = (time: number) => {
-      if (window.location.pathname.startsWith('/v4')) {
+      if (isFixedLayoutPage()) {
         lenis.destroy();
         cancelAnimationFrame(raf);
         return;
