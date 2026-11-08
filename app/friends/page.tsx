@@ -946,7 +946,18 @@ export default function FriendsPage() {
   }
 
   return (
-    <div className="min-h-screen relative overflow-x-hidden th-v4skin" style={pageAccentVars('friends')}>
+    /*
+     * 好友模式：桌面就是"一屏装下"的壳子（根节点定高、里面两栏各自滚），
+     * 一进来不会出现"内容被截一半、还得先往下拖"的半成品样。
+     * 朋友圈模式内容长短不定，保持整页滚动。
+     */
+    <div
+      className={
+        'min-h-screen relative overflow-x-hidden th-v4skin' +
+        (mode === 'friends' ? ' md:h-[100dvh] md:overflow-hidden md:flex md:flex-col' : '')
+      }
+      style={pageAccentVars('friends')}
+    >
       {/* v4 皮肤：冬日视频 + 呼吸光（样式见 app/friends/v4-skin.css） */}
       <div className={"v4-bg"}>
         <video className={"v4-video"} autoPlay muted loop playsInline preload="auto">
@@ -959,8 +970,13 @@ export default function FriendsPage() {
       </div>
 
       {/* pt-24：顶部空间更大，返回键不会被浏览器顶栏挡住 */}
-      <div className="relative max-w-6xl mx-auto px-6 pt-24 pb-8">
-        <header className="th-head mb-6">
+      <div
+        className={
+          'relative max-w-6xl mx-auto px-6 pt-24 pb-8 w-full' +
+          (mode === 'friends' ? ' md:flex md:flex-1 md:min-h-0 md:flex-col' : '')
+        }
+      >
+        <header className={'mb-6' + (mode === 'friends' ? ' md:flex-shrink-0' : '')}>
           <BackLink fallback="/" />
           <h1 className="text-3xl font-bold text-base-content mt-4">小屋</h1>
           <p className="text-sm text-base-content/60 mt-1">小屋里，慢慢说</p>
@@ -1015,7 +1031,7 @@ export default function FriendsPage() {
         </header>
 
         {mode === 'friends' ? (
-          <div className="flex gap-5 md:h-[calc(100vh-320px)] md:min-h-[500px]">            <aside className={`w-72 flex-shrink-0 flex-col gap-3 min-h-0 ${showChatOnMobile ? 'hidden md:flex' : 'flex'}`}>
+          <div className="flex gap-5 md:flex-1 md:min-h-0">            <aside className={`w-72 flex-shrink-0 flex-col gap-3 min-h-0 ${showChatOnMobile ? 'hidden md:flex' : 'flex'}`}>
               <button
                 onClick={() => setShowAdd(!showAdd)}
                 className="w-full py-2.5 rounded-box bg-primary text-primary-content text-sm font-medium hover:shadow-sm transition-all flex items-center justify-center gap-2 flex-shrink-0"
