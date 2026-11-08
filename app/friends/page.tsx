@@ -981,8 +981,23 @@ export default function FriendsPage() {
         }
       >
         <header className={'mb-6 md:mb-2' + (mode === 'friends' ? ' md:flex-shrink-0' : '')}>
-          <BackLink fallback="/" />
-          <h1 className="text-3xl md:text-xl font-bold text-base-content mt-4 md:mt-1">小屋</h1>
+          {/* 手机上还是那行文字返回；桌面上「← 返回」单独一行太突兀，
+              改成标题右侧的一个小圆钮 —— 不占额外的行高 */}
+          <span className="md:hidden">
+            <BackLink fallback="/" />
+          </span>
+
+          <div className="flex items-center justify-between gap-3 mt-4 md:mt-0">
+            <h1 className="text-3xl md:text-xl font-bold text-base-content">小屋</h1>
+            <span className="hidden md:inline-flex">
+              <BackLink
+                fallback="/"
+                label="←"
+                className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-base-content/15 bg-base-100/45 text-[15px] leading-none text-base-content/70 backdrop-blur-sm transition hover:bg-base-100/85 hover:text-primary"
+              />
+            </span>
+          </div>
+
           <p className="text-sm md:text-xs text-base-content/60 mt-1 md:mt-0.5">小屋里，慢慢说</p>
 
           <div className="flex gap-6 mt-5 md:mt-2">
