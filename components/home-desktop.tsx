@@ -51,6 +51,10 @@ type Post = {
   anonymous_id?: string | null
   author_name?: string | null
   author_avatar?: string | null
+  /* 互动：来自同一份 world_feed（likes / comments 两张行表）*/
+  like_count?: number
+  liked_by_me?: boolean
+  comment_count?: number
 }
 type Me = { id: string; nickname?: string | null; username?: string | null }
 
@@ -167,8 +171,12 @@ export function HomeDesktop() {
            * （world_feed 已经把 profiles 一起返回了，这里只是原来没接）
            */
           const profMap = new Map((feed.profiles ?? []).map((x) => [x.id, x]))
+          /* 点赞/评论数：world_feed 给的是两张行表，按 post_id 数一遍就和 /world 一致 */
+          const likeRows = feed.likes ?? []
+          const commentRows = feed.comments ?? []
           const mapped = feed.posts.map((p) => {
             const prof = profMap.get(p.author_id)
+            const mine = likeRows.filter((l) => l.post_id === p.id)
             return {
               id: p.id,
               author_id: p.author_id,
@@ -182,6 +190,9 @@ export function HomeDesktop() {
                 ? `匿名用户${p.anonymous_id || '00000000'}`
                 : prof?.nickname || prof?.username || '某人',
               author_avatar: p.is_anonymous ? null : prof?.avatar_url ?? null,
+              like_count: mine.length,
+              liked_by_me: meId ? mine.some((l) => l.user_id === meId) : false,
+              comment_count: commentRows.filter((c) => c.post_id === p.id).length,
             }
           })
           window.requestAnimationFrame(() => setPosts(mapped))
@@ -199,9 +210,15 @@ export function HomeDesktop() {
           .eq('status', 'approved')
           .order('sort_order', { ascending: true })
         const list = (cs ?? []) as { id: string; name: string; parent_id: string | null }[]
-        /* 只取一级分区，并把每个分区下的帖子数数出来 */
+        /* 只取一级分区，并把每个分区下的帖子数数出来
+           ⚠️ 数的是**院子的表**（world_posts）；原来查的是老表 posts，所以永远 0 */
         const top = list.filter((c) => !c.parent_id)
-        const { data: ps } = await sb.from('posts').select('category_id').limit(2000)
+        const { data: ps } = await sb
+          .from('world_posts')
+          .select('category_id')
+          .eq('status', 'published')
+          .eq('is_hidden', false)
+          .limit(2000)
         const counts = new Map<string, number>()
         for (const p of (ps ?? []) as { category_id: string | null }[]) {
           if (!p.category_id) continue
@@ -223,15 +240,21 @@ export function HomeDesktop() {
         const uid = u.user?.id
         if (!uid) return
         const { count: mp } = await sb
-          .from('posts')
+          .from('world_posts')
           .select('id', { count: 'exact', head: true })
           .eq('author_id', uid)
+          .eq('status', 'published')
         window.requestAnimationFrame(() => setMyPosts(mp ?? 0))
-        const { data: mine } = await sb.from('posts').select('id').eq('author_id', uid).limit(500)
+        const { data: mine } = await sb
+          .from('world_posts')
+          .select('id')
+          .eq('author_id', uid)
+          .eq('status', 'published')
+          .limit(500)
         const ids = (mine ?? []).map((r: { id: string }) => r.id)
         if (ids.length) {
           const { count: rc } = await sb
-            .from('comments')
+            .from('world_comments')
             .select('id', { count: 'exact', head: true })
             .in('post_id', ids)
           window.requestAnimationFrame(() => setRepliesToMe(rc ?? 0))
@@ -528,8 +551,14 @@ export function HomeDesktop() {
                     </div>
                   )}
                   <div className={"v4-acts"}>
-                    <span><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M12 20s-7.4-4.5-7.4-9.3A4 4 0 0 1 12 8a4 4 0 0 1 7.4 2.7C19.4 15.5 12 20 12 20Z"/></svg></span>
-                    <span>◌</span>
+                    <span className={"v4-act" + (p.liked_by_me ? " v4-actOn" : "")}>
+                      <svg viewBox="0 0 24 24" width="15" height="15" fill={p.liked_by_me ? "currentColor" : "none"} stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M12 20s-7.4-4.5-7.4-9.3A4 4 0 0 1 12 8a4 4 0 0 1 7.4 2.7C19.4 15.5 12 20 12 20Z"/></svg>
+                      {p.like_count ? <b>{p.like_count}</b> : null}
+                    </span>
+                    <span className={"v4-act"}>
+                      <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M20 12.4c0 3.9-3.6 7-8 7-.9 0-1.8-.1-2.6-.4L4 21l1.4-3.7A6.6 6.6 0 0 1 4 12.4c0-3.9 3.6-7 8-7s8 3.1 8 7Z"/></svg>
+                      {p.comment_count ? <b>{p.comment_count}</b> : null}
+                    </span>
                     <span>⋯</span>
                   </div>
                 </article>

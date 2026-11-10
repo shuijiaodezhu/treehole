@@ -403,6 +403,14 @@
   border-radius: 12px; background: rgba(0,0,0,.05);
 }
 .v4-acts { display: flex; gap: 16px; margin-top: 12px; font-size: 11px; opacity: .8; }
+/* 赞 / 评论：图标 + 数字（数字来自 world_feed，没数就不显示）*/
+.v4-act {
+  display: inline-flex; align-items: center; gap: 4px;
+  font-family: 'JetBrains Mono', monospace; font-size: 10.5px; color: #6b5346;
+}
+.v4-act b { font-weight: 500; }
+.v4-actOn { color: #b04a2c; }
+.v4-actOn svg { opacity: .95; }
 
 /* ── 右栏 ── */
 .v4-rail {
