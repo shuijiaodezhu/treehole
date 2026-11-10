@@ -375,7 +375,10 @@
   width: 26px; height: 26px; border-radius: 9px;
   display: grid; place-items: center;
   font-size: 11px; font-weight: 600; color: #5a3a28;
+  overflow: hidden;
 }
+/* 真头像：铺满那个小方块，圆角跟着外壳走 */
+.v4-av img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .v4-who { font-size: 13px; font-weight: 600; color: #261c15; }
 .v4-when {
   margin-left: auto;

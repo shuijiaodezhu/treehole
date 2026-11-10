@@ -45,6 +45,12 @@ type Post = {
   content?: string | null
   created_at?: string | null
   image_urls?: string[] | null
+  /* 作者是谁：world_feed 一并把 profiles 返回了，这里照样接上
+     （原来只拿了帖子本身，名字就只能写死成「有人」）*/
+  is_anonymous?: boolean | null
+  anonymous_id?: string | null
+  author_name?: string | null
+  author_avatar?: string | null
 }
 type Me = { id: string; nickname?: string | null; username?: string | null }
 
@@ -154,14 +160,30 @@ export function HomeDesktop() {
         const meId = u.user?.id ?? null
         const feed = await fetchWorldFeed(null, meId)
         if (feed && feed.posts.length) {
-          const mapped = feed.posts.map((p) => ({
-            id: p.id,
-            author_id: p.author_id,
-            content: p.content,
-            created_at: p.created_at,
-            image_urls: p.image_urls,
-            category_id: p.category_id,
-          }))
+          /*
+           * 作者是谁：和 /world 同一套规则
+           *   匿名帖 → 「匿名用户XXXX」（anonymous_id 后六位）
+           *   实名的 → 昵称 → 用户名 → 某人，头像用 profiles.avatar_url
+           * （world_feed 已经把 profiles 一起返回了，这里只是原来没接）
+           */
+          const profMap = new Map((feed.profiles ?? []).map((x) => [x.id, x]))
+          const mapped = feed.posts.map((p) => {
+            const prof = profMap.get(p.author_id)
+            return {
+              id: p.id,
+              author_id: p.author_id,
+              content: p.content,
+              created_at: p.created_at,
+              image_urls: p.image_urls,
+              category_id: p.category_id,
+              is_anonymous: p.is_anonymous,
+              anonymous_id: p.anonymous_id,
+              author_name: p.is_anonymous
+                ? `匿名用户${p.anonymous_id || '00000000'}`
+                : prof?.nickname || prof?.username || '某人',
+              author_avatar: p.is_anonymous ? null : prof?.avatar_url ?? null,
+            }
+          })
           window.requestAnimationFrame(() => setPosts(mapped))
         }
       } catch {
@@ -479,10 +501,16 @@ export function HomeDesktop() {
                       className={"v4-av"}
                       style={{ background: avatarBg(p.author_id) }}
                     >
-                      {(p.author_id === me?.id ? me?.nickname || '我' : '有').slice(0, 1)}
+                      {p.author_avatar ? (
+                        /* 有头像就用真头像；没有就用名字首字 + 底色 */
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img src={p.author_avatar} alt="" loading="lazy" />
+                      ) : (
+                        (p.author_name || (p.author_id === me?.id ? me?.nickname : '') || '某').slice(0, 1)
+                      )}
                     </div>
                     <span className={"v4-who"}>
-                      {p.author_id === me?.id ? me?.nickname || '我' : '有人'}
+                      {p.author_name || (p.author_id === me?.id ? me?.nickname || '我' : '某人')}
                     </span>
                     <span className={"v4-when"}>{rel(p.created_at)}</span>
                   </div>
