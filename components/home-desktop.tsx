@@ -98,10 +98,11 @@ function pickTodaySong(): string {
   return list[day % list.length]
 }
 
-/** 这首歌配的那句话（没配就是空，不硬编一句）*/
+/** 这首歌配的那句话（song-moods.json 已覆盖 132 首；以后新加的歌就用兜底那句）*/
 const MOODS = SONG_MOODS as Record<string, string>
+const MOOD_FALLBACK = '今天这一首，陪你一会儿。'
 function moodOf(song: string): string {
-  return MOODS[song] || ''
+  return MOODS[song] || MOOD_FALLBACK
 }
 
 /**
