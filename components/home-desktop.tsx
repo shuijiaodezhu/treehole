@@ -4,6 +4,8 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { fetchWorldFeed } from './world-feed'
 import SONGS from '../content/songs.json'
+/* 每首歌配一句（歌名 → 一句话，见 content/song-moods.json）*/
+import SONG_MOODS from '../content/song-moods.json'
 import { useEffect, useState } from 'react'
 import { peek } from './local-store'
 import { createClient } from '../app/lib/supabase'
@@ -94,6 +96,12 @@ function pickTodaySong(): string {
     (t.getTime() - new Date(t.getFullYear(), 0, 0).getTime()) / 86400000,
   )
   return list[day % list.length]
+}
+
+/** 这首歌配的那句话（没配就是空，不硬编一句）*/
+const MOODS = SONG_MOODS as Record<string, string>
+function moodOf(song: string): string {
+  return MOODS[song] || ''
 }
 
 /**
@@ -607,6 +615,10 @@ export function HomeDesktop() {
                 <span className={"v4-songN"}>♪</span>
                 <span className={"v4-todaySongTitle"}>今天在听《{todaySong}》</span>
               </div>
+              {/* 这首歌自己配的那句话（content/song-moods.json）；没配就不显示 */}
+              {moodOf(todaySong) && (
+                <div className={"v4-todaySongNote"}>{moodOf(todaySong)}</div>
+              )}
             </div>
 
 

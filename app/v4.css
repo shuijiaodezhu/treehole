@@ -448,8 +448,12 @@
   border-top: 1px solid rgba(110, 72, 52, .12);
 }
 .v4-todaySongTitle { font-size: 12.5px; color: #44342a; letter-spacing: .02em; }
-/* 原来这里还有一句"不用配得上谁，才被允许留下。"——
-   它挂在「今天在听《…》」下面，会被当成那首歌的词，所以去掉了（songs.json 只有歌名，没有词）*/
+/* 「今天在听」下面那句：来自 content/song-moods.json（歌名 → 一句），
+   没配句子的歌就不显示 —— 不再写死一句放在那儿被当成歌词 */
+.v4-todaySongNote {
+  font-size: 11.5px; color: #5a4a3d; opacity: 1;
+  line-height: 1.8; margin-top: 6px; text-align: center;
+}
 .v4-songN { color: #a0563f; margin-right: 3px; }
 
 /* ── 冬日信箱 ── */
