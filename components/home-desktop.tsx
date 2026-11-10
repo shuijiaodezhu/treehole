@@ -607,7 +607,6 @@ export function HomeDesktop() {
                 <span className={"v4-songN"}>♪</span>
                 <span className={"v4-todaySongTitle"}>今天在听《{todaySong}》</span>
               </div>
-              <div className={"v4-todaySongNote"}>不用配得上谁，才被允许留下。</div>
             </div>
 
 
